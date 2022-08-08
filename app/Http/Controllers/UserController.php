@@ -1,0 +1,120 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+
+class UserController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        return Inertia::render('Users/Index', [
+            'users' => User::query()
+                ->when($request->input('search'), function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->paginate(10)
+                ->withQueryString()
+                ->through(fn($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]),
+            'filters' => $request->only(['search'])
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return Inertia::render('Users/Create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $attributes = $request->validate([
+            'name' => 'required',
+            'email' => ['required', 'email', 'unique:users'],
+            'password' => 'required',
+        ]);
+
+        User::create($attributes);
+
+        return redirect()->route('users')->with('success', 'User created successfully!');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function show(User $user)
+    {
+        // TODO remove empty methods.
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(User $user)
+    {
+        $a = $user->name;
+        return Inertia::render('Users/Edit', [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, User $user)
+    {
+        $attributes = $request->validate([
+            'name' => 'required',
+            'email' => ['required', 'email',  Rule::unique('users', 'email')->ignore($user->id)],
+        ]);
+
+        $user->update($attributes);
+
+        return redirect()->route('users')->with('success', 'User updated successfully!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(User $user)
+    {
+        // TODO remove empty methods.
+    }
+}

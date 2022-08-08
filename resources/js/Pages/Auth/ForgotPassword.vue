@@ -1,9 +1,9 @@
 <script setup>
-import BreezeButton from '@/Components/Button.vue';
-import BreezeGuestLayout from '@/Layouts/Guest.vue';
-import BreezeInput from '@/Components/Input.vue';
-import BreezeLabel from '@/Components/Label.vue';
-import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
+import Button from '@/Components/Button.vue';
+import GuestLayout from '@/Layouts/Guest.vue';
+import Input from '@/Components/Input.vue';
+import Label from '@/Components/Label.vue';
+import ValidationErrors from '@/Components/ValidationErrors.vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 
 defineProps({
@@ -20,7 +20,7 @@ const submit = () => {
 </script>
 
 <template>
-    <BreezeGuestLayout>
+    <GuestLayout>
         <Head title="Forgot Password" />
 
         <div class="mb-4 text-sm text-gray-600">
@@ -31,19 +31,19 @@ const submit = () => {
             {{ status }}
         </div>
 
-        <BreezeValidationErrors class="mb-4" />
+        <ValidationErrors class="mb-4" />
 
         <form @submit.prevent="submit">
             <div>
-                <BreezeLabel for="email" value="Email" />
-                <BreezeInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
+                <Label for="email" value="Email" />
+                <Input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus autocomplete="username" />
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <BreezeButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <Button type="submit" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Email Password Reset Link
-                </BreezeButton>
+                </Button>
             </div>
         </form>
-    </BreezeGuestLayout>
+    </GuestLayout>
 </template>
