@@ -66,8 +66,8 @@ watch(search, debounce(value => {
             </div>
         </div>
 
-        <Panel class="mt-6 px-4 py-5 sm:px-6">
+        <div class="mt-6 px-4 py-5 sm:px-6">
             <Pagination :links="users.links" class="flex flex-auto flex-wrap justify-center" />
-        </Panel>
+        </div>
     </AuthenticatedLayout>
 </template>
