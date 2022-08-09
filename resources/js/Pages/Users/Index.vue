@@ -4,7 +4,7 @@ import { Inertia } from '@inertiajs/inertia';
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import debounce from 'lodash/debounce';
 
-import AuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import DefaultLayout from '@/Layouts/Default.vue';
 import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
 import Pagination from '@/Components/Pagination.vue';
@@ -27,7 +27,7 @@ watch(search, debounce(value => {
 <template>
     <Head title="Users" />
 
-    <AuthenticatedLayout>
+    <DefaultLayout>
         <template #header>
             Users
         </template>
@@ -69,5 +69,6 @@ watch(search, debounce(value => {
         <div class="mt-6 px-4 py-5 sm:px-6">
             <Pagination :links="users.links" class="flex flex-auto flex-wrap justify-center" />
         </div>
-    </AuthenticatedLayout>
+    </DefaultLayout
+>
 </template>

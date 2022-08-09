@@ -1,12 +1,12 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import DefaultLayout from '@/Layouts/Default.vue';
 import { Head } from '@inertiajs/inertia-vue3';
 </script>
 
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout>
+    <DefaultLayout>
         <template #header>
             Dashboard
         </template>
@@ -16,5 +16,6 @@ import { Head } from '@inertiajs/inertia-vue3';
                 You're logged in!
             </div>
         </div>
-    </AuthenticatedLayout>
+    </DefaultLayout
+>
 </template>

@@ -2,7 +2,7 @@
 import { reactive } from 'vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 
-import AuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import DefaultLayout from '@/Layouts/Default.vue';
 import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
 import InputError from '@/Components/InputError.vue';
@@ -22,7 +22,7 @@ let submit = () => {
 <template>
     <Head title="Create a user" />
 
-    <AuthenticatedLayout>
+    <DefaultLayout>
         <template #header>
             Create a user
         </template>
@@ -56,5 +56,6 @@ let submit = () => {
                 </Button>
             </div>
         </form>
-    </AuthenticatedLayout>
+    </DefaultLayout
+>
 </template>

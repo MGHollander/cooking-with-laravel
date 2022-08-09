@@ -2,7 +2,7 @@
 import { reactive } from 'vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 
-import AuthenticatedLayout from '@/Layouts/Authenticated.vue';
+import DefaultLayout from '@/Layouts/Default.vue';
 import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
 import InputError from '@/Components/InputError.vue';
@@ -29,7 +29,7 @@ let submit = () => {
 <template>
     <Head :title="`Edit ${form.name}`" />
 
-    <AuthenticatedLayout>
+    <DefaultLayout>
         <template #header>
             Edit {{ form.name }}
         </template>
@@ -57,5 +57,6 @@ let submit = () => {
                 </Button>
             </div>
         </form>
-    </AuthenticatedLayout>
+    </DefaultLayout
+>
 </template>
