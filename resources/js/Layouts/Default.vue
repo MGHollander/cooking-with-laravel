@@ -6,7 +6,6 @@ import { ref } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 
@@ -134,7 +133,7 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Content -->
             <main>
-                <div class="py-12">
+                <div class="py-6 sm:py-12">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div v-if="$page.props.flash.success" class="flex justify-between mb-8 p-4 bg-emerald-100 text-emerald-800 rounded-lg">
                             <p>

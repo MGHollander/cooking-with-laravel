@@ -19,12 +19,13 @@ class RecipeFactory extends Factory
     public function definition()
     {
         $title = ucfirst(fake()->words(rand(4, 8), true));
+        $slug = Str::of($title)->slug('-');
 
         return [
             'user_id' => User::all()->first(),
             'title' => $title,
-            'slug' => Str::of($title)->slug('-'),
-            'image' => fake()->imageUrl(640, 480),
+            'slug' => $slug,
+            'image' => "https://picsum.photos/seed/${slug}/1000",
         ];
     }
 }

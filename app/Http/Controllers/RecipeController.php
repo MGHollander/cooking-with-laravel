@@ -17,7 +17,7 @@ class RecipeController extends Controller
     {
         return Inertia::render('Recipes/Index', [
             'recipes' => Recipe::query()
-                ->paginate(10)
+                ->paginate(17)
                 ->withQueryString()
                 ->through(fn($recipe) => [
                     'id' => $recipe->id,
