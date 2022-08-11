@@ -1,6 +1,7 @@
 <script setup>
-import DefaultLayout from "@/Layouts/Default.vue";
-import Button from "@/Components/Button.vue";
+import { Link } from '@inertiajs/inertia-vue3';
+import DefaultLayout from '@/Layouts/Default.vue';
+import Button from '@/Components/Button.vue';
 
 let props = defineProps({
     recipes: Object,
@@ -20,7 +21,8 @@ let props = defineProps({
             </div>
 
             <div class="grid grid-cols-12 gap-4 sm:gap-6 place-items-stretch">
-                <div
+                <Link
+                    :href="route('recipes.show', recipe.slug)"
                     v-for="(recipe, index) in recipes.data"
                     :key="recipe.id"
                     class="flex flex-col rounded-lg shadow-lg bg-white col-span-12 cursor-pointer"
@@ -35,7 +37,7 @@ let props = defineProps({
                     <h2 class="flex-1 text-gray-900 text-xl font-medium mb-2 pt-6 px-6">{{ recipe.title }}</h2>
 
                     <Button class="mx-6 mb-6 bg-emerald-700 self-start">See recipe</Button>
-                </div>
+                </Link>
             </div>
         </div>
     </DefaultLayout>

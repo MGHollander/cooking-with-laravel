@@ -22,6 +22,7 @@ class RecipeController extends Controller
                 ->through(fn($recipe) => [
                     'id' => $recipe->id,
                     'title' => $recipe->title,
+                    'slug' => $recipe->slug,
                     'image' => $recipe->image,
                 ]),
         ]);
@@ -56,7 +57,9 @@ class RecipeController extends Controller
      */
     public function show(Recipe $recipe)
     {
-        //
+        return Inertia::render('Recipes/Show', [
+            'recipe' => $recipe,
+        ]);
     }
 
     /**

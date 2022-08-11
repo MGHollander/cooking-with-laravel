@@ -17,6 +17,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', [RecipeController::class, 'index'])->name('home');
+Route::get('/recipes/{recipe:slug}', [RecipeController::class, 'show'])->name('recipes.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
