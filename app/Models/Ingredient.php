@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Recipe extends Model
+class Ingredient extends Model
 {
     use HasFactory;
 
     /**
-     * Get the ingredients for the recipe.
+     * Get the recipe that owns the ingredient.
      */
-    public function ingredients()
+    public function recipe()
     {
-        return $this->hasMany(Ingredient::class);
+        return $this->belongsTo(Recipe::class);
     }
 }

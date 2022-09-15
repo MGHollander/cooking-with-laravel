@@ -14,6 +14,11 @@ class RecipeSeeder extends Seeder
      */
     public function run()
     {
-        Recipe::factory(50)->create();
+        // @TODO Add real recipes from an API.
+        for ($i = 0; $i < 50; $i++) {
+            Recipe::factory()
+                ->hasIngredients(mt_rand(5, 15))
+                ->create();
+        }
     }
 }

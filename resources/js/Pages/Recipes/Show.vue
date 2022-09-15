@@ -1,9 +1,25 @@
 <script setup>
 import DefaultLayout from '@/Layouts/Default.vue';
+import { reactive } from 'vue';
 
 let props = defineProps({
     recipe: Object,
 });
+
+let state = reactive({
+    plates: 4,
+    ingredients: props.recipe.ingredients,
+});
+
+function incrementPlates() {
+    state.ingredients.map((ingredient) => ingredient.amount += (ingredient.amount / state.plates));
+    state.plates++;
+}
+
+function decrementPlates() {
+    state.ingredients.map((ingredient) => ingredient.amount -= (ingredient.amount / state.plates));
+    state.plates--;
+}
 </script>
 
 <template>
@@ -39,7 +55,7 @@ let props = defineProps({
                             </svg>
                         </div>
                         <strong>Plates</strong><br />
-                        4 plates
+                        {{ state.plates }} plates
                     </div>
                     <div>
                         <div class="w-16 mx-auto fill-orange-600">
@@ -79,25 +95,23 @@ let props = defineProps({
                     <div class="-mx-6 sm:mx-0 p-6 md:w-1/3 bg-gray-100 sm:rounded-lg">
                         <h2 class="text-2xl font-bold mb-4">Ingredients</h2>
 
-                        <ul>
-                            <li>45 ml olijfolie + extra</li>
-                            <li>1/2 rode ui fijngesneden</li>
-                            <li>2 tenen knoflook fijngehakt</li>
-                            <li>2 tl komijnpoeder</li>
-                            <li>10 gram tijm fijngehakt</li>
-                            <li>25 gram ansjovisfilets op olie uitgelekt en fijngehakt</li>
-                            <li>1/2 citroenrasp</li>
-                            <li>2 el citroensap</li>
-                            <li>2 blikken kikkererwten van 400 gram</li>
-                            <li>1 tl bruine basterdsuiker</li>
-                            <li>400 ml kippenbouillon</li>
-                            <li>200 gram giglipasta of orecchiette</li>
-                            <li>100 gram verse spinazie</li>
-                            <li>15 gram peterselie grof gesneden</li>
-                            <li>1,5 tl za'atar</li>
-                            <li>zout</li>
-                            <li>zwarte peper</li>
-                            <li>1 blok witte kaas</li>
+                        <div class="-mx-2 mb-4 flex justify-between items-center bg-gray-200 p-2 rounded">
+                            <div>{{ state.plates }} plates</div>
+                            <div class="space-x-2">
+                                <button class="inline-block w-8 border-2 border-gray-600 rounded text-lg font-bold" @click="incrementPlates">+</button>
+                                <button
+                                    class="inline-block w-8 border-2 border-gray-600 rounded text-lg font-bold disabled:opacity-50"
+                                    @click="decrementPlates"
+                                    :disabled="state.plates === 1"
+                                >-</button>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-1">
+                            <li v-for="ingredient in state.ingredients" class="flex flex-auto">
+                                <span class="w-2/3 break-words">{{ ingredient.name }}</span>
+                                <span class="pl-2 w-1/3 break-words">{{ ingredient.amount }} {{ ingredient.unit }}</span>
+                            </li>
                         </ul>
                     </div>
 
