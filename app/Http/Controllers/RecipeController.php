@@ -11,7 +11,7 @@ class RecipeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index()
     {
@@ -53,7 +53,7 @@ class RecipeController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Recipe  $recipe
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function show(Recipe $recipe)
     {
