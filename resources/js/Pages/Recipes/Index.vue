@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Head, Link } from '@inertiajs/inertia-vue3';
 import DefaultLayout from '@/Layouts/Default.vue';
 import Button from '@/Components/Button.vue';
 
@@ -9,6 +9,8 @@ let props = defineProps({
 </script>
 
 <template>
+    <Head title="Koken met Marc" />
+
     <DefaultLayout>
         <div class="space-y-6 sm:space-y-12 px-4 sm:px-0">
             <div class="flex relative w-full rounded-lg shadow-lg items-center">

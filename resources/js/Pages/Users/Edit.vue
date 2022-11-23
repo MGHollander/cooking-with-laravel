@@ -1,5 +1,4 @@
 <script setup>
-import { reactive } from 'vue';
 import { Head, useForm } from '@inertiajs/inertia-vue3';
 
 import DefaultLayout from '@/Layouts/Default.vue';
@@ -57,6 +56,5 @@ let submit = () => {
                 </Button>
             </div>
         </form>
-    </DefaultLayout
->
+    </DefaultLayout>
 </template>

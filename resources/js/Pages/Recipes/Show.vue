@@ -1,6 +1,7 @@
 <script setup>
-import DefaultLayout from '@/Layouts/Default.vue';
 import { reactive } from 'vue';
+import { Head } from '@inertiajs/inertia-vue3';
+import DefaultLayout from '@/Layouts/Default.vue';
 
 let props = defineProps({
     recipe: Object,
@@ -23,6 +24,8 @@ function decrementPlates() {
 </script>
 
 <template>
+    <Head :title="recipe.title" />
+
     <DefaultLayout>
         <div class="bg-white sm:rounded-lg sm:shadow-lg overflow-hidden">
             <div class="relative h-32 sm:h-64 md:h-96 p-6 sm:px-12 flex items-center">

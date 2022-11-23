@@ -28,7 +28,8 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <!-- Navigation Links -->
-                            <!-- <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <!-- Hidden for future use
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
@@ -36,7 +37,8 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('users')" :active="route().current('users')">
                                     Users
                                 </NavLink>
-                            </div> -->
+                            </div>
+                            -->
                         </div>
 
                         <div v-if="$page.props.auth.user" class="hidden sm:flex sm:items-center sm:ml-6">
@@ -58,6 +60,10 @@ const showingNavigationDropdown = ref(false);
                                     <template #content>
                                         <DropdownLink :href="route('dashboard')" :active="route().current('dashboard')">
                                             Dashboard
+                                        </DropdownLink>
+
+                                        <DropdownLink :href="route('recipes.create')" :active="route().current('recipes.create')">
+                                            Create a recipe
                                         </DropdownLink>
 
                                         <DropdownLink :href="route('users')" :active="route().current('users')">
