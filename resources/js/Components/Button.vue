@@ -25,7 +25,7 @@ defineProps({
             border border-transparent rounded-md
             focus:ring focus:ring-indigo-200
             focus-visible:ring focus-visible:ring-indigo-200 focus-visible:outline-none
-            font-semibold text-xs text-white
+            font-semibold text-white
             transition ease-in-out duration-150
             disabled:opacity-25"
     >

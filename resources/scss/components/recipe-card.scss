@@ -14,12 +14,16 @@
     }
 
     &-button {
-        @apply mx-6 mb-6 bg-emerald-700 self-start;
+        @apply mx-6 mb-6 bg-emerald-700 self-start text-sm;
     }
 
     &:hover {
         img {
-            @apply scale-110 rotate-1;
+            @apply scale-110 rotate-2;
+        }
+
+        button {
+            @apply bg-gray-700;
         }
     }
 }

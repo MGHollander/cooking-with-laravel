@@ -39,7 +39,7 @@ let props = defineProps({
 
                     <h2 class="recipe-card-title">{{ recipe.title }}</h2>
 
-                    <Button class="recipe-card-button">See recipe</Button>
+                    <Button class="recipe-card-button">Open recipe</Button>
                 </Link>
             </div>
 

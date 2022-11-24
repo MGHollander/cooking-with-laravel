@@ -58,19 +58,19 @@ const showingNavigationDropdown = ref(false);
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink :href="route('dashboard')" :active="route().current('dashboard')">
+                                        <DropdownLink class="no-underline" :href="route('dashboard')" :active="route().current('dashboard')">
                                             Dashboard
                                         </DropdownLink>
 
-                                        <DropdownLink :href="route('recipes.create')" :active="route().current('recipes.create')">
+                                        <DropdownLink class="no-underline" :href="route('recipes.create')" :active="route().current('recipes.create')">
                                             Create a recipe
                                         </DropdownLink>
 
-                                        <DropdownLink :href="route('users')" :active="route().current('users')">
+                                        <DropdownLink class="no-underline" :href="route('users')" :active="route().current('users')">
                                             Users
                                         </DropdownLink>
 
-                                        <DropdownLink :href="route('logout')" method="post" as="button">
+                                        <DropdownLink class="no-underline" :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </DropdownLink>
                                     </template>
@@ -133,8 +133,6 @@ const showingNavigationDropdown = ref(false);
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                         <slot name="header" />
                     </h2>
-
-                    <slot name="header-actions" />
                 </div>
             </header>
 

@@ -32,13 +32,11 @@ watch(search, debounce(value => {
             Users
         </template>
 
-        <template #header-actions>
-            <Button :href="route('users.create')" class="px-2 upper py-0 bg-indigo-500 hover:bg-indigo-600">
+        <div class="mb-4 px-2 sm:px-0 flex justify-between items-center">
+            <Button :href="route('users.create')" class="px-2 text-sm bg-indigo-500 text-sm no-underline hover:bg-indigo-600 hover:text-white">
                 Create a user
             </Button>
-        </template>
 
-        <div class="mb-4 px-2 sm:px-0 text-right">
             <Input v-model="search" placeholder="Search..." class="p-2 w-full sm:w-60" />
         </div>
 
