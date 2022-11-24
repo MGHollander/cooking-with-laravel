@@ -59,7 +59,7 @@ class RecipeController extends Controller
     {
         // TODO something with a resource controller to have control over the items that are send to Vue.
         return Inertia::render('Recipes/Show', [
-            'recipe' => $recipe->load('ingredients'),
+            'recipe' => $recipe->load(['ingredientsLists', 'ingredientsLists.ingredients']),
         ]);
     }
 

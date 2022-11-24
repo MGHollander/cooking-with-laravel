@@ -19,7 +19,15 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->string('title');
             $table->string('slug')->unique();
-            $table->string('image');
+            $table->string('image')->nullable();
+            $table->smallInteger('preparation_minutes')->unsigned()->nullable();
+            $table->smallInteger('cooking_minutes')->unsigned()->nullable();
+            $table->smallInteger('servings')->unsigned();
+            $table->string('difficulty');
+            $table->text('summary')->nullable();
+            $table->text('instructions');
+            $table->string('source_label')->nullable();
+            $table->text('source_link')->nullable();
             $table->timestamps();
         });
     }

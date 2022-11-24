@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue';
+import { computed, reactive } from 'vue';
 import { Head } from '@inertiajs/inertia-vue3';
 import DefaultLayout from '@/Layouts/Default.vue';
 
@@ -8,19 +8,29 @@ let props = defineProps({
 });
 
 let state = reactive({
-    plates: 4,
-    ingredients: props.recipe.ingredients,
+    servings: props.recipe.servings,
+    ingredientsLists: props.recipe.ingredients_lists,
 });
 
-function incrementPlates() {
-    state.ingredients.map((ingredient) => ingredient.amount += (ingredient.amount / state.plates));
-    state.plates++;
+function incrementServings() {
+    state.ingredientsLists.map(
+        (list) => list.ingredients.map(
+            (ingredient) => ingredient.amount += (ingredient.amount / state.servings)
+        )
+    );
+    state.servings++;
 }
 
-function decrementPlates() {
-    state.ingredients.map((ingredient) => ingredient.amount -= (ingredient.amount / state.plates));
-    state.plates--;
+function decrementServings() {
+    state.ingredientsLists.map(
+        (list) => list.ingredients.map(
+            (ingredient) => ingredient.amount -= (ingredient.amount / state.servings)
+        )
+    );
+    state.servings--;
 }
+
+const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servings')
 </script>
 
 <template>
@@ -28,12 +38,12 @@ function decrementPlates() {
 
     <DefaultLayout>
         <div class="bg-white sm:rounded-lg sm:shadow-lg overflow-hidden">
-            <div class="relative h-32 sm:h-64 md:h-96 p-6 sm:px-12 flex items-center">
+            <div v-if="recipe.image" class="relative h-32 sm:h-64 md:h-96 p-6 sm:px-12 flex items-center">
                 <img :src="recipe.image" class="absolute inset-0 w-full h-full object-cover" />
             </div>
 
             <div class="p-6 lg:p-10 space-y-6 md:space-y-10">
-                <h1 class="relative text-2xl font-bold">{{ recipe.title }}</h1>
+                <h1 class="relative text-3xl font-bold">{{ recipe.title }}</h1>
 
                 <div class="md:flex text-sm space-y-2 md:space-y-0 md:space-x-4">
                     <p><strong>Category:</strong> Main course</p>
@@ -47,7 +57,10 @@ function decrementPlates() {
                             <li class="ml-1"><span class="bg-gray-200 px-1 rounded">Spinazie</span></li>
                         </ul>
                     </div>
+
                 </div>
+
+                <div v-html="recipe.summary" class="text-lg" />
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                     <div>
@@ -57,8 +70,8 @@ function decrementPlates() {
                                 <path d="M307.75 187.71c-60.14 0-109.41 52.47-109.41 116.45s49.26 116.45 109.41 116.45 109.41-52.47 109.41-116.45-49.27-116.45-109.41-116.45zm0 207.31c-46.07 0-83.82-40.95-83.82-90.86s37.75-90.86 83.82-90.86 83.82 40.95 83.82 90.86c0 50.55-37.76 90.84-83.82 90.84zM549 297.76l.64-160a13.36 13.36 0 0 0-5.12-10.24q-4.8-3.84-11.52-1.92c-1.92.64-46.07 14.08-46.07 92.78 0 37.11 2.56 64.62 6.4 79.34a23.65 23.65 0 0 0-3.84 13.44v139.52c0 13.44 10.88 24.31 23.67 24.31h14.72c13.44 0 23.67-10.88 23.67-24.31V310.56c1.25-4.48-.03-8.96-2.55-12.8zM524 166l-.64 119.65h-5.76c-1.92-8.32-4.48-28.15-4.48-67.82.01-25 5.13-41.64 10.88-51.83zm3.2 283.45h-10.87V311.84h10.88zm-400.53-323.8a12.83 12.83 0 0 0-12.8 12.8v46.71h-7v-46.72a12.8 12.8 0 0 0-25.59 0v46.71h-7.71v-46.71a12.8 12.8 0 0 0-25.59 0v59.5a3.85 3.85 0 0 0 .64 2.56v.64c0 .64.64 1.28.64 1.92v.64l20.47 34.55a25.13 25.13 0 0 0-7 17.92v194.51c0 13.44 10.88 24.31 23.67 24.31h14.72c13.44 0 23.67-10.88 23.67-24.31V255.53a25.66 25.66 0 0 0-7.68-17.92l19.83-33.27v-.64a2.35 2.35 0 0 0 .64-1.92v-.64c0-.64.64-1.92.64-2.56v-60.14c1.25-7.04-4.51-12.79-11.55-12.79zm-23 85.1L93.4 228l-10.23-17.26zM88.28 449.4v-190c1.92.64 3.2 1.28 5.12 1.28a18.68 18.68 0 0 0 5.76-1.28v190z"/>
                             </svg>
                         </div>
-                        <strong>Plates</strong><br />
-                        {{ state.plates }} plates
+                        <strong>Servings</strong><br />
+                        {{ state.servings }} {{ servingsLabel }}
                     </div>
                     <div>
                         <div class="w-16 mx-auto fill-orange-600">
@@ -68,9 +81,9 @@ function decrementPlates() {
                             </svg>
                         </div>
                         <strong>Difficulty</strong><br />
-                        Average
+                        {{ recipe.difficulty }}
                     </div>
-                    <div>
+                    <div v-if="recipe.preparation_minutes">
                         <div class="w-16 mx-auto fill-emerald-700">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
                                 <path d="M540.13 125.81C530 105.45 504.5 85.08 479 85.08a41.47 41.47 0 0 0-9.46.73c-7.27 1.45-26.91 5.82-136.73 130.92h-.73c-8.73 0-13.82 0-145.46 138.19C122.66 420.37 60.11 488 59.38 488.74a14.55 14.55 0 0 0 8 24 122.6 122.6 0 0 0 24 2.18c69.09 0 152.73-53.82 210.92-98.91 39.27-30.55 113.46-96.73 115.64-114.19.73-6.55-2.18-13.82-9.46-23.27L487 181.81h3.64c14.55 0 34.91-3.64 47.28-19.64 8.08-9.45 8.76-23.27 2.21-36.36zM102.29 485.1c85.1-90.91 203.65-215.28 230.56-237.83 13.82 8.73 45.09 37.82 53.82 50.91C361.94 330.91 207 474.92 102.29 485.1zM515.4 144.72c-5.82 7.27-18.91 8-24.73 8a45.59 45.59 0 0 1-8-.73c-5.09-.73-10.18 1.45-13.82 5.09l-78.55 96.73a246.41 246.41 0 0 0-30.55-25.46c93.83-104.72 114.2-113.45 115.65-114.18 9.46-2.18 25.46 6.55 34.18 18.91 5.82 6.55 5.82 10.92 5.82 11.64z"/>
@@ -78,7 +91,7 @@ function decrementPlates() {
                             </svg>
                         </div>
                         <strong>Preparation time</strong><br />
-                        10 minutes
+                        {{ recipe.preparation_minutes }} minutes
                     </div>
                     <div>
                         <div class="w-16 mx-auto fill-emerald-700">
@@ -90,32 +103,43 @@ function decrementPlates() {
                             </svg>
                         </div>
                         <strong>Cooking time</strong><br />
-                        20 minutes
+                        {{ recipe.cooking_minutes }} minutes
                     </div>
                 </div>
 
                 <div class="space-y-6 md:space-y-0 md:flex md:items-start md:space-x-8">
                     <div class="-mx-6 sm:mx-0 p-6 md:w-1/3 bg-gray-100 sm:rounded-lg">
-                        <h2 class="text-2xl font-bold mb-4">Ingredients</h2>
+                        <h2 class="mb-2 text-2xl font-bold">Ingredients</h2>
 
                         <div class="-mx-2 mb-4 flex justify-between items-center bg-gray-200 p-2 rounded">
-                            <div>{{ state.plates }} plates</div>
+                            <div>{{ state.servings }} {{ servingsLabel }}</div>
                             <div class="space-x-2">
-                                <button class="inline-block w-8 border-2 border-gray-600 rounded text-lg font-bold" @click="incrementPlates">+</button>
                                 <button
-                                    class="inline-block w-8 border-2 border-gray-600 rounded text-lg font-bold disabled:opacity-50"
-                                    @click="decrementPlates"
-                                    :disabled="state.plates === 1"
-                                >-</button>
+                                    class="inline-block w-8 border-2 border-gray-500 rounded text-lg text-gray-600 font-bold hover:bg-gray-500 hover:text-white transition-all"
+                                    @click="incrementServings"
+                                >
+                                    +
+                                </button>
+                                <button
+                                    class="inline-block w-8 border-2 border-gray-500 rounded text-lg text-gray-600 font-bold hover:bg-gray-500 hover:text-white disabled:opacity-50"
+                                    @click="decrementServings"
+                                    :disabled="state.servings === 1"
+                                >
+                                    -
+                                </button>
                             </div>
                         </div>
 
-                        <ul class="space-y-1">
-                            <li v-for="ingredient in state.ingredients" class="flex flex-auto">
-                                <span class="w-2/3 break-words">{{ ingredient.name }}</span>
-                                <span class="pl-2 w-1/3 break-words">{{ ingredient.amount }} {{ ingredient.unit }}</span>
-                            </li>
-                        </ul>
+                        <div v-for="list in state.ingredientsLists">
+                            <h3 v-if="list.title" class="text-lg font-bold mt-8 mb-2">{{ list.title }}</h3>
+
+                            <ul class="space-y-1">
+                                <li v-for="ingredient in list.ingredients" class="flex flex-auto">
+                                    <span class="w-2/3 break-words">{{ ingredient.name }}</span>
+                                    <span class="pl-2 w-1/3 break-words">{{ Math.round(ingredient.amount * 100) / 100 }} {{ ingredient.unit }}</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="md:w-2/3 space-y-4 sm:px-6 md:px-0">
@@ -125,15 +149,12 @@ function decrementPlates() {
 
                         <p>Draai het vuur halfhoog, doe de uitgelekte en afgespoelde kikkererwten en de suiker in de pan en bak alles onder af en toe roeren 8 minuten tot de kikkererwten bruin en krokant beginnen te worden.</p>
 
-                        <p>Giet de kippenbouillon en het citroensap in de pan en laat de saus nog 6 minuten zachtjes pruttelen tot hij licht is ingekookt.</p>
-
-                        <p>Breng ondertussen een pan met water en een beetje zout aan de kook en kook hierin de pasta volgens de aanwijzigingen op de verpakking. Giet af en zet opzij.</p>
-
-                        <p>Roer de spinazie en de peterselie door de kikkererwten, de spinazie zal door de warmte een beetje slinken. Voeg de pasta toe aan de kikkererwten, brokkel de witte kaas erover en roer het geheel door elkaar.</p>
-
-                        <p>Serveer met wat olijfolie er overheen gegoten en een beetj za'atar.</p>
-
-                        <p><strong>Bron:</strong> Ottolenghi Simple</p>
+                        <p v-if="recipe.source_label || recipe.source_link">
+                            <strong>Source: </strong>
+                            <template v-if="recipe.source_link">
+                                <a :href="recipe.source_link">{{ recipe.source_label ?? recipe.source_link }}</a>
+                            </template>
+                        </p>
                     </div>
                 </div>
             </div>

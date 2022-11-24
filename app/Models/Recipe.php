@@ -9,11 +9,21 @@ class Recipe extends Model
 {
     use HasFactory;
 
-    /**
-     * Get the ingredients for the recipe.
-     */
-    public function ingredients()
+    protected $fillable = [
+        'user_id',
+        'title',
+        'slug',
+        'image',
+        'preparation_minutes',
+        'cooking_minutes',
+        'servings',
+        'difficulty',
+        'summary',
+        'instructions',
+    ];
+
+    public function ingredientsLists()
     {
-        return $this->hasMany(Ingredient::class);
+        return $this->hasMany(IngredientsList::class);
     }
 }

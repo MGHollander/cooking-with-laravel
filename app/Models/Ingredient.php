@@ -9,11 +9,15 @@ class Ingredient extends Model
 {
     use HasFactory;
 
-    /**
-     * Get the recipe that owns the ingredient.
-     */
-    public function recipe()
+    protected $fillable = [
+        'ingredients_list_id',
+        'name',
+        'amount',
+        'unit',
+    ];
+
+    public function ingredientsList()
     {
-        return $this->belongsTo(Recipe::class);
+        return $this->belongsTo(IngredientsList::class);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\IngredientsList;
 use App\Models\Recipe;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,12 +15,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ingredients', function (Blueprint $table) {
+        Schema::create('ingredients_lists', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Recipe::class);
+            $table->string('title')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('ingredients', function (Blueprint $table) {
+            $table->id();
+            $table->foreignIdFor(IngredientsList::class);
             $table->string('name');
-            $table->float('amount');
-            $table->string('unit');
+            $table->float('amount')->unsigned();
+            $table->string('unit')->nullable();
             $table->timestamps();
         });
     }
@@ -32,5 +40,6 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('ingredients');
+        Schema::dropIfExists('ingredients_lists');
     }
 };
