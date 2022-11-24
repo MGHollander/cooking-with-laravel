@@ -1,0 +1,25 @@
+.recipe-card {
+    @apply flex flex-col rounded-lg shadow-lg bg-white col-span-12 cursor-pointer no-underline hover:scale-105;
+
+    &-image {
+        @apply rounded-t-lg overflow-hidden;
+
+        img {
+            @apply w-full h-40 object-cover transition-all;
+        }
+    }
+
+    &-title {
+        @apply flex-1 text-gray-900 text-xl font-medium mb-2 pt-6 px-6;
+    }
+
+    &-button {
+        @apply mx-6 mb-6 bg-emerald-700 self-start;
+    }
+
+    &:hover {
+        img {
+            @apply scale-110 rotate-1;
+        }
+    }
+}
