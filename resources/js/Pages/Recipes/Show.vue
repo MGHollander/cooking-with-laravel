@@ -145,9 +145,7 @@ const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servi
                     <div class="md:w-2/3 space-y-4 sm:px-6 md:px-0">
                         <h2 class="text-2xl font-bold mb-4 md:mt-6">Instructions</h2>
 
-                        <p>Giet de olijfolie in een stoof- of hoge koekenpan en zet het vuur hoog. Voeg de ui, knoflook, komijn, tijm, ansjovis, citroenrasp, 1/2 tl zout en royaal versgemalen zwarte peper toe. Bak alles 3-4 minuten onder regelmatig roeren tot het gaar en goudbruin is.</p>
-
-                        <p>Draai het vuur halfhoog, doe de uitgelekte en afgespoelde kikkererwten en de suiker in de pan en bak alles onder af en toe roeren 8 minuten tot de kikkererwten bruin en krokant beginnen te worden.</p>
+                        <div v-html="recipe.instructions" class="instructions" />
 
                         <p v-if="recipe.source_label || recipe.source_link">
                             <strong>Source: </strong>

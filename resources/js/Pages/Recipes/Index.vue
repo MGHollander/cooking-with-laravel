@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/inertia-vue3';
 import DefaultLayout from '@/Layouts/Default.vue';
 import Button from '@/Components/Button.vue';
+import Pagination from '@/Components/Pagination.vue';
 
 let props = defineProps({
     recipes: Object,
@@ -9,8 +10,6 @@ let props = defineProps({
 </script>
 
 <template>
-    <Head title="Koken met Marc" />
-
     <DefaultLayout>
         <div class="space-y-6 sm:space-y-12 px-4 sm:px-0">
             <div class="flex relative w-full rounded-lg shadow-lg items-center">
@@ -27,19 +26,23 @@ let props = defineProps({
                     :href="route('recipes.show', recipe.slug)"
                     v-for="(recipe, index) in recipes.data"
                     :key="recipe.id"
-                    class="flex flex-col rounded-lg shadow-lg bg-white col-span-12 cursor-pointer"
+                    class="recipe-card flex flex-col rounded-lg shadow-lg bg-white col-span-12 cursor-pointer no-underline hover:scale-105"
                     :class="{
                         'md:col-span-6': index < 2,
                         'md:col-span-4': index >= 2,
                         'lg:col-span-3': index >= 5,
                     }"
                 >
-                    <img class="rounded-t-lg w-full h-40 object-cover" :src="recipe.image" alt=""/>
+                    <img v-if="recipe.image" :src="recipe.image" alt="" class="rounded-t-lg w-full h-40 object-cover" />
 
                     <h2 class="flex-1 text-gray-900 text-xl font-medium mb-2 pt-6 px-6">{{ recipe.title }}</h2>
 
                     <Button class="mx-6 mb-6 bg-emerald-700 self-start">See recipe</Button>
                 </Link>
+            </div>
+
+            <div class="">
+                <Pagination :links="recipes.links" class="flex flex-auto flex-wrap justify-center" />
             </div>
         </div>
     </DefaultLayout>

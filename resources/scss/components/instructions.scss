@@ -1,0 +1,14 @@
+.instructions {
+    ol,
+    ul {
+        @apply pl-4 list-outside;
+    }
+
+    ol > li {
+        @apply list-decimal;
+    }
+
+    ul > li {
+        @apply list-disc;
+    }
+}
