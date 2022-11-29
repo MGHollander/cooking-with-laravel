@@ -24,13 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::controller(UserController::class)->group(function () {
-        Route::get('/users', 'index')->name('users');
-        Route::get('/users/create', 'create')->name('users.create');
-        Route::post('/users', 'store')->name('users.store');
-        Route::get('/users/{user}/edit', 'edit')->name('users.edit');
-        Route::patch('/users/{user}', 'update')->name('users.update');
-    });
+    Route::resource('users', UserController::class);
 });
 
 require __DIR__.'/auth.php';

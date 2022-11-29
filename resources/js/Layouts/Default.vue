@@ -66,7 +66,7 @@ const showingNavigationDropdown = ref(false);
                                             Create a recipe
                                         </DropdownLink>
 
-                                        <DropdownLink class="no-underline" :href="route('users')" :active="route().current('users')">
+                                        <DropdownLink class="no-underline" :href="route('users.index')" :active="route().current('users.*')">
                                             Users
                                         </DropdownLink>
 
@@ -115,7 +115,7 @@ const showingNavigationDropdown = ref(false);
                                 Dashboard
                             </ResponsiveNavLink>
 
-                            <ResponsiveNavLink :href="route('users')" :active="route().current('users')">
+                            <ResponsiveNavLink :href="route('users.index')" :active="route().current('users.*')">
                                 Users
                             </ResponsiveNavLink>
 
