@@ -33,7 +33,7 @@ watch(search, debounce(value => {
         </template>
 
         <div class="mb-4 px-2 sm:px-0 flex justify-between items-center">
-            <Button :href="route('users.create')" class="px-2 text-sm bg-indigo-500 text-sm no-underline hover:bg-indigo-600 hover:text-white">
+            <Button :href="route('users.create')" class="px-2 text-sm bg-indigo-600 text-sm no-underline hover:bg-indigo-800 hover:text-white">
                 Create a user
             </Button>
 
@@ -52,7 +52,7 @@ watch(search, debounce(value => {
                             </td>
 
                             <td class="px-4 py-5 sm:px-6 whitespace-nowrap text-right text-sm font-medium">
-                                <Link :href="route('users.edit', user.id)" class="text-indigo-600 hover:text-indigo-900">
+                                <Link :href="route('users.edit', user.id)" class="text-indigo-600 hover:text-indigo-900 no-underline hover:underline">
                                     Edit
                                 </Link>
                             </td>
