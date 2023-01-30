@@ -1,6 +1,6 @@
 <script setup>
 import { computed, reactive } from 'vue';
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head } from '@inertiajs/vue3';
 import DefaultLayout from '@/Layouts/Default.vue';
 
 let props = defineProps({

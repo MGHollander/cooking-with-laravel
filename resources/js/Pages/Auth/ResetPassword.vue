@@ -4,7 +4,7 @@ import GuestLayout from '@/Layouts/Guest.vue';
 import Input from '@/Components/Input.vue';
 import Label from '@/Components/Label.vue';
 import ValidationErrors from '@/Components/ValidationErrors.vue';
-import { Head, useForm } from '@inertiajs/inertia-vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     email: String,
