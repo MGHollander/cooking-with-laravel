@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { router } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import debounce from 'lodash/debounce';
 
 import DefaultLayout from '@/Layouts/Default.vue';

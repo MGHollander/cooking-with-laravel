@@ -1,6 +1,6 @@
 <script setup>
 import DefaultLayout from '@/Layouts/Default.vue';
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
