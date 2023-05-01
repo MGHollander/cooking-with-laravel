@@ -17,6 +17,11 @@ use Inertia\Inertia;
 */
 
 Route::get('/', [RecipeController::class, 'index'])->name('home');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('recipes', RecipeController::class)->except(['index', 'show']);
+});
+
 Route::get('/recipes/{recipe:slug}', [RecipeController::class, 'show'])->name('recipes.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {

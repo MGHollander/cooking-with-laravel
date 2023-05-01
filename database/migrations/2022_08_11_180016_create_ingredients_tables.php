@@ -17,14 +17,14 @@ return new class extends Migration
     {
         Schema::create('ingredients_lists', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Recipe::class);
+            $table->foreignIdFor(Recipe::class)->constrained()->cascadeOnDelete();
             $table->string('title')->nullable();
             $table->timestamps();
         });
 
         Schema::create('ingredients', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(IngredientsList::class);
+            $table->foreignIdFor(IngredientsList::class)->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->float('amount')->unsigned();
             $table->string('unit')->nullable();

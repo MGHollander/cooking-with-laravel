@@ -3,11 +3,13 @@
 // Also see https://github.com/inertiajs/inertia/issues/171.
 
 import { ref } from 'vue';
+import { Link } from '@inertiajs/vue3';
+
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
+import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -63,7 +65,7 @@ const showingNavigationDropdown = ref(false);
                                         </DropdownLink>
 
                                         <DropdownLink class="no-underline" :href="route('recipes.create')" :active="route().current('recipes.create')">
-                                            Create a recipe
+                                            Add a recipe
                                         </DropdownLink>
 
                                         <DropdownLink class="no-underline" :href="route('users.index')" :active="route().current('users.*')">
@@ -76,6 +78,12 @@ const showingNavigationDropdown = ref(false);
                                     </template>
                                 </Dropdown>
                             </div>
+                        </div>
+
+                        <div v-else class="flex">
+                            <NavLink :href="route('login')" :active="route().current('login')">
+                                Login
+                            </NavLink>
                         </div>
 
                         <!-- Hamburger -->
@@ -136,16 +144,34 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </header>
 
+            <div v-if="$page.props.flash.error" class="flex justify-between py-4 rounded-lg bg-red-100 text-red-700">
+                <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
+                    <p>
+                        {{ $page.props.flash.error }}
+                    </p>
+                </div>
+            </div>
+
+            <div v-if="$page.props.flash.success" class="flex justify-between py-4 rounded-lg bg-emerald-100 text-emerald-800">
+                <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
+                    <p>
+                        {{ $page.props.flash.success }}
+                    </p>
+                </div>
+            </div>
+
+            <div v-if="$page.props.flash.warning" class="flex justify-between py-4 rounded-lg bg-yellow-100 text-yellow-700">
+                <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
+                    <p>
+                        {{ $page.props.flash.warning }}
+                    </p>
+                </div>
+            </div>
+
             <!-- Page Content -->
             <main>
                 <div class="py-6 sm:py-12">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div v-if="$page.props.flash.success" class="flex justify-between mb-8 p-4 bg-emerald-100 text-emerald-800 rounded-lg">
-                            <p>
-                                {{ $page.props.flash.success }}
-                            </p>
-                        </div>
-
                         <slot />
                     </div>
                 </div>
