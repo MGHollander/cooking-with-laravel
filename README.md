@@ -1,6 +1,20 @@
 # Cooking with Laravel
 
-## Dashboard
+## Installation
+
+`composer install`
+
+`sail up -d`
+
+`sail npm run prod`
+
+## Development
+
+`sail up -d`
+
+`sail npm run dev`
+
+Visit <http://localhost/>.
 
 There is an admin available at <http://localhost/dashboard>.
 
@@ -8,6 +22,14 @@ There is an admin available at <http://localhost/dashboard>.
 
 Username: `test@example.com`\
 Password: `password`
+
+## Deployment
+
+### Server setup
+
+To be able to access public uploads a symlink needs to be created after the first deployment.
+
+Run `php artisan storage:link` to create the symlink.
 
 ## Credits
 
