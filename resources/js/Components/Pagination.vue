@@ -12,10 +12,10 @@ defineProps({
             :is="link.url ? Link : 'span'"
             v-for="(link, index) in links"
             :key="index"
+            :class="{ 'text-emerald-600 hover:text-emerald-900 no-underline hover:underline transition-all' : link.url, 'text-gray-500' : ! link.url, 'font-bold' : link.active }"
             :href="link.url"
-            v-html="link.label"
             class="p-2"
-            :class="{ 'text-indigo-600 hover:text-indigo-900 no-underline hover:underline' : link.url, 'text-gray-500' : ! link.url, 'font-bold' : link.active }"
+            v-html="link.label"
         />
     </div>
 </template>
