@@ -43,6 +43,7 @@ let props = defineProps({
                     class="recipe-card"
                 >
                     <div class="recipe-card-image">
+                        <!-- TODO Display a placeholder image if no image is available -->
                         <img v-if="recipe.image" :src="recipe.image" alt=""/>
                     </div>
 

@@ -22,83 +22,17 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        // TODO Something with API resources
         return Inertia::render('Recipes/Index', [
             'recipes' => Recipe::query()
                 ->paginate(17)
                 ->withQueryString()
                 ->through(fn($recipe) => [
-                    'id' => $recipe->id,
+                    'id'    => $recipe->id,
                     'title' => $recipe->title,
-                    'slug' => $recipe->slug,
+                    'slug'  => $recipe->slug,
                     'image' => Storage::url($recipe->image),
                 ]),
         ]);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function store(Request $request)
-    {
-        $attributes = $this->validateRecipe($request);
-        $attributes['user_id'] = $request->user()->id;
-
-        if ($image = $this->saveImage($request)) {
-            $attributes['image'] = $image;
-        }
-
-        $recipe = Recipe::create($attributes);
-        $this->saveIngredientsLists($recipe, $attributes['ingredients_lists']);
-
-        return redirect()->route('recipes.show', $recipe)->with('success', 'Recipe added successfully!');
-    }
-
-    protected function validateRecipe(Request $request, ?Recipe $recipe = null): array
-    {
-        $recipe ??= new Recipe();
-
-        return $request->validate([
-            'title' => 'required',
-            'slug' => ['required', Rule::unique('recipes', 'slug')->ignore($recipe)],
-            'image' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png'],
-            'servings' => ['required', 'min:1'],
-            'preparation_minutes' => ['nullable', 'min:1'],
-            'cooking_minutes' => ['nullable', 'min:1'],
-            'difficulty' => 'nullable',
-            'summary' => 'nullable',
-            'ingredients_lists.*.title' => 'nullable',
-            'ingredients_lists.*.ingredients.*.name' => 'required',
-            'ingredients_lists.*.ingredients.*.amount' => 'required',
-            'ingredients_lists.*.ingredients.*.unit' => 'nullable',
-            'instructions' => 'required',
-            'source_label' => 'nullable',
-            'source_link' => ['nullable', 'url'],
-        ], [
-            'ingredients_lists.*.ingredients.*.name.required' => 'The ingredient field is required.',
-            'ingredients_lists.*.ingredients.*.amount.required' => 'The amount field is required.',
-        ]);
-    }
-
-    protected function saveImage(Request $request): bool|string|null
-    {
-        if ($image = $request->file('image')) {
-            // Add a timestamp to the image to prevent browser cache issues.
-            $fileName = Str::slug($request->get('slug')) . '-' . Carbon::now()->getTimestamp() . '.' . $image->extension();
-            $path = $image->storePubliclyAs('public/images', $fileName);
-
-            if (!$path) {
-                Log::error('The recipe image could not be saved.', ['id' => $request->get('id')]);
-                return false;
-            }
-
-            return $path;
-        }
-
-        return null;
     }
 
     /**
@@ -111,13 +45,24 @@ class RecipeController extends Controller
         return Inertia::render('Recipes/Form');
     }
 
-    protected function saveIngredientsLists(Recipe $recipe, array $lists): void
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function store(Request $request)
     {
-        $ingredientsLists = $recipe->ingredientsLists()->createMany($lists);
+        $attributes            = $this->validateRecipe($request);
+        $attributes['user_id'] = $request->user()->id;
 
-        foreach ($ingredientsLists as $key => $list) {
-            $list->ingredients()->createMany($lists[$key]['ingredients']);
+        if ($image = $this->saveImage($request)) {
+            $attributes['image'] = $image;
         }
+
+        $recipe = Recipe::create($attributes);
+
+        return redirect()->route('recipes.show', $recipe)->with('success', 'Recipe added successfully!');
     }
 
     /**
@@ -128,16 +73,15 @@ class RecipeController extends Controller
      */
     public function show(Recipe $recipe)
     {
-        // TODO Something with API resources
-        $recipeData = $recipe->load(['ingredientsLists', 'ingredientsLists.ingredients']);
-
-        if ($recipeData->image) {
-            $recipeData->image = Storage::url($recipeData->image);
+        if ($recipe->image) {
+            $recipe->image = Storage::url($recipe->image);
         }
 
-        return Inertia::render('Recipes/Show', [
-            'recipe' => $recipeData,
-        ]);
+        if ($recipe->ingredients) {
+            $recipe->ingredients = $recipe->transformIngredients($recipe->ingredients);
+        }
+
+        return Inertia::render('Recipes/Show', compact('recipe'));
     }
 
     /**
@@ -149,7 +93,7 @@ class RecipeController extends Controller
     public function edit(Recipe $recipe)
     {
         return Inertia::render('Recipes/Form', [
-            'recipe' => $recipe->load(['ingredientsLists', 'ingredientsLists.ingredients']),
+            'recipe' => $recipe,
         ]);
     }
 
@@ -157,7 +101,7 @@ class RecipeController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param Recipe $recipe
+     * @param Recipe  $recipe
      * @return RedirectResponse
      */
     public function update(Request $request, Recipe $recipe)
@@ -165,7 +109,6 @@ class RecipeController extends Controller
         $attributes = $this->validateRecipe($request, $recipe);
 
         // TODO Updating a recipe without an image results in an error.
-        
         // Do not update the image field if there isn't an image. This might mean that their already is an image and no
         // new image is uploaded.
         if (empty($attributes['image'])) {
@@ -179,11 +122,6 @@ class RecipeController extends Controller
 
             $attributes['image'] = $image;
         }
-
-        // Remove and re-add ingredient lists and ingredients.
-        // TODO Is this really the best way? Some day it will have to many IDs to fit the db...
-        $recipe->ingredientsLists()->delete();
-        $this->saveIngredientsLists($recipe, $attributes['ingredients_lists']);
 
         $recipe->update($attributes);
 
@@ -206,4 +144,45 @@ class RecipeController extends Controller
     {
         //
     }
+
+    protected function validateRecipe(Request $request, ?Recipe $recipe = null): array
+    {
+        $recipe ??= new Recipe();
+
+        // TODO Use a FormRequest with validation rules instead of this method.
+
+        return $request->validate([
+            'title'               => 'required',
+            'slug'                => ['required', Rule::unique('recipes', 'slug')->ignore($recipe)],
+            'image'               => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png'],
+            'servings'            => ['required', 'min:1'],
+            'preparation_minutes' => ['nullable', 'min:1'],
+            'cooking_minutes'     => ['nullable', 'min:1'],
+            'difficulty'          => 'nullable',
+            'summary'             => 'nullable',
+            'ingredients'         => 'required',
+            'instructions'        => 'required',
+            'source_label'        => 'nullable',
+            'source_link'         => ['nullable', 'url'],
+        ]);
+    }
+
+    protected function saveImage(Request $request): bool|string|null
+    {
+        if ($image = $request->file('image')) {
+            // Add a timestamp to the image to prevent browser cache issues.
+            $fileName = Str::slug($request->get('slug')) . '-' . Carbon::now()->getTimestamp() . '.' . $image->extension();
+            $path     = $image->storePubliclyAs('public/images', $fileName);
+
+            if (!$path) {
+                Log::error('The recipe image could not be saved.', ['id' => $request->get('id')]);
+                return false;
+            }
+
+            return $path;
+        }
+
+        return null;
+    }
+
 }

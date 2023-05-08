@@ -19,18 +19,11 @@ let form = useForm({
     cooking_minutes: edit ? props.recipe.cooking_minutes : '',
     servings: edit ? props.recipe.servings : '',
     difficulty: edit ? props.recipe.difficulty : 'easy',
+    ingredients: edit ? props.recipe.ingredients : '',
     summary: edit ? props.recipe.summary : '',
     instructions: edit ? props.recipe.instructions : '',
     source_label: edit ? props.recipe.source_label : '',
     source_link: edit ? props.recipe.source_link : '',
-    ingredients_lists: edit ? props.recipe.ingredients_lists : [{
-        title: '',
-        ingredients: [{
-            name: '',
-            amount: '',
-            unit: '',
-        }],
-    }],
 })
 
 let submit = () => {
@@ -41,27 +34,6 @@ let submit = () => {
     }
 }
 
-const addIngredientsList = () => {
-    form.ingredients_lists.push({
-        title: '',
-        ingredients: [{
-            name: '',
-            amount: '',
-            unit: '',
-        }],
-    })
-}
-
-const addIngredient = (list) => {
-    list.push({
-        name: '',
-        amount: '',
-        unit: '',
-    })
-}
-
-const removeIngredientsList = (key) => form.ingredients_lists.splice(key, 1)
-const removeIngredient = (list, key) => list.splice(key, 1)
 const title = edit ? 'Update Recipe "' + form.title + '"' : 'Create Recipe'
 </script>
 
@@ -73,8 +45,8 @@ const title = edit ? 'Update Recipe "' + form.title + '"' : 'Create Recipe'
             {{ title }}
         </template>
 
-        <form class="max-w-3xl mx-auto mb-12" @submit.prevent="submit">
-            <div class="mb-8 px-4 py-5 sm:p-6 sm:pb-8 bg-white shadow sm:rounded-md space-y-2">
+        <form class="max-w-3xl mx-auto mb-12 space-y-8" @submit.prevent="submit">
+            <div class="px-4 py-5 sm:p-6 sm:pb-8 bg-white shadow sm:rounded-md space-y-2">
                 <div class="grid grid-cols-12 gap-6">
                     <div class="col-span-12 space-y-1">
                         <Label for="title" value="Title"/>
@@ -92,7 +64,7 @@ const title = edit ? 'Update Recipe "' + form.title + '"' : 'Create Recipe'
                     <div class="col-span-12 space-y-1">
                         Show image if there is one and add posibillity to remove it.
 
-                        <Label for="image" value="Image"/>
+                        <Label for="image" value="Image (optional)"/>
                         <input accept="image/jpeg,image/png" type="file" @input="form.image = $event.target.files[0]"/>
                         <progress v-if="form.progress" :value="form.progress.percentage" max="100">
                             {{ form.progress.percentage }}%
@@ -101,7 +73,7 @@ const title = edit ? 'Update Recipe "' + form.title + '"' : 'Create Recipe'
                     </div>
 
                     <div class="col-span-12 space-y-1">
-                        <Label for="summary" value="Summary"/>
+                        <Label for="summary" value="Summary (optional)"/>
                         <textarea
                             v-model="form.summary"
                             class="
@@ -115,21 +87,25 @@ const title = edit ? 'Update Recipe "' + form.title + '"' : 'Create Recipe'
                         />
                         <InputError :message="form.errors.summary"/>
                     </div>
+                </div>
+            </div>
 
+            <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-md space-y-2">
+                <div class="grid grid-cols-12 gap-6">
                     <div class="col-span-12 sm:col-span-4 space-y-1">
                         <Label for="servings" value="Servings"/>
-                        <Input v-model="form.servings" class="block w-full" min="1" requireds type="number"/>
+                        <Input v-model="form.servings" class="block w-full" min="1" required type="number"/>
                         <InputError :message="form.errors.servings"/>
                     </div>
 
                     <div class="col-span-12 sm:col-span-4 space-y-1">
-                        <Label for="preparation_minutes" value="Preparation in minutes"/>
+                        <Label for="preparation_minutes" value="Preparation in minutes (optional)"/>
                         <Input v-model="form.preparation_minutes" class="block w-full" min="1" type="number"/>
                         <InputError :message="form.errors.preparation_minutes"/>
                     </div>
 
                     <div class="col-span-12 sm:col-span-4 space-y-1">
-                        <Label for="cooking_minutes" value="Cooking in minutes"/>
+                        <Label for="cooking_minutes" value="Cooking in minutes (optional)"/>
                         <Input v-model="form.cooking_minutes" class="block w-full" min="1" type="number"/>
                         <InputError :message="form.errors.cooking_minutes"/>
                     </div>
@@ -152,84 +128,42 @@ const title = edit ? 'Update Recipe "' + form.title + '"' : 'Create Recipe'
                         </select>
                         <InputError :message="form.errors.difficulty"/>
                     </div>
-                </div>
-            </div>
 
-            <div v-for="(list, listKey) in form.ingredients_lists"
-                 class="mb-8 px-4 py-5 sm:p-6 sm:pb-8 bg-white shadow sm:rounded-md space-y-6">
-                <div class="grid grid-cols-12 gap-3">
-                    <div class="col-span-12 space-y-1 mb-3">
-                        <Label value="Ingredient list title (optional)"/>
-                        <Input v-model="list.title" class="block w-full" type="text"/>
-                    </div>
-
-                    <div v-for="(ingredient, ingredientKey) in list.ingredients"
-                         class="col-span-12 grid grid-cols-12 gap-6">
-                        <div class="col-span-12 sm:col-span-5 space-y-1">
-                            <Label value="Ingredient"/>
-                            <Input v-model="ingredient.name" class="block w-full" required type="text"/>
-                            <InputError
-                                :message="form.errors['ingredients_lists.' + listKey + '.ingredients.' + ingredientKey + '.name']"/>
-                        </div>
-
-                        <div class="col-span-4 sm:col-span-3 space-y-1">
-                            <Label value="Amount"/>
-                            <Input v-model="ingredient.amount" class="block w-full" min="0.01" required step="0.01"
-                                   type="number"/>
-                            <InputError
-                                :message="form.errors['ingredients_lists.' + listKey + '.ingredients.' + ingredientKey + '.amount']"/>
-                        </div>
-
-                        <div class="col-span-4 sm:col-span-3 space-y-1">
+                    <div class="col-span-12 grid grid-cols-12 gap-6">
+                        <div class="col-span-12 space-y-1">
                             <Label>
-                                Unit
-                                (<span class="sm:hidden">opt</span><span class="hidden sm:inline">optional</span>)
+                                Ingredients
                             </Label>
-                            <Input v-model="ingredient.unit" class="block w-full" type="text"/>
+                            <textarea
+                                v-model="form.ingredients"
+                                class="
+                                    block w-full
+                                    border-gray-300 rounded-md
+                                    focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
+                                    shadow-sm
+                                    transition ease-in-out duration-150
+                                "
+                                required
+                                rows="15"
+                            />
+                            <InputError :message="form.errors.ingredients"/>
+                            <p class="text-xs text-gray-500">
+                                One ingredient per line. Start a line with a # to create a title and a new section. Add
+                                an empty line to create a new section without a title.
+                            </p>
+                            <p class="text-xs text-gray-500">
+                                Ingredients are automatically split in amount (a number), unit (eg. grams, tablespoons,
+                                etc.), name (carrot) and info (chopped in dices).
+                            </p>
+                            <p class="text-xs text-gray-500">
+                                You can add a plural name by adding a | after the name and adding the plural name. For
+                                example: carrot|carrots.
+                            </p>
+                            <p class="text-xs text-gray-500">
+                                Place info inside parentheses. For example: carrot (chopped in dices).
+                            </p>
                         </div>
-
-                        <div class="col-span-2 sm:col-span-1 pt-6">
-                            <Button
-                                v-if="list.ingredients.length > 1"
-                                class="bg-red-700 border-transparent hover:bg-red-800"
-                                type="button"
-                                @click="removeIngredient(list.ingredients, ingredientKey)"
-                            >
-                                -
-                            </Button>
-                        </div>
-
                     </div>
-
-                    <div class="col-span-12 space-x-1">
-                        <Button
-                            class="mt-3 bg-gray-500 hover:bg-gray-700 text-xs"
-                            type="button"
-                            @click="addIngredient(list.ingredients)"
-                        >
-                            Add ingredient
-                        </Button>
-                    </div>
-                </div>
-
-                <div class="col-span-12 space-x-1">
-                    <Button
-                        v-if="listKey === (form.ingredients_lists.length - 1)"
-                        class="bg-gray-500 hover:bg-gray-700 text-xs"
-                        type="button"
-                        @click="addIngredientsList"
-                    >
-                        Add ingredient list
-                    </Button>
-
-                    <Button
-                        v-if="form.ingredients_lists.length > 1"
-                        class="bg-red-700 hover:bg-red-800 text-xs"
-                        type="button"
-                        @click="removeIngredientsList(listKey)"
-                    >
-                        Remove ingredient list
-                    </Button>
                 </div>
             </div>
 

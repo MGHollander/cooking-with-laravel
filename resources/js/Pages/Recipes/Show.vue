@@ -1,5 +1,5 @@
 <script setup>
-import {computed, reactive} from 'vue';
+import {computed} from 'vue';
 import {Head, Link} from '@inertiajs/vue3';
 
 import DefaultLayout from '@/Layouts/Default.vue';
@@ -8,30 +8,27 @@ let props = defineProps({
     recipe: Object,
 });
 
-let state = reactive({
-    servings: props.recipe.servings,
-    ingredientsLists: props.recipe.ingredients_lists,
-});
-
 function incrementServings() {
-    state.ingredientsLists.map(
-        (list) => list.ingredients.map(
-            (ingredient) => ingredient.amount += (ingredient.amount / state.servings)
-        )
-    );
-    state.servings++;
+    for (let listKey in props.recipe.ingredients) {
+        for (let key in props.recipe.ingredients[listKey].ingredients) {
+            let amount = parseFloat(props.recipe.ingredients[listKey].ingredients[key].amount);
+            props.recipe.ingredients[listKey].ingredients[key].amount = amount + (amount / parseFloat(props.recipe.servings));
+        }
+    }
+    props.recipe.servings++;
 }
 
 function decrementServings() {
-    state.ingredientsLists.map(
-        (list) => list.ingredients.map(
-            (ingredient) => ingredient.amount -= (ingredient.amount / state.servings)
-        )
-    );
-    state.servings--;
+    for (let listKey in props.recipe.ingredients) {
+        for (let key in props.recipe.ingredients[listKey].ingredients) {
+            let amount = parseFloat(props.recipe.ingredients[listKey].ingredients[key].amount);
+            props.recipe.ingredients[listKey].ingredients[key].amount = amount - (amount / parseFloat(props.recipe.servings));
+        }
+    }
+    props.recipe.servings--;
 }
 
-const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servings')
+const servingsLabel = computed(() => (props.recipe.servings === 1) ? 'serving' : 'servings')
 </script>
 
 <template>
@@ -66,12 +63,12 @@ const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servi
 
                 </div>
 
-                <div v-html="recipe.summary" class="text-lg"/>
+                <div class="text-lg" v-html="recipe.summary"/>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                     <div>
                         <div class="w-16 mx-auto fill-orange-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+                            <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M307.75 141c-85.1 0-154.84 73.58-154.84 163.8S222 468.6 307.75 468.6c85.1 0 154.2-73.58 154.2-163.8 0-90.86-69.11-163.8-154.2-163.8zm0 301.36c-71 0-129.25-62.06-129.25-138.2S236.09 166 307.75 166c71 0 128.61 62.06 128.61 138.2s-57.59 138.16-128.61 138.16z"/>
                                 <path
@@ -79,11 +76,12 @@ const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servi
                             </svg>
                         </div>
                         <strong>Servings</strong><br/>
-                        {{ state.servings }} {{ servingsLabel }}
+                        {{ recipe.servings }} {{ servingsLabel }}
                     </div>
+
                     <div>
                         <div class="w-16 mx-auto fill-orange-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+                            <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M299.29 118.57c-120.29 0-217.86 97.61-217.86 217.86a215.64 215.64 0 0 0 48.81 137.22 13.8 13.8 0 0 0 19.76 2.12c5.66-5 7.07-14.15 2.12-19.81a187.92 187.92 0 0 1-20.51-31.83l45.27-18.39a14.12 14.12 0 1 0-10.61-26.17l-46 18.39c-5-14.15-8.49-29-9.2-44.56h48.1a14.15 14.15 0 0 0 0-28.29h-48.74a165.28 165.28 0 0 1 8.49-46l43.85 18.39c2.12.71 3.54 1.41 5.66 1.41a14 14 0 0 0 12.73-8.49 14.36 14.36 0 0 0-7.78-18.39l-43.85-18.39A204.84 204.84 0 0 1 155 214.77l32.54 32.54a13.68 13.68 0 0 0 19.81 0 13.68 13.68 0 0 0 0-19.81l-33.24-33.24A211.56 211.56 0 0 1 213 167.38l17.68 42.44c2.12 5.66 7.78 8.49 13.44 8.49 2.12 0 3.54 0 5.66-1.41a15.46 15.46 0 0 0 3.54-2.12c-1.41 12-2.83 30.42-2.83 58 0 33.24.71 74.27 3.54 86.29a49.32 49.32 0 0 0 48.1 38.2 54.6 54.6 0 0 0 10.61-1.41c26.88-5.66 43.85-31.83 38.2-58-2.12-12-18.39-49.51-31.83-79.22-12.73-28.29-21.22-45.27-27.59-55.17 2.12 2.12 5.66 2.83 8.49 2.83a14.19 14.19 0 0 0 14.15-14.15v-44.58a202.27 202.27 0 0 1 46.68 9.2l-17.68 42.44a14.36 14.36 0 0 0 7.78 18.39c2.12.71 3.54 1.41 5.66 1.41a14 14 0 0 0 12.73-8.49L387 168.08a182.4 182.4 0 0 1 38.2 26.17L392 227.5a13.68 13.68 0 0 0 0 19.81 13.68 13.68 0 0 0 19.81 0l32.54-32.54c9.9 12 19.1 25.46 25.46 39.61l-43.85 18.39a14.36 14.36 0 0 0-7.78 18.39c2.12 5.66 7.78 8.49 13.44 8.49 2.12 0 3.54 0 5.66-1.41l43.85-17.68a233 233 0 0 1 8.49 45.27h-48.1a14.15 14.15 0 0 0 0 28.29h48.1a199.17 199.17 0 0 1-9.9 45.27l-45.27-19.1a14.12 14.12 0 0 0-10.61 26.17l44.56 18.39a207.78 207.78 0 0 1-21.93 33.24 13.8 13.8 0 0 0 2.12 19.81c2.83 2.12 5.66 3.54 9.2 3.54a12.73 12.73 0 0 0 10.61-5 217.33 217.33 0 0 0 50.22-139.34c-.76-120.92-99.08-218.53-219.33-218.53zm24 226.35a20.66 20.66 0 0 1-16.27 24c-11.32 2.12-22.63-5-24.76-15.56-2.12-12-3.54-71.44-2.12-110.34 16.32 35.41 40.37 90.58 43.2 101.9zM271.71 188.6h-2.83c-5 .71-8.49 2.83-11.32 9.9l-17.68-42.44a196.33 196.33 0 0 1 46-9.2v46c0 1.41 0 2.83.71 3.54-7.1-7.8-10.59-7.8-14.88-7.8z"/>
                                 <circle cx="300.24" cy="339.59" r="9.2" transform="rotate(-11.9 300.247 339.58)"/>
@@ -92,9 +90,10 @@ const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servi
                         <strong>Difficulty</strong><br/>
                         {{ recipe.difficulty }}
                     </div>
+
                     <div v-if="recipe.preparation_minutes">
                         <div class="w-16 mx-auto fill-emerald-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+                            <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M540.13 125.81C530 105.45 504.5 85.08 479 85.08a41.47 41.47 0 0 0-9.46.73c-7.27 1.45-26.91 5.82-136.73 130.92h-.73c-8.73 0-13.82 0-145.46 138.19C122.66 420.37 60.11 488 59.38 488.74a14.55 14.55 0 0 0 8 24 122.6 122.6 0 0 0 24 2.18c69.09 0 152.73-53.82 210.92-98.91 39.27-30.55 113.46-96.73 115.64-114.19.73-6.55-2.18-13.82-9.46-23.27L487 181.81h3.64c14.55 0 34.91-3.64 47.28-19.64 8.08-9.45 8.76-23.27 2.21-36.36zM102.29 485.1c85.1-90.91 203.65-215.28 230.56-237.83 13.82 8.73 45.09 37.82 53.82 50.91C361.94 330.91 207 474.92 102.29 485.1zM515.4 144.72c-5.82 7.27-18.91 8-24.73 8a45.59 45.59 0 0 1-8-.73c-5.09-.73-10.18 1.45-13.82 5.09l-78.55 96.73a246.41 246.41 0 0 0-30.55-25.46c93.83-104.72 114.2-113.45 115.65-114.18 9.46-2.18 25.46 6.55 34.18 18.91 5.82 6.55 5.82 10.92 5.82 11.64z"/>
                                 <circle cx="483.4" cy="135.26" r="9.46"/>
@@ -103,19 +102,23 @@ const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servi
                         <strong>Preparation time</strong><br/>
                         {{ recipe.preparation_minutes }} minutes
                     </div>
+
                     <div v-if="recipe.cooking_minutes">
                         <div class="w-16 mx-auto fill-emerald-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
-                                <path fill="none"
-                                      d="M299.32 388.92c-1.35 2.7-2 4.73-2.7 6.08-3.38 7.43-5.4 12.83-7.43 16.88h20.94c-2-3.38-4.05-8.1-6.75-14.18-1.38-3.38-2.7-6.08-4.06-8.78zM196.67 276.81a13.51 13.51 0 0 1 27 0v32.42h33.09v-32.42a13.51 13.51 0 1 1 27 0v32.42h32.42v-32.42a13.51 13.51 0 1 1 27 0v32.42h32.42v-32.42a13.51 13.51 0 0 1 27 0v32.42h33.09C424.26 212.66 352 118.11 299.32 118.11c-51.33 0-124.26 95.9-136.42 191.12h33.77z"/>
-                                <path fill="none"
-                                      d="M388.47 336.24H160.88c.68 110.75 71.59 150.6 138.44 150.6s137.77-39.17 137.09-150.6zm-47.95 93.2c-4.73 9.45-12.83 9.45-39.17 9.45h-8.1c-20.26 0-30.39 0-34.44-10.13-2.7-6.75-2-10.13 13.51-44.57 13.51-30.39 16.88-36.47 27-36.47s13.51 6.08 29.71 38.49c13.52 29.05 14.87 35.79 11.49 43.23z"/>
+                            <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M299.32 388.92c-1.35 2.7-2 4.73-2.7 6.08-3.38 7.43-5.4 12.83-7.43 16.88h20.94c-2-3.38-4.05-8.1-6.75-14.18-1.38-3.38-2.7-6.08-4.06-8.78zM196.67 276.81a13.51 13.51 0 0 1 27 0v32.42h33.09v-32.42a13.51 13.51 0 1 1 27 0v32.42h32.42v-32.42a13.51 13.51 0 1 1 27 0v32.42h32.42v-32.42a13.51 13.51 0 0 1 27 0v32.42h33.09C424.26 212.66 352 118.11 299.32 118.11c-51.33 0-124.26 95.9-136.42 191.12h33.77z"
+                                    fill="none"/>
+                                <path
+                                    d="M388.47 336.24H160.88c.68 110.75 71.59 150.6 138.44 150.6s137.77-39.17 137.09-150.6zm-47.95 93.2c-4.73 9.45-12.83 9.45-39.17 9.45h-8.1c-20.26 0-30.39 0-34.44-10.13-2.7-6.75-2-10.13 13.51-44.57 13.51-30.39 16.88-36.47 27-36.47s13.51 6.08 29.71 38.49c13.52 29.05 14.87 35.79 11.49 43.23z"
+                                    fill="none"/>
                                 <path
                                     d="M299.32 91.1c-75.64 0-164.78 132.37-164.78 243.8 0 108.73 64.83 179 165.46 179s165.46-70.23 165.46-179C464.78 220.76 377 91.1 299.32 91.1zm0 27c52.68 0 124.94 94.55 136.42 191.12h-33.09v-32.41a13.51 13.51 0 0 0-27 0v32.42h-32.43v-32.42a13.51 13.51 0 1 0-27 0v32.42h-32.43v-32.42a13.51 13.51 0 1 0-27 0v32.42h-33.1v-32.42a13.51 13.51 0 0 0-27 0v32.42h-33.78C175.06 214 248 118.11 299.32 118.11zm0 368.73c-66.86 0-137.77-39.84-138.44-150.6h275.54c.67 111.44-70.24 150.61-137.1 150.61z"/>
                                 <path
                                     d="M299.32 347.72c-10.13 0-13.51 6.08-27 36.47-15.54 34.44-16.22 37.81-13.52 44.57 4.05 10.13 14.18 10.13 34.44 10.13h8.1c26.34 0 34.44 0 39.17-9.45 3.38-7.43 2-14.18-11.48-43.22-16.2-32.42-19.58-38.5-29.71-38.5zm1.35 64.16h-11.48c2-4.05 4.05-9.45 7.43-16.88.68-1.35 1.35-3.38 2.7-6.08 1.35 2.7 2.7 5.4 4.05 8.78 2.7 6.08 4.73 10.81 6.75 14.18z"/>
                             </svg>
                         </div>
+
                         <strong>Cooking time</strong><br/>
                         {{ recipe.cooking_minutes }} minutes
                     </div>
@@ -126,7 +129,7 @@ const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servi
                         <h2 class="mb-2 text-2xl font-bold">Ingredients</h2>
 
                         <div class="-mx-2 mb-4 flex justify-between items-center bg-gray-200 p-2 rounded">
-                            <div>{{ state.servings }} {{ servingsLabel }}</div>
+                            <div>{{ recipe.servings }} {{ servingsLabel }}</div>
                             <div class="space-x-2">
                                 <button
                                     class="inline-block w-8 border-2 border-gray-500 rounded text-lg text-gray-600 font-bold hover:bg-gray-500 hover:text-white transition-all"
@@ -134,10 +137,11 @@ const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servi
                                 >
                                     +
                                 </button>
+
                                 <button
-                                    class="inline-block w-8 border-2 border-gray-500 rounded text-lg text-gray-600 font-bold hover:bg-gray-500 hover:text-white disabled:opacity-50"
+                                    :disabled="recipe.servings === 1"
+                                    class="inline-block w-8 border-2 border-gray-500 rounded text-lg text-gray-600 font-bold hover:bg-gray-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-600"
                                     @click="decrementServings"
-                                    :disabled="state.servings === 1"
                                 >
                                     -
                                 </button>
@@ -145,15 +149,24 @@ const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servi
                         </div>
 
                         <div class="space-y-6">
-                            <div v-for="list in state.ingredientsLists">
+                            <div v-for="list in recipe.ingredients">
                                 <h3 v-if="list.title" class="text-lg font-bold mt-8 mb-2">{{ list.title }}</h3>
 
                                 <ul class="space-y-1">
                                     <li v-for="ingredient in list.ingredients" class="flex flex-auto">
-                                        <span class="w-2/3 break-words">{{ ingredient.name }}</span>
-                                        <span class="pl-2 w-1/3 break-words">{{
-                                                Math.round(ingredient.amount * 100) / 100
-                                            }} {{ ingredient.unit }}</span>
+                                        <template v-if="ingredient.amount">
+                                            <!-- The span is a trick to prevent extra whitspace between the amount and the following text. -->
+                                            <!-- Multiplying and deviding the amount is a trick to round to 2 decimal places. -->
+                                            <span>{{ Math.round(ingredient.amount * 100) / 100 }}&nbsp;</span>
+                                        </template>
+                                        <template v-if="ingredient.unit">{{ ingredient.unit }}&nbsp;</template>
+                                        <template v-if="ingredient.name_plural && ingredient.amount > 1">
+                                            {{ ingredient.name_plural }}
+                                        </template>
+                                        <template v-else>
+                                            {{ ingredient.name }}
+                                        </template>
+                                        <template v-if="ingredient.info">{{ ingredient.info }}</template>
                                     </li>
                                 </ul>
                             </div>
@@ -163,7 +176,7 @@ const servingsLabel = computed(() => (state.servings === 1) ? 'serving' : 'servi
                     <div class="md:w-2/3 space-y-4 sm:px-6 md:px-0">
                         <h2 class="text-2xl font-bold mb-4 md:mt-6">Instructions</h2>
 
-                        <div v-html="recipe.instructions" class="instructions"/>
+                        <div class="instructions" v-html="recipe.instructions"/>
 
                         <p v-if="recipe.source_label || recipe.source_link">
                             <strong>Source: </strong>

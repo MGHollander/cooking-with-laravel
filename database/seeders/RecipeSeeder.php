@@ -20,43 +20,37 @@ class RecipeSeeder extends Seeder
     public function run()
     {
         foreach ($this->getRecipes() as $recipe) {
-            $slug = Str::slug($recipe->title);
+            $slug  = Str::slug($recipe->title);
             $image = null;
 
             if (!empty($recipe->image)) {
-                $contents = file_get_contents($recipe->image);
+                $contents  = file_get_contents($recipe->image);
                 $extension = substr($recipe->image, strrpos($recipe->image, '.') + 1);
-                $image = 'public/images/' . $slug . '.' . $extension;
+                $image     = 'public/images/' . $slug . '.' . $extension;
                 Storage::put($image, $contents);
             }
 
-            $recipeModel = Recipe::create([
-                'user_id' => User::all()->first()->id,
-                'title' => $recipe->title,
-                'slug' => $slug,
-                'image' => $image,
-                'preparation_minutes' => $recipe->preparationMinutes > -1 ? $recipe->preparationMinutes : 10,
-                'cooking_minutes' => $recipe->cookingMinutes > -1 ? $recipe->cookingMinutes : $recipe->readyInMinutes,
-                'servings' => $recipe->servings > 0 ? $recipe->servings : 4,
-                'difficulty' => array_rand(array_flip(['Easy', 'Moderate', 'Hard'])),
-                'summary' => $recipe->summary,
-                'instructions' => $recipe->instructions,
-                'source_label' => $recipe->sourceName,
-                'source_link' => $recipe->sourceUrl,
-            ]);
-
-            $ingredientsListModel = IngredientsList::create([
-                'recipe_id' => $recipeModel->id,
-            ]);
+            $ingredients = [];
 
             foreach ($recipe->extendedIngredients as $ingredient) {
-                Ingredient::create([
-                    'ingredients_list_id' => $ingredientsListModel->id,
-                    'name' => $ingredient->name,
-                    'amount' => round($ingredient->measures->us->amount, 2),
-                    'unit' => $ingredient->measures->us->unitShort,
-                ]);
+                $ingredients[] = round($ingredient->measures->us->amount, 2) . ' ' . $ingredient->measures->us->unitShort . ' ' . $ingredient->name;
             }
+
+            Recipe::create([
+                'user_id'             => User::all()->first()->id,
+                'title'               => $recipe->title,
+                'slug'                => $slug,
+                'image'               => $image,
+                'preparation_minutes' => $recipe->preparationMinutes > -1 ? $recipe->preparationMinutes : 10,
+                'cooking_minutes'     => $recipe->cookingMinutes > -1 ? $recipe->cookingMinutes : $recipe->readyInMinutes,
+                'servings'            => $recipe->servings > 0 ? $recipe->servings : 4,
+                'difficulty'          => array_rand(array_flip(['Easy', 'Moderate', 'Hard'])),
+                'ingredients'         => implode("\n", $ingredients),
+                'summary'             => $recipe->summary,
+                'instructions'        => $recipe->instructions,
+                'source_label'        => $recipe->sourceName,
+                'source_link'         => $recipe->sourceUrl,
+            ]);
         }
     }
 

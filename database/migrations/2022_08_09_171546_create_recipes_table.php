@@ -25,6 +25,7 @@ return new class extends Migration
             $table->smallInteger('servings')->unsigned();
             $table->string('difficulty');
             $table->text('summary')->nullable();
+            $table->text('ingredients');
             $table->text('instructions');
             $table->string('source_label')->nullable();
             $table->text('source_link')->nullable();
