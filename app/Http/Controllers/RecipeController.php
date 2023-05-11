@@ -149,8 +149,6 @@ class RecipeController extends Controller
     {
         $recipe ??= new Recipe();
 
-        // TODO Use a FormRequest with validation rules instead of this method.
-
         return $request->validate([
             'title'               => 'required',
             'slug'                => ['required', Rule::unique('recipes', 'slug')->ignore($recipe)],
