@@ -44,20 +44,6 @@ const servingsLabel = computed(() => (props.recipe.servings === 1) ? 'serving' :
                     </Link>
                 </div>
 
-                <div class="md:flex text-sm space-y-2 md:space-y-0 md:space-x-4">
-                    <p><strong>Category:</strong> Main course</p>
-
-                    <div class="flex">
-                        <p><strong>Tags:</strong></p>
-
-                        <ul class="list-none flex">
-                            <li class="ml-1"><span class="bg-gray-200 px-1 rounded">Pasta</span></li>
-                            <li class="ml-1"><span class="bg-gray-200 px-1 rounded">Kikkererwten</span></li>
-                            <li class="ml-1"><span class="bg-gray-200 px-1 rounded">Spinazie</span></li>
-                        </ul>
-                    </div>
-                </div>
-
                 <div class="text-lg" v-html="recipe.summary"/>
             </div>
 
@@ -67,7 +53,7 @@ const servingsLabel = computed(() => (props.recipe.servings === 1) ? 'serving' :
                  }"
             >
                 <div v-if="recipe.image">
-                    <img :src="recipe.image" class="mx-auto md:mx-0 max-h-80 max-w-full rounded-lg"/>
+                    <img :src="recipe.image" class="mx-auto md:mx-0 max-h-96 max-w-full rounded-lg object-contain"/>
                 </div>
 
                 <div>

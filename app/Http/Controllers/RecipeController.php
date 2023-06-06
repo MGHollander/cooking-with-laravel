@@ -30,7 +30,7 @@ class RecipeController extends Controller
                     'id'    => $recipe->id,
                     'title' => $recipe->title,
                     'slug'  => $recipe->slug,
-                    'image' => Storage::url($recipe->image),
+                    'image' => $recipe->image ? Storage::url($recipe->image) : null,
                 ]),
         ]);
     }
@@ -92,6 +92,10 @@ class RecipeController extends Controller
      */
     public function edit(Recipe $recipe)
     {
+        if ($recipe->image) {
+            $recipe->image = Storage::url($recipe->image);
+        }
+
         return Inertia::render('Recipes/Form', [
             'recipe' => $recipe,
         ]);
@@ -106,32 +110,38 @@ class RecipeController extends Controller
      */
     public function update(Request $request, Recipe $recipe)
     {
-        $attributes = $this->validateRecipe($request, $recipe);
+        $attributes   = $this->validateRecipe($request, $recipe);
+        $destroyImage = $request->get('destroy_image', false);
 
-        // TODO Updating a recipe without an image results in an error.
-        // Do not update the image field if there isn't an image. This might mean that their already is an image and no
-        // new image is uploaded.
+        // If the image field is empty, remove it from the attributes array, because there is no image to update or delete.
         if (empty($attributes['image'])) {
             unset($attributes['image']);
         }
 
         if ($image = $this->saveImage($request)) {
-            if (Storage::delete($recipe->image) === false) {
-                Log::error('The recipe image could not be deleted.', ['id' => $recipe->id, 'image' => $recipe->image]);
-            }
-
             $attributes['image'] = $image;
+
+            // Delete the old image if there is one.
+            if ($recipe->image) {
+                $this->destroyImage($recipe);
+            }
+        }
+
+        // If the user wants to remove the image, set the image field to null and delete the image.
+        if ($destroyImage) {
+            $attributes['image'] = null;
+            $this->destroyImage($recipe);
         }
 
         $recipe->update($attributes);
 
-        $redirect = redirect()->route('recipes.show', $recipe)->with('success', 'Recipe updated successfully!');
+        $redirect = redirect()->route('recipes.show', $recipe);
 
-        if ($image === false) {
+        if ($destroyImage && !$image) {
             return $redirect->with('warning', 'Recipe updated, but the image is not replaced due to a server error.');
         }
 
-        return $redirect;
+        return $redirect->with('success', 'Recipe updated successfully!');
     }
 
     /**
@@ -181,6 +191,16 @@ class RecipeController extends Controller
         }
 
         return null;
+    }
+
+    protected function destroyImage(Recipe $recipe): bool
+    {
+        if (Storage::delete($recipe->image) === false) {
+            Log::error('The recipe image could not be deleted.', ['id' => $recipe->id, 'image' => $recipe->image]);
+            return false;
+        }
+
+        return true;
     }
 
 }

@@ -6,15 +6,17 @@ import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
 import InputError from '@/Components/InputError.vue';
 import Label from '@/Components/Label.vue';
+import {ref} from "vue";
 
 const props = defineProps(['recipe'])
 const edit = route().current('recipes.edit') ?? false;
 
-let form = useForm({
+const form = useForm({
     _method: edit ? 'PATCH' : 'POST',
     title: edit ? props.recipe.title : '',
     slug: edit ? props.recipe.slug : '',
     image: '',
+    destroy_image: false,
     preparation_minutes: edit ? props.recipe.preparation_minutes : '',
     cooking_minutes: edit ? props.recipe.cooking_minutes : '',
     servings: edit ? props.recipe.servings : '',
@@ -26,7 +28,32 @@ let form = useForm({
     source_link: edit ? props.recipe.source_link : '',
 })
 
-let submit = () => {
+const imageInput = ref(null);
+const imagePreview = ref(props.recipe.image ?? null);
+
+const updateImagePreview = (event) => {
+    form.image = event.target.files[0]
+    form.destroy_image = false;
+
+    if (!form.image) return;
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+        imagePreview.value = e.target.result;
+    };
+
+    reader.readAsDataURL(form.image);
+};
+
+const clearImageField = () => {
+    form.image = null;
+    form.destroy_image = true;
+    imageInput.value.value = null;
+    imagePreview.value = null;
+}
+
+const submit = () => {
     if (edit) {
         form.post(route('recipes.update', props.recipe.id))
     } else {
@@ -62,13 +89,34 @@ const title = edit ? 'Update Recipe "' + form.title + '"' : 'Create Recipe'
 
 
                     <div class="col-span-12 space-y-1">
-                        Show image if there is one and add posibillity to remove it.
-
                         <Label for="image" value="Image (optional)"/>
-                        <input accept="image/jpeg,image/png" type="file" @input="form.image = $event.target.files[0]"/>
+                        <input ref="imageInput" accept="image/jpeg,image/png" type="file" @change="updateImagePreview"
+                               class="hidden"/>
+
+                        <Button v-if="!imagePreview" class="text-xs" @click="imageInput.click()">
+                            Upload image
+                        </Button>
+
+                        <div v-else class="col-span-12 space-y-1">
+                            <img
+                                alt="Image preview"
+                                class="block rounded-md max-w-full max-h-32 bg-contain bg-no-repeat bg-center"
+                                :src="imagePreview"
+                            />
+
+                            <Button class="text-xs mr-1" button-style="secondary" @click="imageInput.click()">
+                                Replace image
+                            </Button>
+
+                            <Button class="text-xs" button-style="danger" @click="clearImageField">
+                                Remove image
+                            </Button>
+                        </div>
+
                         <progress v-if="form.progress" :value="form.progress.percentage" max="100">
                             {{ form.progress.percentage }}%
                         </progress>
+
                         <InputError :message="form.errors.image"/>
                     </div>
 

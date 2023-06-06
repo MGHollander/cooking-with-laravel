@@ -42,9 +42,8 @@ let props = defineProps({
                     :href="route('recipes.show', recipe.slug)"
                     class="recipe-card"
                 >
-                    <div class="recipe-card-image">
-                        <!-- TODO Display a placeholder image if no image is available -->
-                        <img v-if="recipe.image" :src="recipe.image" alt=""/>
+                    <div v-if="recipe.image" class="recipe-card-image">
+                        <img :src="recipe.image" alt="A picture of '{{ recipe.title }}'"/>
                     </div>
 
                     <h2 class="recipe-card-title">{{ recipe.title }}</h2>
