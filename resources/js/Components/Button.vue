@@ -1,5 +1,5 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import {Link} from '@inertiajs/vue3';
 
 defineProps({
     href: {
@@ -9,6 +9,9 @@ defineProps({
     type: {
         type: String,
         default: 'button',
+    },
+    buttonStyle: {
+        type: String,
     },
 });
 </script>
@@ -21,14 +24,22 @@ defineProps({
         class="
             inline-flex items-center
             px-4 py-2
-            bg-gray-800 hover:bg-gray-700 active:bg-gray-900
             border border-transparent rounded-md
             focus:ring focus:ring-indigo-200
             focus-visible:ring focus-visible:ring-indigo-200 focus-visible:outline-none
             font-semibold text-white
             transition ease-in-out duration-150
             disabled:opacity-25"
+        :class="{
+            'bg-gray-800 hover:bg-gray-700 active:bg-gray-900': !buttonStyle,
+            'bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700': buttonStyle === 'primary',
+            'bg-green-600 hover:bg-green-500 active:bg-green-700': buttonStyle === 'success',
+            'bg-red-600 hover:bg-red-500 active:bg-red-700': buttonStyle === 'danger',
+            'bg-yellow-600 hover:bg-yellow-500 active:bg-yellow-700': buttonStyle === 'warning',
+            'bg-gray-600 hover:bg-gray-500 active:bg-gray-700': buttonStyle === 'secondary',
+            'bg-blue-600 hover:bg-blue-500 active:bg-blue-700': buttonStyle === 'info',
+        }"
     >
-        <slot />
+        <slot/>
     </component>
 </template>
