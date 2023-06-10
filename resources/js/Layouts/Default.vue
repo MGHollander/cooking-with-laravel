@@ -83,7 +83,7 @@ const showingNavigationDropdown = ref(false);
                                     </template>
                                 </Dropdown>
                             </div>
-                        </div v-if="$page.props.auth.user">
+                        </div>
 
                         <div v-else class="flex">
                             <NavLink :href="route('login')" :active="route().current('login')">
