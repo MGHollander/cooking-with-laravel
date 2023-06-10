@@ -14,7 +14,6 @@ const edit = route().current('recipes.edit') ?? false;
 const form = useForm({
     _method: edit ? 'PATCH' : 'POST',
     title: edit ? props.recipe.title : '',
-    slug: edit ? props.recipe.slug : '',
     image: '',
     destroy_image: false,
     preparation_minutes: edit ? props.recipe.preparation_minutes : '',
@@ -29,7 +28,7 @@ const form = useForm({
 })
 
 const imageInput = ref(null);
-const imagePreview = ref(props.recipe.image ?? null);
+const imagePreview = ref(props.recipe?.image ?? null);
 
 const updateImagePreview = (event) => {
     form.image = event.target.files[0]
@@ -81,10 +80,9 @@ const title = edit ? 'Update Recipe "' + form.title + '"' : 'Create Recipe'
                         <InputError :message="form.errors.title"/>
                     </div>
 
-                    <div class="col-span-12 space-y-1">
+                    <div v-if="edit" class="col-span-12 space-y-1">
                         <Label for="slug" value="Slug"/>
-                        <Input v-model="form.slug" class="block w-full" required type="text"/>
-                        <InputError :message="form.errors.slug"/>
+                        <blockquote class="font-mono text-sm">/{{ props.recipe.slug }}</blockquote>
                     </div>
 
 

@@ -157,11 +157,8 @@ class RecipeController extends Controller
 
     protected function validateRecipe(Request $request, ?Recipe $recipe = null): array
     {
-        $recipe ??= new Recipe();
-
         return $request->validate([
             'title'               => 'required',
-            'slug'                => ['required', Rule::unique('recipes', 'slug')->ignore($recipe)],
             'image'               => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png'],
             'servings'            => ['required', 'min:1'],
             'preparation_minutes' => ['nullable', 'min:1'],
