@@ -7,6 +7,7 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import Button from "@/Components/Button.vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -42,7 +43,13 @@ const showingNavigationDropdown = ref(false);
 
                         <div v-if="$page.props.auth.user" class="hidden sm:flex sm:items-center sm:ml-6">
                             <!-- Settings Dropdown -->
-                            <div class="ml-3 relative">
+                            <div class="ml-3 relative flex">
+                                <Button class="text-xs no-underline" :href="route('recipes.create')"
+                                        button-style="secondary"
+                                        :active="route().current('recipes.create')">
+                                    Add a recipe
+                                </Button>
+
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
@@ -66,19 +73,26 @@ const showingNavigationDropdown = ref(false);
                                             Dashboard
                                         </DropdownLink>
 
-                                        <DropdownLink class="no-underline" :href="route('recipes.create')"
-                                                      :active="route().current('recipes.create')">
-                                            Add a recipe
+                                        <DropdownLink class="no-underline"
+                                                      :href="route('users.edit', $page.props.auth.user.id)"
+                                                      :active="route().current('users.edit', { id: $page.props.auth.user.id })">
+                                            Edit your profile
+                                        </DropdownLink>
+
+                                        <DropdownLink class="no-underline"
+                                                      :href="route('users.password.edit')"
+                                                      :active="route().current('users.password.edit')">
+                                            Change your password
                                         </DropdownLink>
 
                                         <DropdownLink class="no-underline" :href="route('users.index')"
-                                                      :active="route().current('users.*')">
-                                            Users
+                                                      :active="route().current('users.*') && !route().current('users.edit', { id: $page.props.auth.user.id })">
+                                            Manage users
                                         </DropdownLink>
 
                                         <DropdownLink class="no-underline" :href="route('logout')" method="post"
                                                       as="button">
-                                            Log Out
+                                            Log out
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -94,6 +108,12 @@ const showingNavigationDropdown = ref(false);
                         <!-- Hamburger -->
                         <!-- TODO At the moment there are no menu items, so the hamburger menu is only useful if you are signed in. -->
                         <div v-if="$page.props.auth.user" class="-mr-2 flex items-center sm:hidden">
+                            <Button class="text-xs no-underline" :href="route('recipes.create')"
+                                    button-style="secondary"
+                                    :active="route().current('recipes.create')">
+                                Add a recipe
+                            </Button>
+                            
                             <button @click="showingNavigationDropdown = ! showingNavigationDropdown"
                                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -136,12 +156,24 @@ const showingNavigationDropdown = ref(false);
                                 Dashboard
                             </ResponsiveNavLink>
 
+                            <ResponsiveNavLink
+                                :href="route('users.edit', $page.props.auth.user.id)"
+                                :active="route().current('users.edit', { id: $page.props.auth.user.id })">
+                                Edit your profile
+                            </ResponsiveNavLink>
+
+                            <ResponsiveNavLink
+                                :href="route('users.password.edit')"
+                                :active="route().current('users.password.edit')">
+                                Change your password
+                            </ResponsiveNavLink>
+
                             <ResponsiveNavLink :href="route('users.index')" :active="route().current('users.*')">
-                                Users
+                                Manage users
                             </ResponsiveNavLink>
 
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                                Log Out
+                                Log out
                             </ResponsiveNavLink>
                         </div>
                     </div>

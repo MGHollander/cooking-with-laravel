@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\RecipeController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\User\ChangePasswordController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -25,11 +26,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/recipes/{recipe:slug}', [RecipeController::class, 'show'])->name('recipes.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
+    Route::get('/dashboard', static function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    Route::get('/users/change-password', [ChangePasswordController::class, 'show'])->name('users.password.edit');
+    Route::post('/users/change-password', [ChangePasswordController::class, 'update'])->name('users.password.update');
+
     Route::resource('users', UserController::class);
+
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

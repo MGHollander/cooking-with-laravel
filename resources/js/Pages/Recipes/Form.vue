@@ -60,7 +60,7 @@ const submit = () => {
     }
 }
 
-const title = edit ? 'Update Recipe "' + form.title + '"' : 'Create Recipe'
+const title = edit ? 'Update Recipe "' + form.title + '"' : 'Add a recipe'
 </script>
 
 <template>
