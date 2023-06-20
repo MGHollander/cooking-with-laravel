@@ -44,7 +44,7 @@ class RecipeSeeder extends Seeder
                 'preparation_minutes' => $recipe->preparationMinutes > -1 ? $recipe->preparationMinutes : 10,
                 'cooking_minutes'     => $recipe->cookingMinutes > -1 ? $recipe->cookingMinutes : $recipe->readyInMinutes,
                 'servings'            => $recipe->servings > 0 ? $recipe->servings : 4,
-                'difficulty'          => array_rand(array_flip(['Easy', 'Moderate', 'Hard'])),
+                'difficulty'          => array_rand(array_flip(['easy', 'moderate', 'hard'])),
                 'ingredients'         => implode("\n", $ingredients),
                 'summary'             => $recipe->summary,
                 'instructions'        => $recipe->instructions,
