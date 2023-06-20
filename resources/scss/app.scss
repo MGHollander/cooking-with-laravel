@@ -3,12 +3,20 @@
 @tailwind utilities;
 
 @layer base {
+    p + p {
+        @apply mt-4;
+    }
+
     a {
         @apply text-emerald-700 underline transition-all;
 
         &:hover {
             @apply text-black;
         }
+    }
+
+    ul, ol {
+        @apply list-disc list-inside my-4;
     }
 }
 

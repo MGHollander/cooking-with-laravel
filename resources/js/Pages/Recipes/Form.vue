@@ -1,6 +1,12 @@
 <script setup>
 import {Head, useForm} from '@inertiajs/vue3';
-
+import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
+import {Essentials} from '@ckeditor/ckeditor5-essentials';
+import {Bold, Italic, Strikethrough, Underline} from '@ckeditor/ckeditor5-basic-styles';
+import {Link} from '@ckeditor/ckeditor5-link';
+import {List} from '@ckeditor/ckeditor5-list';
+import {Paragraph} from '@ckeditor/ckeditor5-paragraph';
+import '../../../css/ckeditor.css';
 import DefaultLayout from '@/Layouts/Default.vue';
 import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
@@ -61,6 +67,55 @@ const submit = () => {
 }
 
 const title = edit ? 'Update Recipe "' + form.title + '"' : 'Add a recipe'
+
+const editor = ClassicEditor;
+const summaryEditorConfig = {
+    plugins: [
+        Essentials,
+        Bold,
+        Italic,
+        Link,
+        Paragraph,
+        Strikethrough, Underline
+    ],
+
+    toolbar: {
+        items: [
+            'bold',
+            'italic',
+            'underline',
+            'strikeThrough',
+            '|',
+            'link',
+        ]
+    }
+}
+
+const instructionsEditorConfig = {
+    plugins: [
+        Essentials,
+        Bold,
+        Italic,
+        Link,
+        List,
+        Paragraph,
+        Strikethrough, Underline,
+    ],
+
+    toolbar: {
+        items: [
+            'bold',
+            'italic',
+            'underline',
+            'strikeThrough',
+            '|',
+            'bulletedList',
+            'numberedList',
+            '|',
+            'link',
+        ]
+    }
+}
 </script>
 
 <template>
@@ -120,17 +175,7 @@ const title = edit ? 'Update Recipe "' + form.title + '"' : 'Add a recipe'
 
                     <div class="col-span-12 space-y-1">
                         <Label for="summary" value="Summary (optional)"/>
-                        <textarea
-                            v-model="form.summary"
-                            class="
-                                block w-full
-                                border-gray-300 rounded-md
-                                focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
-                                shadow-sm
-                                transition ease-in-out duration-150
-                            "
-                            rows="5"
-                        />
+                        <ckeditor :editor="editor" v-model="form.summary" :config="summaryEditorConfig"/>
                         <InputError :message="form.errors.summary"/>
                     </div>
                 </div>
@@ -217,18 +262,7 @@ const title = edit ? 'Update Recipe "' + form.title + '"' : 'Add a recipe'
                 <div class="grid grid-cols-12 gap-6">
                     <div class="col-span-12 space-y-1">
                         <Label for="instructions" value="Instructions"/>
-                        <textarea
-                            v-model="form.instructions"
-                            class="
-                                block w-full
-                                border-gray-300 rounded-md
-                                focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
-                                shadow-sm
-                                transition ease-in-out duration-150
-                            "
-                            required
-                            rows="15"
-                        />
+                        <ckeditor :editor="editor" v-model="form.instructions" :config="instructionsEditorConfig"/>
                         <InputError :message="form.errors.instructions"/>
                     </div>
 
