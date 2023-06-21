@@ -1,11 +1,16 @@
 <script setup>
-import {Link} from '@inertiajs/vue3';
+import {Link, useForm} from '@inertiajs/vue3';
 import DefaultLayout from '@/Layouts/Default.vue';
 import Button from '@/Components/Button.vue';
 import Pagination from '@/Components/Pagination.vue';
 
 let props = defineProps({
     recipes: Object,
+    search: String,
+});
+
+const form = useForm({
+    search: props.search ?? '',
 });
 </script>
 
@@ -16,16 +21,22 @@ let props = defineProps({
                 <img class="absolute inset-0 object-cover rounded-lg shadow-lg w-full h-full"
                      src="https://picsum.photos/id/999/1000"/>
 
-                <div class="px-4 py-8 sm:p-16 md:p-32 w-full flex relative">
+                <form @submit.prevent="form.get(route('search'))"
+                      class="px-4 py-8 sm:p-16 md:p-32 w-full flex relative">
                     <input
                         class="w-full p-2 sm:py-4 sm:px-6 bg-white border-2 border-gray-300 rounded-l-md text-sm md:text-base lg:text-lg"
                         placeholder="What would you like to eat today?"
-                        type="search"/>
+                        type="search"
+                        v-model="form.search"
+                    />
                     <button
-                        class="p-2 sm:py-4 sm:px-6 bg-emerald-700 border-2 border-emerald-700 border-l-0 rounded-r-md text-white text-sm md:text-base lg:text-lg">
+                        type="submit"
+                        :disabled="form.processing"
+                        class="p-2 sm:py-4 sm:px-6 bg-emerald-700 border-2 border-emerald-700 border-l-0 rounded-r-md text-white text-sm md:text-base lg:text-lg"
+                    >
                         Search
                     </button>
-                </div>
+                </form>
             </div>
 
             <h1 class="sr-only">Recipes</h1>
@@ -52,7 +63,7 @@ let props = defineProps({
                 </Link>
             </div>
 
-            <div class="">
+            <div v-if="recipes.last_page > 1">
                 <Pagination :links="recipes.links" class="flex flex-auto flex-wrap justify-center"/>
             </div>
         </div>

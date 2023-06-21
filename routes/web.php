@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\User\ChangePasswordController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/recipes/{recipe:slug}', [RecipeController::class, 'show'])->name('recipes.show');
+
+Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', static function () {

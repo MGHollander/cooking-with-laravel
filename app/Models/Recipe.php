@@ -61,7 +61,7 @@ class Recipe extends Model
         return $transformedIngredients;
     }
 
-    public function parseIngredient($ingredientString)
+    public function parseIngredient($ingredientString): array
     {
         $ingredient = ['full' => $ingredientString];
 
@@ -102,7 +102,7 @@ class Recipe extends Model
         return $ingredient;
     }
 
-    public function getCookingUnits()
+    public function getCookingUnits(): array
     {
         return [
             'teaspoon',
