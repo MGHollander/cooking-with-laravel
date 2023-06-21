@@ -29,7 +29,8 @@ defineProps({
             focus-visible:ring focus-visible:ring-indigo-200 focus-visible:outline-none
             font-semibold text-white hover:text-white
             transition ease-in-out duration-150
-            disabled:opacity-25"
+            disabled:opacity-25
+            no-underline"
         :class="{
             'bg-gray-800 hover:bg-gray-700 active:bg-gray-900': !buttonStyle,
             'bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700': buttonStyle === 'primary',

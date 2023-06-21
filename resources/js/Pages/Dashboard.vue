@@ -15,7 +15,7 @@ import Button from '@/Components/Button.vue';
 
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 bg-white border-b border-gray-200">
-                <Button :href="route('recipes.create')" class="text-sm text-emerald-700 no-underline hover:text-black">
+                <Button :href="route('recipes.create')" class="text-sm no-underline">
                     Add a recipe
                 </Button>
             </div>

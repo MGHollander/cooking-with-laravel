@@ -1,5 +1,5 @@
 <script setup>
-import {Head, useForm} from '@inertiajs/vue3';
+import {Head, router, useForm} from '@inertiajs/vue3';
 import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
 import {Essentials} from '@ckeditor/ckeditor5-essentials';
 import {Bold, Italic, Strikethrough, Underline} from '@ckeditor/ckeditor5-basic-styles';
@@ -114,6 +114,14 @@ const instructionsEditorConfig = {
             '|',
             'link',
         ]
+    }
+}
+
+function confirmDeletion(event) {
+    if (confirm('Are you sure you want to delete this recipe?')) {
+        router.delete(route('recipes.destroy', props.recipe.id), {
+            method: 'delete',
+        });
     }
 }
 </script>
@@ -281,9 +289,17 @@ const instructionsEditorConfig = {
             </div>
 
             <div class="fixed bottom-0 left-0 w-full px-4 py-3 bg-gray-50 border-t border-gray-200 sm:px-6">
-                <div class="max-w-3xl mx-auto sm:px-6">
+                <div class="flex justify-between max-w-3xl mx-auto sm:px-6">
                     <Button :disabled="form.processing" class="text-xs" type="submit">
                         Save
+                    </Button>
+
+                    <Button v-if="$page.props.auth.user"
+                            button-style="danger"
+                            class="text-xs"
+                            @click="confirmDeletion"
+                    >
+                        Delete
                     </Button>
                 </div>
             </div>

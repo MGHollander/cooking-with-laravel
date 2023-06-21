@@ -146,11 +146,13 @@ class RecipeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Recipe $recipe
-     * @return Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Recipe $recipe)
     {
-        //
+        $recipe->delete();
+
+        return redirect()->route('home')->with('success', 'Recipe deleted successfully!');
     }
 
     protected function validateRecipe(Request $request, ?Recipe $recipe = null): array

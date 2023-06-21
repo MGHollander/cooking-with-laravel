@@ -1,8 +1,9 @@
 <script setup>
 import {computed} from 'vue';
-import {Head, Link} from '@inertiajs/vue3';
+import {Head, Link, router} from '@inertiajs/vue3';
 
 import DefaultLayout from '@/Layouts/Default.vue';
+import Button from '@/Components/Button.vue';
 
 let props = defineProps({
     recipe: Object,
@@ -29,6 +30,14 @@ function decrementServings() {
 }
 
 const servingsLabel = computed(() => (props.recipe.servings === 1) ? 'serving' : 'servings')
+
+function confirmDeletion(event) {
+    if (confirm('Are you sure you want to delete this recipe?')) {
+        router.delete(route('recipes.destroy', props.recipe.id), {
+            method: 'delete',
+        });
+    }
+}
 </script>
 
 <template>
@@ -39,9 +48,23 @@ const servingsLabel = computed(() => (props.recipe.servings === 1) ? 'serving' :
             <div class="p-6 lg:p-10 space-y-6 md:space-y-10">
                 <div class="flex justify-between items-center">
                     <h1 class="relative text-3xl font-bold">{{ recipe.title }}</h1>
-                    <Link v-if="$page.props.auth.user" :href="route('recipes.edit', recipe.id)"
-                          class="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-sm text-black no-underline">Edit
-                    </Link>
+                    <div class="space-x-2 whitespace-nowrap">
+                        <Button v-if="$page.props.auth.user"
+                                :href="route('recipes.edit', recipe.id)"
+                                class="text-xs"
+                                button-style="secondary"
+                        >
+                            Edit
+                        </Button>
+
+                        <Button v-if="$page.props.auth.user"
+                                button-style="danger"
+                                class="text-xs"
+                                @click="confirmDeletion"
+                        >
+                            Delete
+                        </Button>
+                    </div>
                 </div>
 
                 <div class="text-lg" v-html="recipe.summary"/>
