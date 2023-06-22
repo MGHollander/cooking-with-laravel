@@ -176,8 +176,8 @@ class RecipeController extends Controller
     {
         if ($image = $request->file('image')) {
             // Add a timestamp to the image to prevent browser cache issues.
-            $fileName = Str::slug($request->get('slug')) . '-' . Carbon::now()->getTimestamp() . '.' . $image->extension();
-            $path     = $image->storePubliclyAs('public/images', $fileName);
+            $fileName = Str::slug($request->get('title')) . '-' . Carbon::now()->getTimestamp() . '.' . $image->extension();
+            $path     = $image->storePubliclyAs('public/images/recipes', $fileName);
 
             if (!$path) {
                 Log::error('The recipe image could not be saved.', ['id' => $request->get('id')]);
