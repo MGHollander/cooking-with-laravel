@@ -13,6 +13,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        if (app()->environment('production')) {
+            if (!$this->command->confirm('Are you sure you want to seed on production?')) {
+                return;
+            }
+        }
+
         $this->call([
             UserSeeder::class,
             RecipeSeeder::class,
