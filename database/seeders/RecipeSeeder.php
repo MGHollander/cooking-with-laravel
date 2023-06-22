@@ -19,12 +19,6 @@ class RecipeSeeder extends Seeder
      */
     public function run()
     {
-        if (app()->environment('production')) {
-            if (!$this->command->confirm('Are you sure you want to seed recipes on production?')) {
-                return;
-            }
-        }
-
         foreach ($this->getRecipes() as $recipe) {
             $slug  = Str::slug($recipe->title);
             $image = null;

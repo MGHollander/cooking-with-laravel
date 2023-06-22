@@ -16,9 +16,9 @@ class UserSeeder extends Seeder
     {
         $email = 'test@example.com';
         if (User::where('email', $email)->doesntExist()) {
-            User::create([
-                'name'     => 'Test User',
-                'email'    => $email,
+            User::factory()->create([
+                'name' => 'Test User',
+                'email' => $email,
                 'password' => 'password',
             ]);
         }
