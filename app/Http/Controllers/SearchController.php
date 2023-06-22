@@ -19,11 +19,11 @@ class SearchController extends Controller
      */
     public function index(Request $request): Response
     {
-        $search  = $request->get('search') ?? '';
+        $q       = $request->get('q') ?? '';
         $recipes = Search::add(Recipe::class, ['title', 'ingredients', 'instructions'])
             ->paginate(15)
             ->beginWithWildcard()
-            ->search($search)
+            ->search($q)
             ->withQueryString()
             ->through(fn($recipe) => [
                 'id'    => $recipe->id,
@@ -34,7 +34,7 @@ class SearchController extends Controller
 
         return Inertia::render('Search/Index', [
             'recipes' => $recipes,
-            'search'  => $search,
+            'q'       => $q,
         ]);
     }
 

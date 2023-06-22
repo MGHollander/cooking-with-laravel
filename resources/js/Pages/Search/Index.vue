@@ -6,16 +6,17 @@ import Pagination from '@/Components/Pagination.vue';
 
 let props = defineProps({
     recipes: Object,
-    search: String,
+    q: String,
 });
 
 const form = useForm({
-    search: props.search ?? '',
+    q: props.q ?? '',
 });
 
-const title = (props.search !== '' && props.recipes.total > 0) ?
-    `${props.recipes.total} recipes for '${props.search}'`
-    : ((props.search && props.recipes.total === 0) ? `No recipes found for '${props.search}'` : 'Search for recipes');
+const recipeNounForm = (props.recipes.total === 1) ? 'recept' : 'recepten';
+const title = (props.q !== '' && props.recipes.total > 0) ?
+    `${props.recipes.total} ${recipeNounForm} met '${props.q}'`
+    : ((props.q && props.recipes.total === 0) ? `Geen recepten met '${props.q}'` : 'Zoek een recept');
 </script>
 
 <template>
@@ -33,31 +34,31 @@ const title = (props.search !== '' && props.recipes.total > 0) ?
                         class="w-full p-2 sm:py-4 sm:px-6 bg-white border-2 border-gray-300 rounded-l-md text-sm md:text-base lg:text-lg"
                         placeholder="What would you like to eat today?"
                         type="search"
-                        v-model="form.search"
+                        v-model="form.q"
                     />
                     <button
                         type="submit"
                         :disabled="form.processing"
                         class="p-2 sm:py-4 sm:px-6 bg-emerald-700 border-2 border-emerald-700 border-l-0 rounded-r-md text-white text-sm md:text-base lg:text-lg"
                     >
-                        Search
+                        Zoeken
                     </button>
                 </form>
             </div>
 
             <div v-if="recipes.total === 0">
                 <h1 class="text-2xl  font-bold text-center mb-4">
-                    No recipes found for <span class="text-emerald-700 italic">{{ search }}</span>
+                    Geen recepten gevonden met <span class="text-emerald-700 italic">{{ q }}</span>
                 </h1>
 
-                <p class="text-center">Try to search for something else.</p>
+                <p class="text-center">Probeer een ander zoekwoord.</p>
             </div>
 
             <template v-if="recipes.total > 0">
                 <h1 class="text-2xl font-bold">
-                    {{ recipes.total }} recipes
-                    <template v-if="search">
-                        for <span class="text-emerald-700 italic">{{ search }}</span>
+                    {{ recipes.total }} {{ recipeNounForm }}
+                    <template v-if="q">
+                        met <span class="text-emerald-700 italic">{{ q }}</span>
                     </template>
                 </h1>
 
@@ -73,8 +74,6 @@ const title = (props.search !== '' && props.recipes.total > 0) ?
                         </div>
 
                         <h2 class="recipe-card-title">{{ recipe.title }}</h2>
-
-                        <Button class="recipe-card-button">Open recipe</Button>
                     </Link>
                 </div>
 

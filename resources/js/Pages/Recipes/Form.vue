@@ -13,6 +13,7 @@ import Input from '@/Components/Input.vue';
 import InputError from '@/Components/InputError.vue';
 import Label from '@/Components/Label.vue';
 import {ref} from "vue";
+import ValidationErrors from "@/Components/ValidationErrors.vue";
 
 const props = defineProps(['recipe'])
 const edit = route().current('recipes.edit') ?? false;
@@ -66,7 +67,7 @@ const submit = () => {
     }
 }
 
-const title = edit ? 'Update Recipe "' + form.title + '"' : 'Add a recipe'
+const title = edit ? 'Wijzig recept "' + form.title + '"' : 'Voeg een nieuw recept toe'
 
 const editor = ClassicEditor;
 const summaryEditorConfig = {
@@ -118,7 +119,7 @@ const instructionsEditorConfig = {
 }
 
 function confirmDeletion(event) {
-    if (confirm('Are you sure you want to delete this recipe?')) {
+    if (confirm('Weet je zeker dat je dit recept wilt verwijderen?')) {
         router.delete(route('recipes.destroy', props.recipe.id), {
             method: 'delete',
         });
@@ -137,8 +138,10 @@ function confirmDeletion(event) {
         <form class="max-w-3xl mx-auto mb-12 space-y-8" @submit.prevent="submit">
             <div class="px-4 py-5 sm:p-6 sm:pb-8 bg-white shadow sm:rounded-md space-y-2">
                 <div class="grid grid-cols-12 gap-6">
+                    <ValidationErrors class="col-span-12 -mx-4 -mt-5 p-4"/>
+
                     <div class="col-span-12 space-y-1">
-                        <Label for="title" value="Title"/>
+                        <Label for="title" value="Titel"/>
                         <Input v-model="form.title" autocomplete="title" class="block w-full" required type="text"/>
                         <InputError :message="form.errors.title"/>
                     </div>
@@ -150,27 +153,27 @@ function confirmDeletion(event) {
 
 
                     <div class="col-span-12 space-y-1">
-                        <Label for="image" value="Image (optional)"/>
+                        <Label for="image" value="Afbeelding (optioneel)"/>
                         <input ref="imageInput" accept="image/jpeg,image/png" type="file" @change="updateImagePreview"
                                class="hidden"/>
 
                         <Button v-if="!imagePreview" class="text-xs" @click="imageInput.click()">
-                            Upload image
+                            Upload afbeelding
                         </Button>
 
                         <div v-else class="col-span-12 space-y-1">
                             <img
-                                alt="Image preview"
+                                alt="Voorbeeld van de afbeelding"
                                 class="block rounded-md max-w-full max-h-32 bg-contain bg-no-repeat bg-center"
                                 :src="imagePreview"
                             />
 
                             <Button class="text-xs mr-1" button-style="secondary" @click="imageInput.click()">
-                                Replace image
+                                Vervang afbeelding
                             </Button>
 
                             <Button class="text-xs" button-style="danger" @click="clearImageField">
-                                Remove image
+                                Verwijder afbeelding
                             </Button>
                         </div>
 
@@ -182,7 +185,7 @@ function confirmDeletion(event) {
                     </div>
 
                     <div class="col-span-12 space-y-1">
-                        <Label for="summary" value="Summary (optional)"/>
+                        <Label for="summary" value="Samenvatting (optioneel)"/>
                         <ckeditor :editor="editor" v-model="form.summary" :config="summaryEditorConfig"/>
                         <InputError :message="form.errors.summary"/>
                     </div>
@@ -192,25 +195,25 @@ function confirmDeletion(event) {
             <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-md space-y-2">
                 <div class="grid grid-cols-12 gap-6">
                     <div class="col-span-12 sm:col-span-4 space-y-1">
-                        <Label for="servings" value="Servings"/>
+                        <Label for="servings" value="Aantal porties"/>
                         <Input v-model="form.servings" class="block w-full" min="1" required type="number"/>
                         <InputError :message="form.errors.servings"/>
                     </div>
 
                     <div class="col-span-12 sm:col-span-4 space-y-1">
-                        <Label for="preparation_minutes" value="Preparation in minutes (optional)"/>
+                        <Label for="preparation_minutes" value="Voorbereidingstijd in minuten (optioneel)"/>
                         <Input v-model="form.preparation_minutes" class="block w-full" min="1" type="number"/>
                         <InputError :message="form.errors.preparation_minutes"/>
                     </div>
 
                     <div class="col-span-12 sm:col-span-4 space-y-1">
-                        <Label for="cooking_minutes" value="Cooking in minutes (optional)"/>
+                        <Label for="cooking_minutes" value="Bereidingstijd in minuten (optioneel)"/>
                         <Input v-model="form.cooking_minutes" class="block w-full" min="1" type="number"/>
                         <InputError :message="form.errors.cooking_minutes"/>
                     </div>
 
                     <div class="col-span-12 sm:col-span-12 space-y-1">
-                        <Label for="difficulty" value="Difficulty"/>
+                        <Label for="difficulty" value="Moeilijkheid"/>
                         <select
                             v-model="form.difficulty"
                             class="
@@ -221,18 +224,16 @@ function confirmDeletion(event) {
                                 transition ease-in-out duration-150
                             "
                         >
-                            <option value="easy">Easy</option>
-                            <option value="moderate">Moderate</option>
-                            <option value="difficult">Difficult</option>
+                            <option value="easy">Makkelijk</option>
+                            <option value="moderate">Gemiddeld</option>
+                            <option value="difficult">Moeilijk</option>
                         </select>
                         <InputError :message="form.errors.difficulty"/>
                     </div>
 
                     <div class="col-span-12 grid grid-cols-12 gap-6">
                         <div class="col-span-12 space-y-1">
-                            <Label>
-                                Ingredients
-                            </Label>
+                            <Label>Ingredienten</Label>
                             <textarea
                                 v-model="form.ingredients"
                                 class="
@@ -246,21 +247,26 @@ function confirmDeletion(event) {
                                 rows="15"
                             />
                             <InputError :message="form.errors.ingredients"/>
-                            <p class="text-xs text-gray-500">
-                                One ingredient per line. Start a line with a # to create a title and a new section. Add
-                                an empty line to create a new section without a title.
+                            <p class="!my-3 text-xs text-gray-500">
+                                Je kunt de ingredienten verrijken met de volgende opties:
                             </p>
-                            <p class="text-xs text-gray-500">
-                                Ingredients are automatically split in amount (a number), unit (eg. grams, tablespoons,
-                                etc.), name (carrot) and info (chopped in dices).
-                            </p>
-                            <p class="text-xs text-gray-500">
-                                You can add a plural name by adding a | after the name and adding the plural name. For
-                                example: carrot|carrots.
-                            </p>
-                            <p class="text-xs text-gray-500">
-                                Place info inside parentheses. For example: carrot (chopped in dices).
-                            </p>
+                            <ul class="pl-4 text-xs text-gray-500 list-outside">
+                                <li>
+                                    Één ingredient per regel. Begin een regel met een # om een titel en een nieuwe
+                                    sectie te maken. Voeg een lege regel toe om een nieuwe sectie zonder titel te maken.
+                                </li>
+                                <li>
+                                    Ingredienten worden automatisch gesplitst in hoeveelheid (een getal), eenheid (bijv.
+                                    gram, eetlepels, etc.), naam (wortel) en info (in blokjes gesneden).
+                                </li>
+                                <li>
+                                    Je kunt een de meervoud van een ingredient toevoegen door een | achter de naam te
+                                    zetten en de meervoudsvorm toe te voegen. Bijvoorbeeld: wortel|wortels.
+                                </li>
+                                <li>
+                                    Plaats info tussen haakjes. Bijvoorbeeld: wortel (in blokjes gesneden).
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -269,19 +275,19 @@ function confirmDeletion(event) {
             <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-md space-y-2">
                 <div class="grid grid-cols-12 gap-6">
                     <div class="col-span-12 space-y-1">
-                        <Label for="instructions" value="Instructions"/>
+                        <Label for="instructions" value="Instructies"/>
                         <ckeditor :editor="editor" v-model="form.instructions" :config="instructionsEditorConfig"/>
                         <InputError :message="form.errors.instructions"/>
                     </div>
 
                     <div class="col-span-12 space-y-1">
-                        <Label for="source_label" value="Source label (optional)"/>
+                        <Label for="source_label" value="Bron naam (optioneel)"/>
                         <Input v-model="form.source_label" class="block w-full" type="text"/>
                         <InputError :message="form.errors.source_label"/>
                     </div>
 
                     <div class="col-span-12 space-y-1">
-                        <Label for="source_link" value="Source link (optional)"/>
+                        <Label for="source_link" value="Bron link (optioneel)"/>
                         <Input v-model="form.source_link" class="block w-full" type="text"/>
                         <InputError :message="form.errors.source_link"/>
                     </div>
@@ -291,7 +297,7 @@ function confirmDeletion(event) {
             <div class="fixed bottom-0 left-0 w-full px-4 py-3 bg-gray-50 border-t border-gray-200 sm:px-6">
                 <div class="flex justify-between max-w-3xl mx-auto sm:px-6">
                     <Button :disabled="form.processing" class="text-xs" type="submit">
-                        Save
+                        Opslaan
                     </Button>
 
                     <Button v-if="$page.props.auth.user"
@@ -299,7 +305,7 @@ function confirmDeletion(event) {
                             class="text-xs"
                             @click="confirmDeletion"
                     >
-                        Delete
+                        Verwijder
                     </Button>
                 </div>
             </div>

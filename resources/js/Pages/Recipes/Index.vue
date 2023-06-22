@@ -6,11 +6,11 @@ import Pagination from '@/Components/Pagination.vue';
 
 let props = defineProps({
     recipes: Object,
-    search: String,
+    q: String,
 });
 
 const form = useForm({
-    search: props.search ?? '',
+    q: props.q ?? '',
 });
 </script>
 
@@ -25,21 +25,21 @@ const form = useForm({
                       class="px-4 py-8 sm:p-16 md:p-32 w-full flex relative">
                     <input
                         class="w-full p-2 sm:py-4 sm:px-6 bg-white border-2 border-gray-300 rounded-l-md text-sm md:text-base lg:text-lg"
-                        placeholder="What would you like to eat today?"
+                        placeholder="Waar heb je zin in?"
                         type="search"
-                        v-model="form.search"
+                        v-model="form.q"
                     />
                     <button
                         type="submit"
                         :disabled="form.processing"
                         class="p-2 sm:py-4 sm:px-6 bg-emerald-700 border-2 border-emerald-700 border-l-0 rounded-r-md text-white text-sm md:text-base lg:text-lg"
                     >
-                        Search
+                        Zoeken
                     </button>
                 </form>
             </div>
 
-            <h1 class="sr-only">Recipes</h1>
+            <h1 class="sr-only">Recepten</h1>
 
             <div class="grid grid-cols-12 gap-4 sm:gap-6 place-items-stretch">
                 <Link
@@ -54,12 +54,10 @@ const form = useForm({
                     class="recipe-card"
                 >
                     <div v-if="recipe.image" class="recipe-card-image">
-                        <img :src="recipe.image" alt="A picture of '{{ recipe.title }}'"/>
+                        <img :src="recipe.image" :alt="`Afbeelding van '${recipe.title}'`"/>
                     </div>
 
                     <h2 class="recipe-card-title">{{ recipe.title }}</h2>
-
-                    <Button class="recipe-card-button">Open recipe</Button>
                 </Link>
             </div>
 

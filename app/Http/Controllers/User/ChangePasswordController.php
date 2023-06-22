@@ -16,7 +16,7 @@ class ChangePasswordController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Inertia\Response
      */
-    public function show(Request $request)
+    public function edit(Request $request)
     {
         return Inertia::render('Users/UpdatePassword');
     }
@@ -43,6 +43,6 @@ class ChangePasswordController extends Controller
 
         event(new PasswordReset($user));
 
-        return redirect()->route('dashboard')->with('success', 'Your password has been changed successfully!');
+        return redirect()->route('dashboard')->with('success', 'Je wachtwoord is succesvol gewijzigd!');
     }
 }

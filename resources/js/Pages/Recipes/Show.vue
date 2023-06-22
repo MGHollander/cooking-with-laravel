@@ -29,10 +29,10 @@ function decrementServings() {
     props.recipe.servings--;
 }
 
-const servingsLabel = computed(() => (props.recipe.servings === 1) ? 'serving' : 'servings')
+const servingsLabel = computed(() => (props.recipe.servings === 1) ? 'portie' : 'porties')
 
 function confirmDeletion(event) {
-    if (confirm('Are you sure you want to delete this recipe?')) {
+    if (confirm('Weet je zeker dat je dit recept wilt verwijderen?')) {
         router.delete(route('recipes.destroy', props.recipe.id), {
             method: 'delete',
         });
@@ -46,15 +46,15 @@ function confirmDeletion(event) {
     <DefaultLayout>
         <div class="bg-white sm:rounded-lg sm:shadow-lg overflow-hidden">
             <div class="p-6 lg:p-10 space-y-6 md:space-y-10">
-                <div class="flex justify-between items-center">
-                    <h1 class="relative text-3xl font-bold">{{ recipe.title }}</h1>
+                <div class="md:flex md:justify-between">
+                    <h1 class="relative text-3xl font-bold mb-4">{{ recipe.title }}</h1>
                     <div class="space-x-2 whitespace-nowrap">
                         <Button v-if="$page.props.auth.user"
                                 :href="route('recipes.edit', recipe.id)"
                                 class="text-xs"
                                 button-style="secondary"
                         >
-                            Edit
+                            Bewerk
                         </Button>
 
                         <Button v-if="$page.props.auth.user"
@@ -62,7 +62,7 @@ function confirmDeletion(event) {
                                 class="text-xs"
                                 @click="confirmDeletion"
                         >
-                            Delete
+                            Verwijder
                         </Button>
                     </div>
                 </div>
@@ -94,7 +94,7 @@ function confirmDeletion(event) {
                                         d="M307.75 187.71c-60.14 0-109.41 52.47-109.41 116.45s49.26 116.45 109.41 116.45 109.41-52.47 109.41-116.45-49.27-116.45-109.41-116.45zm0 207.31c-46.07 0-83.82-40.95-83.82-90.86s37.75-90.86 83.82-90.86 83.82 40.95 83.82 90.86c0 50.55-37.76 90.84-83.82 90.84zM549 297.76l.64-160a13.36 13.36 0 0 0-5.12-10.24q-4.8-3.84-11.52-1.92c-1.92.64-46.07 14.08-46.07 92.78 0 37.11 2.56 64.62 6.4 79.34a23.65 23.65 0 0 0-3.84 13.44v139.52c0 13.44 10.88 24.31 23.67 24.31h14.72c13.44 0 23.67-10.88 23.67-24.31V310.56c1.25-4.48-.03-8.96-2.55-12.8zM524 166l-.64 119.65h-5.76c-1.92-8.32-4.48-28.15-4.48-67.82.01-25 5.13-41.64 10.88-51.83zm3.2 283.45h-10.87V311.84h10.88zm-400.53-323.8a12.83 12.83 0 0 0-12.8 12.8v46.71h-7v-46.72a12.8 12.8 0 0 0-25.59 0v46.71h-7.71v-46.71a12.8 12.8 0 0 0-25.59 0v59.5a3.85 3.85 0 0 0 .64 2.56v.64c0 .64.64 1.28.64 1.92v.64l20.47 34.55a25.13 25.13 0 0 0-7 17.92v194.51c0 13.44 10.88 24.31 23.67 24.31h14.72c13.44 0 23.67-10.88 23.67-24.31V255.53a25.66 25.66 0 0 0-7.68-17.92l19.83-33.27v-.64a2.35 2.35 0 0 0 .64-1.92v-.64c0-.64.64-1.92.64-2.56v-60.14c1.25-7.04-4.51-12.79-11.55-12.79zm-23 85.1L93.4 228l-10.23-17.26zM88.28 449.4v-190c1.92.64 3.2 1.28 5.12 1.28a18.68 18.68 0 0 0 5.76-1.28v190z"/>
                                 </svg>
                             </div>
-                            <strong>Servings</strong><br/>
+                            <strong>Aantal porties</strong><br/>
                             {{ recipe.servings }} {{ servingsLabel }}
                         </div>
 
@@ -106,7 +106,7 @@ function confirmDeletion(event) {
                                     <circle cx="300.24" cy="339.59" r="9.2" transform="rotate(-11.9 300.247 339.58)"/>
                                 </svg>
                             </div>
-                            <strong>Difficulty</strong><br/>
+                            <strong>Moeilijkheid</strong><br/>
                             {{ recipe.difficulty }}
                         </div>
 
@@ -118,8 +118,8 @@ function confirmDeletion(event) {
                                     <circle cx="483.4" cy="135.26" r="9.46"/>
                                 </svg>
                             </div>
-                            <strong>Preparation time</strong><br/>
-                            {{ recipe.preparation_minutes }} minutes
+                            <strong>Voorbereidingstijd</strong><br/>
+                            {{ recipe.preparation_minutes }} minuten
                         </div>
 
                         <div v-if="recipe.cooking_minutes">
@@ -138,8 +138,8 @@ function confirmDeletion(event) {
                                 </svg>
                             </div>
 
-                            <strong>Cooking time</strong><br/>
-                            {{ recipe.cooking_minutes }} minutes
+                            <strong>Bereidingstijd</strong><br/>
+                            {{ recipe.cooking_minutes }} minuten
                         </div>
                     </div>
                 </div>
@@ -148,7 +148,7 @@ function confirmDeletion(event) {
             <div class="p-6 lg:p-10 space-y-6 md:space-y-10">
                 <div class="space-y-6 md:space-y-0 md:flex md:items-start md:space-x-8">
                     <div class="-mx-6 sm:mx-0 p-6 md:w-1/3 bg-gray-100 sm:rounded-lg">
-                        <h2 class="mb-2 text-2xl font-bold">Ingredients</h2>
+                        <h2 class="mb-2 text-2xl font-bold">Ingrediënten</h2>
 
                         <div class="-mx-2 mb-4 flex justify-between items-center bg-gray-200 p-2 rounded">
                             <div>{{ recipe.servings }} {{ servingsLabel }}</div>
@@ -156,6 +156,7 @@ function confirmDeletion(event) {
                                 <button
                                     class="inline-block w-8 border-2 border-gray-500 rounded text-lg text-gray-600 font-bold hover:bg-gray-500 hover:text-white transition-all"
                                     @click="incrementServings"
+                                    aria-label="Verhoog aantal porties"
                                 >
                                     +
                                 </button>
@@ -164,6 +165,7 @@ function confirmDeletion(event) {
                                     :disabled="recipe.servings === 1"
                                     class="inline-block w-8 border-2 border-gray-500 rounded text-lg text-gray-600 font-bold hover:bg-gray-500 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-600"
                                     @click="decrementServings"
+                                    aria-label="Verminder aantal porties"
                                 >
                                     -
                                 </button>
@@ -196,12 +198,12 @@ function confirmDeletion(event) {
                     </div>
 
                     <div class="md:w-2/3 space-y-4 sm:px-6 md:px-0">
-                        <h2 class="text-2xl font-bold mb-4 md:mt-6">Instructions</h2>
+                        <h2 class="text-2xl font-bold mb-4 md:mt-6">Instructies</h2>
 
                         <div class="instructions" v-html="recipe.instructions"/>
 
                         <p v-if="recipe.source_label || recipe.source_link">
-                            <strong>Source: </strong>
+                            <strong>Bron: </strong>
                             <template v-if="recipe.source_link">
                                 <a :href="recipe.source_link">{{ recipe.source_label ?? recipe.source_link }}</a>
                             </template>

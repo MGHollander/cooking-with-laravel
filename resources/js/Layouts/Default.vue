@@ -14,7 +14,7 @@ const showingNavigationDropdown = ref(false);
 const showingNavigationSeaerch = ref(false);
 
 const form = useForm({
-    search: '',
+    q: '',
 });
 </script>
 
@@ -55,7 +55,7 @@ const form = useForm({
                                     :href="route('recipes.create')"
                                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                                 >
-                                    <span class="sr-only">Add a recipe</span>
+                                    <span class="sr-only">Voeg een recept toe</span>
                                     <svg class="h-5 w-5" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                         <path
                                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -67,7 +67,7 @@ const form = useForm({
                                     class="inline-flex items-center justify-center p-2.5 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                                     @click="showingNavigationSeaerch = ! showingNavigationSeaerch"
                                 >
-                                    <span class="sr-only">Search a recipe</span>
+                                    <span class="sr-only">Zoek een recept</span>
                                     <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                             <path
@@ -103,31 +103,26 @@ const form = useForm({
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink class="no-underline" :href="route('dashboard')"
-                                                      :active="route().current('dashboard')">
-                                            Dashboard
-                                        </DropdownLink>
-
                                         <DropdownLink class="no-underline"
                                                       :href="route('users.edit', $page.props.auth.user.id)"
                                                       :active="route().current('users.edit', { id: $page.props.auth.user.id })">
-                                            Edit your profile
+                                            Bewerk je profiel
                                         </DropdownLink>
 
                                         <DropdownLink class="no-underline"
                                                       :href="route('users.password.edit')"
                                                       :active="route().current('users.password.edit')">
-                                            Change your password
+                                            Wijzig je wachtwoord
                                         </DropdownLink>
 
                                         <DropdownLink class="no-underline" :href="route('users.index')"
-                                                      :active="route().current('users.*') && !route().current('users.edit', { id: $page.props.auth.user.id })">
-                                            Manage users
+                                                      :active="route().current('users.index')">
+                                            Beheer gebruikers
                                         </DropdownLink>
 
                                         <DropdownLink class="no-underline" :href="route('logout')" method="post"
                                                       as="button">
-                                            Log out
+                                            Uitloggen
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
@@ -136,7 +131,7 @@ const form = useForm({
 
                         <div v-else class="flex space-x-1">
                             <NavLink :href="route('login')" :active="route().current('login')">
-                                Login
+                                Inloggen
                             </NavLink>
 
                             <div class="flex items-center">
@@ -144,7 +139,7 @@ const form = useForm({
                                     class="inline-flex items-center justify-center p-2.5 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                                     @click="showingNavigationSeaerch = ! showingNavigationSeaerch"
                                 >
-                                    <span class="sr-only">Search a recipe</span>
+                                    <span class="sr-only">Zoek een recept</span>
                                     <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                             <path
@@ -172,7 +167,7 @@ const form = useForm({
                                 :href="route('recipes.create')"
                                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                             >
-                                <span class="sr-only">Add a recipe</span>
+                                <span class="sr-only">Voeg een recept toe</span>
                                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                     <path
                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -184,7 +179,7 @@ const form = useForm({
                                 @click="showingNavigationSeaerch = ! showingNavigationSeaerch"
                                 class="inline-flex items-center justify-center p-2.5 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                             >
-                                <span class="sr-only">Search a recipe</span>
+                                <span class="sr-only">Zoek een recept</span>
                                 <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <path
@@ -227,16 +222,16 @@ const form = useForm({
                         >
                             <input
                                 class="w-full p-2 sm:py-2 sm:px-3 bg-white border-2 border-gray-300 rounded-l-md text-sm md:text-base lg:text-lg"
-                                placeholder="What would you like to eat today?"
+                                placeholder="Waar heb je zin in?"
                                 type="search"
-                                v-model="form.search"
+                                v-model="form.q"
                             />
                             <button
                                 type="submit"
                                 :disabled="form.processing"
                                 class="p-2 sm:py-2 sm:px-3 bg-emerald-700 border-2 border-emerald-700 border-l-0 rounded-r-md text-white text-sm md:text-base lg:text-lg"
                             >
-                                Search
+                                Zoeken
                             </button>
                         </form>
                     </Transition>
@@ -263,28 +258,24 @@ const form = useForm({
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                Dashboard
-                            </ResponsiveNavLink>
-
                             <ResponsiveNavLink
                                 :href="route('users.edit', $page.props.auth.user.id)"
                                 :active="route().current('users.edit', { id: $page.props.auth.user.id })">
-                                Edit your profile
+                                Bewerk je profiel
                             </ResponsiveNavLink>
 
                             <ResponsiveNavLink
                                 :href="route('users.password.edit')"
                                 :active="route().current('users.password.edit')">
-                                Change your password
+                                Wijzig je wachtwoord
                             </ResponsiveNavLink>
 
-                            <ResponsiveNavLink :href="route('users.index')" :active="route().current('users.*')">
-                                Manage users
+                            <ResponsiveNavLink :href="route('users.index')" :active="route().current('users.index')">
+                                Beheer gebruikers
                             </ResponsiveNavLink>
 
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                                Log out
+                                Uitloggen
                             </ResponsiveNavLink>
                         </div>
                     </div>

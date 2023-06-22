@@ -25,7 +25,7 @@ let submit = () => {
     form.patch(route('users.update', props.id));
 };
 
-const title = 'Edit ' + (props.id === attrs.auth.user.id ? 'your profile' : props.name + '\'s profile');
+const title = 'Bewerk ' + (props.id === attrs.auth.user.id ? 'je profiel' : `het profiel van ${props.name}`);
 </script>
 
 <template>
@@ -40,14 +40,14 @@ const title = 'Edit ' + (props.id === attrs.auth.user.id ? 'your profile' : prop
             <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-tl-md sm:rounded-tr-md space-y-2">
                 <div class="grid grid-cols-6 gap-6">
                     <div class="col-span-6 sm:col-span-4 space-y-1">
-                        <Label for="name" value="Name"/>
+                        <Label for="name" value="Naam"/>
                         <Input v-model="form.name" type="text" required class="block w-full" autocomplete="name"/>
                         <InputError :message="form.errors.name"/>
                     </div>
 
                     <div class="col-span-6 sm:col-span-4 space-y-1">
-                        <Label for="email" value="Email"/>
-                        <Input v-model="form.email" type="email" required class="block w-full" autocomplete="username"/>
+                        <Label for="email" value="E-mailadres"/>
+                        <Input v-model="form.email" type="email" required class="block w-full" autocomplete="email"/>
                         <InputError :message="form.errors.email"/>
                     </div>
                 </div>
@@ -56,7 +56,7 @@ const title = 'Edit ' + (props.id === attrs.auth.user.id ? 'your profile' : prop
             <div
                 class="flex items-center px-4 py-3 bg-gray-50 border-b border-gray-200 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
                 <Button class="text-xs" type="submit" :disabled="form.processing">
-                    Save
+                    Opslaan
                 </Button>
             </div>
         </form>

@@ -60,7 +60,7 @@ class RecipeController extends Controller
 
         $recipe = Recipe::create($attributes);
 
-        return redirect()->route('recipes.show', $recipe)->with('success', 'Recipe added successfully!');
+        return redirect()->route('recipes.show', $recipe)->with('success', 'Het recept is succesvol toegevoegd!');
     }
 
     /**
@@ -78,6 +78,8 @@ class RecipeController extends Controller
         if ($recipe->ingredients) {
             $recipe->ingredients = $recipe->transformIngredients($recipe->ingredients);
         }
+
+        $recipe->difficulty = Str::ucfirst(__('recipes.' . $recipe->difficulty));
 
         return Inertia::render('Recipes/Show', compact('recipe'));
     }
@@ -136,10 +138,10 @@ class RecipeController extends Controller
         $redirect = redirect()->route('recipes.show', $recipe);
 
         if ($destroyImage && !$image) {
-            return $redirect->with('warning', 'Recipe updated, but the image is not replaced due to a server error.');
+            return $redirect->with('warning', 'Het recept is gewijzigd, maar de afbeelding kon niet worden aangepast door een fout op de server.');
         }
 
-        return $redirect->with('success', 'Recipe updated successfully!');
+        return $redirect->with('success', 'Het recept is succesvol gewijzigd!');
     }
 
     /**
@@ -152,7 +154,7 @@ class RecipeController extends Controller
     {
         $recipe->delete();
 
-        return redirect()->route('home')->with('success', 'Recipe deleted successfully!');
+        return redirect()->route('home')->with('success', 'Het recept is succesvol verwijderd!');
     }
 
     protected function validateRecipe(Request $request, ?Recipe $recipe = null): array
