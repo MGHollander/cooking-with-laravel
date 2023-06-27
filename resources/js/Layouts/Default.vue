@@ -10,8 +10,15 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 
-const showingNavigationDropdown = ref(false);
-const showingNavigationSeaerch = ref(false);
+const showNav = ref(null);
+const toggleNav = (nav) => {
+    if (nav === showNav.value) {
+        showNav.value = null;
+    } else {
+        showNav.value = nav;
+    }
+}
+
 
 const form = useForm({
     q: '',
@@ -47,27 +54,47 @@ const form = useForm({
                             -->
                         </div>
 
+                        <!-- Menu for users -->
                         <div v-if="$page.props.auth.user" class="hidden sm:flex sm:items-center sm:ml-6">
-                            <!-- Settings Dropdown -->
                             <div class="ml-3 relative flex items-center space-x-1">
-                                <Link
-                                    v-if="$page.props.auth.user"
-                                    :href="route('recipes.create')"
-                                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-                                >
-                                    <span class="sr-only">Voeg een recept toe</span>
-                                    <svg class="h-5 w-5" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                                        <path
-                                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 12L20 12 M12 4l0 16"/>
-                                    </svg>
-                                </Link>
+                                <Dropdown align="left" width="48">
+                                    <template #trigger>
+                                        <span class="inline-flex rounded-md">
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                                aria-label="Uitklapmenu om recepten toe te voegen"
+                                            >
+                                                <svg class="h-5 w-5" stroke="currentColor" fill="none"
+                                                     viewBox="0 0 24 24">
+                                                    <path
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M4 12L20 12 M12 4l0 16"/>
+                                                </svg>
+                                            </button>
+                                        </span>
+                                    </template>
+
+                                    <template #content>
+                                        <DropdownLink class="no-underline"
+                                                      :href="route('recipes.create')"
+                                                      :active="route().current('recipes.create')">
+                                            Voeg een recept toe
+                                        </DropdownLink>
+
+                                        <DropdownLink class="no-underline"
+                                                      :href="route('import.index')"
+                                                      :active="route().current('import.index')">
+                                            Importeer een recept
+                                        </DropdownLink>
+                                    </template>
+                                </Dropdown>
 
                                 <button
                                     class="inline-flex items-center justify-center p-2.5 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-                                    @click="showingNavigationSeaerch = ! showingNavigationSeaerch"
+                                    @click="toggleNav('search')"
+                                    aria-label="Zoek een recept"
                                 >
-                                    <span class="sr-only">Zoek een recept</span>
                                     <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                             <path
@@ -88,8 +115,11 @@ const form = useForm({
                                 <Dropdown align="right" width="48">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
-                                            <button type="button"
-                                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                                            <button
+                                                type="button"
+                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
+                                                aria-label="Open het gebruikersmenu"
+                                            >
                                                 {{ $page.props.auth.user.name }}
 
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
@@ -129,6 +159,7 @@ const form = useForm({
                             </div>
                         </div>
 
+                        <!-- Menu for guests -->
                         <div v-else class="flex space-x-1">
                             <NavLink :href="route('login')" :active="route().current('login')">
                                 Inloggen
@@ -137,9 +168,9 @@ const form = useForm({
                             <div class="flex items-center">
                                 <button
                                     class="inline-flex items-center justify-center p-2.5 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-                                    @click="showingNavigationSeaerch = ! showingNavigationSeaerch"
+                                    @click="toggleNav('search')"
+                                    aria-label="Zoek een recept"
                                 >
-                                    <span class="sr-only">Zoek een recept</span>
                                     <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                             <path
@@ -159,27 +190,25 @@ const form = useForm({
                             </div>
                         </div>
 
-                        <!-- Hamburger -->
-                        <!-- TODO At the moment there are no menu items, so the hamburger menu is only useful if you are signed in. -->
+                        <!-- Responsive Menu -->
                         <div v-if="$page.props.auth.user" class="-mr-2 flex items-center sm:hidden space-x-1">
-                            <Link
-                                v-if="$page.props.auth.user"
-                                :href="route('recipes.create')"
+                            <button
+                                @click="toggleNav('create')"
                                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                                aria-label="Voeg een recept toe"
                             >
-                                <span class="sr-only">Voeg een recept toe</span>
                                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                     <path
                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 12L20 12 M12 4l0 16"/>
                                 </svg>
-                            </Link>
+                            </button>
 
                             <button
-                                @click="showingNavigationSeaerch = ! showingNavigationSeaerch"
+                                @click="toggleNav('search')"
                                 class="inline-flex items-center justify-center p-2.5 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                                aria-label="Zoek een recept"
                             >
-                                <span class="sr-only">Zoek een recept</span>
                                 <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <path
@@ -197,49 +226,49 @@ const form = useForm({
                                 </svg>
                             </button>
 
-                            <button @click="showingNavigationDropdown = ! showingNavigationDropdown"
-                                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                                <span class="sr-only">Menu</span>
+                            <button
+                                @click="toggleNav('user')"
+                                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                                aria-label="Gebruikersmenu"
+                            >
                                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                     <path
-                                        :class="{'hidden': showingNavigationDropdown, 'inline-flex': ! showingNavigationDropdown }"
+                                        v-if="showNav !== 'user'"
                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 6h16 M4 12h16 M4 18h16"/>
                                     <path
-                                        :class="{'hidden': ! showingNavigationDropdown, 'inline-flex': showingNavigationDropdown }"
+                                        v-if="showNav === 'user'"
                                         stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
                             </button>
                         </div>
                     </div>
-
-                    <Transition name="fade">
-                        <form
-                            v-if="showingNavigationSeaerch"
-                            @submit.prevent="form.get(route('search'))"
-                            class="p-2 w-full flex relative"
-                        >
-                            <input
-                                class="w-full p-2 sm:py-2 sm:px-3 bg-white border-2 border-gray-300 rounded-l-md text-sm md:text-base lg:text-lg"
-                                placeholder="Waar heb je zin in?"
-                                type="search"
-                                v-model="form.q"
-                            />
-                            <button
-                                type="submit"
-                                :disabled="form.processing"
-                                class="p-2 sm:py-2 sm:px-3 bg-emerald-700 border-2 border-emerald-700 border-l-0 rounded-r-md text-white text-sm md:text-base lg:text-lg"
-                            >
-                                Zoeken
-                            </button>
-                        </form>
-                    </Transition>
                 </div>
 
-                <!-- Responsive Navigation Menu -->
-                <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"
-                     class="sm:hidden">
+                <!-- Search bar -->
+                <form
+                    v-if="showNav === 'search'"
+                    @submit.prevent="form.get(route('search'))"
+                    class="p-4 w-full flex border-t border-gray-200"
+                >
+                    <input
+                        class="w-full p-2 sm:py-2 sm:px-3 bg-white border-2 border-gray-300 rounded-l-md text-sm md:text-base"
+                        placeholder="Waar heb je zin in?"
+                        type="search"
+                        v-model="form.q"
+                    />
+                    <button
+                        type="submit"
+                        :disabled="form.processing"
+                        class="p-2 sm:py-2 sm:px-3 bg-emerald-700 border-2 border-emerald-700 border-l-0 rounded-r-md text-white text-sm md:text-base"
+                    >
+                        Zoeken
+                    </button>
+                </form>
+
+                <!-- Responsive Menus -->
+                <div v-if="$page.props.auth.user" class="sm:hidden">
                     <!-- <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
@@ -250,14 +279,31 @@ const form = useForm({
                         </ResponsiveNavLink>
                     </div> -->
 
-                    <!-- Responsive Settings Options -->
-                    <div v-if="$page.props.auth.user" class="pt-4 pb-1 border-t border-gray-200">
-                        <div class="px-4">
+                    <!-- Responsive Create Menu -->
+                    <div v-if="showNav === 'create'" class="py-1 border-t border-gray-200">
+                        <div class="space-y-1">
+                            <ResponsiveNavLink
+                                :href="route('recipes.create')"
+                                :active="route().current('recipes.create')">
+                                Recept toevoegen
+                            </ResponsiveNavLink>
+
+                            <ResponsiveNavLink
+                                :href="route('import.index')"
+                                :active="route().current('import.index')">
+                                Recept importeren
+                            </ResponsiveNavLink>
+                        </div>
+                    </div>
+
+                    <!-- Responsive User Menu -->
+                    <div v-if="showNav === 'user'">
+                        <div class="p-4 border-t border-gray-200">
                             <div class="font-medium text-base text-gray-800">{{ $page.props.auth.user.name }}</div>
                             <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
                         </div>
 
-                        <div class="mt-3 space-y-1">
+                        <div class="py-1 space-y-1 border-t border-gray-200">
                             <ResponsiveNavLink
                                 :href="route('users.edit', $page.props.auth.user.id)"
                                 :active="route().current('users.edit', { id: $page.props.auth.user.id })">
@@ -274,7 +320,8 @@ const form = useForm({
                                 Beheer gebruikers
                             </ResponsiveNavLink>
 
-                            <ResponsiveNavLink :href="route('logout')" method="post" as="button">
+                            <ResponsiveNavLink :href="route('logout')" method="post" as="button"
+                                               class="w-full text-left">
                                 Uitloggen
                             </ResponsiveNavLink>
                         </div>
@@ -293,27 +340,22 @@ const form = useForm({
 
             <div v-if="$page.props.flash.error" class="flex justify-between py-4 rounded-lg bg-red-100 text-red-700">
                 <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
-                    <p>
-                        {{ $page.props.flash.error }}
-                    </p>
+                    <p v-html="$page.props.flash.error"/>
+
                 </div>
             </div>
 
             <div v-if="$page.props.flash.success"
                  class="flex justify-between py-4 rounded-lg bg-emerald-100 text-emerald-800">
                 <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
-                    <p>
-                        {{ $page.props.flash.success }}
-                    </p>
+                    <p v-html="$page.props.flash.success"/>
                 </div>
             </div>
 
             <div v-if="$page.props.flash.warning"
                  class="flex justify-between py-4 rounded-lg bg-yellow-100 text-yellow-700">
                 <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
-                    <p>
-                        {{ $page.props.flash.warning }}
-                    </p>
+                    <p v-html="$page.props.flash.warning"/>
                 </div>
             </div>
 

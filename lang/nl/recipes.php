@@ -2,6 +2,6 @@
 
 return [
     'easy'      => 'makkelijk',
-    'moderate'  => 'gemiddeld',
+    'average'   => 'gemiddeld',
     'difficult' => 'moeilijk',
 ];

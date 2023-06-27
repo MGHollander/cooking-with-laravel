@@ -2,6 +2,6 @@
 
 return [
     'easy'      => 'easy',
-    'moderate'  => 'moderate',
+    'average'   => 'average',
     'difficult' => 'difficult',
 ];

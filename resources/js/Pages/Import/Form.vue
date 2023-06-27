@@ -1,47 +1,45 @@
 <script setup>
-import {Head, router, useForm} from '@inertiajs/vue3';
-import {ClassicEditor} from '@ckeditor/ckeditor5-editor-classic';
-import {Essentials} from '@ckeditor/ckeditor5-essentials';
-import {Bold, Italic, Strikethrough, Underline} from '@ckeditor/ckeditor5-basic-styles';
-import {Link} from '@ckeditor/ckeditor5-link';
-import {List} from '@ckeditor/ckeditor5-list';
-import {Paragraph} from '@ckeditor/ckeditor5-paragraph';
+import {ref} from "vue";
+import {Head, useForm} from '@inertiajs/vue3';
+import {ClassicEditor} from "@ckeditor/ckeditor5-editor-classic";
 import '../../../css/ckeditor.css';
+import {instructionsEditorConfig, summaryEditorConfig} from "@/editorConfig";
 import DefaultLayout from '@/Layouts/Default.vue';
 import Button from '@/Components/Button.vue';
 import Input from '@/Components/Input.vue';
 import InputError from '@/Components/InputError.vue';
 import Label from '@/Components/Label.vue';
-import {ref} from "vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 
-const props = defineProps(['recipe'])
-const edit = route().current('recipes.edit') ?? false;
-
-const form = useForm({
-    // Fix multipart limitations @see https://inertiajs.com/file-uploads#multipart-limitations
-    // NOTE: The form is also submitted useing the post method instead of the patch method.
-    _method: edit ? 'PATCH' : 'POST',
-    title: edit ? props.recipe.title : '',
-    image: '',
-    destroy_image: false,
-    preparation_minutes: edit ? props.recipe.preparation_minutes : '',
-    cooking_minutes: edit ? props.recipe.cooking_minutes : '',
-    servings: edit ? props.recipe.servings : '',
-    difficulty: edit ? props.recipe.difficulty : 'easy',
-    ingredients: edit ? props.recipe.ingredients : '',
-    summary: edit ? props.recipe.summary : '',
-    instructions: edit ? props.recipe.instructions : '',
-    source_label: edit ? props.recipe.source_label : '',
-    source_link: edit ? props.recipe.source_link : '',
+const props = defineProps({
+    url: String,
+    recipe: Object,
 })
 
+const title = 'Geïmporteerd recept controleren';
+
+const form = useForm({
+    title: props.recipe.title,
+    image: '',
+    external_image: props.recipe.image,
+    preparation_minutes: props.recipe.preparation_minutes,
+    cooking_minutes: props.recipe.cooking_minutes,
+    servings: props.recipe.servings,
+    difficulty: props.recipe.difficulty,
+    ingredients: props.recipe.ingredients,
+    summary: props.recipe.summary,
+    instructions: props.recipe.instructions,
+    source_label: props.recipe.source_label,
+    source_link: props.recipe.source_link,
+    return_to_import_page: false,
+})
+
+const editor = ClassicEditor;
 const imageInput = ref(null);
-const imagePreview = ref(props.recipe?.image ?? null);
+const imagePreview = ref(props.recipe.image ?? null);
 
 const updateImagePreview = (event) => {
     form.image = event.target.files[0]
-    form.destroy_image = false;
 
     if (!form.image) return;
 
@@ -56,68 +54,9 @@ const updateImagePreview = (event) => {
 
 const clearImageField = () => {
     form.image = null;
-    form.destroy_image = true;
+    form.external_image = null;
     imageInput.value.value = null;
     imagePreview.value = null;
-}
-
-const title = edit ? 'Wijzig recept "' + form.title + '"' : 'Voeg een nieuw recept toe'
-
-const editor = ClassicEditor;
-const summaryEditorConfig = {
-    plugins: [
-        Essentials,
-        Bold,
-        Italic,
-        Link,
-        Paragraph,
-        Strikethrough, Underline
-    ],
-
-    toolbar: {
-        items: [
-            'bold',
-            'italic',
-            'underline',
-            'strikeThrough',
-            '|',
-            'link',
-        ]
-    }
-}
-
-const instructionsEditorConfig = {
-    plugins: [
-        Essentials,
-        Bold,
-        Italic,
-        Link,
-        List,
-        Paragraph,
-        Strikethrough, Underline,
-    ],
-
-    toolbar: {
-        items: [
-            'bold',
-            'italic',
-            'underline',
-            'strikeThrough',
-            '|',
-            'bulletedList',
-            'numberedList',
-            '|',
-            'link',
-        ]
-    }
-}
-
-function confirmDeletion(event) {
-    if (confirm('Weet je zeker dat je dit recept wilt verwijderen?')) {
-        router.delete(route('recipes.destroy', props.recipe.id), {
-            method: 'delete',
-        });
-    }
 }
 </script>
 
@@ -129,28 +68,44 @@ function confirmDeletion(event) {
             {{ title }}
         </template>
 
-        <form class="max-w-3xl mx-auto mb-12 space-y-8"
-              @submit.prevent="edit ? form.post(route('recipes.update', props.recipe.id)) : form.post(route('recipes.store'))">
+        <form class="max-w-3xl mx-auto mb-12 space-y-8" @submit.prevent="form.post(route('import.store'))">
             <div class="px-4 py-5 sm:p-6 sm:pb-8 bg-white shadow sm:rounded space-y-2">
+                <div>
+                    <p>URL: <a :href="props.url" target="_blank">{{ props.url }}</a></p>
+                    <p>Recipe:</p>
+                    <pre class="overflow-x-scroll"><code>{{ props.recipe }}</code></pre>
+                </div>
+            </div>
+
+            <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded space-y-2">
                 <div class="grid grid-cols-12 gap-6">
                     <ValidationErrors class="col-span-12 -mx-4 -mt-5 sm:-mx-6 sm:-mt-6 sm:rounded-t p-4"/>
 
                     <div class="col-span-12 space-y-1">
                         <Label for="title" value="Titel"/>
-                        <Input v-model="form.title" autocomplete="title" class="block w-full" required type="text"/>
+                        <Input v-model="form.title" autocomplete="title" class="block w-full" required
+                               type="text"/>
                         <InputError :message="form.errors.title"/>
                     </div>
 
-                    <div v-if="edit" class="col-span-12 space-y-1">
-                        <Label for="slug" value="Slug"/>
-                        <blockquote class="font-mono text-sm">/{{ props.recipe.slug }}</blockquote>
+                    <div class="col-span-12 space-y-1">
+                        <Label for="image" value="Externe afbeelding (optioneel)"/>
+                        <Input
+                            type="url"
+                            v-model="form.external_image"
+                            class="block w-full"
+                        />
                     </div>
-
 
                     <div class="col-span-12 space-y-1">
                         <Label for="image" value="Afbeelding (optioneel)"/>
-                        <input ref="imageInput" accept="image/jpeg,image/png" type="file" @change="updateImagePreview"
-                               class="hidden"/>
+                        <input
+                            type="file"
+                            class="hidden"
+                            accept="image/jpeg,image/png"
+                            ref="imageInput"
+                            @change="updateImagePreview"
+                        />
 
                         <Button v-if="!imagePreview" class="text-xs" @click="imageInput.click()">
                             Upload afbeelding
@@ -181,7 +136,11 @@ function confirmDeletion(event) {
 
                     <div class="col-span-12 space-y-1">
                         <Label for="summary" value="Samenvatting (optioneel)"/>
-                        <ckeditor :editor="editor" v-model="form.summary" :config="summaryEditorConfig"/>
+                        <ckeditor
+                            :editor="editor"
+                            :config="summaryEditorConfig"
+                            v-model="form.summary"
+                        />
                         <InputError :message="form.errors.summary"/>
                     </div>
                 </div>
@@ -189,25 +148,13 @@ function confirmDeletion(event) {
 
             <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-md space-y-2">
                 <div class="grid grid-cols-12 gap-6">
-                    <div class="col-span-12 sm:col-span-4 space-y-1 self-end">
+                    <div class="col-span-12 sm:col-span-6 space-y-1 self-end">
                         <Label for="servings" value="Aantal porties"/>
                         <Input v-model="form.servings" class="block w-full" min="1" required type="number"/>
                         <InputError :message="form.errors.servings"/>
                     </div>
 
-                    <div class="col-span-12 sm:col-span-4 space-y-1 self-end">
-                        <Label for="preparation_minutes" value="Voorbereidingstijd in minuten (optioneel)"/>
-                        <Input v-model="form.preparation_minutes" class="block w-full" min="1" type="number"/>
-                        <InputError :message="form.errors.preparation_minutes"/>
-                    </div>
-
-                    <div class="col-span-12 sm:col-span-4 space-y-1 self-end">
-                        <Label for="cooking_minutes" value="Bereidingstijd in minuten (optioneel)"/>
-                        <Input v-model="form.cooking_minutes" class="block w-full" min="1" type="number"/>
-                        <InputError :message="form.errors.cooking_minutes"/>
-                    </div>
-
-                    <div class="col-span-12 sm:col-span-12 space-y-1">
+                    <div class="col-span-12 sm:col-span-6 space-y-1">
                         <Label for="difficulty" value="Moeilijkheid"/>
                         <select
                             v-model="form.difficulty"
@@ -224,6 +171,18 @@ function confirmDeletion(event) {
                             <option value="difficult">Moeilijk</option>
                         </select>
                         <InputError :message="form.errors.difficulty"/>
+                    </div>
+
+                    <div class="col-span-12 sm:col-span-6 space-y-1 self-end">
+                        <Label for="preparation_minutes" value="Voorbereidingstijd in minuten (optioneel)"/>
+                        <Input v-model="form.preparation_minutes" class="block w-full" min="1" type="number"/>
+                        <InputError :message="form.errors.preparation_minutes"/>
+                    </div>
+
+                    <div class="col-span-12 sm:col-span-6 space-y-1 self-end">
+                        <Label for="cooking_minutes" value="Bereidingstijd in minuten (optioneel)"/>
+                        <Input v-model="form.cooking_minutes" class="block w-full" min="1" type="number"/>
+                        <InputError :message="form.errors.cooking_minutes"/>
                     </div>
 
                     <div class="col-span-12 grid grid-cols-12 gap-6">
@@ -247,15 +206,19 @@ function confirmDeletion(event) {
                             </p>
                             <ul class="pl-4 text-xs text-gray-500 list-outside">
                                 <li>
-                                    Één ingredient per regel. Begin een regel met een # om een titel en een nieuwe
-                                    sectie te maken. Voeg een lege regel toe om een nieuwe sectie zonder titel te maken.
+                                    Één ingredient per regel. Begin een regel met een # om een titel en een
+                                    nieuwe
+                                    sectie te maken. Voeg een lege regel toe om een nieuwe sectie zonder titel
+                                    te maken.
                                 </li>
                                 <li>
-                                    Ingredienten worden automatisch gesplitst in hoeveelheid (een getal), eenheid (bijv.
+                                    Ingredienten worden automatisch gesplitst in hoeveelheid (een getal),
+                                    eenheid (bijv.
                                     gram, eetlepels, etc.), naam (wortel) en info (in blokjes gesneden).
                                 </li>
                                 <li>
-                                    Je kunt een de meervoud van een ingredient toevoegen door een | achter de naam te
+                                    Je kunt een de meervoud van een ingredient toevoegen door een | achter de
+                                    naam te
                                     zetten en de meervoudsvorm toe te voegen. Bijvoorbeeld: wortel|wortels.
                                 </li>
                                 <li>
@@ -267,11 +230,15 @@ function confirmDeletion(event) {
                 </div>
             </div>
 
-            <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-md space-y-2">
-                <div class="grid grid-cols-12 gap-6">
+            <div class="bg-white shadow sm:rounded-md space-y-2">
+                <div class="px-4 py-5 sm:p-6 grid grid-cols-12 gap-6">
                     <div class="col-span-12 space-y-1">
                         <Label for="instructions" value="Instructies"/>
-                        <ckeditor :editor="editor" v-model="form.instructions" :config="instructionsEditorConfig"/>
+                        <ckeditor
+                            :editor="editor"
+                            :config="instructionsEditorConfig"
+                            v-model="form.instructions"
+                        />
                         <InputError :message="form.errors.instructions"/>
                     </div>
 
@@ -283,25 +250,32 @@ function confirmDeletion(event) {
 
                     <div class="col-span-12 space-y-1">
                         <Label for="source_link" value="Bron link (optioneel)"/>
-                        <Input v-model="form.source_link" class="block w-full" type="url"/>
+                        <Input v-model="form.source_link" class="block w-full" type="text"/>
                         <InputError :message="form.errors.source_link"/>
                     </div>
                 </div>
-            </div>
 
-            <div class="fixed bottom-0 left-0 w-full px-4 py-3 bg-gray-50 border-t border-gray-200 sm:px-6">
-                <div class="flex justify-between max-w-3xl mx-auto sm:px-6">
-                    <Button :disabled="form.processing" class="text-xs" type="submit">
-                        Opslaan
-                    </Button>
-
-                    <Button v-if="edit"
-                            button-style="danger"
+                <div class="fixed bottom-0 left-0 w-full px-4 py-3 bg-gray-50 border-t border-gray-200 sm:px-6">
+                    <div class="flex max-w-3xl mx-auto sm:px-6 space-x-2">
+                        <Button
+                            :disabled="form.processing"
                             class="text-xs"
-                            @click="confirmDeletion"
-                    >
-                        Verwijder
-                    </Button>
+                            type="submit"
+                            @click="form.return_to_import_page = false"
+                        >
+                            Opslaan
+                        </Button>
+
+                        <Button
+                            :disabled="form.processing"
+                            class="text-xs"
+                            type="submit"
+                            button-style="secondary"
+                            @click="form.return_to_import_page = true"
+                        >
+                            Opslaan en nieuw recept importeren
+                        </Button>
+                    </div>
                 </div>
             </div>
         </form>

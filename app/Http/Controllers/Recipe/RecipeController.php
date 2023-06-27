@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Recipe;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Recipe\RecipeRequest;
+use App\Http\Traits\UploadImageTrait;
 use App\Models\Recipe;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class RecipeController extends Controller
 {
+    use UploadImageTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +29,7 @@ class RecipeController extends Controller
                     'id'    => $recipe->id,
                     'title' => $recipe->title,
                     'slug'  => $recipe->slug,
-                    'image' => $recipe->image ? Storage::url($recipe->image) : null,
+                    'image' => $recipe->image ? Storage::disk('public')->url($recipe->image) : null,
                 ]),
         ]);
     }
@@ -46,12 +47,12 @@ class RecipeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param RecipeRequest $request
      * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(RecipeRequest $request)
     {
-        $attributes            = $this->validateRecipe($request);
+        $attributes            = $request->validated();
         $attributes['user_id'] = $request->user()->id;
 
         if ($image = $this->saveImage($request)) {
@@ -72,7 +73,7 @@ class RecipeController extends Controller
     public function show(Recipe $recipe)
     {
         if ($recipe->image) {
-            $recipe->image = Storage::url($recipe->image);
+            $recipe->image = Storage::disk('public')->url($recipe->image);
         }
 
         if ($recipe->ingredients) {
@@ -93,7 +94,7 @@ class RecipeController extends Controller
     public function edit(Recipe $recipe)
     {
         if ($recipe->image) {
-            $recipe->image = Storage::url($recipe->image);
+            $recipe->image = Storage::disk('public')->url($recipe->image);
         }
 
         return Inertia::render('Recipes/Form', [
@@ -104,13 +105,13 @@ class RecipeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param Recipe  $recipe
+     * @param RecipeRequest $request
+     * @param Recipe        $recipe
      * @return RedirectResponse
      */
-    public function update(Request $request, Recipe $recipe)
+    public function update(RecipeRequest $request, Recipe $recipe)
     {
-        $attributes   = $this->validateRecipe($request, $recipe);
+        $attributes   = $request->validated();
         $destroyImage = $request->get('destroy_image', false);
 
         // If the image field is empty, remove it from the attributes array, because there is no image to update or delete.
@@ -156,50 +157,4 @@ class RecipeController extends Controller
 
         return redirect()->route('home')->with('success', 'Het recept is succesvol verwijderd!');
     }
-
-    protected function validateRecipe(Request $request, ?Recipe $recipe = null): array
-    {
-        return $request->validate([
-            'title'               => 'required',
-            'image'               => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png'],
-            'servings'            => ['required', 'min:1'],
-            'preparation_minutes' => ['nullable', 'min:1'],
-            'cooking_minutes'     => ['nullable', 'min:1'],
-            'difficulty'          => 'nullable',
-            'summary'             => 'nullable',
-            'ingredients'         => 'required',
-            'instructions'        => 'required',
-            'source_label'        => 'nullable',
-            'source_link'         => ['nullable', 'url'],
-        ]);
-    }
-
-    protected function saveImage(Request $request): bool|string|null
-    {
-        if ($image = $request->file('image')) {
-            // Add a timestamp to the image to prevent browser cache issues.
-            $fileName = Str::slug($request->get('title')) . '-' . Carbon::now()->getTimestamp() . '.' . $image->extension();
-            $path     = $image->storePubliclyAs('public/images/recipes', $fileName);
-
-            if (!$path) {
-                Log::error('The recipe image could not be saved.', ['id' => $request->get('id')]);
-                return false;
-            }
-
-            return $path;
-        }
-
-        return null;
-    }
-
-    protected function destroyImage(Recipe $recipe): bool
-    {
-        if (Storage::delete($recipe->image) === false) {
-            Log::error('The recipe image could not be deleted.', ['id' => $recipe->id, 'image' => $recipe->image]);
-            return false;
-        }
-
-        return true;
-    }
-
 }

@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\Recipe\ImportController;
+use App\Http\Controllers\Recipe\RecipeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\User\ChangePasswordController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +26,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/recepten/{recipe}/bewerken', [RecipeController::class, 'edit'])->name('recipes.edit');
     Route::patch('/recepten/{recipe}', [RecipeController::class, 'update'])->name('recipes.update');
     Route::delete('/recepten/{recipe}', [RecipeController::class, 'destroy'])->name('recipes.destroy');
+
+    Route::get('/recepten/importeren', [ImportController::class, 'index'])->name('import.index');
+    Route::get('/recepten/importeren/controleren', [ImportController::class, 'create'])->name('import.create');
+    Route::post('/recepten/importeren', [ImportController::class, 'store'])->name('import.store');
 });
 
 Route::get('/recepten/{recipe:slug}', [RecipeController::class, 'show'])->name('recipes.show');

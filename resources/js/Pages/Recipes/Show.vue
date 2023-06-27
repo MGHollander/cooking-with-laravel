@@ -67,7 +67,7 @@ function confirmDeletion(event) {
                     </div>
                 </div>
 
-                <div class="text-lg" v-html="recipe.summary"/>
+                <div v-if="recipe.summary" v-html="recipe.summary" class="text-lg"/>
             </div>
 
             <div class="grid items-center p-6 lg:p-10 space-y-12 md:space-y-0"
@@ -206,6 +206,9 @@ function confirmDeletion(event) {
                             <strong>Bron: </strong>
                             <template v-if="recipe.source_link">
                                 <a :href="recipe.source_link">{{ recipe.source_label ?? recipe.source_link }}</a>
+                            </template>
+                            <template v-if="!recipe.source_link && recipe.source_label">
+                                {{ recipe.source_label }}
                             </template>
                         </p>
                     </div>
