@@ -11,7 +11,6 @@ use Spatie\Sluggable\SlugOptions;
 
 class Recipe extends Model
 {
-    use HasFactory;
     use HasSlug;
 
     protected $fillable = [
@@ -19,6 +18,7 @@ class Recipe extends Model
         'title',
         'slug',
         'image',
+        'external_image',
         'servings',
         'preparation_minutes',
         'cooking_minutes',

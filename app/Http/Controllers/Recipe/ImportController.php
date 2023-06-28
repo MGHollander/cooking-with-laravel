@@ -82,6 +82,7 @@ class ImportController extends Controller
                 $external_image,
                 Str::slug($attributes['title']) . '-' . time() . '.' . $extension
             );
+            unset($attributes['external_image']);
         }
 
         if ($image = $this->saveImage($request)) {

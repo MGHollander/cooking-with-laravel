@@ -136,13 +136,7 @@ class RecipeController extends Controller
 
         $recipe->update($attributes);
 
-        $redirect = redirect()->route('recipes.show', $recipe);
-
-        if ($destroyImage && !$image) {
-            return $redirect->with('warning', 'Het recept is gewijzigd, maar de afbeelding kon niet worden aangepast door een fout op de server.');
-        }
-
-        return $redirect->with('success', 'Het recept is succesvol gewijzigd!');
+        return redirect()->route('recipes.show', $recipe)->with('success', 'Het recept is succesvol gewijzigd!');
     }
 
     /**
