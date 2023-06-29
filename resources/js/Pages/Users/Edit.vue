@@ -1,64 +1,62 @@
 <script setup>
-import {Head, useForm} from '@inertiajs/vue3';
-
-import DefaultLayout from '@/Layouts/Default.vue';
-import Button from '@/Components/Button.vue';
-import Input from '@/Components/Input.vue';
-import InputError from '@/Components/InputError.vue';
-import Label from '@/Components/Label.vue';
-import {useAttrs} from "vue";
+import { Head, useForm } from "@inertiajs/vue3";
+import { useAttrs } from "vue";
+import Button from "@/Components/Button.vue";
+import Input from "@/Components/Input.vue";
+import InputError from "@/Components/InputError.vue";
+import Label from "@/Components/Label.vue";
+import DefaultLayout from "@/Layouts/Default.vue";
 
 let props = defineProps({
-    id: Number,
-    name: String,
-    email: String,
+  id: Number,
+  name: String,
+  email: String,
 });
 
-const attrs = useAttrs()
+const attrs = useAttrs();
 
 let form = useForm({
-    name: props.name,
-    email: props.email,
-})
+  name: props.name,
+  email: props.email,
+});
 
 let submit = () => {
-    form.patch(route('users.update', props.id));
+  form.patch(route("users.update", props.id));
 };
 
-const title = 'Bewerk ' + (props.id === attrs.auth.user.id ? 'je profiel' : `het profiel van ${props.name}`);
+const title = "Bewerk " + (props.id === attrs.auth.user.id ? "je profiel" : `het profiel van ${props.name}`);
 </script>
 
 <template>
-    <Head :title="title"/>
+  <Head :title="title" />
 
-    <DefaultLayout>
-        <template #header>
-            {{ title }}
-        </template>
+  <DefaultLayout>
+    <template #header>
+      {{ title }}
+    </template>
 
-        <form @submit.prevent="submit" class="max-w-2xl mx-auto">
-            <div class="px-4 py-5 sm:p-6 bg-white shadow sm:rounded-tl-md sm:rounded-tr-md space-y-2">
-                <div class="grid grid-cols-6 gap-6">
-                    <div class="col-span-6 sm:col-span-4 space-y-1">
-                        <Label for="name" value="Naam"/>
-                        <Input v-model="form.name" type="text" required class="block w-full" autocomplete="name"/>
-                        <InputError :message="form.errors.name"/>
-                    </div>
+    <form class="mx-auto max-w-2xl" @submit.prevent="submit">
+      <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded-tl-md sm:rounded-tr-md sm:p-6">
+        <div class="grid grid-cols-6 gap-6">
+          <div class="col-span-6 space-y-1 sm:col-span-4">
+            <Label for="name" value="Naam" />
+            <Input v-model="form.name" type="text" required class="block w-full" autocomplete="name" />
+            <InputError :message="form.errors.name" />
+          </div>
 
-                    <div class="col-span-6 sm:col-span-4 space-y-1">
-                        <Label for="email" value="E-mailadres"/>
-                        <Input v-model="form.email" type="email" required class="block w-full" autocomplete="email"/>
-                        <InputError :message="form.errors.email"/>
-                    </div>
-                </div>
-            </div>
+          <div class="col-span-6 space-y-1 sm:col-span-4">
+            <Label for="email" value="E-mailadres" />
+            <Input v-model="form.email" type="email" required class="block w-full" autocomplete="email" />
+            <InputError :message="form.errors.email" />
+          </div>
+        </div>
+      </div>
 
-            <div
-                class="flex items-center px-4 py-3 bg-gray-50 border-b border-gray-200 text-right sm:px-6 shadow sm:rounded-bl-md sm:rounded-br-md">
-                <Button class="text-xs" type="submit" :disabled="form.processing">
-                    Opslaan
-                </Button>
-            </div>
-        </form>
-    </DefaultLayout>
+      <div
+        class="flex items-center border-b border-gray-200 bg-gray-50 px-4 py-3 text-right shadow sm:rounded-bl-md sm:rounded-br-md sm:px-6"
+      >
+        <Button class="text-xs" type="submit" :disabled="form.processing"> Opslaan </Button>
+      </div>
+    </form>
+  </DefaultLayout>
 </template>
