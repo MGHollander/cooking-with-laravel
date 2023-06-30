@@ -11,6 +11,7 @@ class RecipeParser
     private array $recipeData = [
         'title'       => null,
         'url'         => null,
+        'keywords'    => null,
         'ingredients' => null,
         'steps'       => null,
         'yield'       => null,
@@ -65,6 +66,11 @@ class RecipeParser
     private function parse_name($values): void
     {
         $this->recipeData['title'] = $this->getFirstValue($values);
+    }
+
+    private function parse_keywords($values): void
+    {
+        $this->recipeData['keywords'] = $this->getFirstValue($values);
     }
 
     private function parse_recipeyield($values): void

@@ -15,6 +15,7 @@ class ImportResource extends JsonResource
         return [
             'title'               => $this->resource['title'],
             'image'               => !empty($this->resource['images']) ? $this->resource['images'][0] : null,
+            'tags'                => $this->resource['keywords'],
             'preparation_minutes' => $this->transformTime($this->resource['prepTime']),
             'cooking_minutes'     => $this->transformTime($this->resource['cookTime'] ?? $this->resource['totalTime']),
             'servings'            => (int) $this->resource['yield'],
