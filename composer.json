@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.7",
         "protonemedia/laravel-cross-eloquent-search": "^3.2",
         "spatie/laravel-sluggable": "^3.5",
+        "spatie/laravel-tags": "^4.4",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {

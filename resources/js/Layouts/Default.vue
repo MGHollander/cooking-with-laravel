@@ -1,4 +1,6 @@
 <script setup>
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Link, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
@@ -106,18 +108,7 @@ const form = useForm({
                       <Button button-style="ghost" aria-label="Open het gebruikersmenu" class="!p-2.5 text-sm">
                         {{ $page.props.auth.user.name }}
 
-                        <svg
-                          class="-mr-0.5 ml-2 h-4 w-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
+                        <FontAwesomeIcon :icon="faChevronDown" class="-mt-0.5 ml-2 h-3" />
                       </Button>
                     </span>
                   </template>

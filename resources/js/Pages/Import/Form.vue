@@ -22,12 +22,13 @@ const form = useForm({
   title: props.recipe.title,
   image: "",
   external_image: props.recipe.image,
+  summary: props.recipe.summary,
+  tags: props.recipe.tags,
   preparation_minutes: props.recipe.preparation_minutes,
   cooking_minutes: props.recipe.cooking_minutes,
   servings: props.recipe.servings,
   difficulty: props.recipe.difficulty,
   ingredients: props.recipe.ingredients,
-  summary: props.recipe.summary,
   instructions: props.recipe.instructions,
   source_label: props.recipe.source_label,
   source_link: props.recipe.source_link,
@@ -131,6 +132,15 @@ const clearImageField = () => {
             <Label for="summary" value="Samenvatting (optioneel)" />
             <ckeditor v-model="form.summary" :editor="editor" :config="summaryEditorConfig" />
             <InputError :message="form.errors.summary" />
+          </div>
+
+          <div class="col-span-12 space-y-1">
+            <Label for="tags" value="Tags (optioneel)" />
+            <Input v-model="form.tags" class="block w-full" type="text" />
+            <p class="text-xs text-gray-500">
+              Komma gescheiden lijst met tags. Bijvoorbeeld: "vegan, glutenvrij, lactosevrij"
+            </p>
+            <InputError :message="form.errors.tags" />
           </div>
         </div>
       </div>

@@ -32,7 +32,7 @@ defineProps({
       'bg-blue-600 hover:bg-blue-500 active:bg-blue-700': buttonStyle === 'info',
       'bg-white hover:bg-blue-500 active:bg-blue-700': buttonStyle === 'info',
       'text-white hover:text-white': buttonStyle !== 'ghost',
-      'bg-white text-gray-500 hover:text-gray-700': buttonStyle === 'ghost',
+      'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700': buttonStyle === 'ghost',
     }"
   >
     <slot />

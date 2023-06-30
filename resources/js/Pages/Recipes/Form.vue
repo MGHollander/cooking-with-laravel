@@ -15,7 +15,7 @@ import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 
-const props = defineProps(["recipe"]);
+const props = defineProps({ recipe: Object });
 const edit = route().current("recipes.edit") ?? false;
 
 const form = useForm({
@@ -25,12 +25,13 @@ const form = useForm({
   title: edit ? props.recipe.title : "",
   image: "",
   destroy_image: false,
+  summary: edit ? props.recipe.summary : "",
+  tags: edit ? props.recipe.tags : "",
   preparation_minutes: edit ? props.recipe.preparation_minutes : "",
   cooking_minutes: edit ? props.recipe.cooking_minutes : "",
   servings: edit ? props.recipe.servings : "",
   difficulty: edit ? props.recipe.difficulty : "easy",
   ingredients: edit ? props.recipe.ingredients : "",
-  summary: edit ? props.recipe.summary : "",
   instructions: edit ? props.recipe.instructions : "",
   source_label: edit ? props.recipe.source_label : "",
   source_link: edit ? props.recipe.source_link : "",
@@ -80,7 +81,7 @@ const instructionsEditorConfig = {
   },
 };
 
-function confirmDeletion(event) {
+function confirmDeletion() {
   if (confirm("Weet je zeker dat je dit recept wilt verwijderen?")) {
     router.delete(route("recipes.destroy", props.recipe.id), {
       method: "delete",
@@ -94,7 +95,7 @@ function confirmDeletion(event) {
 
   <DefaultLayout>
     <template #header>
-      {{ title }}
+      {{ title }} <a v-if="edit" :href="route('recipes.show', props.recipe)" class="ml-4 text-sm">Bekijk het recept</a>
     </template>
 
     <form
@@ -126,7 +127,7 @@ function confirmDeletion(event) {
               @change="updateImagePreview"
             />
 
-            <Button v-if="!imagePreview" class="text-xs" @click="imageInput.click()"> Upload afbeelding </Button>
+            <Button v-if="!imagePreview" class="text-xs" @click="imageInput.click()"> Upload afbeelding</Button>
 
             <div v-else class="col-span-12 space-y-1">
               <img
@@ -139,7 +140,7 @@ function confirmDeletion(event) {
                 Vervang afbeelding
               </Button>
 
-              <Button class="text-xs" button-style="danger" @click="clearImageField"> Verwijder afbeelding </Button>
+              <Button class="text-xs" button-style="danger" @click="clearImageField"> Verwijder afbeelding</Button>
             </div>
 
             <progress v-if="form.progress" :value="form.progress.percentage" max="100">
@@ -153,6 +154,15 @@ function confirmDeletion(event) {
             <Label for="summary" value="Samenvatting (optioneel)" />
             <ckeditor v-model="form.summary" :editor="editor" :config="summaryEditorConfig" />
             <InputError :message="form.errors.summary" />
+          </div>
+
+          <div class="col-span-12 space-y-1">
+            <Label for="tags" value="Tags (optioneel)" />
+            <Input v-model="form.tags" class="block w-full" type="text" />
+            <p class="text-xs text-gray-500">
+              Komma gescheiden lijst met tags. Bijvoorbeeld: "vegan, glutenvrij, lactosevrij"
+            </p>
+            <InputError :message="form.errors.tags" />
           </div>
         </div>
       </div>
@@ -247,7 +257,7 @@ function confirmDeletion(event) {
         <div class="mx-auto flex max-w-3xl justify-between sm:px-6">
           <Button :disabled="form.processing" class="text-xs" type="submit"> Opslaan</Button>
 
-          <Button v-if="edit" button-style="danger" class="text-xs" @click="confirmDeletion"> Verwijder </Button>
+          <Button v-if="edit" button-style="danger" class="text-xs" @click="confirmDeletion"> Verwijder</Button>
         </div>
       </div>
     </form>

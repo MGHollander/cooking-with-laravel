@@ -1,10 +1,14 @@
 <script setup>
+import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Head, router } from "@inertiajs/vue3";
 import { computed } from "vue";
 import Button from "@/Components/Button.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 
-let props = defineProps({
+const props = defineProps({
   recipe: Object,
 });
 
@@ -44,30 +48,36 @@ function confirmDeletion() {
 
   <DefaultLayout>
     <div class="overflow-hidden bg-white sm:rounded-lg sm:shadow-lg">
-      <div class="space-y-6 p-6 md:space-y-10 lg:p-10">
-        <div class="md:flex md:justify-between">
-          <h1 class="relative mb-4 text-3xl font-bold">{{ recipe.title }}</h1>
-          <div class="space-x-2 whitespace-nowrap">
-            <Button
-              v-if="$page.props.auth.user"
-              :href="route('recipes.edit', recipe.id)"
-              class="text-xs"
-              button-style="secondary"
-            >
-              Bewerk
-            </Button>
+      <div class="m-6 space-y-6 md:space-y-10 lg:m-10">
+        <div>
+          <Dropdown v-if="$page.props.auth.user" align="right" width="48" class="float-right">
+            <template #trigger>
+              <Button button-style="ghost" aria-label="Uitklapmenu voor acties op recept" class="w-10 !p-2.5">
+                <FontAwesomeIcon :icon="faEllipsisV" class="mx-auto" />
+              </Button>
+            </template>
 
-            <Button v-if="$page.props.auth.user" button-style="danger" class="text-xs" @click="confirmDeletion">
-              Verwijder
-            </Button>
+            <template #content>
+              <DropdownLink :href="route('recipes.edit', recipe.id)"> Recept bewerken</DropdownLink>
+
+              <DropdownLink @click="confirmDeletion"> Verwijder</DropdownLink>
+            </template>
+          </Dropdown>
+
+          <h1 class="mb-4 text-xl font-bold md:text-3xl">{{ recipe.title }}</h1>
+
+          <div v-if="recipe.tags.length > 0" class="flex space-x-2 text-sm">
+            <div v-for="item in recipe.tags" :key="item.id" class="rounded bg-gray-200 px-2">
+              {{ item }}
+            </div>
           </div>
         </div>
 
-        <div v-if="recipe.summary" class="text-lg" v-html="recipe.summary" />
+        <div v-if="recipe.summary" class="md:text-lg" v-html="recipe.summary" />
       </div>
 
       <div
-        class="grid items-center space-y-12 p-6 md:space-y-0 lg:p-10"
+        class="m-6 grid items-center space-y-6 md:space-y-0 lg:m-10"
         :class="{
           'md:grid-cols-2': recipe.image,
         }"
@@ -151,7 +161,7 @@ function confirmDeletion() {
         </div>
       </div>
 
-      <div class="space-y-6 p-6 md:space-y-10 lg:p-10">
+      <div class="m-6 space-y-6 md:space-y-10 lg:m-10">
         <div class="space-y-6 md:flex md:items-start md:space-x-8 md:space-y-0">
           <div class="-mx-6 bg-gray-100 p-6 sm:mx-0 sm:rounded-lg md:w-1/3">
             <h2 class="mb-2 text-2xl font-bold">Ingrediënten</h2>
@@ -182,7 +192,7 @@ function confirmDeletion() {
               <div v-for="list in recipe.ingredients">
                 <h3 v-if="list.title" class="mb-2 mt-8 text-lg font-bold">{{ list.title }}</h3>
 
-                <ul class="space-y-1">
+                <ul class="m-0 space-y-1">
                   <li v-for="ingredient in list.ingredients" class="flex flex-auto">
                     <template v-if="ingredient.amount">
                       <!-- The span is a trick to prevent extra whitspace between the amount and the following text. -->

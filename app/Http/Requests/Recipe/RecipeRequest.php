@@ -17,6 +17,7 @@ class RecipeRequest extends FormRequest
             'title'               => 'required',
             'image'               => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png'],
             'external_image'      => ['nullable', 'url'],
+            'tags'                => ['nullable', 'string'],
             'servings'            => ['required', 'integer', 'min:1'],
             'preparation_minutes' => ['nullable', 'integer', 'min:1'],
             'cooking_minutes'     => ['nullable', 'integer', 'min:1'],

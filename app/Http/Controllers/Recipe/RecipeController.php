@@ -59,6 +59,10 @@ class RecipeController extends Controller
             $attributes['image'] = $image;
         }
 
+        if ($tags = $request->get('tags')) {
+            $attributes['tags'] = array_map('trim', explode(',', $tags));
+        }
+
         $recipe = Recipe::create($attributes);
 
         return redirect()->route('recipes.show', $recipe)->with('success', 'Het recept is succesvol toegevoegd!');
@@ -82,7 +86,24 @@ class RecipeController extends Controller
 
         $recipe->difficulty = Str::ucfirst(__('recipes.' . $recipe->difficulty));
 
-        return Inertia::render('Recipes/Show', compact('recipe'));
+        return Inertia::render('Recipes/Show', [
+            'recipe' => [
+                'id'                  => $recipe->id,
+                'title'               => $recipe->title,
+                'slug'                => $recipe->slug,
+                'image'               => $recipe->image,
+                'summary'             => $recipe->summary,
+                'tags'                => $recipe->tags->pluck('name'),
+                'servings'            => $recipe->servings,
+                'preparation_minutes' => $recipe->preparation_minutes,
+                'cooking_minutes'     => $recipe->cooking_minutes,
+                'difficulty'          => $recipe->difficulty,
+                'ingredients'         => $recipe->ingredients,
+                'instructions'        => $recipe->instructions,
+                'source_label'        => $recipe->source_label,
+                'source_link'         => $recipe->source_link,
+            ],
+        ]);
     }
 
     /**
@@ -98,7 +119,22 @@ class RecipeController extends Controller
         }
 
         return Inertia::render('Recipes/Form', [
-            'recipe' => $recipe,
+            'recipe' => [
+                'id'                  => $recipe->id,
+                'title'               => $recipe->title,
+                'slug'                => $recipe->slug,
+                'image'               => $recipe->image,
+                'summary'             => $recipe->summary,
+                'tags'                => $recipe->tags->pluck('name')->implode(', '),
+                'servings'            => $recipe->servings,
+                'preparation_minutes' => $recipe->preparation_minutes,
+                'cooking_minutes'     => $recipe->cooking_minutes,
+                'difficulty'          => $recipe->difficulty,
+                'ingredients'         => $recipe->ingredients,
+                'instructions'        => $recipe->instructions,
+                'source_label'        => $recipe->source_label,
+                'source_link'         => $recipe->source_link,
+            ],
         ]);
     }
 
@@ -133,6 +169,12 @@ class RecipeController extends Controller
             $attributes['image'] = null;
             $this->destroyImage($recipe);
         }
+
+        if ($tags = $request->get('tags')) {
+            $tags = array_filter(array_map('trim', explode(',', $tags)));
+        }
+
+        $attributes['tags'] = $tags ?? [];
 
         $recipe->update($attributes);
 

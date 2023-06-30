@@ -88,6 +88,11 @@ class ImportController extends Controller
         if ($image = $this->saveImage($request)) {
             $attributes['image'] = $image;
         }
+
+        if ($tags = $request->get('tags')) {
+            $attributes['tags'] = array_map('trim', explode(',', $tags));
+        }
+        
         $recipe = Recipe::create($attributes);
 
         if ($return_to_import_page) {
