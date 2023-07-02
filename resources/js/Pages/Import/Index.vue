@@ -18,21 +18,6 @@ const form = useForm({
 
 const title = "Recept importeren";
 let showHelp = ref(false);
-
-const testRecipes = [
-  "https://koken.maruc.nl/recepten/gigli-met-kikkererwten-en-zaatar",
-  "https://www.ah.nl/allerhande/recept/R-R1197009/pastasalade-met-geroosterde-paprikasaus",
-  "https://www.leukerecepten.nl/recepten/noedel-bowl-zalm/",
-  "https://www.okokorecepten.nl/recept/groenten/doperwten/doperwten-munt",
-  "https://koken.maruc.nl/microdata.html",
-  "https://koken.maruc.nl/rdfa.html",
-];
-
-// Temporary function for fast testing
-function test(event) {
-  form.url = event.target.innerText;
-  form.get(route("import.create"));
-}
 </script>
 
 <template>
@@ -69,16 +54,6 @@ function test(event) {
               </div>
               <InputError :message="form.errors.parser" />
             </div>
-
-            <ul class="col-span-12 my-0 list-none font-mono text-sm">
-              <li
-                v-for="url in testRecipes"
-                class="cursor-pointer overflow-hidden overflow-ellipsis whitespace-nowrap hover:underline"
-                @click="test"
-              >
-                {{ url }}
-              </li>
-            </ul>
           </div>
 
           <div class="border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6" :class="{ 'sm:rounded-b': !showHelp }">
@@ -91,12 +66,23 @@ function test(event) {
             </div>
           </div>
 
-          <p v-if="showHelp" class="border-t border-gray-200 bg-sky-100 p-4 text-sky-700 md:rounded-b">
-            Bij het importeren wordt er op een webpagina gezocht naar een recept dat is gedefineerd in het
-            <a href="https://schema.org/Recipe" class="text-sky-900">schema.org/Recipe</a> formaat. Er wordt gezocht
-            naar Microdata, RDFa en JSON-LD markups.<br />
-            Als er geen recept wordt gevonden dan wordt er een foutmelding weergegeven.
-          </p>
+          <div v-if="showHelp" class="border-t border-gray-200 bg-sky-100 p-4 text-sky-700 md:rounded-b">
+            <p>
+              <strong>Structured data</strong><br />
+              Bij het importeren wordt er op een webpagina gezocht naar een recept dat is gedefineerd in het
+              <a href="https://schema.org/Recipe" class="text-sky-900">schema.org/Recipe</a> formaat. Er wordt gezocht
+              naar Microdata, RDFa en JSON-LD markups.<br />
+              Als er geen recept wordt gevonden dan wordt er een foutmelding weergegeven.
+            </p>
+            <p>
+              <strong>Open AI</strong><br />
+              Met behulp van Open AI wordt er een tekst gegenereerd op basis van de inhoud van de webpagina. Deze tekst
+              wordt vervolgens geanalyseerd om te kijken of er een recept in staat. Als er een recept wordt gevonden dan
+              wordt deze geïmporteerd. Als er geen recept wordt gevonden dan wordt er een foutmelding weergegeven. Deze
+              methode is experimenteel en kan dus fouten bevatten. Er zijn ook kosten verbonden aan het gebruik van Open
+              AI.
+            </p>
+          </div>
         </div>
       </form>
     </div>
