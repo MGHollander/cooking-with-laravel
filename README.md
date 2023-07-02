@@ -10,7 +10,7 @@ friends, family and other sources in one place.
 - Import recipes using [Structured Data](https://schema.org/Recipe)
 - Import recipes using Open AI (experimental)
 - Search recipes
-- Simple user managerment
+- Simple user management
 
 ## Installation
 
@@ -51,6 +51,6 @@ Run `vendor/bin/dep deploy` to deploy changes.
 
 ## Credits
 
-- The seeded recipes are made possible by <https://spoonacular.com/food-api>.
-- The recipe import feature idea is inspired by <https://fly.io/laravel-bytes/parsing-recipes-with-robot-help/>.
-- The recipe import feature is made possible by <https://www.openai.com/>.
+- The seeded recipes are made possible by <https://spoonacular.com/food-api>
+- The recipe import feature idea is inspired by <https://fly.io/laravel-bytes/parsing-recipes-with-robot-help/>
+- The recipe import feature is made possible by <https://www.openai.com/>
