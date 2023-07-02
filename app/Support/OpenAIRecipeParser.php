@@ -9,7 +9,7 @@ class OpenAIRecipeParser
     public static function read($url)
     {
         if (empty(config('services.open_ai.api_key'))) {
-            return null;
+            throw new \Exception('OpenAI API key not set');
         }
 
         $prompt = "Haal alleen de volgende informatie uit het recept dat je hier vindt: $url
@@ -26,10 +26,10 @@ class OpenAIRecipeParser
 
             Geef de output als geldige JSON terug.
             De sleutels moeten exact overeenkomen met de waarde tussen [] in de bovenstaande lijst.
-            De waarden mogen strings, integers, arrays of null zijn.
+            De waarden mogen alleen exacte tekst zijn zoals deze op de website staat.
             De waarden mogen ook leeg zijn als er geen informatie gevonden is.
             Vertaal de moeilijkheidsgraad naar het Engels (easy, average, difficult).
-            Vertaal alle waarden, behalve de moeilijkheidsgraad, naar het Nederlands als deze in een andere taal zijn.";
+        ";
 
         $client = OpenAI::client(config('services.open_ai.api_key'));
 
