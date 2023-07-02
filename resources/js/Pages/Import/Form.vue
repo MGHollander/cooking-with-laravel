@@ -93,6 +93,7 @@ const clearImageField = () => {
           <div class="col-span-12 space-y-1">
             <Label for="image" value="Externe afbeelding (optioneel)" />
             <Input v-model="form.external_image" type="url" class="block w-full" />
+            <InputError :message="form.errors.external_image" />
           </div>
 
           <div class="col-span-12 space-y-1">
@@ -105,7 +106,7 @@ const clearImageField = () => {
               @change="updateImagePreview"
             />
 
-            <Button v-if="!imagePreview" class="text-xs" @click="imageInput.click()"> Upload afbeelding </Button>
+            <Button v-if="!imagePreview" class="text-xs" @click="imageInput.click()"> Upload afbeelding</Button>
 
             <div v-else class="col-span-12 space-y-1">
               <img
@@ -118,7 +119,7 @@ const clearImageField = () => {
                 Vervang afbeelding
               </Button>
 
-              <Button class="text-xs" button-style="danger" @click="clearImageField"> Verwijder afbeelding </Button>
+              <Button class="text-xs" button-style="danger" @click="clearImageField"> Verwijder afbeelding</Button>
             </div>
 
             <progress v-if="form.progress" :value="form.progress.percentage" max="100">

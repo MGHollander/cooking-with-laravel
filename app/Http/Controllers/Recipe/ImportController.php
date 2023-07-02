@@ -72,11 +72,14 @@ class ImportController extends Controller
         $attributes['user_id'] = $request->user()->id;
 
         if ($external_image = $request->get('external_image')) {
-            $extension           = substr($external_image, strrpos($external_image, '.') + 1);
-            $attributes['image'] = FileHelper::uploadExternalImage(
-                $external_image,
-                Str::slug($attributes['title']) . '-' . time() . '.' . $extension
-            );
+            $extension = substr($external_image, strrpos($external_image, '.') + 1);
+            try {
+                $attributes['image'] = FileHelper::uploadExternalImage(
+                    $external_image,
+                    Str::slug($attributes['title']) . '-' . time() . '.' . $extension
+                );
+            } catch (\Exception $e) {
+            }
             unset($attributes['external_image']);
         }
 

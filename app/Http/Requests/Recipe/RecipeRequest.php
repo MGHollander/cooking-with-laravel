@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Recipe;
 
+use App\Rules\ExternalImage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RecipeRequest extends FormRequest
@@ -16,7 +17,7 @@ class RecipeRequest extends FormRequest
         return [
             'title'               => 'required',
             'image'               => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png'],
-            'external_image'      => ['nullable', 'url'],
+            'external_image'      => ['nullable', 'url', new ExternalImage],
             'tags'                => ['nullable', 'string'],
             'servings'            => ['required', 'integer', 'min:1'],
             'preparation_minutes' => ['nullable', 'integer', 'min:1'],

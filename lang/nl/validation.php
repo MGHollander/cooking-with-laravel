@@ -138,8 +138,9 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'aangepast-bericht',
+        'external_image' => [
+            'not_found'    => 'De externe afbeelding kon niet worden gevonden.',
+            'invalid_type' => 'De externe afbeelding is van een ongeldig type. Alleen JPEG en PNG zijn toegestaan.',
         ],
     ],
 
