@@ -10,6 +10,8 @@ import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import { instructionsEditorConfig, summaryEditorConfig } from "@/editorConfig";
 import DefaultLayout from "@/Layouts/Default.vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
 
 const props = defineProps({
   url: String,
@@ -226,7 +228,18 @@ const clearImageField = () => {
 
           <div class="col-span-12 space-y-1">
             <Label for="source_link" value="Bron link (optioneel)" />
-            <Input v-model="form.source_link" class="block w-full" type="text" />
+            <div class="flex items-stretch">
+              <Input v-model="form.source_link" class="block w-full" type="text" />
+              <Button
+                v-if="form.source_link"
+                :href="form.source_link"
+                target="_blank"
+                class="ml-4"
+                button-style="secondary"
+              >
+                <FontAwesomeIcon :icon="faExternalLink" />
+              </Button>
+            </div>
             <InputError :message="form.errors.source_link" />
           </div>
         </div>

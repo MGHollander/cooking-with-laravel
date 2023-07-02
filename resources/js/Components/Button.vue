@@ -1,7 +1,7 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 
-defineProps({
+const props = defineProps({
   href: {
     type: String,
     default: null,
@@ -18,7 +18,13 @@ defineProps({
 
 <template>
   <component
-    :is="href ? Link : 'button'"
+    :is="
+      href && props.href.startsWith('/')
+        ? Link
+        : href && (href.startsWith('http://') || href.startsWith('https://'))
+        ? 'a'
+        : 'button'
+    "
     :href="href ?? null"
     :type="href ? null : type"
     class="inline-flex items-center rounded-md border border-transparent px-4 py-2 font-semibold no-underline transition duration-150 ease-in-out focus:ring focus:ring-indigo-200 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-200 disabled:opacity-25"

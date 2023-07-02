@@ -5,6 +5,8 @@ import { Essentials } from "@ckeditor/ckeditor5-essentials";
 import { Link } from "@ckeditor/ckeditor5-link";
 import { List } from "@ckeditor/ckeditor5-list";
 import { Paragraph } from "@ckeditor/ckeditor5-paragraph";
+import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Head, router, useForm } from "@inertiajs/vue3";
 import "../../../css/ckeditor.css";
 import { ref } from "vue";
@@ -247,7 +249,21 @@ function confirmDeletion() {
 
           <div class="col-span-12 space-y-1">
             <Label for="source_link" value="Bron link (optioneel)" />
-            <Input v-model="form.source_link" class="block w-full" type="url" />
+            <div class="flex items-stretch">
+              <Input v-model="form.source_link" class="block w-full" type="text" />
+              <Button
+                v-if="
+                  form.source_link &&
+                  (form.source_link.startsWith('http://') || form.source_link.startsWith('https://'))
+                "
+                :href="form.source_link"
+                target="_blank"
+                class="ml-4"
+                button-style="secondary"
+              >
+                <FontAwesomeIcon :icon="faExternalLink" />
+              </Button>
+            </div>
             <InputError :message="form.errors.source_link" />
           </div>
         </div>
