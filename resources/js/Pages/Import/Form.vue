@@ -72,16 +72,6 @@ const clearImageField = () => {
     </template>
 
     <form class="mx-auto mb-12 max-w-3xl space-y-8" @submit.prevent="form.post(route('import.store'))">
-      <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6 sm:pb-8">
-        <div>
-          <p>
-            URL: <a :href="props.url" target="_blank">{{ props.url }}</a>
-          </p>
-          <p>Recipe:</p>
-          <pre class="overflow-x-scroll"><code>{{ props.recipe }}</code></pre>
-        </div>
-      </div>
-
       <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6">
         <div class="grid grid-cols-12 gap-6">
           <ValidationErrors class="col-span-12 -mx-4 -mt-5 p-4 sm:-mx-6 sm:-mt-6 sm:rounded-t" />
