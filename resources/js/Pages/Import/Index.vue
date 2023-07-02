@@ -7,8 +7,13 @@ import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 
+const props = defineProps({
+  openAI: Boolean,
+});
+
 const form = useForm({
   url: "",
+  parser: "structured-data",
 });
 
 const title = "Recept importeren";
@@ -48,6 +53,23 @@ function test(event) {
               <InputError :message="form.errors.url" />
             </div>
 
+            <div v-if="props.openAI" class="col-span-12 space-y-1">
+              <Label for="parser" value="Methode" />
+              <div>
+                <label>
+                  <input v-model="form.parser" value="structured-data" required type="radio" />
+                  Structured data
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input v-model="form.parser" value="open-ai" required type="radio" />
+                  Open AI (experimenteel)
+                </label>
+              </div>
+              <InputError :message="form.errors.parser" />
+            </div>
+
             <ul class="col-span-12 my-0 list-none font-mono text-sm">
               <li
                 v-for="url in testRecipes"
@@ -61,7 +83,7 @@ function test(event) {
 
           <div class="border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6" :class="{ 'sm:rounded-b': !showHelp }">
             <div class="mx-auto max-w-3xl space-x-2 md:space-x-4">
-              <Button :disabled="form.processing" class="text-xs" type="submit"> Importeren </Button>
+              <Button :disabled="form.processing" class="text-xs" type="submit"> Importeren</Button>
 
               <a class="cursor-pointer text-sm text-gray-600 hover:text-gray-900" @click="showHelp = !showHelp">
                 Hoe werkt dit?

@@ -6,7 +6,7 @@ use App\Http\Resources\ImportResource;
 use Brick\StructuredData\Item;
 use Illuminate\Support\Str;
 
-class RecipeParser
+class StructuredDataRecipeParser
 {
     private array $recipeData = [
         'title'       => null,
