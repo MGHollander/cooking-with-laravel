@@ -79,6 +79,7 @@ class ImportController extends Controller
                     Str::slug($attributes['title']) . '-' . time() . '.' . $extension
                 );
             } catch (\Exception $e) {
+                // @TODO handle exception
             }
             unset($attributes['external_image']);
         }
