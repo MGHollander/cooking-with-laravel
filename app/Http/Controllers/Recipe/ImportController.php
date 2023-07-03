@@ -92,9 +92,7 @@ class ImportController extends Controller
         }
 
         // Always unset external_image, because it's not saved to the database.
-        if ($request->get('external_image')) {
-            unset($attributes['external_image']);
-        }
+        unset($attributes['external_image']);
 
         $recipe = Recipe::create($attributes);
 
