@@ -81,7 +81,6 @@ class ImportController extends Controller
             } catch (\Exception $e) {
                 // @TODO handle exception
             }
-            unset($attributes['external_image']);
         }
 
         if ($image = $this->saveImage($request)) {
@@ -90,6 +89,11 @@ class ImportController extends Controller
 
         if ($tags = $request->get('tags')) {
             $attributes['tags'] = array_map('trim', explode(',', $tags));
+        }
+
+        // Always unset external_image, because it's not saved to the database.
+        if ($request->get('external_image')) {
+            unset($attributes['external_image']);
         }
 
         $recipe = Recipe::create($attributes);
