@@ -15,7 +15,7 @@ class ImportResource extends JsonResource
         return [
             'title'               => $this->resource['title'],
             'image'               => isset($this->resource['images']) && is_array($this->resource['images']) ? $this->resource['images'][0] : $this->resource['images'] ?? null,
-            'tags'                => $this->resource['keywords'] ?? null,
+            'tags'                => isset($this->resource['keywords']) ? Str::lower($this->resource['keywords']) : null,
             'preparation_minutes' => isset($this->resource['prepTime']) ? $this->transformTime($this->resource['prepTime']) : null,
             'cooking_minutes'     => isset($this->resource['cookTime']) || isset($this->resource['totalTime']) ? $this->transformTime($this->resource['cookTime'] ?? $this->resource['totalTime']) : null,
             'servings'            => (int) $this->resource['yield'],
