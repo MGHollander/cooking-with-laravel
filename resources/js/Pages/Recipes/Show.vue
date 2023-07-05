@@ -221,7 +221,7 @@ function confirmDeletion() {
             <p v-if="recipe.source_label || recipe.source_link">
               <strong>Bron: </strong>
               <template v-if="recipe.source_link">
-                <a :href="recipe.source_link">{{ recipe.source_label ?? recipe.source_link }}</a>
+                <a :href="recipe.source_link" target="_blank">{{ recipe.source_label ?? recipe.source_link }}</a>
               </template>
               <template v-if="!recipe.source_link && recipe.source_label">
                 {{ recipe.source_label }}
