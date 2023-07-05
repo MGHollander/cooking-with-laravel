@@ -84,7 +84,12 @@ const clearImageField = () => {
 
           <div class="col-span-12 space-y-1">
             <Label for="image" value="Externe afbeelding (optioneel)" />
-            <Input v-model="form.external_image" type="url" class="block w-full" />
+            <Input
+              v-model="form.external_image"
+              type="url"
+              class="block w-full"
+              @change="imagePreview = form.external_image"
+            />
             <InputError :message="form.errors.external_image" />
           </div>
 
