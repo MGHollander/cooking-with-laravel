@@ -1,0 +1,10 @@
+
+.ck-content ol {
+    list-style: outside;
+    padding-left: 1rem;
+}
+
+.ck-content ul {
+    list-style: outside;
+    padding-left: 1rem;
+}

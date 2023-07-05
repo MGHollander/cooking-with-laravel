@@ -3,6 +3,7 @@ import { ClassicEditor } from "@ckeditor/ckeditor5-editor-classic";
 import { Head, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
 import "../../../css/ckeditor.css";
+import "../../../css/content-styles.css";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
