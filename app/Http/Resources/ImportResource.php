@@ -53,7 +53,7 @@ class ImportResource extends JsonResource
             }
 
             if ($listSteps) {
-                return '<ul><li>' . implode('</li><li>', $steps) . '</li></ul>';
+                return '<ol><li>' . implode('</li><li>', $steps) . '</li></ol>';
             }
 
             return implode('', $steps);

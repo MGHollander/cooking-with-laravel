@@ -167,7 +167,7 @@ class StructuredDataRecipeParser
 
     private function processItemListElement(array $values): void
     {
-        $this->recipeData['steps'][] = '<ul>';
+        $this->recipeData['steps'][] = '<ol>';
 
         foreach ($values as $value) {
             if ($value instanceof Item) {
@@ -175,7 +175,7 @@ class StructuredDataRecipeParser
             }
         }
 
-        $this->recipeData['steps'][] = '</ul>';
+        $this->recipeData['steps'][] = '</ol>';
     }
 
     private function processItemElement(array $properties): void
