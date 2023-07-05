@@ -83,7 +83,7 @@ function confirmDeletion() {
         }"
       >
         <div v-if="recipe.image">
-          <img :src="recipe.image" class="mx-auto max-h-96 max-w-full rounded-lg object-contain md:mx-0" />
+          <img :src="recipe.image" class="mx-auto h-full max-h-96 w-full max-w-full rounded-lg object-cover md:mx-0" />
         </div>
 
         <div>
