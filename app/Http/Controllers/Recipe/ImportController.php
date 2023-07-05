@@ -87,9 +87,7 @@ class ImportController extends Controller
             $attributes['image'] = $image;
         }
 
-        if ($tags = $request->get('tags')) {
-            $attributes['tags'] = array_map('trim', explode(',', $tags));
-        }
+        $attributes['tags'] = !empty($attributes['tags']) ? array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags'])))) : [];
 
         // Always unset external_image, because it's not saved to the database.
         unset($attributes['external_image']);

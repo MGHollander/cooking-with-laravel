@@ -59,9 +59,8 @@ class RecipeController extends Controller
             $attributes['image'] = $image;
         }
 
-        if ($tags = $request->get('tags')) {
-            $attributes['tags'] = array_map('trim', explode(',', $tags));
-        }
+        $attributes['tags'] = !empty($attributes['tags']) ? array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags'])))) : [];
+
 
         $recipe = Recipe::create($attributes);
 
@@ -170,11 +169,7 @@ class RecipeController extends Controller
             $this->destroyImage($recipe);
         }
 
-        if ($tags = $request->get('tags')) {
-            $tags = array_filter(array_map('trim', explode(',', $tags)));
-        }
-
-        $attributes['tags'] = $tags ?? [];
+        $attributes['tags'] = !empty($attributes['tags']) ? array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags'])))) : [];
 
         $recipe->update($attributes);
 
