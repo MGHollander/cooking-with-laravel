@@ -2,16 +2,17 @@
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Link, useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Button from "@/Components/Button.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import Input from "@/Components/Input.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 
 const showNav = ref(null);
+const search = ref(null);
+
 const toggleNav = (nav) => {
   if (nav === showNav.value) {
     showNav.value = null;
@@ -22,6 +23,12 @@ const toggleNav = (nav) => {
 
 const form = useForm({
   q: "",
+});
+
+watchEffect(() => {
+  if (search.value) {
+    search.value.focus();
+  }
 });
 </script>
 
@@ -231,6 +238,7 @@ const form = useForm({
           @submit.prevent="form.get(route('search'))"
         >
           <input
+            ref="search"
             v-model="form.q"
             class="w-full rounded-l-md border-2 border-gray-300 bg-white p-2 text-sm sm:px-3 sm:py-2 md:text-base"
             placeholder="Waar heb je zin in?"
