@@ -2,7 +2,6 @@ import "./bootstrap";
 import "../scss/app.scss";
 
 import CKEditor from "@ckeditor/ckeditor5-vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createApp, h } from "vue";
@@ -21,9 +20,8 @@ createInertiaApp({
   setup({ el, App, props, plugin }) {
     return createApp({ render: () => h(App, props) })
       .use(plugin)
-      .use(ZiggyVue, Ziggy)
+      .use(ZiggyVue)
       .use(CKEditor)
-      .use(FontAwesomeIcon)
       .mount(el);
   },
   progress: {
