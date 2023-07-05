@@ -39,7 +39,7 @@ class ImportController extends Controller
         try {
             !Http::get($url)->ok();
         } catch (\Exception $e) {
-            return back()->with('warning', 'Helaas, er kon geen verbinding worden gemaakt met de opgegeven URL. Bestaat de pagina wel?');
+            return back()->with('warning', 'Helaas, er kon geen verbinding worden gemaakt met de opgegeven URL. Bestaat deze pagina nog wel?');
         }
 
         match ($parser) {
