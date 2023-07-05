@@ -19,7 +19,7 @@ class ImportResource extends JsonResource
             'preparation_minutes' => isset($this->resource['prepTime']) ? $this->transformTime($this->resource['prepTime']) : null,
             'cooking_minutes'     => isset($this->resource['cookTime']) || isset($this->resource['totalTime']) ? $this->transformTime($this->resource['cookTime'] ?? $this->resource['totalTime']) : null,
             'servings'            => (int) $this->resource['yield'],
-            'difficulty'          => $this->resource['difficulty'] ?? 'average',
+            'difficulty'          => $this->resource['difficulty'] ?? 'easy',
             'ingredients'         => isset($this->resource['ingredients']) && is_array($this->resource['ingredients']) ? implode("\n", $this->resource['ingredients']) : $this->resource['ingredients'] ?? null,
             'instructions'        => isset($this->resource['steps']) ? $this->transformInstructions($this->resource['steps']) : null,
             'source_label'        => isset($this->resource['url']) ? Str::replace('www.', '', parse_url($this->resource['url'], PHP_URL_HOST)) : null,
