@@ -5,7 +5,13 @@
     }
 
     ol > li {
-        @apply list-decimal;
+        @apply relative min-h-[1.5em] pb-2 pl-4 list-none;
+        counter-increment: step-counter;
+
+        &::before {
+            @apply absolute -top-0.5 -left-4 text-xl text-emerald-700 font-bold;
+            content: counter(step-counter);
+        }
     }
 
     ul > li {
