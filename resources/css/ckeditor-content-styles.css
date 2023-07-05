@@ -8,3 +8,7 @@
     list-style: outside;
     padding-left: 1rem;
 }
+
+.ck-content li + li {
+    padding-top: 0.5rem;
+}

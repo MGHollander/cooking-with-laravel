@@ -9,7 +9,7 @@ import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Head, router, useForm } from "@inertiajs/vue3";
 import "../../../css/ckeditor.css";
-import "../../../css/content-styles.css";
+import "../../../css/ckeditor-content-styles.css";
 import { ref } from "vue";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
