@@ -65,7 +65,7 @@ const clearImageField = () => {
   imagePreview.value = null;
 };
 
-const title = edit ? 'Wijzig recept "' + form.title + '"' : "Voeg een nieuw recept toe";
+const title = edit ? `Wijzig recept “${form.title}”` : "Voeg een nieuw recept toe";
 
 const editor = ClassicEditor;
 const summaryEditorConfig = {
