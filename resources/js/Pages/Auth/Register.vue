@@ -25,7 +25,7 @@ const submit = () => {
   <GuestLayout>
     <Head title="Registreren" />
 
-    <ValidationErrors class="mb-4" />
+    <ValidationErrors class="-mx-6 -mt-4 mb-4 px-6 py-4" />
 
     <form @submit.prevent="submit">
       <div>

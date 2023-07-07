@@ -1,6 +1,5 @@
 <script setup>
-import { router } from "@inertiajs/vue3";
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, router } from "@inertiajs/vue3";
 import debounce from "lodash/debounce";
 import { ref, watch } from "vue";
 import Button from "@/Components/Button.vue";
@@ -18,7 +17,7 @@ let search = ref(props.filters.search);
 watch(
   search,
   debounce((value) => {
-    Inertia.get(
+    router.get(
       route("users"),
       { search: value },
       {
@@ -34,7 +33,7 @@ watch(
   <Head title="Gebruikers beheren" />
 
   <DefaultLayout>
-    <template #header> Gebruikers beheren </template>
+    <template #header> Gebruikers beheren</template>
 
     <div class="mb-4 flex items-center justify-between px-2 sm:px-0">
       <Button

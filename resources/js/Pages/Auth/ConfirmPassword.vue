@@ -25,7 +25,7 @@ const submit = () => {
       Dit is een beveiligd gedeelte van de website. Bevestig je wachtwoord voordat je doorgaat.
     </div>
 
-    <ValidationErrors class="mb-4" />
+    <ValidationErrors class="-mx-6 mb-4 px-6 py-4" />
 
     <form @submit.prevent="submit">
       <div>

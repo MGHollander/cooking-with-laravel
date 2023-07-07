@@ -29,7 +29,7 @@ const submit = () => {
   <GuestLayout>
     <Head title="Reset je wachtwoord" />
 
-    <ValidationErrors class="mb-4" />
+    <ValidationErrors class="-mx-6 -mt-4 mb-4 px-6 py-4" />
 
     <form @submit.prevent="submit">
       <div>
@@ -66,7 +66,6 @@ const submit = () => {
           class="mt-1 block w-full"
           required
           autocomplete="new-password"
-        />
         />
       </div>
 

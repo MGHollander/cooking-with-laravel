@@ -29,9 +29,9 @@ const submit = () => {
   <GuestLayout>
     <Head title="Inloggen" />
 
-    <ValidationErrors class="mb-4" />
+    <ValidationErrors class="-mx-6 -mt-4 mb-4 px-6 py-4" />
 
-    <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+    <div v-if="status" class="-mx-6 -mt-4 mb-4 bg-emerald-100 px-6 py-4 text-sm font-medium text-emerald-800">
       {{ status }}
     </div>
 

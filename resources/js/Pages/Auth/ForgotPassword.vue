@@ -28,11 +28,11 @@ const submit = () => {
       je een nieuw wachtwoord kunt aanmaken.
     </div>
 
-    <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+    <ValidationErrors class="-mx-6 mb-4 px-6 py-4" />
+
+    <div v-if="status" class="-mx-6 mb-4 bg-emerald-100 px-6 py-4 text-sm font-medium text-emerald-800">
       {{ status }}
     </div>
-
-    <ValidationErrors class="mb-4" />
 
     <form @submit.prevent="submit">
       <div>
