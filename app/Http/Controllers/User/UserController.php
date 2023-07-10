@@ -4,7 +4,11 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\UserCreated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
@@ -53,14 +57,28 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $attributes = $request->validate([
-            'name'     => 'required',
-            'email'    => ['required', 'email', 'unique:users'],
-            'password' => 'required',
+            'name'  => 'required',
+            'email' => ['required', 'email', 'unique:users'],
         ]);
+
+        $attributes['password'] = Hash::make(Str::random(32));
 
         User::create($attributes);
 
-        return redirect()->route('users.index')->with('success', 'De gebruiker is succesvol toegevoegd!');
+        $status = Password::sendResetLink(
+            $request->only('email'),
+            static function ($user, $token) {
+                $user->notify(new UserCreated($token));
+            }
+        );
+
+        $redirect = redirect()->route('users.index');
+
+        if ($status !== Password::RESET_LINK_SENT) {
+            return $redirect->with('warning', 'De gebruiker is succesvol toegevoegd, maar er kon geen email gestuurd worden met instructies om een wachtwoord aan te maken. De volgende melding is terug gegeven: <em>' . trans($status) . '</em>');
+        }
+
+        return $redirect->with('success', 'De gebruiker is succesvol toegevoegd en er een email gestuurd met instructies om een wachtwoord aan te maken.');
     }
 
     /**
