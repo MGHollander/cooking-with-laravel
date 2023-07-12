@@ -68,6 +68,11 @@ class StructuredDataRecipeParser
         $this->recipeData['title'] = $this->getFirstValue($values);
     }
 
+    private function parse_description($values): void
+    {
+        $this->recipeData['description'] = $this->getFirstValue($values);
+    }
+
     private function parse_keywords($values): void
     {
         $this->recipeData['keywords'] = $this->getFirstValue($values);
