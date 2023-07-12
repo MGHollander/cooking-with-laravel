@@ -1,5 +1,5 @@
 <script setup>
-import { Head, useForm } from "@inertiajs/vue3";
+import { Head, router, useForm } from "@inertiajs/vue3";
 import { useAttrs } from "vue";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
@@ -25,6 +25,14 @@ let submit = () => {
 };
 
 const title = "Bewerk " + (props.id === attrs.auth.user.id ? "je profiel" : `het profiel van ${props.name}`);
+
+function confirmDeletion() {
+  if (confirm("Weet je zeker dat je deze gebruiker wilt verwijderen?")) {
+    router.delete(route("users.destroy", props.id), {
+      method: "delete",
+    });
+  }
+}
 </script>
 
 <template>
@@ -53,9 +61,13 @@ const title = "Bewerk " + (props.id === attrs.auth.user.id ? "je profiel" : `het
       </div>
 
       <div
-        class="flex items-center border-b border-gray-200 bg-gray-50 px-4 py-3 text-right shadow sm:rounded-bl-md sm:rounded-br-md sm:px-6"
+        class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-3 text-right shadow sm:rounded-bl-md sm:rounded-br-md sm:px-6"
       >
-        <Button class="text-xs" type="submit" :disabled="form.processing"> Opslaan </Button>
+        <Button class="text-xs" type="submit" :disabled="form.processing">Opslaan</Button>
+
+        <Button class="text-xs" button-style="danger" :disabled="form.processing" @click="confirmDeletion()">
+          Verwijderen
+        </Button>
       </div>
     </form>
   </DefaultLayout>

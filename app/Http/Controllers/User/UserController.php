@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\UserCreated;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -75,10 +76,10 @@ class UserController extends Controller
         $redirect = redirect()->route('users.index');
 
         if ($status !== Password::RESET_LINK_SENT) {
-            return $redirect->with('warning', 'De gebruiker is succesvol toegevoegd, maar er kon geen email gestuurd worden met instructies om een wachtwoord aan te maken. De volgende melding is terug gegeven: <em>' . trans($status) . '</em>');
+            return $redirect->with('warning', 'De gebruiker “<i>{$user->name}</i>” is succesvol toegevoegd, maar er kon geen email gestuurd worden met instructies om een wachtwoord aan te maken. De volgende melding is terug gegeven: <em>' . trans($status) . '</em>');
         }
 
-        return $redirect->with('success', 'De gebruiker is succesvol toegevoegd en er een email gestuurd met instructies om een wachtwoord aan te maken.');
+        return $redirect->with('success', 'De gebruiker “<i>{$user->name}</i>” is succesvol toegevoegd en er een email gestuurd met instructies om een wachtwoord aan te maken.');
     }
 
     /**
@@ -112,6 +113,20 @@ class UserController extends Controller
 
         $user->update($attributes);
 
-        return redirect()->route('users.index')->with('success', 'De gebruiker is succesvol aangepast!');
+        return redirect()->route('users.index')->with('success', 'De gebruiker “<i>{$user->name}</i>” is succesvol aangepast!');
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param User $user
+     * @return RedirectResponse
+     */
+    public function destroy(User $user): RedirectResponse
+    {
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', "De gebruiker “<i>{$user->name}</i>” is succesvol verwijderd!");
     }
 }

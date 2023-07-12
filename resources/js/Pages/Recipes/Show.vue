@@ -58,9 +58,9 @@ function confirmDeletion() {
             </template>
 
             <template #content>
-              <DropdownLink :href="route('recipes.edit', recipe.id)"> Recept bewerken</DropdownLink>
+              <DropdownLink :href="route('recipes.edit', recipe.id)">Recept bewerken</DropdownLink>
 
-              <DropdownLink href="#" @click="confirmDeletion"> Verwijder</DropdownLink>
+              <DropdownLink href="#" @click="confirmDeletion">Verwijder</DropdownLink>
             </template>
           </Dropdown>
 

@@ -272,9 +272,16 @@ function confirmDeletion() {
 
       <div class="fixed bottom-0 left-0 w-full border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
         <div class="mx-auto flex max-w-3xl justify-between sm:px-6">
-          <Button :disabled="form.processing" class="text-xs" type="submit"> Opslaan</Button>
-
-          <Button v-if="edit" button-style="danger" class="text-xs" @click="confirmDeletion"> Verwijder</Button>
+          <Button :disabled="form.processing" class="text-xs" type="submit">Opslaan</Button>
+          <Button
+            v-if="edit"
+            :disabled="form.processing"
+            button-style="danger"
+            class="text-xs"
+            @click="confirmDeletion"
+          >
+            Verwijder
+          </Button>
         </div>
       </div>
     </form>

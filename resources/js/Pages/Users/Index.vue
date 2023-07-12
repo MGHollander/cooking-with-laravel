@@ -1,5 +1,7 @@
 <script setup>
-import { Head, Link, router } from "@inertiajs/vue3";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { Head, router } from "@inertiajs/vue3";
 import debounce from "lodash/debounce";
 import { ref, watch } from "vue";
 import Button from "@/Components/Button.vue";
@@ -27,6 +29,14 @@ watch(
     );
   }, 300)
 );
+
+function confirmDeletion(user_id) {
+  if (confirm("Weet je zeker dat je deze gebruiker wilt verwijderen?")) {
+    router.delete(route("users.destroy", user_id), {
+      method: "delete",
+    });
+  }
+}
 </script>
 
 <template>
@@ -38,7 +48,7 @@ watch(
     <div class="mb-4 flex items-center justify-between px-2 sm:px-0">
       <Button
         :href="route('users.create')"
-        class="bg-indigo-600 px-2 text-sm text-sm no-underline hover:bg-indigo-800 hover:text-white"
+        class="bg-indigo-600 px-2 text-sm no-underline hover:bg-indigo-800 hover:text-white"
       >
         Gebruiker toevoegen
       </Button>
@@ -56,13 +66,18 @@ watch(
                 <span class="text-sm text-gray-500">{{ user.email }}</span>
               </td>
 
-              <td class="whitespace-nowrap px-4 py-5 text-right text-sm font-medium sm:px-6">
-                <Link
+              <td class="space-x-2 whitespace-nowrap px-4 py-5 text-right text-sm font-medium sm:px-6">
+                <Button
                   :href="route('users.edit', user.id)"
                   class="text-indigo-600 no-underline hover:text-indigo-900 hover:underline"
+                  aria-label="Gebruiker bewerken"
                 >
-                  Bewerk
-                </Link>
+                  <FontAwesomeIcon :icon="faEdit" />
+                </Button>
+
+                <Button button-style="danger" aria-label="Gebruiker verwijderen" @click="confirmDeletion(user.id)">
+                  <FontAwesomeIcon :icon="faTrash" />
+                </Button>
               </td>
             </tr>
           </table>
