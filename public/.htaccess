@@ -1,3 +1,11 @@
+# Redirects from the old website
+Redirect 301 "/recepten/bietgeitenkaas-wrap" "/recepten/biet-geitenkaas-wrap"
+Redirect 301 "/recepten/courgetti-met-krokante-kikkererwten" "/recepten/courgetti-met-krokante-kikkererwten-feta-en-rucola"
+Redirect 301 "/recepten/hartige-taart-pompoen-spinazie-en-feta" "/recepten/hartige-taart-met-pompoen-spinazie-en-feta"
+Redirect 301 "/recepten/tomaatpaprikasoep-met-parelcouscous-en-knoflooksoepstengels" "/recepten/tomaat-paprikasoep-met-parelcouscous-en-knoflook-soepstengels"
+Redirect 301 "/recepten/zalm-met-pesto-van-de-bbq" "/recepten/zalm-met-pesto-en-groenten"
+
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
