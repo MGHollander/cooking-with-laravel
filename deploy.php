@@ -10,7 +10,7 @@ require 'recipe/laravel.php';
 
 set('branch', 'main');
 set('default_stage', 'production');
-set('http_user', 'koken');
+set('http_user', 'kokenv2');
 set('local_deploy_path', 'tmp_deploy');
 set('repository', 'git@github.com:MGHollander/cooking-with-laravel.git');
 set('writable_mode', 'chmod');
@@ -21,9 +21,9 @@ add('writable_dirs', []);
 
 // Hosts
 
-host('v2.koken.maruc.nl')
+host('koken.maruc.nl')
     ->set('remote_user', 'kokenv2')
-    ->set('deploy_path', '~/domains/v2.koken.maruc.nl');
+    ->set('deploy_path', '~/domains/koken.maruc.nl');
 
 // Hooks
 desc('Prepares a new release');
