@@ -46,12 +46,12 @@ const form = useForm({
         <Link
           v-for="(recipe, index) in recipes.data"
           :key="recipe.id"
+          :href="route('recipes.show', recipe.slug)"
           :class="{
             'md:col-span-6': index < 2,
             'md:col-span-4': index >= 2,
             'lg:col-span-3': index >= 5,
           }"
-          :href="route('recipes.show', recipe.slug)"
           class="recipe-card"
         >
           <div v-if="recipe.image" class="recipe-card-image">

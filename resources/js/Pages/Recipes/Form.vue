@@ -16,6 +16,7 @@ import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
+import { summaryEditorConfig, instructionsEditorConfig } from "@/editorConfig";
 import DefaultLayout from "@/Layouts/Default.vue";
 
 const props = defineProps({ recipe: Object });
@@ -68,21 +69,6 @@ const clearImageField = () => {
 const title = edit ? `Wijzig recept “${form.title}”` : "Voeg een nieuw recept toe";
 
 const editor = ClassicEditor;
-const summaryEditorConfig = {
-  plugins: [Essentials, Bold, Italic, Link, Paragraph, Strikethrough, Underline],
-
-  toolbar: {
-    items: ["bold", "italic", "underline", "strikeThrough", "|", "link"],
-  },
-};
-
-const instructionsEditorConfig = {
-  plugins: [Essentials, Bold, Italic, Link, List, Paragraph, Strikethrough, Underline],
-
-  toolbar: {
-    items: ["bold", "italic", "underline", "strikeThrough", "|", "bulletedList", "numberedList", "|", "link"],
-  },
-};
 
 function confirmDeletion() {
   if (confirm("Weet je zeker dat je dit recept wilt verwijderen?")) {

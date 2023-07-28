@@ -1,4 +1,8 @@
-.instructions {
+.recipe-instructions {
+    h3 {
+        @apply text-lg font-bold my-4;
+    }
+
     ol,
     ul {
         @apply pl-4 list-outside;

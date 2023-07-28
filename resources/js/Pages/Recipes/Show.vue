@@ -67,8 +67,8 @@ function confirmDeletion() {
 
           <h1 class="mb-4 text-xl font-bold md:text-3xl">{{ recipe.title }}</h1>
 
-          <div v-if="recipe.tags.length > 0" class="flex space-x-2 text-sm">
-            <div v-for="item in recipe.tags" :key="item.id" class="rounded bg-gray-200 px-2">
+          <div v-if="recipe.tags.length > 0" class="-mb-2 flex flex-wrap text-sm">
+            <div v-for="item in recipe.tags" :key="item.id" class="mb-2 mr-2 rounded bg-gray-200 px-2">
               {{ item }}
             </div>
           </div>
@@ -217,7 +217,7 @@ function confirmDeletion() {
           <div class="space-y-4 sm:px-6 md:w-2/3 md:px-0">
             <h2 class="mb-4 text-2xl font-bold md:mt-6">Instructies</h2>
 
-            <div class="instructions" v-html="recipe.instructions" />
+            <div class="recipe-instructions" v-html="recipe.instructions" />
 
             <p v-if="recipe.source_label || recipe.source_link">
               <strong>Bron: </strong>

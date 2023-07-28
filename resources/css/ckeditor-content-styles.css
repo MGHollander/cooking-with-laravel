@@ -1,11 +1,18 @@
 
+.ck-content h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
 .ck-content ol {
-    list-style: outside;
+    list-style-position: outside;
     padding-left: 1rem;
 }
 
 .ck-content ul {
-    list-style: outside;
+    list-style-position: outside;
     padding-left: 1rem;
 }
 
