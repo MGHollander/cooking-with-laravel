@@ -6,6 +6,7 @@ import { computed } from "vue";
 import Button from "@/Components/Button.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
+import StructuredRecipe from "@/Components/StructuredJson/Recipe.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 
 const props = defineProps({
@@ -45,6 +46,7 @@ function confirmDeletion() {
 
 <template>
   <Head :title="recipe.title" />
+  <StructuredRecipe :recipe="recipe" />
 
   <DefaultLayout>
     <div class="overflow-hidden bg-white sm:rounded-lg sm:shadow-lg">
@@ -59,7 +61,6 @@ function confirmDeletion() {
 
             <template #content>
               <DropdownLink :href="route('recipes.edit', recipe.id)">Recept bewerken</DropdownLink>
-
               <DropdownLink href="#" @click="confirmDeletion">Verwijder</DropdownLink>
             </template>
           </Dropdown>

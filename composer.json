@@ -19,7 +19,8 @@
         "protonemedia/laravel-cross-eloquent-search": "^3.2",
         "spatie/laravel-sluggable": "^3.5",
         "spatie/laravel-tags": "^4.4",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "ext-dom": "*"
     },
     "require-dev": {
         "deployer/deployer": "^7.3",

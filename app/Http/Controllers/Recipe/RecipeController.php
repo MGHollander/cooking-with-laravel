@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Recipe;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Recipe\RecipeRequest;
+use App\Http\Resources\StructuredData\Recipe\IngredientsResource;
+use App\Http\Resources\StructuredData\Recipe\InstructionsResource;
 use App\Http\Traits\UploadImageTrait;
 use App\Models\Recipe;
 use Illuminate\Http\RedirectResponse;
@@ -75,32 +77,30 @@ class RecipeController extends Controller
      */
     public function show(Recipe $recipe)
     {
-        if ($recipe->image) {
-            $recipe->image = Storage::disk('public')->url($recipe->image);
-        }
-
-        if ($recipe->ingredients) {
-            $recipe->ingredients = $recipe->transformIngredients($recipe->ingredients);
-        }
-
-        $recipe->difficulty = Str::ucfirst(__('recipes.' . $recipe->difficulty));
-
         return Inertia::render('Recipes/Show', [
             'recipe' => [
                 'id'                  => $recipe->id,
                 'title'               => $recipe->title,
                 'slug'                => $recipe->slug,
-                'image'               => $recipe->image,
+                'image'               => $recipe->image ? Storage::disk('public')->url($recipe->image) : null,
                 'summary'             => $recipe->summary,
                 'tags'                => $recipe->tags->pluck('name'),
                 'servings'            => $recipe->servings,
                 'preparation_minutes' => $recipe->preparation_minutes,
                 'cooking_minutes'     => $recipe->cooking_minutes,
-                'difficulty'          => $recipe->difficulty,
-                'ingredients'         => $recipe->ingredients,
+                'difficulty'          => Str::ucfirst(__('recipes.' . $recipe->difficulty)),
+                'ingredients'         => $recipe->transformIngredients($recipe->ingredients),
                 'instructions'        => $recipe->instructions,
                 'source_label'        => $recipe->source_label,
                 'source_link'         => $recipe->source_link,
+                'created_at'          => $recipe->created_at,
+                'structured_data'     => [
+                    'description'  => strip_tags($recipe->summary),
+                    'ingredients'  => new IngredientsResource($recipe->ingredients),
+                    'instructions' => new InstructionsResource($recipe->instructions),
+                    'keywords'     => implode(',', $recipe->tags->pluck('name')->toArray()),
+                ],
+
             ],
         ]);
     }
