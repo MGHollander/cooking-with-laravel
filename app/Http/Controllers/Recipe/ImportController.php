@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Recipe;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Import\ImportRequest;
 use App\Http\Requests\Recipe\RecipeRequest;
-use App\Http\Resources\ImportResource;
+use App\Http\Resources\Recipe\ImportResource;
 use App\Http\Traits\UploadImageTrait;
 use App\Models\Recipe;
 use App\Support\FileHelper;

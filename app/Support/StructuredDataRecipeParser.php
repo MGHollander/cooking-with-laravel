@@ -2,7 +2,7 @@
 
 namespace App\Support;
 
-use App\Http\Resources\ImportResource;
+use App\Http\Resources\Recipe\ImportResource;
 use Brick\StructuredData\Item;
 use Illuminate\Support\Str;
 

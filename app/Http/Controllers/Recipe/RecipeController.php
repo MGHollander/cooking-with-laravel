@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Recipe;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Recipe\RecipeRequest;
-use App\Http\Resources\StructuredData\Recipe\IngredientsResource;
+use App\Http\Resources\Recipe\IngredientsResource;
+use App\Http\Resources\StructuredData\Recipe\IngredientsResource as StructuredDataIngredientsResource;
 use App\Http\Resources\StructuredData\Recipe\InstructionsResource;
 use App\Http\Traits\UploadImageTrait;
 use App\Models\Recipe;
@@ -89,14 +90,14 @@ class RecipeController extends Controller
                 'preparation_minutes' => $recipe->preparation_minutes,
                 'cooking_minutes'     => $recipe->cooking_minutes,
                 'difficulty'          => Str::ucfirst(__('recipes.' . $recipe->difficulty)),
-                'ingredients'         => $recipe->transformIngredients($recipe->ingredients),
+                'ingredients'         => new IngredientsResource($recipe->ingredients),
                 'instructions'        => $recipe->instructions,
                 'source_label'        => $recipe->source_label,
                 'source_link'         => $recipe->source_link,
                 'created_at'          => $recipe->created_at,
                 'structured_data'     => [
                     'description'  => strip_tags($recipe->summary),
-                    'ingredients'  => new IngredientsResource($recipe->ingredients),
+                    'ingredients'  => new StructuredDataIngredientsResource($recipe->ingredients),
                     'instructions' => new InstructionsResource($recipe->instructions),
                     'keywords'     => implode(',', $recipe->tags->pluck('name')->toArray()),
                 ],
