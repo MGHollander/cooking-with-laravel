@@ -20,58 +20,106 @@ class InstructionsResource extends JsonResource
         $dom = new DOMDocument();
         $dom->loadHTML($this->resource);
 
-        $instructions = [];
-        $index        = 0;
+        $instructions        = [];
+        $currentSectionIndex = 0;
+
         foreach ($dom->getElementsByTagName('body')->item(0)->childNodes as $node) {
             if ($node->nodeType !== XML_ELEMENT_NODE) {
                 continue;
             }
 
-            if ($node->tagName === 'h3') {
-                $index++;
-                $instructions[$index] = [
-                    '@type'           => 'HowToSection',
-                    'name'            => $node->textContent,
-                    'itemListElement' => [],
-                ];
-                continue;
-            }
-
-            if (in_array($node->tagName, ['ul', 'ol'])) {
-                foreach ($node->childNodes as $childNode) {
-                    if ($childNode->nodeType !== XML_ELEMENT_NODE) {
-                        continue;
-                    }
-
-                    if (isset($instructions[$index]['@type']) && $instructions[$index]['@type'] === 'HowToSection') {
-                        $instructions[$index]['itemListElement'][] = [
-                            '@type' => 'HowToStep',
-                            'text'  => $childNode->textContent,
-                        ];
-                    } else {
-                        $instructions[$index][] = [
-                            '@type' => 'HowToStep',
-                            'text'  => $childNode->textContent,
-                        ];
-                    }
-                }
-            }
-
-            if ($node->tagName === 'p') {
-                if (isset($instructions[$index]['@type']) && $instructions[$index]['@type'] === 'HowToSection') {
-                    $instructions[$index]['itemListElement'][] = [
-                        '@type' => 'HowToStep',
-                        'text'  => $node->textContent,
-                    ];
-                } else {
-                    $instructions[$index][] = [
-                        '@type' => 'HowToStep',
-                        'text'  => $node->textContent,
-                    ];
-                }
+            switch ($node->tagName) {
+                case 'h3':
+                    $currentSectionIndex++;
+                    $this->parseHeading($node, $instructions, $currentSectionIndex);
+                    break;
+                case 'ul':
+                case 'ol':
+                    $this->parseList($node, $instructions, $currentSectionIndex);
+                    break;
+                case 'p':
+                    $this->parseParagraph($node, $instructions, $currentSectionIndex);
             }
         }
 
         return $instructions;
+    }
+
+    /**
+     * Parse heading element and add section to instructions array.
+     *
+     * @param \DOMElement $headingNode
+     * @param array       $instructions
+     * @param int         $sectionIndex
+     */
+    private function parseHeading(\DOMElement $headingNode, array &$instructions, int $sectionIndex): void
+    {
+        $instructions[$sectionIndex] = [
+            '@type'           => 'HowToSection',
+            'name'            => $headingNode->textContent,
+            'itemListElement' => [],
+        ];
+    }
+
+    /**
+     * Parse list elements and add to instructions array.
+     *
+     * @param \DOMElement $listNode
+     * @param array       $instructions
+     * @param int         $sectionIndex
+     */
+    private function parseList(\DOMElement $listNode, array &$instructions, int $sectionIndex): void
+    {
+        foreach ($listNode->childNodes as $childNode) {
+            if ($childNode->nodeType !== XML_ELEMENT_NODE) {
+                continue;
+            }
+
+            $step = $this->createStep($childNode->textContent);
+            $this->addItem($instructions, $sectionIndex, $step);
+        }
+    }
+
+    /**
+     * Parse step element (e.g., paragraph) and add to instructions array.
+     *
+     * @param \DOMElement $stepNode
+     * @param array       $instructions
+     * @param int         $sectionIndex
+     */
+    private function parseParagraph(\DOMElement $stepNode, array &$instructions, int $sectionIndex): void
+    {
+        $step = $this->createStep($stepNode->textContent);
+        $this->addItem($instructions, $sectionIndex, $step);
+    }
+
+    /**
+     * Create a new step array.
+     *
+     * @param string $text
+     * @return array
+     */
+    private function createStep(string $text): array
+    {
+        return [
+            '@type' => 'HowToStep',
+            'text'  => $text,
+        ];
+    }
+
+    /**
+     * Add the step to the appropriate location in the instructions array.
+     *
+     * @param array $instructions
+     * @param int   $sectionIndex
+     * @param array $step
+     */
+    private function addItem(array &$instructions, int $sectionIndex, array $step): void
+    {
+        if (isset($instructions[$sectionIndex]['@type']) && $instructions[$sectionIndex]['@type'] === 'HowToSection') {
+            $instructions[$sectionIndex]['itemListElement'][] = $step;
+        } else {
+            $instructions[$sectionIndex][] = $step;
+        }
     }
 }
