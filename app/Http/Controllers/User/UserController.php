@@ -64,7 +64,7 @@ class UserController extends Controller
 
         $attributes['password'] = Hash::make(Str::random(32));
 
-        User::create($attributes);
+        $user = User::create($attributes);
 
         $status = Password::sendResetLink(
             $request->only('email'),
@@ -76,10 +76,10 @@ class UserController extends Controller
         $redirect = redirect()->route('users.index');
 
         if ($status !== Password::RESET_LINK_SENT) {
-            return $redirect->with('warning', 'De gebruiker “<i>{$user->name}</i>” is succesvol toegevoegd, maar er kon geen email gestuurd worden met instructies om een wachtwoord aan te maken. De volgende melding is terug gegeven: <em>' . trans($status) . '</em>');
+            return $redirect->with('warning', "De gebruiker “<i>{$user->name}</i>” is succesvol toegevoegd, maar er kon geen email gestuurd worden met instructies om een wachtwoord aan te maken. De volgende melding is terug gegeven: <em>" . trans($status) . '</em>');
         }
 
-        return $redirect->with('success', 'De gebruiker “<i>{$user->name}</i>” is succesvol toegevoegd en er een email gestuurd met instructies om een wachtwoord aan te maken.');
+        return $redirect->with('success', "De gebruiker “<i>{$user->name}</i>” is succesvol toegevoegd en er een email gestuurd met instructies om een wachtwoord aan te maken.");
     }
 
     /**
