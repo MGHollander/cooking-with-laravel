@@ -34,12 +34,13 @@ class ImportController extends Controller
     public function create(ImportRequest $request)
     {
         $url    = $request->get('url');
-        $parser = $request->get('parser');
+        $parser = $request->get('parser', 'structured-data');
 
+        // TODO: Use proper validation. This is just a quick fix.
         try {
-            !Http::get($url)->ok();
+            Http::throw()->get($url);
         } catch (\Exception $e) {
-            return back()->with('warning', 'Helaas, er kon geen verbinding worden gemaakt met de opgegeven URL. Bestaat deze pagina nog wel?');
+            return back()->with('warning', 'Helaas, de URL die je hebt opgegeven lijkt niet meer te bestaan. Probeer een andere URL.');
         }
 
         match ($parser) {
