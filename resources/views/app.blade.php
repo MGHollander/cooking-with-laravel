@@ -18,6 +18,10 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
 
+    @foreach($open_graph as $key => $value)
+        <meta property="og:{{ $key }}" content="{{ $value }}"/>
+    @endforeach
+
     <!-- Scripts -->
     @routes
     @vite('resources/js/app.js')
