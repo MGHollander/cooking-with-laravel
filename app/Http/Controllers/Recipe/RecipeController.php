@@ -11,6 +11,7 @@ use App\Http\Traits\UploadImageTrait;
 use App\Models\Recipe;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -101,7 +102,12 @@ class RecipeController extends Controller
                     'instructions' => new InstructionsResource($recipe->instructions),
                     'keywords'     => implode(',', $recipe->tags->pluck('name')->toArray()),
                 ],
-
+            ],
+        ])->withViewData([
+            'open_graph' => [
+                'title' => $recipe->title,
+                'image' => $recipe->image ? Storage::disk('public')->url($recipe->image) : null,
+                'url'   => URL::current(),
             ],
         ]);
     }
