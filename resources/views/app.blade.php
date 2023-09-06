@@ -18,6 +18,16 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
 
+    @if($og_title)
+        <meta property="og:title" content="{{ $og_title }}"/>
+    @endif
+    @if($og_url)
+        <meta property="og:url" content="{{ $og_url }}"/>
+    @endif
+    @if($og_image)
+        <meta property="og:image" content="{{ $og_image }}"/>
+    @endif
+
     <!-- Scripts -->
     @routes
     @vite('resources/js/app.js')

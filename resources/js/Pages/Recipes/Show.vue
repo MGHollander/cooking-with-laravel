@@ -6,7 +6,6 @@ import { computed } from "vue";
 import Button from "@/Components/Button.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import OpenGraphRecipe from "@/Components/OpenGraph/Recipe.vue";
 import StructuredRecipe from "@/Components/StructuredJson/Recipe.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 
@@ -48,7 +47,6 @@ function confirmDeletion() {
 <template>
   <Head :title="recipe.title" />
   <StructuredRecipe :recipe="recipe" />
-  <OpenGraphRecipe :title="recipe.title" :url="route('recipes.show', recipe.slug)" :image="recipe.image" />
 
   <DefaultLayout>
     <div class="overflow-hidden bg-white sm:rounded-lg sm:shadow-lg">
