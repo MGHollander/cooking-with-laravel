@@ -18,9 +18,11 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
 
-    @foreach($open_graph as $key => $value)
-        <meta property="og:{{ $key }}" content="{{ $value }}"/>
-    @endforeach
+    @if(isset($open_graph) && is_array($open_graph))
+        @foreach($open_graph as $key => $value)
+            <meta property="og:{{ $key }}" content="{{ $value }}"/>
+        @endforeach
+    @endif
 
     <!-- Scripts -->
     @routes
