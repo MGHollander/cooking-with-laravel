@@ -10,10 +10,12 @@ use App\Http\Resources\StructuredData\Recipe\InstructionsResource;
 use App\Http\Traits\UploadImageTrait;
 use App\Models\Recipe;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 
 class RecipeController extends Controller
 {
@@ -74,11 +76,18 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Recipe $recipe
-     * @return \Inertia\Response
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $slug
+     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response|\Inertia\Response
      */
-    public function show(Recipe $recipe)
+    public function show(Request $request, string $slug)
     {
+        $recipe = Recipe::findBySlug($slug);
+
+        if (!$recipe) {
+            return $this->notFound($request, $slug);
+        }
+
         return Inertia::render('Recipes/Show', [
             'recipe' => [
                 'id'                  => $recipe->id,
@@ -194,5 +203,28 @@ class RecipeController extends Controller
         $recipe->delete();
 
         return redirect()->route('home')->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd!");
+    }
+
+    private function notFound(Request $request, $slug): \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+    {
+        $q       = Str::replace('-', ' ', $slug);
+        $recipes = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
+            ->paginate(12)
+            ->beginWithWildcard()
+            ->search($q)
+            ->withQueryString()
+            ->through(fn($recipe) => [
+                'id'    => $recipe->id,
+                'title' => $recipe->title,
+                'slug'  => $recipe->slug,
+                'image' => $recipe->image ? Storage::url($recipe->image) : null,
+            ]);
+
+        return Inertia::render('Recipes/NotFound', [
+            'q'       => implode(', ', explode(' ', $q)),
+            'recipes' => $recipes,
+        ])
+            ->toResponse($request)
+            ->setStatusCode(404);
     }
 }

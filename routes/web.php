@@ -33,7 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/recepten/importeren', [ImportController::class, 'store'])->name('import.store');
 });
 
-Route::get('/recepten/{recipe:slug}', [RecipeController::class, 'show'])
+Route::get('/recepten/{slug}', [RecipeController::class, 'show'])
     ->name('recipes.show')
     ->missing(fn($request, $exceptions) => app()->call(RecipeNotFoundController::class . '@__invoke', ['ids' => $exceptions->getIds()]));
 
