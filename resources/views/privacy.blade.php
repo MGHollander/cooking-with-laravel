@@ -1,7 +1,9 @@
 @extends('layout')
 
+{{-- This page is not working locally because it is missing the piwik code --}}
+
 @section('head')
-    @vite('resources/scss/app.scss')
+    @vite('resources/js/app.js')
 @endsection
 
 @section('title')
