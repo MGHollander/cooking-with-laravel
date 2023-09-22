@@ -351,7 +351,7 @@ watchEffect(() => {
       <footer>
         <div class="py-2">
           <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <Link :href="route('privacy')" class="text-gray-900 hover:text-gray-500">Privacy</Link>
+            <a :href="route('privacy')" class="text-gray-900 hover:text-gray-500">Privacy</a>
           </div>
         </div>
       </footer>

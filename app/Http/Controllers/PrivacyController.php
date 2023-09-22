@@ -15,11 +15,11 @@ class PrivacyController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return \Inertia\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
-    public function __invoke(): Response
+    public function __invoke(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
     {
-        return Inertia::render('Privacy');
+        return view('privacy');
     }
 
 }
