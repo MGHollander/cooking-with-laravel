@@ -96,9 +96,9 @@ class ImportController extends Controller
         $recipe = Recipe::create($attributes);
 
         if ($return_to_import_page) {
-            return redirect()->route('import.index')->with('success', 'Het recept “<a href="' . route('recipes.show', $recipe) . '"><i>' . $recipe->title . '</i></a>” is succesvol geïmporteerd!');
+            return redirect()->route('import.index')->with('success', 'Het recept “<a href="' . route('recipes.show', $recipe->slug) . '"><i>' . $recipe->title . '</i></a>” is succesvol geïmporteerd!');
         }
-        return redirect()->route('recipes.show', $recipe)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol geïmporteerd!");
+        return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol geïmporteerd!");
     }
 
     private function parseStructuredData($url)

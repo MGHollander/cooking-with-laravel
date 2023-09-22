@@ -70,7 +70,7 @@ class RecipeController extends Controller
 
         $recipe = Recipe::create($attributes);
 
-        return redirect()->route('recipes.show', $recipe)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol toegevoegd!");
+        return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol toegevoegd!");
     }
 
     /**
@@ -189,7 +189,7 @@ class RecipeController extends Controller
 
         $recipe->update($attributes);
 
-        return redirect()->route('recipes.show', $recipe)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol gewijzigd!");
+        return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol gewijzigd!");
     }
 
     /**
