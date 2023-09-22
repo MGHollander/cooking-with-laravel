@@ -34,8 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/recepten/{slug}', [RecipeController::class, 'show'])
-    ->name('recipes.show')
-    ->missing(fn($request, $exceptions) => app()->call(RecipeNotFoundController::class . '@__invoke', ['ids' => $exceptions->getIds()]));
+    ->name('recipes.show');
 
 Route::get('/zoeken', [SearchController::class, 'index'])->name('search');
 
