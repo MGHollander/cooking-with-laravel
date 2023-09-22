@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\Recipe\ImportController;
 use App\Http\Controllers\Recipe\RecipeController;
 use App\Http\Controllers\Recipe\RecipeNotFoundController;
@@ -37,6 +38,7 @@ Route::get('/recepten/{slug}', [RecipeController::class, 'show'])
     ->name('recipes.show');
 
 Route::get('/zoeken', [SearchController::class, 'index'])->name('search');
+Route::get('/privacy', PrivacyController::class)->name('privacy');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/gebruikers/wachtwoord-wijzigen', [ChangePasswordController::class, 'edit'])->name('users.password.edit');
