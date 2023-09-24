@@ -49,16 +49,16 @@ watchEffect(() => {
 
               <!-- Navigation Links -->
               <!-- Hidden for future use
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
-                                </NavLink>
+              <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                  <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                      Dashboard
+                  </NavLink>
 
-                                <NavLink :href="route('users')" :active="route().current('users')">
-                                    Users
-                                </NavLink>
-                            </div>
-                            -->
+                  <NavLink :href="route('users')" :active="route().current('users')">
+                      Users
+                  </NavLink>
+              </div>
+              -->
             </div>
 
             <!-- Menu for users -->
@@ -349,7 +349,7 @@ watchEffect(() => {
       </main>
 
       <footer>
-        <div class="py-2">
+        <div class="px-4 pb-4">
           <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <a :href="route('privacy')" class="text-gray-900 hover:text-gray-500">Privacy</a>
           </div>
