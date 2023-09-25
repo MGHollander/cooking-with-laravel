@@ -136,7 +136,7 @@
         (function (window, document) {
             // Check if Piwik is loaded.
             setTimeout(function () {
-                if (typeof Piwik !== 'undefined' && Piwik.initialized) {
+                if (ppms?.cm?.api.length > 0) {
                     document.getElementById('piwikConsentForm').classList.remove('hidden');
                     document.getElementById('piwikConsentForm').classList.add('flex');
                 } else {
