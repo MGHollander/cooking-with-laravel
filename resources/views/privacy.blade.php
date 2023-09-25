@@ -136,7 +136,6 @@
         (function (window, document) {
             // Check if Piwik is loaded.
             setTimeout(function () {
-                console.log('Piwik is loaded: ' + (typeof Piwik !== 'undefined'));
                 if (typeof Piwik !== 'undefined' && Piwik.initialized) {
                     document.getElementById('piwikConsentForm').classList.remove('hidden');
                     document.getElementById('piwikConsentForm').classList.add('flex');
