@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Import\ImportRequest;
 use App\Http\Requests\Recipe\RecipeRequest;
 use App\Http\Resources\Recipe\ImportResource;
-use App\Http\Traits\UploadImageTrait;
+use App\Http\Traits\FillableAttributes;
 use App\Models\Recipe;
-use App\Support\FileHelper;
 use App\Support\OpenAIRecipeParser;
 use App\Support\StructuredDataRecipeParser;
 use Brick\StructuredData\HTMLReader;
@@ -17,12 +16,11 @@ use Brick\StructuredData\Reader\MicrodataReader;
 use Brick\StructuredData\Reader\RdfaLiteReader;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ImportController extends Controller
 {
-    use UploadImageTrait;
+    use FillableAttributes;
 
     public function index()
     {
@@ -67,35 +65,24 @@ class ImportController extends Controller
      */
     public function store(RecipeRequest $request)
     {
-        $return_to_import_page = $request->get('return_to_import_page');
-
         $attributes            = $request->validated();
         $attributes['user_id'] = $request->user()->id;
+        // TODO Make a mutator for this.
+        // Convert tags to lowercase and trim whitespace.
+        $attributes['tags'] = !empty($attributes['tags']) ? array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags'])))) : [];
 
-        if ($external_image = $request->get('external_image')) {
-            $extension = substr($external_image, strrpos($external_image, '.') + 1);
+        $recipe = (new Recipe)->create($this->fillableAttributes(new Recipe, $attributes));
+
+        if ($externalImage = $request->get('external_image')) {
             try {
-                $attributes['image'] = FileHelper::uploadExternalImage(
-                    $external_image,
-                    Str::slug($attributes['title']) . '-' . time() . '.' . $extension
-                );
+                $recipe->addMediaFromUrl($externalImage)
+                    ->toMediaCollection('recipe_image');
             } catch (\Exception $e) {
                 // @TODO handle exception
             }
         }
 
-        if ($image = $this->saveImage($request)) {
-            $attributes['image'] = $image;
-        }
-
-        $attributes['tags'] = !empty($attributes['tags']) ? array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags'])))) : [];
-
-        // Always unset external_image, because it's not saved to the database.
-        unset($attributes['external_image']);
-
-        $recipe = Recipe::create($attributes);
-
-        if ($return_to_import_page) {
+        if ($request->get('return_to_import_page')) {
             return redirect()->route('import.index')->with('success', 'Het recept “<a href="' . route('recipes.show', $recipe->slug) . '"><i>' . $recipe->title . '</i></a>” is succesvol geïmporteerd!');
         }
         return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol geïmporteerd!");

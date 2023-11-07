@@ -1,23 +1,20 @@
 <script setup>
-import { Bold, Italic, Strikethrough, Underline } from "@ckeditor/ckeditor5-basic-styles";
 import { ClassicEditor } from "@ckeditor/ckeditor5-editor-classic";
-import { Essentials } from "@ckeditor/ckeditor5-essentials";
-import { Link } from "@ckeditor/ckeditor5-link";
-import { List } from "@ckeditor/ckeditor5-list";
-import { Paragraph } from "@ckeditor/ckeditor5-paragraph";
 import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Head, router, useForm } from "@inertiajs/vue3";
 import "../../../css/ckeditor.css";
 import "../../../css/ckeditor-content-styles.css";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { Cropper } from "vue-advanced-cropper";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
-import { summaryEditorConfig, instructionsEditorConfig } from "@/editorConfig";
+import { instructionsEditorConfig, summaryEditorConfig } from "@/editorConfig";
 import DefaultLayout from "@/Layouts/Default.vue";
+import "vue-advanced-cropper/dist/style.css";
 
 const props = defineProps({ recipe: Object });
 const edit = route().current("recipes.edit") ?? false;
@@ -27,8 +24,9 @@ const form = useForm({
   // NOTE: The form is also submitted useing the post method instead of the patch method.
   _method: edit ? "PATCH" : "POST",
   title: edit ? props.recipe.title : "",
-  image: "",
-  destroy_image: false,
+  media: null,
+  media_dimensions: null,
+  destroy_media: false,
   summary: edit ? props.recipe.summary ?? "" : "",
   tags: edit ? props.recipe.tags : "",
   preparation_minutes: edit ? props.recipe.preparation_minutes?.toString() : "",
@@ -41,34 +39,76 @@ const form = useForm({
   source_link: edit ? props.recipe.source_link : "",
 });
 
-const imageInput = ref(null);
-const imagePreview = ref(props.recipe?.image ?? null);
-
-const updateImagePreview = (event) => {
-  form.image = event.target.files[0];
-  form.destroy_image = false;
-
-  if (!form.image) return;
-
-  const reader = new FileReader();
-
-  reader.onload = (e) => {
-    imagePreview.value = e.target.result;
-  };
-
-  reader.readAsDataURL(form.image);
-};
-
-const clearImageField = () => {
-  form.image = null;
-  form.destroy_image = true;
-  imageInput.value.value = null;
-  imagePreview.value = null;
-};
-
 const title = edit ? `Wijzig recept “${form.title}”` : "Voeg een nieuw recept toe";
 
 const editor = ClassicEditor;
+const file = ref(null);
+const image = ref({ src: props.recipe?.media?.original_url ?? null, type: null });
+const cropperCard = ref(null);
+const cropperShow = ref(null);
+
+const save = () => {
+  form.media_dimensions = {
+    card: cropperCard.value ? cropperCard.value.getResult().coordinates : null,
+    show: cropperShow.value ? cropperShow.value.getResult().coordinates : null,
+  };
+
+  form.post(edit ? route("recipes.update", props.recipe.id) : route("recipes.store"));
+};
+
+const clearMediaField = () => {
+  form.destroy_media = true;
+  form.media = null;
+  file.value.value = null;
+  image.value = { src: null, type: null };
+};
+
+// Source: https://advanced-cropper.github.io/vue-advanced-cropper/guides/recipes.html#load-image-from-a-disc
+function loadImage(event) {
+  const { files } = event.target;
+  if (files && files[0]) {
+    form.media = files[0];
+    form.destroy_image = false;
+
+    if (image.value.src) {
+      URL.revokeObjectURL(image.value.src);
+    }
+
+    const blob = URL.createObjectURL(files[0]);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      image.value = {
+        src: blob,
+        type: getMimeType(e.target.result, files[0].type),
+      };
+    };
+    reader.readAsArrayBuffer(files[0]);
+  }
+}
+
+// This function is used to detect the actual image type,
+// Source: https://advanced-cropper.github.io/vue-advanced-cropper/guides/recipes.html#load-image-from-a-disc
+function getMimeType(file, fallback = null) {
+  const byteArray = new Uint8Array(file).subarray(0, 4);
+  let header = "";
+  for (let i = 0; i < byteArray.length; i++) {
+    header += byteArray[i].toString(16);
+  }
+  switch (header) {
+    case "89504e47":
+      return "image/png";
+    case "47494638":
+      return "image/gif";
+    case "ffd8ffe0":
+    case "ffd8ffe1":
+    case "ffd8ffe2":
+    case "ffd8ffe3":
+    case "ffd8ffe8":
+      return "image/jpeg";
+    default:
+      return fallback;
+  }
+}
 
 function confirmDeletion() {
   if (confirm("Weet je zeker dat je dit recept wilt verwijderen?")) {
@@ -77,6 +117,32 @@ function confirmDeletion() {
     });
   }
 }
+
+onMounted(() => {
+  const coordinatesCard = props.recipe?.media?.manipulations?.card?.manualCrop;
+  if (coordinatesCard) {
+    const [width, height, left, top] = coordinatesCard.split(",");
+
+    cropperCard.value.setCoordinates({
+      width: width,
+      height: height,
+      left: left,
+      top: top,
+    });
+  }
+
+  const coordinatesShow = props.recipe?.media?.manipulations?.show?.manualCrop;
+  if (coordinatesShow) {
+    const [width, height, left, top] = coordinatesShow.split(",");
+
+    cropperShow.value.setCoordinates({
+      width: width,
+      height: height,
+      left: left,
+      top: top,
+    });
+  }
+});
 </script>
 
 <template>
@@ -87,10 +153,7 @@ function confirmDeletion() {
       {{ title }} <a v-if="edit" :href="route('recipes.show', props.recipe)" class="ml-4 text-sm">Bekijk het recept</a>
     </template>
 
-    <form
-      class="mx-auto mb-12 max-w-3xl space-y-8"
-      @submit.prevent="edit ? form.post(route('recipes.update', props.recipe.id)) : form.post(route('recipes.store'))"
-    >
+    <form class="mx-auto mb-12 max-w-3xl space-y-8" @submit.prevent="save">
       <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6 sm:pb-8">
         <div class="grid grid-cols-12 gap-6">
           <ValidationErrors class="col-span-12 -mx-4 -mt-5 p-4 sm:-mx-6 sm:-mt-6 sm:rounded-t" />
@@ -106,37 +169,50 @@ function confirmDeletion() {
             <blockquote class="font-mono text-sm">/{{ props.recipe.slug }}</blockquote>
           </div>
 
-          <div class="col-span-12 space-y-1">
+          <div class="col-span-12 gap-4 space-y-1">
             <Label for="image" value="Afbeelding (optioneel)" />
-            <input
-              ref="imageInput"
-              accept="image/jpeg,image/png"
-              type="file"
-              class="hidden"
-              @change="updateImagePreview"
-            />
 
-            <Button v-if="!imagePreview" class="text-xs" @click="imageInput.click()"> Upload afbeelding</Button>
-
-            <div v-else class="col-span-12 space-y-1">
-              <img
-                alt="Voorbeeld van de afbeelding"
-                class="block max-h-32 max-w-full rounded-md bg-contain bg-center bg-no-repeat"
-                :src="imagePreview"
-              />
-
-              <Button class="mr-1 text-xs" button-style="secondary" @click="imageInput.click()">
-                Vervang afbeelding
-              </Button>
-
-              <Button class="text-xs" button-style="danger" @click="clearImageField"> Verwijder afbeelding</Button>
+            <div v-if="image.src" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <strong class="text-sm">Overzicht pagina's</strong>
+                <cropper
+                  ref="cropperCard"
+                  class="vue-advanced-cropper !max-h-[16rem] max-w-full"
+                  :src="image.src"
+                  :stencil-props="{
+                    aspectRatio: 16 / 9,
+                  }"
+                  :min-width="390"
+                  background-class="cropper-bg"
+                />
+              </div>
+              <div>
+                <strong class="text-sm">Recept pagina</strong>
+                <cropper
+                  ref="cropperShow"
+                  class="vue-advanced-cropper !max-h-[16rem] max-w-full"
+                  :src="image.src"
+                  :stencil-props="{
+                    aspectRatio: 4 / 3,
+                  }"
+                  :min-width="575"
+                  background-class="cropper-bg"
+                />
+              </div>
             </div>
+
+            <input ref="file" type="file" class="hidden" accept="image/jpeg,image/png" @change="loadImage($event)" />
+            <template v-if="image.src">
+              <Button class="mr-1 text-xs" button-style="secondary" @click="file.click()">Vervang afbeelding</Button>
+              <Button class="text-xs" button-style="danger" @click="clearMediaField">Verwijder afbeelding</Button>
+            </template>
+            <Button v-else class="text-xs" @click="file.click()">Upload afbeelding</Button>
 
             <progress v-if="form.progress" :value="form.progress.percentage" max="100">
               {{ form.progress.percentage }}%
             </progress>
 
-            <InputError :message="form.errors.image" />
+            <InputError :message="form.errors.media" />
           </div>
 
           <div class="col-span-12 space-y-1">
@@ -273,3 +349,10 @@ function confirmDeletion() {
     </form>
   </DefaultLayout>
 </template>
+
+<style>
+.cropper-bg {
+  background-color: transparent;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC);
+}
+</style>

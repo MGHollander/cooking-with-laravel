@@ -7,11 +7,10 @@ use App\Http\Requests\Recipe\RecipeRequest;
 use App\Http\Resources\Recipe\IngredientsResource;
 use App\Http\Resources\StructuredData\Recipe\IngredientsResource as StructuredDataIngredientsResource;
 use App\Http\Resources\StructuredData\Recipe\InstructionsResource;
-use App\Http\Traits\UploadImageTrait;
+use App\Http\Traits\FillableAttributes;
 use App\Models\Recipe;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -19,7 +18,7 @@ use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 
 class RecipeController extends Controller
 {
-    use UploadImageTrait;
+    use FillableAttributes;
 
     /**
      * Display a listing of the resource.
@@ -35,7 +34,7 @@ class RecipeController extends Controller
                     'id'    => $recipe->id,
                     'title' => $recipe->title,
                     'slug'  => $recipe->slug,
-                    'image' => $recipe->image ? Storage::disk('public')->url($recipe->image) : null,
+                    'image' => $recipe->getFirstMediaUrl('recipe_image', 'overview'),
                 ]),
         ]);
     }
@@ -60,15 +59,12 @@ class RecipeController extends Controller
     {
         $attributes            = $request->validated();
         $attributes['user_id'] = $request->user()->id;
-
-        if ($image = $this->saveImage($request)) {
-            $attributes['image'] = $image;
-        }
-
+        // TODO Make a mutator for this. Also for the update method.
         $attributes['tags'] = !empty($attributes['tags']) ? array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags'])))) : [];
 
+        $recipe = (new Recipe)->create($this->fillableAttributes(new Recipe, $attributes));
 
-        $recipe = Recipe::create($attributes);
+        $this->saveMedia($request, $recipe);
 
         return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol toegevoegd!");
     }
@@ -93,7 +89,7 @@ class RecipeController extends Controller
                 'id'                  => $recipe->id,
                 'title'               => $recipe->title,
                 'slug'                => $recipe->slug,
-                'image'               => $recipe->image ? Storage::disk('public')->url($recipe->image) : null,
+                'image'               => $recipe->getFirstMediaUrl('recipe_image', 'show'),
                 'summary'             => $recipe->summary,
                 'tags'                => $recipe->tags->pluck('name'),
                 'servings'            => $recipe->servings,
@@ -115,7 +111,7 @@ class RecipeController extends Controller
         ])->withViewData([
             'open_graph' => [
                 'title' => $recipe->title,
-                'image' => $recipe->image ? Storage::disk('public')->url($recipe->image) : null,
+                'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
                 'url'   => URL::current(),
             ],
         ]);
@@ -129,16 +125,12 @@ class RecipeController extends Controller
      */
     public function edit(Recipe $recipe)
     {
-        if ($recipe->image) {
-            $recipe->image = Storage::disk('public')->url($recipe->image);
-        }
-
         return Inertia::render('Recipes/Form', [
             'recipe' => [
                 'id'                  => $recipe->id,
                 'title'               => $recipe->title,
                 'slug'                => $recipe->slug,
-                'image'               => $recipe->image,
+                'media'               => $recipe->getFirstMedia('recipe_image'),
                 'summary'             => $recipe->summary,
                 'tags'                => $recipe->tags->pluck('name')->implode(', '),
                 'servings'            => $recipe->servings,
@@ -162,32 +154,16 @@ class RecipeController extends Controller
      */
     public function update(RecipeRequest $request, Recipe $recipe)
     {
-        $attributes   = $request->validated();
-        $destroyImage = $request->get('destroy_image', false);
-
-        // If the image field is empty, remove it from the attributes array, because there is no image to update or delete.
-        if (empty($attributes['image'])) {
-            unset($attributes['image']);
-        }
-
-        if ($image = $this->saveImage($request)) {
-            $attributes['image'] = $image;
-
-            // Delete the old image if there is one.
-            if ($recipe->image) {
-                $this->destroyImage($recipe);
-            }
-        }
-
-        // If the user wants to remove the image, set the image field to null and delete the image.
-        if ($destroyImage) {
-            $attributes['image'] = null;
-            $this->destroyImage($recipe);
-        }
-
+        $attributes         = $request->validated();
         $attributes['tags'] = !empty($attributes['tags']) ? array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags'])))) : [];
 
-        $recipe->update($attributes);
+        $recipe->update($this->fillableAttributes($recipe, $attributes));
+
+        if ($request->get('destroy_media', false)) {
+            $recipe->clearMediaCollection('recipe_image');
+        }
+
+        $this->saveMedia($request, $recipe);
 
         return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol gewijzigd!");
     }
@@ -217,7 +193,7 @@ class RecipeController extends Controller
                 'id'    => $recipe->id,
                 'title' => $recipe->title,
                 'slug'  => $recipe->slug,
-                'image' => $recipe->image ? Storage::url($recipe->image) : null,
+                'image' => $recipe->getFirstMedia('recipe_image', 'overview'),
             ]);
 
         return Inertia::render('Recipes/NotFound', [
@@ -226,5 +202,37 @@ class RecipeController extends Controller
         ])
             ->toResponse($request)
             ->setStatusCode(404);
+    }
+
+    private function saveMedia(Request $request, Recipe $recipe): void
+    {
+        $mediaDimensions = $request->get('media_dimensions', []);
+
+        if (!empty($mediaDimensions['card'])) {
+            $cardDimensions    = $mediaDimensions['card'];
+            $manipulationsCard = ['manualCrop' => "${cardDimensions['width']},${cardDimensions['height']},${cardDimensions['left']},${cardDimensions['top']}"];
+        }
+
+        if (!empty($mediaDimensions['show'])) {
+            $showDimensions    = $mediaDimensions['show'];
+            $manipulationsShow = ['manualCrop' => "${showDimensions['width']},${showDimensions['height']},${showDimensions['left']},${showDimensions['top']}"];
+        }
+
+        if ($request->hasFile('media')) {
+            $recipe->addMediaFromRequest('media')
+                ->withManipulations([
+                    'card' => $manipulationsCard ?? [],
+                    'show' => $manipulationsShow ?? [],
+                ])
+                ->toMediaCollection('recipe_image');
+        }
+
+        if ($media = $recipe->getFirstMedia('recipe_image')) {
+            $media->manipulations = [
+                'card' => $manipulationsCard ?? [],
+                'show' => $manipulationsShow ?? [],
+            ];
+            $media->save();
+        }
     }
 }

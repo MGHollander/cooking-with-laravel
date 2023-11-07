@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "ext-dom": "*",
         "brick/structured-data": "^0.1.1",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.0",
@@ -17,10 +18,10 @@
         "laravel/tinker": "^2.7",
         "openai-php/client": "^0.6.2",
         "protonemedia/laravel-cross-eloquent-search": "^3.2",
+        "spatie/laravel-medialibrary": "^10.0.0",
         "spatie/laravel-sluggable": "^3.5",
         "spatie/laravel-tags": "^4.4",
-        "tightenco/ziggy": "^1.0",
-        "ext-dom": "*"
+        "tightenco/ziggy": "^1.0"
     },
     "require-dev": {
         "deployer/deployer": "^7.3",

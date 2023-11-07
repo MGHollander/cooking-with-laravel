@@ -16,7 +16,7 @@ class RecipeRequest extends FormRequest
     {
         return [
             'title'               => 'required',
-            'image'               => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png'],
+            'media'               => ['nullable', 'image', 'mimes:jpg,png', 'max:' . (config('media-library.max_file_size', 1024 * 1024 * 10) / 1024)],
             'external_image'      => ['nullable', 'url', new ExternalImage],
             'tags'                => ['nullable', 'string'],
             'servings'            => ['required', 'integer', 'min:1'],

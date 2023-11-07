@@ -65,7 +65,7 @@ function confirmDeletion() {
             </template>
           </Dropdown>
 
-          <h1 class="mb-4 text-xl font-bold md:text-3xl">{{ recipe.title }}</h1>
+          <h1 class="mb-4 text-2xl font-bold md:text-3xl">{{ recipe.title }}</h1>
 
           <div v-if="recipe.tags.length > 0" class="-mb-2 flex flex-wrap text-sm">
             <div v-for="item in recipe.tags" :key="item.id" class="mb-2 mr-2 rounded bg-gray-200 px-2">
@@ -84,7 +84,7 @@ function confirmDeletion() {
         }"
       >
         <div v-if="recipe.image">
-          <img :src="recipe.image" class="mx-auto h-full max-h-96 w-full max-w-full rounded-lg object-cover md:mx-0" />
+          <img :src="recipe.image" class="mx-auto aspect-[4/3] w-full rounded-lg object-cover md:mx-0" />
         </div>
 
         <div>
@@ -165,7 +165,7 @@ function confirmDeletion() {
       <div class="m-6 space-y-6 md:space-y-10 lg:m-10">
         <div class="space-y-6 md:flex md:items-start md:space-x-8 md:space-y-0">
           <div class="-mx-6 bg-gray-100 p-6 sm:mx-0 sm:rounded-lg md:w-1/3">
-            <h2 class="mb-2 text-2xl font-bold">Ingrediënten</h2>
+            <h2 class="mb-2 text-xl font-bold md:text-2xl">Ingrediënten</h2>
 
             <div class="-mx-2 mb-4 flex items-center justify-between rounded bg-gray-200 p-2">
               <div>{{ recipe.servings }} {{ servingsLabel }}</div>
@@ -215,7 +215,7 @@ function confirmDeletion() {
           </div>
 
           <div class="space-y-4 sm:px-6 md:w-2/3 md:px-0">
-            <h2 class="mb-4 text-2xl font-bold md:mt-6">Instructies</h2>
+            <h2 class="mb-4 text-xl font-bold md:mt-6 md:text-2xl">Instructies</h2>
 
             <div class="recipe-instructions" v-html="recipe.instructions" />
 
