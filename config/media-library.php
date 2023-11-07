@@ -6,7 +6,7 @@ return [
      * The disk on which to store added files and derived images by default. Choose
      * one or more of the disks you've configured in config/filesystems.php.
      */
-    'disk_name'                                 => 'media',
+    'disk_name'                                 => 'public',
 
     /*
      * The maximum file size of an item in bytes.
@@ -257,5 +257,5 @@ return [
      * You can specify a prefix for that is used for storing all media.
      * If you set this to `/my-subdir`, all your media will be stored in a `/my-subdir` directory.
      */
-    'prefix'                          => env('MEDIA_PREFIX', ''),
+    'prefix'                          => env('MEDIA_PREFIX', 'media'),
 ];
