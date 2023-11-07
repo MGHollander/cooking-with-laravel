@@ -1,7 +1,6 @@
 <script setup>
 import { ClassicEditor } from "@ckeditor/ckeditor5-editor-classic";
 import { Head, useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
 import "../../../css/ckeditor.css";
 import "../../../css/ckeditor-content-styles.css";
 import Button from "@/Components/Button.vue";
@@ -23,7 +22,6 @@ const title = "Geïmporteerd recept controleren";
 
 const form = useForm({
   title: props.recipe.title,
-  image: "",
   external_image: props.recipe.image,
   summary: props.recipe.summary,
   tags: props.recipe.tags,
@@ -39,29 +37,6 @@ const form = useForm({
 });
 
 const editor = ClassicEditor;
-const imageInput = ref(null);
-const imagePreview = ref(props.recipe.image ?? null);
-
-const updateImagePreview = (event) => {
-  form.image = event.target.files[0];
-
-  if (!form.image) return;
-
-  const reader = new FileReader();
-
-  reader.onload = (e) => {
-    imagePreview.value = e.target.result;
-  };
-
-  reader.readAsDataURL(form.image);
-};
-
-const clearImageField = () => {
-  form.image = null;
-  form.external_image = null;
-  imageInput.value.value = null;
-  imagePreview.value = null;
-};
 </script>
 
 <template>
@@ -85,46 +60,12 @@ const clearImageField = () => {
 
           <div class="col-span-12 space-y-1">
             <Label for="image" value="Externe afbeelding (optioneel)" />
-            <Input
-              v-model="form.external_image"
-              type="url"
-              class="block w-full"
-              @change="imagePreview = form.external_image"
-            />
+            <Input v-model="form.external_image" type="url" class="block w-full" />
             <InputError :message="form.errors.external_image" />
-          </div>
-
-          <div class="col-span-12 space-y-1">
-            <Label for="image" value="Afbeelding (optioneel)" />
-            <input
-              ref="imageInput"
-              type="file"
-              class="hidden"
-              accept="image/jpeg,image/png"
-              @change="updateImagePreview"
+            <img
+              class="!mt-2 block max-h-32 max-w-full rounded-md bg-contain bg-center bg-no-repeat"
+              :src="form.external_image"
             />
-
-            <Button v-if="!imagePreview" class="text-xs" @click="imageInput.click()"> Upload afbeelding</Button>
-
-            <div v-else class="col-span-12 space-y-1">
-              <img
-                alt="Voorbeeld van de afbeelding"
-                class="block max-h-32 max-w-full rounded-md bg-contain bg-center bg-no-repeat"
-                :src="imagePreview"
-              />
-
-              <Button class="mr-1 text-xs" button-style="secondary" @click="imageInput.click()">
-                Vervang afbeelding
-              </Button>
-
-              <Button class="text-xs" button-style="danger" @click="clearImageField"> Verwijder afbeelding</Button>
-            </div>
-
-            <progress v-if="form.progress" :value="form.progress.percentage" max="100">
-              {{ form.progress.percentage }}%
-            </progress>
-
-            <InputError :message="form.errors.image" />
           </div>
 
           <div class="col-span-12 space-y-1">
