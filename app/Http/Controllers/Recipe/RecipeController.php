@@ -34,7 +34,7 @@ class RecipeController extends Controller
                     'id'    => $recipe->id,
                     'title' => $recipe->title,
                     'slug'  => $recipe->slug,
-                    'image' => $recipe->getFirstMediaUrl('recipe_image', 'overview'),
+                    'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
                 ]),
         ]);
     }
@@ -193,7 +193,7 @@ class RecipeController extends Controller
                 'id'    => $recipe->id,
                 'title' => $recipe->title,
                 'slug'  => $recipe->slug,
-                'image' => $recipe->getFirstMedia('recipe_image', 'overview'),
+                'image' => $recipe->getFirstMedia('recipe_image', 'card'),
             ]);
 
         return Inertia::render('Recipes/NotFound', [
