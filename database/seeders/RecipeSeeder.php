@@ -32,11 +32,10 @@ class RecipeSeeder extends Seeder
                 $ingredients[] = round($ingredient->measures->us->amount, 2) . ' ' . $ingredient->measures->us->unitShort . ' ' . $ingredient->name;
             }
 
-            Recipe::create([
+            $model = Recipe::create([
                 'user_id'             => User::all()->first()->id,
                 'title'               => $recipe->title,
                 'slug'                => $slug,
-                'image'               => $image,
                 'preparation_minutes' => $recipe->preparationMinutes > -1 ? $recipe->preparationMinutes : 10,
                 'cooking_minutes'     => $recipe->cookingMinutes > -1 ? $recipe->cookingMinutes : $recipe->readyInMinutes,
                 'servings'            => $recipe->servings > 0 ? $recipe->servings : 4,
@@ -47,6 +46,11 @@ class RecipeSeeder extends Seeder
                 'source_label'        => $recipe->sourceName,
                 'source_link'         => $recipe->sourceUrl,
             ]);
+
+            if (!empty($recipe->image)) {
+                $model->addMediaFromUrl($recipe->image)
+                    ->toMediaCollection('recipe_image');
+            }
         }
     }
 
