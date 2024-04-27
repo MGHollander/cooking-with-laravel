@@ -1,12 +1,11 @@
 <?php
 
-use App\Http\Controllers\PrivacyController;
-use App\Http\Controllers\Recipe\ImportController;
-use App\Http\Controllers\Recipe\RecipeController;
-use App\Http\Controllers\Recipe\RecipeNotFoundController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\User\ChangePasswordController;
-use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Inertia\PrivacyController;
+use App\Http\Controllers\Inertia\Recipe\ImportController;
+use App\Http\Controllers\Inertia\Recipe\RecipeController;
+use App\Http\Controllers\Inertia\SearchController;
+use App\Http\Controllers\Inertia\User\ChangePasswordController;
+use App\Http\Controllers\Inertia\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
