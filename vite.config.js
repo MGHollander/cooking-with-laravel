@@ -15,6 +15,8 @@ export default defineConfig({
         "resources/scss/app.scss",
         // For the Inertia app
         "resources/js/Inertia/app.js",
+        // For the InertiaMinimal app
+        "resources/js/InertiaMinimal/app.js",
       ],
       refresh: true,
     }),

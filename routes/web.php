@@ -7,6 +7,7 @@ use App\Http\Controllers\Inertia\Recipe\RecipeController;
 use App\Http\Controllers\Inertia\SearchController;
 use App\Http\Controllers\Inertia\User\ChangePasswordController;
 use App\Http\Controllers\Inertia\User\UserController;
+use App\Http\Controllers\InertiaMinimal\RecipeController as InertiaMinimalRecipeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,3 +66,13 @@ Route::get('/blade', [BladeRecipeController::class, 'index'])->name('blade.home'
 Route::get('/blade/{slug}', [BladeRecipeController::class, 'show'])->name('blade.show');
 
 // END Blade routes
+
+// START Inertia Minimal routes
+
+Route::middleware([\App\Http\Middleware\Inertia\HandleInertiaMinimalRequests::class])
+  ->withoutMiddleware([\App\Http\Middleware\Inertia\HandleInertiaRequests::class])
+  ->group(function () {
+    Route::get('/inertia-minimal', [InertiaMinimalRecipeController::class, 'index'])->name('inertia-minimal.home');
+    Route::get('/inertia-minimal/{slug}', [InertiaMinimalRecipeController::class, 'show'])->name('inertia-minimal.show');
+  });
+// END Inertia Minimal routes
