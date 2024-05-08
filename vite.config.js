@@ -10,7 +10,12 @@ export default defineConfig({
   plugins: [
     ckeditor5({ theme: require.resolve("@ckeditor/ckeditor5-theme-lark") }),
     laravel({
-      input: "resources/js/Inertia/app.js",
+      input: [
+        // For the Blade app
+        "resources/scss/app.scss",
+        // For the Inertia app
+        "resources/js/Inertia/app.js",
+      ],
       refresh: true,
     }),
     vue({
