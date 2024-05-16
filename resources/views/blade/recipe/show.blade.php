@@ -62,6 +62,7 @@
     @endif
 
     <div class="md:text-lg">
+      {{-- TODO strip unsave tags --}}
       {!! $recipe["summary"] !!}
     </div>
 

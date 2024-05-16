@@ -24,6 +24,7 @@ class RecipeController extends Controller
    */
   public function index()
   {
+    // TODO use a resource instead of a query
     return Inertia::render('Recipes/Index', [
       'recipes' => Recipe::query()
         ->paginate(12)

@@ -23,6 +23,7 @@ class RecipeController extends Controller
    */
   public function index(): \Illuminate\View\View
   {
+    // TODO use a resource instead of a query
     return view('blade.recipe.index', [
       'recipes' => Recipe::query()
         ->paginate(12)
@@ -45,7 +46,7 @@ class RecipeController extends Controller
   public function show(Request $request, string $slug): \Illuminate\View\View
   {
     $recipe = Recipe::findBySlug($slug);
-
+    // TODO Make this a resource so that it returns an object in blade.
     return view('blade.recipe.show', [
       'recipe'     => [
         'id'                  => $recipe->id,
@@ -71,6 +72,7 @@ class RecipeController extends Controller
           'keywords'     => implode(',', $recipe->tags->pluck('name')->toArray()),
         ],
       ],
+      // TODO Add open graph to layout.
       'open_graph' => [
         'title' => $recipe->title,
         'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
