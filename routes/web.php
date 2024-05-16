@@ -8,6 +8,8 @@ use App\Http\Controllers\Inertia\SearchController;
 use App\Http\Controllers\Inertia\User\ChangePasswordController;
 use App\Http\Controllers\Inertia\User\UserController;
 use App\Http\Controllers\InertiaMinimal\RecipeController as InertiaMinimalRecipeController;
+use App\Livewire\Recipe\Index;
+use App\Livewire\Recipe\Show;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -66,6 +68,13 @@ Route::get('/blade', [BladeRecipeController::class, 'index'])->name('blade.home'
 Route::get('/blade/{slug}', [BladeRecipeController::class, 'show'])->name('blade.show');
 
 // END Blade routes
+
+// START Livewire routes
+
+Route::get('/livewire', Index::class)->name('livewire.home');
+Route::get('/livewire/{slug}', Show::class)->name('livewire.show');
+
+// END Livewire routes
 
 // START Inertia Minimal routes
 
