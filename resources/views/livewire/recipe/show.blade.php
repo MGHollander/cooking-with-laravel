@@ -6,39 +6,6 @@
   <link rel="canonical" href="{{ route("recipes.show", ["slug" => $recipe->slug]) }}" />
 </x-slot>
 
-@script
-  <script>
-    Alpine.data('recipe', () => {
-      return {
-        servingsText() {
-          return $wire.servings + ' ' + ($wire.servings === 1 ? 'portie' : 'porties');
-        },
-        increment() {
-          for (let listKey in $wire.ingredients) {
-            for (let key in $wire.ingredients[listKey].ingredients) {
-              let amount = parseFloat($wire.ingredients[listKey].ingredients[key].amount);
-              // round amount to 2 decimals
-              $wire.ingredients[listKey].ingredients[key].amount = amount + amount / parseFloat($wire.servings);
-            }
-          }
-          $wire.servings++;
-        },
-
-        decrement() {
-          if ($wire.servings <= 1) return;
-          for (let listKey in $wire.ingredients) {
-            for (let key in $wire.ingredients[listKey].ingredients) {
-              let amount = parseFloat($wire.ingredients[listKey].ingredients[key].amount);
-              $wire.ingredients[listKey].ingredients[key].amount = amount - amount / parseFloat($wire.servings);
-            }
-          }
-          $wire.servings--;
-        },
-      };
-    });
-  </script>
-@endscript
-
 <div>
   <p class="mb-4"><a href="{{ route("livewire.home") }}" wire:navigate>Terug naar overzicht</a></p>
 
@@ -189,3 +156,36 @@
     </div>
   </div>
 </div>
+
+@script
+  <script>
+    Alpine.data('recipe', () => {
+      return {
+        servingsText() {
+          return $wire.servings + ' ' + ($wire.servings === 1 ? 'portie' : 'porties');
+        },
+        increment() {
+          for (let listKey in $wire.ingredients) {
+            for (let key in $wire.ingredients[listKey].ingredients) {
+              let amount = parseFloat($wire.ingredients[listKey].ingredients[key].amount);
+              // round amount to 2 decimals
+              $wire.ingredients[listKey].ingredients[key].amount = amount + amount / parseFloat($wire.servings);
+            }
+          }
+          $wire.servings++;
+        },
+
+        decrement() {
+          if ($wire.servings <= 1) return;
+          for (let listKey in $wire.ingredients) {
+            for (let key in $wire.ingredients[listKey].ingredients) {
+              let amount = parseFloat($wire.ingredients[listKey].ingredients[key].amount);
+              $wire.ingredients[listKey].ingredients[key].amount = amount - amount / parseFloat($wire.servings);
+            }
+          }
+          $wire.servings--;
+        },
+      };
+    });
+  </script>
+@endscript
