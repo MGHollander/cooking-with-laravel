@@ -11,6 +11,7 @@ use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 
 class RecipeController extends Controller
 {
@@ -21,18 +22,23 @@ class RecipeController extends Controller
    *
    * @return \Illuminate\View\View
    */
-  public function index(): \Illuminate\View\View
+  public function index(Request $request): \Illuminate\View\View
   {
     // TODO use a resource instead of a query
+    // TODO remove query string from url when empty search field is send.
     return view('blade.recipe.index', [
-      'recipes' => Recipe::query()
+      'recipes' => Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
         ->paginate(12)
+        ->beginWithWildcard()
+        ->search($request->get("search"))
+        ->withQueryString()
         ->through(fn($recipe) => [
           'id'    => $recipe->id,
           'title' => $recipe->title,
           'slug'  => $recipe->slug,
           'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
         ]),
+      // TODO Add open graph tags.
     ]);
   }
 
