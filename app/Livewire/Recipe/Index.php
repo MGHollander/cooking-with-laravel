@@ -3,6 +3,7 @@
 namespace App\Livewire\Recipe;
 
 use App\Models\Recipe;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use ProtoneMedia\LaravelCrossEloquentSearch\Search;
@@ -11,6 +12,7 @@ class Index extends Component
 {
   use WithPagination;
 
+  #[Url]
   public ?string $search = null;
 
   public function render()
