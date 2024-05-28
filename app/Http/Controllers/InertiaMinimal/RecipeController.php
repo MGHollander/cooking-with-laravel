@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 
 class RecipeController extends Controller
 {
@@ -22,18 +23,22 @@ class RecipeController extends Controller
    *
    * @return \Inertia\Response
    */
-  public function index()
+  public function index(Request $request)
   {
     // TODO use a resource instead of a query
     return Inertia::render('Recipes/Index', [
-      'recipes' => Recipe::query()
+      'recipes' => Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
         ->paginate(12)
+        ->beginWithWildcard()
+        ->search($request->get("search"))
+        ->withQueryString()
         ->through(fn($recipe) => [
           'id'    => $recipe->id,
           'title' => $recipe->title,
           'slug'  => $recipe->slug,
           'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
         ]),
+      // TODO Add open graph tags.
     ]);
   }
 
