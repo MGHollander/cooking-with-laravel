@@ -23,7 +23,8 @@
 
     @vite(["resources/scss/app.scss"])
   </head>
-  <body class="min-h-screen min-w-80 min-w-96 bg-gray-100 py-8 font-sans antialiased">
+  <body class="min-h-screen min-w-80 min-w-96 bg-gray-100 pb-8 font-sans antialiased">
+    <div class="mb-8 h-5 bg-pink-300"></div>
     <div class="container mx-auto px-6">
       {{ $slot }}
     </div>
