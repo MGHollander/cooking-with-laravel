@@ -13,6 +13,7 @@ export default defineConfig({
       input: [
         // For the Blade app
         "resources/scss/app.scss",
+        "resources/js/Blade/app.js",
         // For the Inertia app
         "resources/js/Inertia/app.js",
         // For the InertiaMinimal app
