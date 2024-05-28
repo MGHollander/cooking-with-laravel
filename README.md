@@ -49,6 +49,8 @@ configuration in `deploy.php`.
 
 Run `vendor/bin/dep deploy` to deploy changes.
 
+**Tip:** Add a branch or tag to the command to deploy a specific version. For example `vendor/bin/dep deploy --tag=v1.0.0` or `vendor/bin/dep deploy --branch=main`.
+
 ## Credits
 
 - The seeded recipes are made possible by <https://spoonacular.com/food-api>
