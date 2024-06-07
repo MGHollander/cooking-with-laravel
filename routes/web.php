@@ -36,6 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/recepten/{slug}', [RecipeController::class, 'show'])
     ->name('recipes.show');
+Route::redirect('/recepten', '/');
 
 Route::get('/zoeken', [SearchController::class, 'index'])->name('search');
 Route::get('/privacy', PrivacyController::class)->name('privacy');
