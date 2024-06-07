@@ -18,7 +18,7 @@ class SearchController extends Controller
      */
     public function index(Request $request): Response
     {
-        $q       = $request->get('q') ?? '';
+        $q       = strtolower($request->get('q')) ?? '';
         $recipes = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
             ->paginate(15)
             ->beginWithWildcard()
