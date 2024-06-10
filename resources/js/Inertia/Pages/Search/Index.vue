@@ -19,8 +19,8 @@ const title =
   props.q !== "" && props.recipes.total > 0
     ? `${props.recipes.total} ${recipeNounForm} met '${props.q}'`
     : props.q && props.recipes.total === 0
-    ? `Geen recepten met '${props.q}'`
-    : "Zoek een recept";
+      ? `Geen recepten met '${props.q}'`
+      : "Zoek een recept";
 </script>
 
 <template>
@@ -28,7 +28,7 @@ const title =
 
   <DefaultLayout>
     <div class="space-y-6 px-4 sm:space-y-12 sm:px-0">
-      <SearchBlock size="small" />
+      <SearchBlock size="small" :q="q" />
 
       <div v-if="recipes.total === 0">
         <h1 class="mb-4 text-center text-2xl font-bold">

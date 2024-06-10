@@ -30,7 +30,7 @@ class RecipeController extends Controller
       'recipes' => Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
         ->paginate(12)
         ->beginWithWildcard()
-        ->search($request->get("search"))
+        ->search(strtolower($request->get("search")))
         ->withQueryString()
         ->through(fn($recipe) => [
           'id'    => $recipe->id,

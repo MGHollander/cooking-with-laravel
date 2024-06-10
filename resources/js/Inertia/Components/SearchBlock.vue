@@ -2,7 +2,6 @@
 import { useForm } from "@inertiajs/vue3";
 
 let props = defineProps({
-  recipes: Object,
   q: String,
   size: String,
 });
