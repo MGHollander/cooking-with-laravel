@@ -27,8 +27,6 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        dd('test 123');
-
         return Inertia::render('Recipes/Index', [
             'recipes' => Recipe::query()
                 ->paginate(17)
