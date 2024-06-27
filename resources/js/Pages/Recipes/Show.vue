@@ -1,8 +1,9 @@
 <script setup>
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisV, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Head, router } from "@inertiajs/vue3";
-import { computed } from "vue";
+import { useWakeLock } from "@vueuse/core";
+import { computed, reactive } from "vue";
 import Button from "@/Components/Button.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
@@ -42,6 +43,16 @@ function confirmDeletion() {
     });
   }
 }
+
+const wakeLock = reactive(useWakeLock());
+const wakeLockButtonIcon = computed(() => (wakeLock.isActive ? faMoon : faSun));
+const wakeLockButtonTitle = computed(() =>
+  wakeLock.isActive ? "Scherm automatisch dimmer volgens systeem instellingen" : "Scherm niet automatisch dimmen"
+);
+
+function toggleWakeLock() {
+  return wakeLock.isActive ? wakeLock.release() : wakeLock.request("screen");
+}
 </script>
 
 <template>
@@ -52,18 +63,30 @@ function confirmDeletion() {
     <div class="overflow-hidden bg-white sm:rounded-lg sm:shadow-lg">
       <div class="m-6 space-y-6 md:space-y-10 lg:m-10">
         <div>
-          <Dropdown v-if="$page.props.auth.user" align="right" width="48" class="float-right">
-            <template #trigger>
-              <Button button-style="ghost" aria-label="Uitklapmenu voor acties op recept" class="w-10 !p-2.5">
-                <FontAwesomeIcon :icon="faEllipsisV" class="mx-auto" />
-              </Button>
-            </template>
+          <div class="float-right flex gap-2">
+            <Button
+              v-if="wakeLock.isSupported"
+              button-style="ghost"
+              aria-label="Uitklapmenu voor acties op recept"
+              class="w-10 !p-2.5"
+              :title="wakeLockButtonTitle"
+              @click="toggleWakeLock"
+            >
+              <FontAwesomeIcon :icon="wakeLockButtonIcon" class="mx-auto" />
+            </Button>
+            <Dropdown v-if="$page.props.auth.user" align="right" width="48">
+              <template #trigger>
+                <Button button-style="ghost" aria-label="Uitklapmenu voor acties op recept" class="w-10 !p-2.5">
+                  <FontAwesomeIcon :icon="faEllipsisV" class="mx-auto" />
+                </Button>
+              </template>
 
-            <template #content>
-              <DropdownLink :href="route('recipes.edit', recipe.id)">Recept bewerken</DropdownLink>
-              <DropdownLink href="#" @click="confirmDeletion">Verwijder</DropdownLink>
-            </template>
-          </Dropdown>
+              <template #content>
+                <DropdownLink :href="route('recipes.edit', recipe.id)">Recept bewerken</DropdownLink>
+                <DropdownLink href="#" @click="confirmDeletion">Verwijder</DropdownLink>
+              </template>
+            </Dropdown>
+          </div>
 
           <h1 class="mb-4 text-2xl font-bold md:text-3xl">{{ recipe.title }}</h1>
 
