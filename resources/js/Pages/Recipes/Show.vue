@@ -209,7 +209,7 @@ const toggleStrike = (ingredient) => {
                 <button
                   class="w-8 rounded border-2 border-gray-500 text-lg font-bold text-gray-600 transition-all hover:bg-gray-500 hover:text-white"
                   aria-label="Verhoog aantal porties"
-                  @click="updateServings(servings + 1)"
+                  @click="updateServings(parseInt(servings) + 1)"
                 >
                   +
                 </button>
@@ -218,7 +218,7 @@ const toggleStrike = (ingredient) => {
                   :disabled="servings === 1"
                   class="w-8 rounded border-2 border-gray-500 text-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-gray-600"
                   aria-label="Verminder aantal porties"
-                  @click="updateServings(servings - 1)"
+                  @click="updateServings(parseInt(servings) - 1)"
                 >
                   -
                 </button>
