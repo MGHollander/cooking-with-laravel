@@ -1,9 +1,10 @@
 <script setup>
 import { faEllipsisV, faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { faUndo } from "@fortawesome/free-solid-svg-icons/faUndo";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Head, router } from "@inertiajs/vue3";
 import { useWakeLock } from "@vueuse/core";
-import { computed, reactive } from "vue";
+import { computed, reactive, ref } from "vue";
 import Button from "@/Components/Button.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
@@ -14,31 +15,25 @@ const props = defineProps({
   recipe: Object,
 });
 
-function incrementServings() {
-  for (let listKey in props.recipe.ingredients) {
-    for (let key in props.recipe.ingredients[listKey].ingredients) {
-      let amount = parseFloat(props.recipe.ingredients[listKey].ingredients[key].amount);
-      props.recipe.ingredients[listKey].ingredients[key].amount = amount + amount / parseFloat(props.recipe.servings);
+const localRecipe = ref(props.recipe);
+const defaultServings = localRecipe.value.servings;
+const servings = ref(localRecipe.value.servings);
+const servingsLabel = computed(() => (localRecipe.value.servings === 1 ? "portie" : "porties"));
+
+function updateServings(amount) {
+  for (let listKey in localRecipe.value.ingredients) {
+    for (let key in localRecipe.value.ingredients[listKey].ingredients) {
+      const ingredientAmount = parseFloat(props.recipe.ingredients[listKey].ingredients[key].amount);
+      localRecipe.value.ingredients[listKey].ingredients[key].amount =
+        (ingredientAmount / parseFloat(servings.value)) * amount;
     }
   }
-  props.recipe.servings++;
+  servings.value = amount;
 }
-
-function decrementServings() {
-  for (let listKey in props.recipe.ingredients) {
-    for (let key in props.recipe.ingredients[listKey].ingredients) {
-      let amount = parseFloat(props.recipe.ingredients[listKey].ingredients[key].amount);
-      props.recipe.ingredients[listKey].ingredients[key].amount = amount - amount / parseFloat(props.recipe.servings);
-    }
-  }
-  props.recipe.servings--;
-}
-
-const servingsLabel = computed(() => (props.recipe.servings === 1 ? "portie" : "porties"));
 
 function confirmDeletion() {
   if (confirm("Weet je zeker dat je dit recept wilt verwijderen?")) {
-    router.delete(route("recipes.destroy", props.recipe.id), {
+    router.delete(route("recipes.destroy", localRecipe.value.id), {
       method: "delete",
     });
   }
@@ -65,8 +60,8 @@ const toggleStrike = (ingredient) => {
 </script>
 
 <template>
-  <Head :title="recipe.title" />
-  <StructuredRecipe :recipe="recipe" />
+  <Head :title="localRecipe.title" />
+  <StructuredRecipe :recipe="localRecipe" />
 
   <DefaultLayout>
     <div class="overflow-hidden bg-white sm:rounded-lg sm:shadow-lg">
@@ -91,39 +86,39 @@ const toggleStrike = (ingredient) => {
               </template>
 
               <template #content>
-                <DropdownLink :href="route('recipes.edit', recipe.id)">Recept bewerken</DropdownLink>
+                <DropdownLink :href="route('recipes.edit', localRecipe.id)">Recept bewerken</DropdownLink>
                 <DropdownLink href="#" @click="confirmDeletion">Verwijder</DropdownLink>
               </template>
             </Dropdown>
           </div>
 
-          <h1 class="mb-4 text-2xl font-bold md:text-3xl">{{ recipe.title }}</h1>
+          <h1 class="mb-4 text-2xl font-bold md:text-3xl">{{ localRecipe.title }}</h1>
 
-          <div v-if="recipe.tags.length > 0" class="-mb-2 flex flex-wrap text-sm">
-            <div v-for="item in recipe.tags" :key="item.id" class="mb-2 mr-2 rounded bg-gray-200 px-2">
+          <div v-if="localRecipe.tags.length > 0" class="-mb-2 flex flex-wrap text-sm">
+            <div v-for="item in localRecipe.tags" :key="item.id" class="mb-2 mr-2 rounded bg-gray-200 px-2">
               {{ item }}
             </div>
           </div>
         </div>
 
-        <div v-if="recipe.summary" class="md:text-lg" v-html="recipe.summary" />
+        <div v-if="localRecipe.summary" class="md:text-lg" v-html="localRecipe.summary" />
       </div>
 
       <div
         class="m-6 grid items-center space-y-6 md:space-y-0 lg:m-10"
         :class="{
-          'md:grid-cols-2': recipe.image,
+          'md:grid-cols-2': localRecipe.image,
         }"
       >
-        <div v-if="recipe.image">
-          <img :src="recipe.image" class="mx-auto aspect-[4/3] w-full rounded-lg object-cover md:mx-0" />
+        <div v-if="localRecipe.image">
+          <img :src="localRecipe.image" class="mx-auto aspect-[4/3] w-full rounded-lg object-cover md:mx-0" />
         </div>
 
         <div>
           <div
             class="grid grid-cols-2 gap-4 text-center sm:max-md:grid-cols-4"
             :class="{
-              'md:grid-cols-4': !recipe.image,
+              'md:grid-cols-4': !localRecipe.image,
             }"
           >
             <div>
@@ -138,7 +133,7 @@ const toggleStrike = (ingredient) => {
                 </svg>
               </div>
               <strong>Aantal porties</strong><br />
-              {{ recipe.servings }} {{ servingsLabel }}
+              {{ servings }} {{ servingsLabel }}
             </div>
 
             <div>
@@ -151,10 +146,10 @@ const toggleStrike = (ingredient) => {
                 </svg>
               </div>
               <strong>Moeilijkheid</strong><br />
-              {{ recipe.difficulty }}
+              {{ localRecipe.difficulty }}
             </div>
 
-            <div v-if="recipe.preparation_minutes">
+            <div v-if="localRecipe.preparation_minutes">
               <div class="mx-auto w-16 fill-emerald-700">
                 <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -164,10 +159,10 @@ const toggleStrike = (ingredient) => {
                 </svg>
               </div>
               <strong>Voorbereidingstijd</strong><br />
-              {{ recipe.preparation_minutes }} minuten
+              {{ localRecipe.preparation_minutes }} minuten
             </div>
 
-            <div v-if="recipe.cooking_minutes">
+            <div v-if="localRecipe.cooking_minutes">
               <div class="mx-auto w-16 fill-emerald-700">
                 <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -188,7 +183,7 @@ const toggleStrike = (ingredient) => {
               </div>
 
               <strong>Bereidingstijd</strong><br />
-              {{ recipe.cooking_minutes }} minuten
+              {{ localRecipe.cooking_minutes }} minuten
             </div>
           </div>
         </div>
@@ -200,21 +195,30 @@ const toggleStrike = (ingredient) => {
             <h2 class="mb-2 text-xl font-bold md:text-2xl">Ingrediënten</h2>
 
             <div class="-mx-2 mb-4 flex items-center justify-between rounded bg-gray-200 p-2">
-              <div>{{ recipe.servings }} {{ servingsLabel }}</div>
-              <div class="space-x-2">
+              <div>{{ servings }} {{ servingsLabel }}</div>
+              <div class="flex items-stretch gap-2">
                 <button
-                  class="inline-block w-8 rounded border-2 border-gray-500 text-lg font-bold text-gray-600 transition-all hover:bg-gray-500 hover:text-white"
+                  v-if="servings !== defaultServings"
+                  class="w-8 rounded text-xs text-gray-600 transition-all hover:bg-gray-500 hover:text-white"
+                  aria-label="Terug naar het standaard aantal porties"
+                  @click="updateServings(defaultServings)"
+                >
+                  <FontAwesomeIcon :icon="faUndo" />
+                </button>
+
+                <button
+                  class="w-8 rounded border-2 border-gray-500 text-lg font-bold text-gray-600 transition-all hover:bg-gray-500 hover:text-white"
                   aria-label="Verhoog aantal porties"
-                  @click="incrementServings"
+                  @click="updateServings(servings + 1)"
                 >
                   +
                 </button>
 
                 <button
-                  :disabled="recipe.servings === 1"
-                  class="inline-block w-8 rounded border-2 border-gray-500 text-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-gray-600"
+                  :disabled="servings === 1"
+                  class="w-8 rounded border-2 border-gray-500 text-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-gray-600"
                   aria-label="Verminder aantal porties"
-                  @click="decrementServings"
+                  @click="updateServings(servings - 1)"
                 >
                   -
                 </button>
@@ -222,7 +226,7 @@ const toggleStrike = (ingredient) => {
             </div>
 
             <div class="space-y-6">
-              <div v-for="list in recipe.ingredients">
+              <div v-for="(list, list_index) in localRecipe.ingredients" :key="`${list.title}-${list_index}`">
                 <button
                   v-if="strikedIngredients.size > 0"
                   class="float-right text-sm"
@@ -234,8 +238,8 @@ const toggleStrike = (ingredient) => {
 
                 <ul class="m-0 space-y-1">
                   <li
-                    v-for="(ingredient, id) in list.ingredients"
-                    :key="`${ingredient.name}-${id}`"
+                    v-for="(ingredient, ingredient_index) in list.ingredients"
+                    :key="`${ingredient.name}-${ingredient_index}`"
                     class="flex flex-auto"
                   >
                     <span
@@ -266,15 +270,17 @@ const toggleStrike = (ingredient) => {
           <div class="space-y-4 sm:px-6 md:w-2/3 md:px-0">
             <h2 class="mb-4 text-xl font-bold md:mt-6 md:text-2xl">Instructies</h2>
 
-            <div class="recipe-instructions" v-html="recipe.instructions" />
+            <div class="recipe-instructions" v-html="localRecipe.instructions" />
 
-            <p v-if="recipe.source_label || recipe.source_link">
+            <p v-if="localRecipe.source_label || localRecipe.source_link">
               <strong>Bron: </strong>
-              <template v-if="recipe.source_link">
-                <a :href="recipe.source_link" target="_blank">{{ recipe.source_label ?? recipe.source_link }}</a>
+              <template v-if="localRecipe.source_link">
+                <a :href="localRecipe.source_link" target="_blank">
+                  {{ localRecipe.source_label ?? localRecipe.source_link }}
+                </a>
               </template>
-              <template v-if="!recipe.source_link && recipe.source_label">
-                {{ recipe.source_label }}
+              <template v-if="!localRecipe.source_link && localRecipe.source_label">
+                {{ localRecipe.source_label }}
               </template>
             </p>
           </div>
