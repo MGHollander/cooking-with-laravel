@@ -53,6 +53,15 @@ const wakeLockButtonTitle = computed(() =>
 function toggleWakeLock() {
   return wakeLock.isActive ? wakeLock.release() : wakeLock.request("screen");
 }
+
+const strikedIngredients = reactive(new Set());
+const toggleStrike = (ingredient) => {
+  if (strikedIngredients.has(ingredient)) {
+    strikedIngredients.delete(ingredient);
+  } else {
+    strikedIngredients.add(ingredient);
+  }
+};
 </script>
 
 <template>
@@ -214,23 +223,40 @@ function toggleWakeLock() {
 
             <div class="space-y-6">
               <div v-for="list in recipe.ingredients">
+                <button
+                  v-if="strikedIngredients.size > 0"
+                  class="float-right text-sm"
+                  @click="() => strikedIngredients.clear()"
+                >
+                  reset
+                </button>
                 <h3 v-if="list.title" class="mb-2 mt-8 text-lg font-bold">{{ list.title }}</h3>
 
                 <ul class="m-0 space-y-1">
-                  <li v-for="ingredient in list.ingredients" class="flex flex-auto">
-                    <template v-if="ingredient.amount">
-                      <!-- The span is a trick to prevent extra whitspace between the amount and the following text. -->
-                      <!-- Multiplying and deviding the amount is a trick to round to 2 decimal places. -->
-                      <span>{{ Math.round(ingredient.amount * 100) / 100 }}&nbsp;</span>
-                    </template>
-                    <template v-if="ingredient.unit">{{ ingredient.unit }}&nbsp;</template>
-                    <template v-if="ingredient.name_plural && ingredient.amount > 1">
-                      {{ ingredient.name_plural }}
-                    </template>
-                    <template v-else>
-                      {{ ingredient.name }}
-                    </template>
-                    <template v-if="ingredient.info">{{ ingredient.info }}</template>
+                  <li
+                    v-for="(ingredient, id) in list.ingredients"
+                    :key="`${ingredient.name}-${id}`"
+                    class="flex flex-auto"
+                  >
+                    <span
+                      class="cursor-pointer"
+                      :class="{ 'text-gray-600 line-through': strikedIngredients.has(ingredient) }"
+                      @click="toggleStrike(ingredient)"
+                    >
+                      <template v-if="ingredient.amount">
+                        <!-- The span is a trick to prevent extra whitspace between the amount and the following text. -->
+                        <!-- Multiplying and deviding the amount is a trick to round to 2 decimal places. -->
+                        <span>{{ Math.round(ingredient.amount * 100) / 100 }}&nbsp;</span>
+                      </template>
+                      <template v-if="ingredient.unit">{{ ingredient.unit }}&nbsp;</template>
+                      <template v-if="ingredient.name_plural && ingredient.amount > 1">
+                        {{ ingredient.name_plural }}
+                      </template>
+                      <template v-else>
+                        {{ ingredient.name }}
+                      </template>
+                      <template v-if="ingredient.info">{{ ingredient.info }}</template>
+                    </span>
                   </li>
                 </ul>
               </div>
