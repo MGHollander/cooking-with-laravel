@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 
@@ -38,11 +39,11 @@ class ChangePasswordController extends Controller
 
         $user = $request->user();
         $user->update([
-            'password' => $request->get('new_password'),
+            'password' => Hash::make($request->get('new_password')),
         ]);
 
         event(new PasswordReset($user));
 
-        return redirect()->route('dashboard')->with('success', 'Je wachtwoord is succesvol gewijzigd!');
+        return redirect()->route('home')->with('success', 'Je wachtwoord is succesvol gewijzigd!');
     }
 }
