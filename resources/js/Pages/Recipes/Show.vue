@@ -226,14 +226,14 @@ const toggleStrike = (ingredient) => {
             </div>
 
             <div class="space-y-6">
+              <button
+                v-if="strikedIngredients.size > 0"
+                class="float-right text-sm"
+                @click="() => strikedIngredients.clear()"
+              >
+                <FontAwesomeIcon :icon="faUndo" />
+              </button>
               <div v-for="(list, list_index) in localRecipe.ingredients" :key="`${list.title}-${list_index}`">
-                <button
-                  v-if="strikedIngredients.size > 0"
-                  class="float-right text-sm"
-                  @click="() => strikedIngredients.clear()"
-                >
-                  reset
-                </button>
                 <h3 v-if="list.title" class="mb-2 mt-8 text-lg font-bold">{{ list.title }}</h3>
 
                 <ul class="m-0 space-y-1">
