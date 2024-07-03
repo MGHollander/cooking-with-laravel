@@ -104,12 +104,6 @@ class RecipeController extends Controller
                 'source_label'        => $recipe->source_label,
                 'source_link'         => $recipe->source_link,
                 'created_at'          => $recipe->created_at,
-                'structured_data'     => [
-                    'description'  => strip_tags($recipe->summary),
-                    'ingredients'  => new StructuredDataIngredientsResource($recipe->ingredients),
-                    'instructions' => new InstructionsResource($recipe->instructions),
-                    'keywords'     => implode(',', $recipe->tags->pluck('name')->toArray()),
-                ],
             ],
         ])->withViewData([
             'open_graph' => [
@@ -252,7 +246,7 @@ class RecipeController extends Controller
         JsonLd::addValues([
             'datePublished'      => $recipe->created_at,
             'recipeYield'        => $recipe->servings,
-            'ingredients'        => new StructuredDataIngredientsResource($recipe->ingredients),
+            'recipeIngredient'   => new StructuredDataIngredientsResource($recipe->ingredients),
             'recipeInstructions' => new InstructionsResource($recipe->instructions),
         ]);
 
