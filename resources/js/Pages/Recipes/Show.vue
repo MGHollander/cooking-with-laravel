@@ -8,7 +8,6 @@ import { computed, reactive, ref } from "vue";
 import Button from "@/Components/Button.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import StructuredRecipe from "@/Components/StructuredJson/Recipe.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 
 const props = defineProps({
@@ -61,7 +60,6 @@ const toggleStrike = (ingredient) => {
 
 <template>
   <Head :title="localRecipe.title" />
-  <StructuredRecipe :recipe="localRecipe" />
 
   <DefaultLayout>
     <div class="overflow-hidden bg-white sm:rounded-lg sm:shadow-lg">

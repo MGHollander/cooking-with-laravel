@@ -26,6 +26,8 @@
         @endforeach
     @endif
 
+    {!! JsonLd::generate() !!}
+
     @yield('head')
 </head>
 <body class="font-sans antialiased min-w-80">

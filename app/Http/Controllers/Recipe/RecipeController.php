@@ -9,6 +9,7 @@ use App\Http\Resources\StructuredData\Recipe\IngredientsResource as StructuredDa
 use App\Http\Resources\StructuredData\Recipe\InstructionsResource;
 use App\Http\Traits\FillableAttributes;
 use App\Models\Recipe;
+use Artesaos\SEOTools\Facades\JsonLd;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
@@ -83,6 +84,8 @@ class RecipeController extends Controller
         if (!$recipe) {
             return $this->notFound($request, $slug);
         }
+
+        $this->setJsonLdData($recipe);
 
         return Inertia::render('Recipes/Show', [
             'recipe' => [
@@ -234,5 +237,62 @@ class RecipeController extends Controller
             ];
             $media->save();
         }
+    }
+
+    // @see https://developers.google.com/search/docs/appearance/structured-data/recipe
+    private function setJsonLdData(Recipe $recipe): void
+    {
+        JsonLd::setType('Recipe');
+        JsonLd::setTitle($recipe->title);
+
+        if ($recipe->summary) {
+            JsonLd::setDescription(strip_tags($recipe->summary));
+        }
+
+        JsonLd::addValues([
+            'datePublished'      => $recipe->created_at,
+            'recipeYield'        => $recipe->servings,
+            'ingredients'        => new StructuredDataIngredientsResource($recipe->ingredients),
+            'recipeInstructions' => new InstructionsResource($recipe->instructions),
+        ]);
+
+        $image = $recipe->getFirstMediaUrl('recipe_image', 'show');
+        if ($image) {
+            JsonLd::addImage($image);
+        }
+
+        // prepTime and cookTime should be used together according to the Google specs.
+        // Therefore, only add if both of them are available.
+        if ($recipe->preparation_minutes && $recipe->cooking_minutes) {
+            JsonLd::addValues([
+                'prepTime' => $this->minutesToISODuration($recipe->preparation_minutes),
+                'cookTime' => $this->minutesToISODuration($recipe->cooking_minutes),
+            ]);
+        }
+
+        if ($recipe->preparation_minutes || $recipe->cooking_minutes) {
+            JsonLd::addValue('totalTime', $this->minutesToISODuration(($recipe->preparation_minutes ?? 0) + ($recipe->cooking_minutes ?? 0)));
+        }
+
+        if ($recipe->tags->count() > 0) {
+            JsonLd::addValue('keywords', implode(',', $recipe->tags->pluck('name')->toArray()));
+        }
+
+    }
+
+    /*
+     * Transform minutes into an ISO 8601 duration string.
+     * @see https://en.wikipedia.org/wiki/ISO_8601#Durations
+     */
+    private function minutesToISODuration($minutes): string|null
+    {
+        $isoHours   = (int) $minutes > 59 ? floor($minutes / 60) . 'H' : '';
+        $isoMinutes = (int) $minutes % 60 ? ($minutes % 60) . 'M' : '';
+
+        if (empty($isoMinutes) && empty($isoHours)) {
+            return null;
+        }
+
+        return 'PT' . $isoHours . $isoMinutes;
     }
 }
