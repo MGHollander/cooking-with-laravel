@@ -1,8 +1,8 @@
 <script setup>
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Link, useForm } from "@inertiajs/vue3";
-import { ref, watchEffect } from "vue";
+import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {Link, useForm} from "@inertiajs/vue3";
+import {ref, watchEffect} from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import Button from "@/Inertia/Components/Button.vue";
@@ -43,7 +43,7 @@ watchEffect(() => {
               <!-- Logo -->
               <div class="flex shrink-0 items-center">
                 <Link :href="route('home')">
-                  <ApplicationLogo class="block h-9 w-auto" />
+                  <ApplicationLogo class="block h-9 w-auto"/>
                 </Link>
               </div>
 
@@ -92,7 +92,7 @@ watchEffect(() => {
                 </Dropdown>
 
                 <Button button-style="ghost" aria-label="Zoek een recept" class="!p-2.5" @click="toggleNav('search')">
-                  <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="https://www.w3.org/2000/svg">
                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                       <path
                         d="M5.40705882,9.76579186 L1.13049774,14.0423529 L1.95800905,14.8691403 L6.23384615,10.5925792 C5.93199325,10.3445547 5.65508327,10.0676448 5.40705882,9.76579186 L5.40705882,9.76579186 Z M10.0180995,1.21013575 C7.38262671,1.21013575 5.24615385,3.34660861 5.24615385,5.98208145 C5.24615385,8.61755429 7.38262671,10.7540271 10.0180995,10.7540271 C12.6534724,10.7540271 14.7898643,8.61763532 14.7898643,5.98226244 C14.7898643,3.34688957 12.6534724,1.21049774 10.0180995,1.21049774 L10.0180995,1.21013575 Z M6.91113122,5.46932127 C6.65303181,5.46932127 6.4438009,5.26009036 6.4438009,5.00199095 C6.4438009,4.74389154 6.65303181,4.53466063 6.91113122,4.53466063 C7.16923063,4.53466063 7.37846154,4.74389154 7.37846154,5.00199095 C7.37846154,5.12593466 7.32922509,5.24480195 7.24158366,5.33244339 C7.15394222,5.42008482 7.03507493,5.46932127 6.91113122,5.46932127 Z M7.94027149,4.33628959 C7.48843702,4.33549024 7.12272582,3.96869932 7.12325849,3.51686445 C7.12379115,3.06502958 7.49036615,2.69910196 7.94220126,2.69936794 C8.39403636,2.69963392 8.76018029,3.06599287 8.760181,3.51782805 C8.76018134,3.73514866 8.67375208,3.94354729 8.51994746,4.09708029 C8.36614283,4.2506133 8.15759176,4.33667406 7.94027149,4.33628959 Z M9.59276018,3.21158371 C9.3345954,3.21018605 9.12631234,3.00001615 9.12724286,2.74184926 C9.12817338,2.48368237 9.33796605,2.27501936 9.59613419,2.27548273 C9.85430234,2.27594609 10.0633446,2.48536085 10.0633484,2.74352941 C10.0633502,2.86810541 10.0136898,2.98754248 9.92536382,3.07539289 C9.83703781,3.16324331 9.71733436,3.21225814 9.59276018,3.21158371 L9.59276018,3.21158371 Z"
@@ -102,9 +102,9 @@ watchEffect(() => {
                         fill="currentColor"
                         fill-rule="nonzero"
                       />
-                      <circle fill="currentColor" fill-rule="nonzero" cx="7.94027149" cy="3.51782805" r="1" />
-                      <circle fill="currentColor" fill-rule="nonzero" cx="9.59457014" cy="2.74352941" r="1" />
-                      <circle fill="currentColor" fill-rule="nonzero" cx="6.91113122" cy="5.00199095" r="1" />
+                      <circle fill="currentColor" fill-rule="nonzero" cx="7.94027149" cy="3.51782805" r="1"/>
+                      <circle fill="currentColor" fill-rule="nonzero" cx="9.59457014" cy="2.74352941" r="1"/>
+                      <circle fill="currentColor" fill-rule="nonzero" cx="6.91113122" cy="5.00199095" r="1"/>
                     </g>
                   </svg>
                 </Button>
@@ -115,7 +115,7 @@ watchEffect(() => {
                       <Button button-style="ghost" aria-label="Open het gebruikersmenu" class="!p-2.5 text-sm">
                         {{ $page.props.auth.user.name }}
 
-                        <FontAwesomeIcon :icon="faChevronDown" class="-mt-0.5 ml-2 h-3" />
+                        <FontAwesomeIcon :icon="faChevronDown" class="-mt-0.5 ml-2 h-3"/>
                       </Button>
                     </span>
                   </template>
@@ -152,7 +152,7 @@ watchEffect(() => {
                   aria-label="Zoek een recept"
                   @click="toggleNav('search')"
                 >
-                  <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="https://www.w3.org/2000/svg">
                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                       <path
                         d="M5.40705882,9.76579186 L1.13049774,14.0423529 L1.95800905,14.8691403 L6.23384615,10.5925792 C5.93199325,10.3445547 5.65508327,10.0676448 5.40705882,9.76579186 L5.40705882,9.76579186 Z M10.0180995,1.21013575 C7.38262671,1.21013575 5.24615385,3.34660861 5.24615385,5.98208145 C5.24615385,8.61755429 7.38262671,10.7540271 10.0180995,10.7540271 C12.6534724,10.7540271 14.7898643,8.61763532 14.7898643,5.98226244 C14.7898643,3.34688957 12.6534724,1.21049774 10.0180995,1.21049774 L10.0180995,1.21013575 Z M6.91113122,5.46932127 C6.65303181,5.46932127 6.4438009,5.26009036 6.4438009,5.00199095 C6.4438009,4.74389154 6.65303181,4.53466063 6.91113122,4.53466063 C7.16923063,4.53466063 7.37846154,4.74389154 7.37846154,5.00199095 C7.37846154,5.12593466 7.32922509,5.24480195 7.24158366,5.33244339 C7.15394222,5.42008482 7.03507493,5.46932127 6.91113122,5.46932127 Z M7.94027149,4.33628959 C7.48843702,4.33549024 7.12272582,3.96869932 7.12325849,3.51686445 C7.12379115,3.06502958 7.49036615,2.69910196 7.94220126,2.69936794 C8.39403636,2.69963392 8.76018029,3.06599287 8.760181,3.51782805 C8.76018134,3.73514866 8.67375208,3.94354729 8.51994746,4.09708029 C8.36614283,4.2506133 8.15759176,4.33667406 7.94027149,4.33628959 Z M9.59276018,3.21158371 C9.3345954,3.21018605 9.12631234,3.00001615 9.12724286,2.74184926 C9.12817338,2.48368237 9.33796605,2.27501936 9.59613419,2.27548273 C9.85430234,2.27594609 10.0633446,2.48536085 10.0633484,2.74352941 C10.0633502,2.86810541 10.0136898,2.98754248 9.92536382,3.07539289 C9.83703781,3.16324331 9.71733436,3.21225814 9.59276018,3.21158371 L9.59276018,3.21158371 Z"
@@ -179,7 +179,7 @@ watchEffect(() => {
                 @click="toggleNav('create')"
               >
                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12L20 12 M12 4l0 16" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12L20 12 M12 4l0 16"/>
                 </svg>
               </button>
 
@@ -188,7 +188,7 @@ watchEffect(() => {
                 aria-label="Zoek een recept"
                 @click="toggleNav('search')"
               >
-                <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="https://www.w3.org/2000/svg">
                   <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                     <path
                       d="M5.40705882,9.76579186 L1.13049774,14.0423529 L1.95800905,14.8691403 L6.23384615,10.5925792 C5.93199325,10.3445547 5.65508327,10.0676448 5.40705882,9.76579186 L5.40705882,9.76579186 Z M10.0180995,1.21013575 C7.38262671,1.21013575 5.24615385,3.34660861 5.24615385,5.98208145 C5.24615385,8.61755429 7.38262671,10.7540271 10.0180995,10.7540271 C12.6534724,10.7540271 14.7898643,8.61763532 14.7898643,5.98226244 C14.7898643,3.34688957 12.6534724,1.21049774 10.0180995,1.21049774 L10.0180995,1.21013575 Z M6.91113122,5.46932127 C6.65303181,5.46932127 6.4438009,5.26009036 6.4438009,5.00199095 C6.4438009,4.74389154 6.65303181,4.53466063 6.91113122,4.53466063 C7.16923063,4.53466063 7.37846154,4.74389154 7.37846154,5.00199095 C7.37846154,5.12593466 7.32922509,5.24480195 7.24158366,5.33244339 C7.15394222,5.42008482 7.03507493,5.46932127 6.91113122,5.46932127 Z M7.94027149,4.33628959 C7.48843702,4.33549024 7.12272582,3.96869932 7.12325849,3.51686445 C7.12379115,3.06502958 7.49036615,2.69910196 7.94220126,2.69936794 C8.39403636,2.69963392 8.76018029,3.06599287 8.760181,3.51782805 C8.76018134,3.73514866 8.67375208,3.94354729 8.51994746,4.09708029 C8.36614283,4.2506133 8.15759176,4.33667406 7.94027149,4.33628959 Z M9.59276018,3.21158371 C9.3345954,3.21018605 9.12631234,3.00001615 9.12724286,2.74184926 C9.12817338,2.48368237 9.33796605,2.27501936 9.59613419,2.27548273 C9.85430234,2.27594609 10.0633446,2.48536085 10.0633484,2.74352941 C10.0633502,2.86810541 10.0136898,2.98754248 9.92536382,3.07539289 C9.83703781,3.16324331 9.71733436,3.21225814 9.59276018,3.21158371 L9.59276018,3.21158371 Z"
@@ -313,14 +313,14 @@ watchEffect(() => {
       <header v-if="$slots.header" class="bg-white shadow">
         <div class="mx-auto flex max-w-7xl justify-between px-4 py-6 sm:px-6 lg:px-8">
           <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            <slot name="header" />
+            <slot name="header"/>
           </h2>
         </div>
       </header>
 
       <div v-if="$page.props.flash.error" class="flex justify-between rounded-lg bg-red-100 py-4 text-red-700">
         <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p v-html="$page.props.flash.error" />
+          <p v-html="$page.props.flash.error"/>
         </div>
       </div>
 
@@ -329,13 +329,13 @@ watchEffect(() => {
         class="flex justify-between rounded-lg bg-emerald-100 py-4 text-emerald-800"
       >
         <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p v-html="$page.props.flash.success" />
+          <p v-html="$page.props.flash.success"/>
         </div>
       </div>
 
       <div v-if="$page.props.flash.warning" class="flex justify-between rounded-lg bg-yellow-100 py-4 text-yellow-700">
         <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p v-html="$page.props.flash.warning" />
+          <p v-html="$page.props.flash.warning"/>
         </div>
       </div>
 
@@ -343,7 +343,7 @@ watchEffect(() => {
       <main>
         <div class="py-6 sm:py-12">
           <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <slot />
+            <slot/>
           </div>
         </div>
       </main>

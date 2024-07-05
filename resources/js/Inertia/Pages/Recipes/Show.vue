@@ -1,8 +1,8 @@
 <script setup>
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Head, router } from "@inertiajs/vue3";
-import { computed } from "vue";
+import {faEllipsisV} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {Head, router} from "@inertiajs/vue3";
+import {computed} from "vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import Button from "@/Inertia/Components/Button.vue";
 import DropdownLink from "@/Inertia/Components/DropdownLink.vue";
@@ -45,8 +45,8 @@ function confirmDeletion() {
 </script>
 
 <template>
-  <Head :title="recipe.title" />
-  <StructuredRecipe :recipe="recipe" />
+  <Head :title="recipe.title"/>
+  <StructuredRecipe :recipe="recipe"/>
 
   <DefaultLayout>
     <div class="overflow-hidden bg-white sm:rounded-lg sm:shadow-lg">
@@ -55,7 +55,7 @@ function confirmDeletion() {
           <Dropdown v-if="$page.props.auth.user" align="right" width="48" class="float-right">
             <template #trigger>
               <Button button-style="ghost" aria-label="Uitklapmenu voor acties op recept" class="w-10 !p-2.5">
-                <FontAwesomeIcon :icon="faEllipsisV" class="mx-auto" />
+                <FontAwesomeIcon :icon="faEllipsisV" class="mx-auto"/>
               </Button>
             </template>
 
@@ -74,7 +74,7 @@ function confirmDeletion() {
           </div>
         </div>
 
-        <div v-if="recipe.summary" class="md:text-lg" v-html="recipe.summary" />
+        <div v-if="recipe.summary" class="md:text-lg" v-html="recipe.summary"/>
       </div>
 
       <div
@@ -84,7 +84,7 @@ function confirmDeletion() {
         }"
       >
         <div v-if="recipe.image">
-          <img :src="recipe.image" class="mx-auto aspect-[4/3] w-full rounded-lg object-cover md:mx-0" />
+          <img :src="recipe.image" class="mx-auto aspect-[4/3] w-full rounded-lg object-cover md:mx-0"/>
         </div>
 
         <div>
@@ -96,7 +96,7 @@ function confirmDeletion() {
           >
             <div>
               <div class="mx-auto w-16 fill-orange-600">
-                <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 600 600" xmlns="https://www.w3.org/2000/svg">
                   <path
                     d="M307.75 141c-85.1 0-154.84 73.58-154.84 163.8S222 468.6 307.75 468.6c85.1 0 154.2-73.58 154.2-163.8 0-90.86-69.11-163.8-154.2-163.8zm0 301.36c-71 0-129.25-62.06-129.25-138.2S236.09 166 307.75 166c71 0 128.61 62.06 128.61 138.2s-57.59 138.16-128.61 138.16z"
                   />
@@ -105,39 +105,39 @@ function confirmDeletion() {
                   />
                 </svg>
               </div>
-              <strong>Aantal porties</strong><br />
+              <strong>Aantal porties</strong><br/>
               {{ recipe.servings }} {{ servingsLabel }}
             </div>
 
             <div>
               <div class="mx-auto w-16 fill-orange-600">
-                <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 600 600" xmlns="https://www.w3.org/2000/svg">
                   <path
                     d="M299.29 118.57c-120.29 0-217.86 97.61-217.86 217.86a215.64 215.64 0 0 0 48.81 137.22 13.8 13.8 0 0 0 19.76 2.12c5.66-5 7.07-14.15 2.12-19.81a187.92 187.92 0 0 1-20.51-31.83l45.27-18.39a14.12 14.12 0 1 0-10.61-26.17l-46 18.39c-5-14.15-8.49-29-9.2-44.56h48.1a14.15 14.15 0 0 0 0-28.29h-48.74a165.28 165.28 0 0 1 8.49-46l43.85 18.39c2.12.71 3.54 1.41 5.66 1.41a14 14 0 0 0 12.73-8.49 14.36 14.36 0 0 0-7.78-18.39l-43.85-18.39A204.84 204.84 0 0 1 155 214.77l32.54 32.54a13.68 13.68 0 0 0 19.81 0 13.68 13.68 0 0 0 0-19.81l-33.24-33.24A211.56 211.56 0 0 1 213 167.38l17.68 42.44c2.12 5.66 7.78 8.49 13.44 8.49 2.12 0 3.54 0 5.66-1.41a15.46 15.46 0 0 0 3.54-2.12c-1.41 12-2.83 30.42-2.83 58 0 33.24.71 74.27 3.54 86.29a49.32 49.32 0 0 0 48.1 38.2 54.6 54.6 0 0 0 10.61-1.41c26.88-5.66 43.85-31.83 38.2-58-2.12-12-18.39-49.51-31.83-79.22-12.73-28.29-21.22-45.27-27.59-55.17 2.12 2.12 5.66 2.83 8.49 2.83a14.19 14.19 0 0 0 14.15-14.15v-44.58a202.27 202.27 0 0 1 46.68 9.2l-17.68 42.44a14.36 14.36 0 0 0 7.78 18.39c2.12.71 3.54 1.41 5.66 1.41a14 14 0 0 0 12.73-8.49L387 168.08a182.4 182.4 0 0 1 38.2 26.17L392 227.5a13.68 13.68 0 0 0 0 19.81 13.68 13.68 0 0 0 19.81 0l32.54-32.54c9.9 12 19.1 25.46 25.46 39.61l-43.85 18.39a14.36 14.36 0 0 0-7.78 18.39c2.12 5.66 7.78 8.49 13.44 8.49 2.12 0 3.54 0 5.66-1.41l43.85-17.68a233 233 0 0 1 8.49 45.27h-48.1a14.15 14.15 0 0 0 0 28.29h48.1a199.17 199.17 0 0 1-9.9 45.27l-45.27-19.1a14.12 14.12 0 0 0-10.61 26.17l44.56 18.39a207.78 207.78 0 0 1-21.93 33.24 13.8 13.8 0 0 0 2.12 19.81c2.83 2.12 5.66 3.54 9.2 3.54a12.73 12.73 0 0 0 10.61-5 217.33 217.33 0 0 0 50.22-139.34c-.76-120.92-99.08-218.53-219.33-218.53zm24 226.35a20.66 20.66 0 0 1-16.27 24c-11.32 2.12-22.63-5-24.76-15.56-2.12-12-3.54-71.44-2.12-110.34 16.32 35.41 40.37 90.58 43.2 101.9zM271.71 188.6h-2.83c-5 .71-8.49 2.83-11.32 9.9l-17.68-42.44a196.33 196.33 0 0 1 46-9.2v46c0 1.41 0 2.83.71 3.54-7.1-7.8-10.59-7.8-14.88-7.8z"
                   />
-                  <circle cx="300.24" cy="339.59" r="9.2" transform="rotate(-11.9 300.247 339.58)" />
+                  <circle cx="300.24" cy="339.59" r="9.2" transform="rotate(-11.9 300.247 339.58)"/>
                 </svg>
               </div>
-              <strong>Moeilijkheid</strong><br />
+              <strong>Moeilijkheid</strong><br/>
               {{ recipe.difficulty }}
             </div>
 
             <div v-if="recipe.preparation_minutes">
               <div class="mx-auto w-16 fill-emerald-700">
-                <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 600 600" xmlns="https://www.w3.org/2000/svg">
                   <path
                     d="M540.13 125.81C530 105.45 504.5 85.08 479 85.08a41.47 41.47 0 0 0-9.46.73c-7.27 1.45-26.91 5.82-136.73 130.92h-.73c-8.73 0-13.82 0-145.46 138.19C122.66 420.37 60.11 488 59.38 488.74a14.55 14.55 0 0 0 8 24 122.6 122.6 0 0 0 24 2.18c69.09 0 152.73-53.82 210.92-98.91 39.27-30.55 113.46-96.73 115.64-114.19.73-6.55-2.18-13.82-9.46-23.27L487 181.81h3.64c14.55 0 34.91-3.64 47.28-19.64 8.08-9.45 8.76-23.27 2.21-36.36zM102.29 485.1c85.1-90.91 203.65-215.28 230.56-237.83 13.82 8.73 45.09 37.82 53.82 50.91C361.94 330.91 207 474.92 102.29 485.1zM515.4 144.72c-5.82 7.27-18.91 8-24.73 8a45.59 45.59 0 0 1-8-.73c-5.09-.73-10.18 1.45-13.82 5.09l-78.55 96.73a246.41 246.41 0 0 0-30.55-25.46c93.83-104.72 114.2-113.45 115.65-114.18 9.46-2.18 25.46 6.55 34.18 18.91 5.82 6.55 5.82 10.92 5.82 11.64z"
                   />
-                  <circle cx="483.4" cy="135.26" r="9.46" />
+                  <circle cx="483.4" cy="135.26" r="9.46"/>
                 </svg>
               </div>
-              <strong>Voorbereidingstijd</strong><br />
+              <strong>Voorbereidingstijd</strong><br/>
               {{ recipe.preparation_minutes }} minuten
             </div>
 
             <div v-if="recipe.cooking_minutes">
               <div class="mx-auto w-16 fill-emerald-700">
-                <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 600 600" xmlns="https://www.w3.org/2000/svg">
                   <path
                     d="M299.32 388.92c-1.35 2.7-2 4.73-2.7 6.08-3.38 7.43-5.4 12.83-7.43 16.88h20.94c-2-3.38-4.05-8.1-6.75-14.18-1.38-3.38-2.7-6.08-4.06-8.78zM196.67 276.81a13.51 13.51 0 0 1 27 0v32.42h33.09v-32.42a13.51 13.51 0 1 1 27 0v32.42h32.42v-32.42a13.51 13.51 0 1 1 27 0v32.42h32.42v-32.42a13.51 13.51 0 0 1 27 0v32.42h33.09C424.26 212.66 352 118.11 299.32 118.11c-51.33 0-124.26 95.9-136.42 191.12h33.77z"
                     fill="none"
@@ -155,7 +155,7 @@ function confirmDeletion() {
                 </svg>
               </div>
 
-              <strong>Bereidingstijd</strong><br />
+              <strong>Bereidingstijd</strong><br/>
               {{ recipe.cooking_minutes }} minuten
             </div>
           </div>
@@ -217,7 +217,7 @@ function confirmDeletion() {
           <div class="space-y-4 sm:px-6 md:w-2/3 md:px-0">
             <h2 class="mb-4 text-xl font-bold md:mt-6 md:text-2xl">Instructies</h2>
 
-            <div class="recipe-instructions" v-html="recipe.instructions" />
+            <div class="recipe-instructions" v-html="recipe.instructions"/>
 
             <p v-if="recipe.source_label || recipe.source_link">
               <strong>Bron: </strong>
