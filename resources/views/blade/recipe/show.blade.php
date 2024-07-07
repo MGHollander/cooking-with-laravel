@@ -48,7 +48,10 @@
 
   <p class="mb-4"><a href="{{ route("blade.home") }}">Terug naar overzicht</a></p>
 
-  <div class="space-y-6 bg-white p-6 sm:rounded-lg sm:shadow-lg md:space-y-10 lg:p-10" x-data="recipe">
+  <div
+    class="recipe-details space-y-6 bg-white p-6 sm:rounded-lg sm:shadow-lg md:space-y-10 lg:p-10"
+    x-data="recipe"
+  >
     <h1 class="mb-4 text-2xl font-bold md:text-3xl">{{ $recipe["title"] }}</h1>
 
     @if (count($recipe["tags"]) > 0)

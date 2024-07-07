@@ -4,16 +4,17 @@
   </x-slot>
 
   <div class="mb-4 flex items-center justify-between">
-    <h1 class="text-2xl font-bold md:text-3xl">
+    <h1 id="recipes-title" class="text-2xl font-bold md:text-3xl">
       @if (request("search") && $recipes->total() > 0)
-        Found {{ $recipes->count() }} recipes for "{{ request("search") }}"
+        Found {{ $recipes->total() }} recipes for "{{ request("search") }}"
       @elseif (request("search") && $recipes->total() === 0)
         No recipes found for "{{ request("search") }}"
       @else
         Recipes
       @endif
     </h1>
-    <form class="flex items-center space-x-2">
+
+    <form class="flex items-center space-x-2" data-swup-form>
       <label>Search:</label>
       <input
         type="search"
@@ -25,14 +26,14 @@
     </form>
   </div>
   @if ($recipes->total() > 0)
-    <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div id="recipes" class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       @foreach ($recipes->items() as $recipe)
         <x-blade.recipe-card :recipe="$recipe" />
       @endforeach
     </div>
 
     @if ($recipes->hasPages())
-      <div class="mt-8">
+      <div id="recipes-pagination" class="mt-8">
         {{ $recipes->links() }}
       </div>
     @endif

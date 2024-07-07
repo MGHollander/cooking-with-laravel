@@ -66,6 +66,7 @@ require __DIR__ . '/auth.php';
 // START Blade routes
 
 Route::get('/blade', [BladeRecipeController::class, 'index'])->name('blade.home');
+Route::post('/blade', [BladeRecipeController::class, 'index']);
 Route::get('/blade/{slug}', [BladeRecipeController::class, 'show'])->name('blade.show');
 
 // END Blade routes

@@ -1,0 +1,73 @@
+/* Define a transition duration during page visits */
+html.is-changing .transition-fade {
+  transition: opacity 0.25s;
+  opacity: 1;
+}
+
+/* Define the styles for the unloaded pages */
+html.is-animating .transition-fade {
+  opacity: 0;
+}
+
+h1 {
+  transition: transform 300ms, opacity 300ms;
+}
+
+html.is-animating.is-leaving h1,
+html.is-animating.is-rendering h1 {
+  transform: translateY(-2rem);
+  opacity: 0;
+}
+
+.recipe-details {
+  transition: transform 300ms, opacity 300ms;
+}
+
+html.is-animating.is-leaving .recipe-details,
+html.is-animating.is-rendering .recipe-details {
+  transform: scale(95%);
+  opacity: 0;
+}
+
+
+#recipes-title,
+#recipes-pagination {
+  transition: transform 300ms, opacity 300ms;
+}
+
+#recipes-title.is-leaving,
+#recipes-pagination.is-leaving {
+  opacity: 0;
+}
+
+#recipes-pagination.is-rendering {
+  opacity: 0;
+}
+
+#recipes.is-changing {
+  --duration-leave: 150ms;
+  --duration-enter: 400ms;
+  transition-duration: var(--duration-enter);
+}
+
+#recipes.is-leaving {
+  transition-duration: var(--duration-leave);
+}
+
+#recipes.is-changing .recipe {
+  transition-property: opacity, transform;
+  transition-duration: var(--duration-enter);
+  transition-timing-function: cubic-bezier(0.230, 1.000, 0.320, 1.000);
+  /* easeOutQuint */
+}
+
+#recipes.is-animating .recipe {
+  opacity: 0;
+  transform: scale(0.75);
+}
+
+/* Change easing and duration for the leave-phase */
+#recipes.is-leaving .recipe {
+  transition-timing-function: ease-in;
+  transition-duration: var(--duration-leave);
+}

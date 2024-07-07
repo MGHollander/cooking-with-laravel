@@ -46,8 +46,13 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@inertiajs/vue3": "^1.0.0",
+    "@swup/debug-plugin": "^4.0.4",
+    "@swup/forms-plugin": "^3.5.1",
+    "@swup/fragment-plugin": "^1.1.1",
+    "@swup/scripts-plugin": "^2.1.0",
     "alpinejs": "^3.13.10",
     "dayjs": "^1.11.9",
+    "swup": "^4.6.1",
     "vue-advanced-cropper": "^2.8.8"
   }
 }

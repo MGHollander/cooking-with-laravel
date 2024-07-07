@@ -4,7 +4,7 @@
 
 <a
   href="{{ route("blade.show", ["slug" => $recipe["slug"]]) }}"
-  class="cursor-pointer rounded-lg bg-white no-underline shadow-lg hover:scale-105"
+  class="recipe cursor-pointer rounded-lg bg-white no-underline shadow-lg hover:scale-105"
 >
   @if ($recipe["image"])
     <div class="overflow-hidden rounded-t-lg">
