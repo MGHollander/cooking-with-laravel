@@ -27,9 +27,7 @@ watch(
   <DefaultLayout>
     <div class="mb-4 flex items-center justify-between">
       <h1 class="text-2xl font-bold md:text-3xl">
-        <template v-if="search && recipes.data.length > 0">
-          Found {{ recipes.data.length }} recipes for "{{ search }}"
-        </template>
+        <template v-if="search && recipes.total > 0"> Found {{ recipes.total }} recipes for "{{ search }}"</template>
         <template v-else-if="search && recipes.data.length === 0">No recipes found</template>
         <template v-else>Recipes</template>
       </h1>

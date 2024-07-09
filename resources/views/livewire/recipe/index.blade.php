@@ -6,7 +6,7 @@
   <div class="mb-4 flex items-center justify-between">
     <h1 class="text-2xl font-bold md:text-3xl">
       @if ($search && $recipes->total() > 0)
-        Found {{ $recipes->count() }} recipes for "{{ $search }}"
+        Found {{ $recipes->total() }} recipes for "{{ $search }}"
       @elseif ($search && $recipes->total() === 0)
         No recipes found
       @else
