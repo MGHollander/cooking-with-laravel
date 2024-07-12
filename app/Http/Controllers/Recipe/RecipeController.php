@@ -24,13 +24,13 @@ class RecipeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Inertia\Response
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(): \Illuminate\View\View
     {
-        return Inertia::render('Recipes/Index', [
+        return view('kocina.recipes.index', [
             'recipes' => Recipe::query()
-                ->paginate(17)
+                ->paginate(12)
                 ->through(fn($recipe) => [
                     'id'    => $recipe->id,
                     'title' => $recipe->title,
@@ -75,9 +75,9 @@ class RecipeController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $slug
-     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response|\Inertia\Response
+     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response|\Illuminate\View\View
      */
-    public function show(Request $request, string $slug)
+    public function show(Request $request, string $slug): \Illuminate\Http\JsonResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
     {
         $recipe = Recipe::findBySlug($slug);
 
@@ -87,8 +87,8 @@ class RecipeController extends Controller
 
         $this->setJsonLdData($recipe);
 
-        return Inertia::render('Recipes/Show', [
-            'recipe' => [
+        return view('kocina.recipes.show', [
+            'recipe'     => [
                 'id'                  => $recipe->id,
                 'title'               => $recipe->title,
                 'slug'                => $recipe->slug,
@@ -99,13 +99,20 @@ class RecipeController extends Controller
                 'preparation_minutes' => $recipe->preparation_minutes,
                 'cooking_minutes'     => $recipe->cooking_minutes,
                 'difficulty'          => Str::ucfirst(__('recipes.' . $recipe->difficulty)),
-                'ingredients'         => new IngredientsResource($recipe->ingredients),
+                // TODO I think this is not the way to go, but for the experiment it's fine.
+                'ingredients'         => (new IngredientsResource(""))->transformIngredients($recipe->ingredients),
                 'instructions'        => $recipe->instructions,
                 'source_label'        => $recipe->source_label,
                 'source_link'         => $recipe->source_link,
                 'created_at'          => $recipe->created_at,
+                'structured_data'     => [
+                    'description'  => strip_tags($recipe->summary),
+                    'ingredients'  => new StructuredDataIngredientsResource($recipe->ingredients),
+                    'instructions' => new InstructionsResource($recipe->instructions),
+                    'keywords'     => implode(',', $recipe->tags->pluck('name')->toArray()),
+                ],
             ],
-        ])->withViewData([
+            // TODO Replace for SEO Tools
             'open_graph' => [
                 'title' => $recipe->title,
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
@@ -193,6 +200,7 @@ class RecipeController extends Controller
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
             ]);
 
+        // TODO !!
         return Inertia::render('Recipes/NotFound', [
             'q'       => implode(', ', explode(' ', $q)),
             'recipes' => $recipes,

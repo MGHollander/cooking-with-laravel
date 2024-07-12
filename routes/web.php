@@ -34,8 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/recepten/importeren', [ImportController::class, 'store'])->name('import.store');
 });
 
-Route::get('/recepten/{slug}', [RecipeController::class, 'show'])
-    ->name('recipes.show');
+Route::get('/recepten/{slug}', [RecipeController::class, 'show'])->name('recipes.show');
 Route::redirect('/recepten', '/');
 
 Route::get('/zoeken', [SearchController::class, 'index'])->name('search');
