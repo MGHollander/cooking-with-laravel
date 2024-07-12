@@ -1,0 +1,41 @@
+.container {
+    box-sizing: content-box;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+    .container {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+@media (min-width: 960px) {
+    .container {
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+    }
+}
+
+.container::before,
+.container::after {
+    content: "";
+    display: table;
+}
+
+.container::after {
+    clear: both;
+}
+
+.container > :last-child {
+    margin-bottom: 0;
+}
+
+.container .container {
+    padding-left: 0;
+    padding-right: 0;
+}
