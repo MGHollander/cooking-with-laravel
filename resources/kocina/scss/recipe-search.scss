@@ -1,0 +1,49 @@
+.recipe-search {
+  margin: 2rem 0;
+}
+
+.recipe-search-form {
+  display: flex;
+}
+
+.recipe-search-field {
+  border: none;
+  border-radius: 6px 0 0 6px;
+  background-color: #f9f5f4;
+  padding: 0.75rem 0 0.75rem 1rem;
+  width: 100%;
+  color: #4a4a4a;
+  font-size: 0.9rem;
+  font-family: inherit;
+
+  &:focus {
+    position: relative;
+  }
+
+  &::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+.recipe-search-clear-button,
+.recipe-search-submit-button {
+  background-color: #f9f5f4;
+}
+
+.recipe-search-clear-button,
+.recipe-search-filter-button,
+.recipe-search-submit-button {
+  border: none;
+  padding: 0.75rem;
+}
+
+.recipe-search-submit-button {
+  border-radius: 0 6px 6px 0;
+}
+
+.recipe-search-filter-button {
+  border: none;
+  border-radius: 6px;
+  background-color: transparent;
+}

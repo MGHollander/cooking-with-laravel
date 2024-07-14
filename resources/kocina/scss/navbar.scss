@@ -1,49 +1,47 @@
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-    color: #4a4a4a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  color: #4a4a4a;
 }
 
 .navbar > * {
-    flex: 1 0 auto;
+  flex: 1 0 auto;
 }
 
 .navbar-left {
-    // Make sure the
-    inline-size: calc(100% - 5rem);
-    overflow-wrap: break-word;
+  // Make sure the
+  inline-size: calc(100% - 5rem);
+  overflow-wrap: break-word;
 }
 
 .navbar-right {
-    margin-left: 0.5rem;
-    display: flex;
-    justify-content: end;
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 0.5rem;
 }
 
 .navbar-right * + * {
-    margin-left: 0.5rem;
+  margin-left: 0.5rem;
 }
 
 .navbar-title {
-    color: #eb4a36;
-    font-size: 1.5625rem;
-    font-family: "Leckerli One", cursive;
-    font-weight: 400;
-    text-decoration: none;
+  color: #eb4a36;
+  font-weight: 400;
+  font-size: 1.5625rem;
+  font-family: "Leckerli One", cursive;
+  text-decoration: none;
 }
 
 .navbar-search-button {
-    width: 2rem;
-    height: 2rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 .navbar-search-button,
 .navbar-nav-button {
-    border: none;
-    background-color: transparent;
+  border: none;
+  background-color: transparent;
 }
-
-

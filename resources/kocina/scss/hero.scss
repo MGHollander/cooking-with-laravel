@@ -1,41 +1,41 @@
 .hero {
-    position: relative;
-    border-radius: 1.5rem;
-    overflow: hidden;
-    padding: 2rem;
-    background-size: cover;
-    background-position: center;
+  position: relative;
+  border-radius: 1.5rem;
+  background-position: center;
+  background-size: cover;
+  padding: 2rem;
+  overflow: hidden;
 }
 
 .hero-overlay {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0) 100%);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0) 100%);
 }
 
 // TODO Choose one image.
 .hero-family {
-    background-image: url("../img/family-diner.jpg");
+  background-image: url("../img/family-diner.jpg");
 }
 
 .hero-wine {
-    background-image: url("../img/serving-wine.jpg");
+  background-image: url("../img/serving-wine.jpg");
 }
 
 .hero-plates {
-    background-image: url("../img/serving-plates.jpg");
+  background-image: url("../img/serving-plates.jpg");
 }
 
 .hero-title {
-    position: relative;
-    font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .hero-title,
 .hero-text {
-    color: #fff;
-    text-shadow: 1px 1px 2px #3d3d3d;
+  position: relative;
+  color: #fff;
+  text-shadow: 1px 1px 2px #3d3d3d;
 }

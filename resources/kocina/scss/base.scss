@@ -1,92 +1,108 @@
 :root {
-    // TODO Can you use CSS vars in @media?
-    --kocina-breakpoint-s: 640px;
-    --kocina-breakpoint-m: 960px;
-    --kocina-breakpoint-l: 1200px;
-    --kocina-breakpoint-xl: 1600px;
+  // TODO Can you use CSS vars in @media?
+  --kocina-breakpoint-s: 640px;
+  --kocina-breakpoint-m: 960px;
+  --kocina-breakpoint-l: 1200px;
+  --kocina-breakpoint-xl: 1600px;
+}
+
+@custom-media --kocina-media-breakpoint-s (min-width: 640px);
+@custom-media --kocina-media-breakpoint-m (min-width: 960px);
+@custom-media --kocina-media-breakpoint-l (min-width: 1200px);
+@custom-media --kocina-media-breakpoint-xl (min-width: 1600px);
+
+* {
+  transition: outline-offset 0.25s ease-in-out;
+  outline-offset: 0px;
+}
+
+*:focus {
+  outline-color: #eb4a36;
+  outline-offset: 4px;
 }
 
 html {
-    font-family: "Montserrat", sans-serif;
-    font-size: 100%;
-    font-weight: 400;
-    line-height: 1.5;
-    background: #fff;
-    color: #4a4a4a;
+  background: #fff;
+  color: #4a4a4a;
+  font-weight: 400;
+  font-size: 100%;
+  line-height: 1.5;
+  font-family: "Montserrat", sans-serif;
 }
 
 body {
-    margin: 0;
+  margin: 0;
 }
 
 a {
-    color: #eb4a36;
-    text-decoration: none;
-    cursor: pointer;
+  cursor: pointer;
+  color: #eb4a36;
+  text-decoration: none;
 }
 
 a:hover {
-    color: #000;
-    text-decoration: none;
+  color: #000;
+  text-decoration: none;
 }
 
 abbr[title] {
-    text-decoration: underline dotted;
-    -webkit-text-decoration-style: dotted;
+  text-decoration: underline dotted;
+  -webkit-text-decoration-style: dotted;
 }
 
-b, strong {
-    font-weight: 600;
+b,
+strong {
+  font-weight: 600;
 }
 
 :not(pre) > code,
 :not(pre) > kbd,
 :not(pre) > samp {
-    font-family: Consolas, monaco, monospace;
-    font-size: 0.875rem;
-    color: #ED4B35;
-    white-space: nowrap;
-    padding: 2px 6px;
-    background: #f9f5f4;
+  background: #f9f5f4;
+  padding: 2px 6px;
+  color: #ed4b35;
+  font-size: 0.875rem;
+  font-family: Consolas, monaco, monospace;
+  white-space: nowrap;
 }
 
 em {
-    color: #ED4B35;
+  color: #ed4b35;
 }
 
 ins {
-    background: #ffd;
-    color: #4a4a4a;
-    text-decoration: none;
+  background: #ffd;
+  color: #4a4a4a;
+  text-decoration: none;
 }
 
 mark {
-    background: #ffd;
-    color: #4a4a4a;
+  background: #ffd;
+  color: #4a4a4a;
 }
 
 q {
-    font-style: italic;
+  font-style: italic;
 }
 
 small {
-    font-size: 80%;
+  font-size: 80%;
 }
 
 sub,
 sup {
-    font-size: 75%;
-    line-height: 0;
-    position: relative;
-    vertical-align: baseline;
+  position: relative;
+  vertical-align: baseline;
+  font-size: 75%;
+  line-height: 0;
 }
 
 sup {
-    top: -0.5em;
+  top: -0.5em;
 }
 
 sub {
-    bottom: -0.25em;
+  bottom: -0.25em;
 }
 
 audio,
@@ -95,36 +111,36 @@ iframe,
 img,
 svg,
 video {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 canvas,
 img,
 video {
-    max-width: 100%;
-    height: auto;
-    box-sizing: border-box;
+  box-sizing: border-box;
+  max-width: 100%;
+  height: auto;
 }
 
 @supports (display: block) {
-    svg {
-        max-width: 100%;
-        height: auto;
-        box-sizing: border-box;
-    }
+  svg {
+    box-sizing: border-box;
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 svg:not(:root) {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 img:not([src]) {
-    min-width: 1px;
-    visibility: hidden;
+  visibility: hidden;
+  min-width: 1px;
 }
 
 iframe {
-    border: 0;
+  border: 0;
 }
 
 p,
@@ -135,7 +151,7 @@ pre,
 address,
 fieldset,
 figure {
-    margin: 0 0 20px 0;
+  margin: 0 0 20px 0;
 }
 
 * + p,
@@ -146,7 +162,7 @@ figure {
 * + address,
 * + fieldset,
 * + figure {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 h1,
@@ -155,13 +171,12 @@ h3,
 h4,
 h5,
 h6 {
-    margin: 0 0 20px 0;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 600;
-    color: #000;
-    text-transform: none;
+  margin: 0 0 20px 0;
+  color: #000;
+  font-weight: 600;
+  font-family: "Montserrat", sans-serif;
+  text-transform: none;
 }
-
 
 * + h1,
 * + h2,
@@ -169,143 +184,146 @@ h6 {
 * + h4,
 * + h5,
 * + h6 {
-    margin-top: 30px;
+  margin-top: 30px;
 }
 
 h1 {
-    font-size: 2.23125rem;
-    line-height: 1.2;
+  font-size: 2.23125rem;
+  line-height: 1.2;
 }
 
 h2 {
-    font-size: 1.4875rem;
-    line-height: 1.4;
+  font-size: 1.4875rem;
+  line-height: 1.4;
 }
 
 h3 {
-    font-size: 1.375rem;
-    line-height: 1.4;
+  font-size: 1.375rem;
+  line-height: 1.4;
 }
 
 h4 {
-    font-size: 1.125rem;
-    line-height: 1.4;
+  font-size: 1.125rem;
+  line-height: 1.4;
 }
 
 h5 {
-    font-size: 16px;
-    line-height: 1.4;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 h6 {
-    font-size: 0.875rem;
-    line-height: 1.4;
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
 @media (min-width: 640px) {
-    h1 {
-        font-size: 2.625rem;
-    }
+  h1 {
+    font-size: 2.625rem;
+  }
 
-    h2 {
-        font-size: 1.75rem;
-    }
+  h2 {
+    font-size: 1.75rem;
+  }
 }
 
 ul,
 ol {
-    padding-left: 30px;
+  padding-left: 30px;
 }
 
 ul > li > ul,
 ul > li > ol,
 ol > li > ol,
 ol > li > ul {
-    margin: 0;
+  margin: 0;
 }
 
 dt {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 dd {
-    margin-left: 0;
+  margin-left: 0;
 }
 
 hr {
-    overflow: visible;
-    text-align: inherit;
-    margin: 0 0 20px 0;
-    border: 0;
-    border-top: 1px solid #eaecf0;
+  margin: 0 0 20px 0;
+  border: 0;
+  border-top: 1px solid #eaecf0;
+  overflow: visible;
+  text-align: inherit;
 }
 
 * + hr {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 address {
-    font-style: normal;
+  font-style: normal;
 }
 
 blockquote {
-    margin: 0 0 20px 0;
-    font-size: 1.125rem;
-    line-height: 1.5;
-    font-style: italic;
-    color: #333;
+  margin: 0 0 20px 0;
+  color: #333;
+  font-style: italic;
+  font-size: 1.125rem;
+  line-height: 1.5;
 }
 
 * + blockquote {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 blockquote p:last-of-type {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 blockquote footer {
-    margin-top: 10px;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: #4a4a4a;
+  margin-top: 10px;
+  color: #4a4a4a;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 blockquote footer::before {
-    content: "— ";
+  content: "— ";
 }
 
 pre {
-    font: 0.875rem / 1.5 Consolas, monaco, monospace;
-    color: #4a4a4a;
-    -moz-tab-size: 4;
-    tab-size: 4;
-    overflow: auto;
-    padding: 10px;
-    border: 1px solid #eaecf0;
-    border-radius: 3px;
-    background: #fff;
+  border: 1px solid #eaecf0;
+  border-radius: 3px;
+  background: #fff;
+  padding: 10px;
+  overflow: auto;
+  color: #4a4a4a;
+  font:
+    0.875rem / 1.5 Consolas,
+    monaco,
+    monospace;
+  -moz-tab-size: 4;
+  tab-size: 4;
 }
 
 pre code {
-    font-family: Consolas, monaco, monospace;
+  font-family: Consolas, monaco, monospace;
 }
 
 ::selection {
-    background: #39f;
-    color: #fff;
-    text-shadow: none;
+  background: #39f;
+  color: #fff;
+  text-shadow: none;
 }
 
 details,
 main {
-    display: block;
+  display: block;
 }
 
 summary {
-    display: list-item;
+  display: list-item;
 }
 
 template {
-    display: none;
+  display: none;
 }

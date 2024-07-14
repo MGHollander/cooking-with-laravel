@@ -1,5 +1,6 @@
 import axios from "axios";
 import _ from "lodash";
+import Alpine from "alpinejs";
 
 window._ = _;
 
@@ -33,3 +34,11 @@ window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 //     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
 //     enabledTransports: ['ws', 'wss'],
 // });
+
+/**
+ * Alpine is a rugged, minimal tool for composing behavior directly in your markup. Think of it like
+ * jQuery for the modern web. Plop in a script tag and get going.
+ */
+
+window.Alpine = Alpine;
+Alpine.start();
