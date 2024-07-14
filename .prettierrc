@@ -1,4 +1,7 @@
 {
-  "tabWidth": 2,
-  "printWidth": 120
+    "tabWidth": 2,
+    "printWidth": 120,
+    "plugins": [
+        "prettier-plugin-css-order"
+    ]
 }
