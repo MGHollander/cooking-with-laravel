@@ -1,4 +1,5 @@
 {
+    "name": "@mghollander/cooking-with-laravel",
     "private": true,
     "scripts": {
         "dev": "vite",
