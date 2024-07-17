@@ -60,13 +60,13 @@ class Recipe extends Model implements HasMedia
     {
         $this
             ->addMediaConversion('show')
-            ->crop('crop-center', 1024, 768)
+            ->crop('crop-center', 600, 600)
             ->performOnCollections('recipe_image')
             ->nonQueued();
 
         $this
             ->addMediaConversion('card')
-            ->crop('crop-center', 1024, 576)
+            ->crop('crop-center', 300, 160)
             ->performOnCollections('recipe_image')
             ->nonQueued();
     }

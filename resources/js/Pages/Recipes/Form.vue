@@ -27,7 +27,7 @@ const form = useForm({
   media: null,
   media_dimensions: null,
   destroy_media: false,
-  summary: edit ? props.recipe.summary ?? "" : "",
+  summary: edit ? (props.recipe.summary ?? "") : "",
   tags: edit ? props.recipe.tags : "",
   preparation_minutes: edit ? props.recipe.preparation_minutes?.toString() : "",
   cooking_minutes: edit ? props.recipe.cooking_minutes?.toString() : "",
@@ -180,9 +180,9 @@ onMounted(() => {
                   class="vue-advanced-cropper !max-h-[16rem] max-w-full"
                   :src="image.src"
                   :stencil-props="{
-                    aspectRatio: 16 / 9,
+                    aspectRatio: 75 / 40,
                   }"
-                  :min-width="390"
+                  :min-width="300"
                   background-class="cropper-bg"
                 />
               </div>
@@ -193,9 +193,9 @@ onMounted(() => {
                   class="vue-advanced-cropper !max-h-[16rem] max-w-full"
                   :src="image.src"
                   :stencil-props="{
-                    aspectRatio: 4 / 3,
+                    aspectRatio: 1,
                   }"
-                  :min-width="575"
+                  :min-width="600"
                   background-class="cropper-bg"
                 />
               </div>
@@ -352,7 +352,7 @@ onMounted(() => {
 
 <style>
 .cropper-bg {
-  background-color: transparent;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC);
+  background-color: transparent;
 }
 </style>
