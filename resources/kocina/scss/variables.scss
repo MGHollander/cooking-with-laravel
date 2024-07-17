@@ -1,7 +1,26 @@
 :root {
+  // TODO Can you use CSS vars in @media?
+  --kocina-breakpoint-s: 640px;
+  --kocina-breakpoint-m: 960px;
+  --kocina-breakpoint-l: 1200px;
+  --kocina-breakpoint-xl: 1600px;
+
   --color-white: #fff;
   --color-primary: #eb4a36;
 
   --transition-duration-default: 0.15s;
   --transition-timing-function-default: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+// @see https://www.npmjs.com/package/postcss-custom-media
+@custom-media --kocina-media-breakpoint-s-max (max-width: 639px);
+@custom-media --kocina-media-breakpoint-s-min (min-width: 640px);
+
+@custom-media --kocina-media-breakpoint-m-max (min-width: 959px);
+@custom-media --kocina-media-breakpoint-m-min (min-width: 960px);
+
+@custom-media --kocina-media-breakpoint-l-max (min-width: 1199px);
+@custom-media --kocina-media-breakpoint-l-min (min-width: 1200px);
+
+@custom-media --kocina-media-breakpoint-xl-max (min-width: 1599px);
+@custom-media --kocina-media-breakpoint-xl-min (min-width: 1600px);

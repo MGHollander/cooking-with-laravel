@@ -1,16 +1,3 @@
-:root {
-  // TODO Can you use CSS vars in @media?
-  --kocina-breakpoint-s: 640px;
-  --kocina-breakpoint-m: 960px;
-  --kocina-breakpoint-l: 1200px;
-  --kocina-breakpoint-xl: 1600px;
-}
-
-@custom-media --kocina-media-breakpoint-s (min-width: 640px);
-@custom-media --kocina-media-breakpoint-m (min-width: 960px);
-@custom-media --kocina-media-breakpoint-l (min-width: 1200px);
-@custom-media --kocina-media-breakpoint-xl (min-width: 1600px);
-
 * {
   transition: outline-offset 0.25s ease-in-out;
   outline-offset: 0;
@@ -217,7 +204,7 @@ h6 {
   line-height: 1.4;
 }
 
-@media (min-width: 640px) {
+@media (--kocina-breakpoint-s-min) {
   h1 {
     font-size: 2.625rem;
   }

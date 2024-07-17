@@ -8,14 +8,14 @@
   max-width: var(--kocina-breakpoint-l);
 }
 
-@media (min-width: 640px) {
+@media (--kocina-media-breakpoint-s-min) {
   .container {
     padding-right: 2rem;
     padding-left: 2rem;
   }
 }
 
-@media (min-width: 960px) {
+@media (--kocina-media-breakpoint-m-min) {
   .container {
     padding-right: 2.5rem;
     padding-left: 2.5rem;
