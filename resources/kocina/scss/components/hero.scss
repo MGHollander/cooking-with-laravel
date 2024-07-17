@@ -39,3 +39,16 @@
   color: var(--color-white);
   text-shadow: 1px 1px 2px #3d3d3d;
 }
+
+@media (--kocina-media-breakpoint-s-max) {
+  .hero-text {
+    display: none;
+  }
+}
+
+@media (--kocina-media-breakpoint-m-min) {
+  .hero-title,
+  .hero-text {
+    width: 60%;
+  }
+}
