@@ -10,12 +10,12 @@
   font-size: 0.9rem;
 
   &-primary {
-    background-color: #eb4a36;
-    color: #fff;
+    background-color: var(--color-primary);
+    color: var(--color-white);
 
     &:hover {
       background-color: #e9351f;
-      color: #fff;
+      color: var(--color-white);
     }
   }
 }

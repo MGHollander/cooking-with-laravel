@@ -16,14 +16,15 @@
   font-size: 0.9rem;
   font-family: inherit;
 
-  &:focus {
-    position: relative;
-  }
-
   &::-webkit-search-cancel-button {
     -webkit-appearance: none;
     appearance: none;
   }
+}
+
+.recipe-search-field:focus,
+.recipe-search-clear-button:focus {
+  position: relative;
 }
 
 .recipe-search-clear-button,

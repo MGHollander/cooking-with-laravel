@@ -17,12 +17,12 @@
 }
 
 *:focus {
-  outline-color: #eb4a36;
+  outline-color: var(--color-primary);
   outline-offset: 4px;
 }
 
 html {
-  background: #fff;
+  background: var(--color-white);
   color: #4a4a4a;
   font-weight: 400;
   font-size: 100%;
@@ -36,7 +36,7 @@ body {
 
 a {
   cursor: pointer;
-  color: #eb4a36;
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -293,7 +293,7 @@ blockquote footer::before {
 pre {
   border: 1px solid #eaecf0;
   border-radius: 3px;
-  background: #fff;
+  background: var(--color-white);
   padding: 10px;
   overflow: auto;
   color: #4a4a4a;
@@ -310,8 +310,8 @@ pre code {
 }
 
 ::selection {
-  background: #39f;
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-white);
   text-shadow: none;
 }
 

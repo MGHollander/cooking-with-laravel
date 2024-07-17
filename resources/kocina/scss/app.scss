@@ -1,9 +1,11 @@
 @import "base";
+@import "variables";
 @import "helpers";
 
-@import "button";
-@import "container";
-@import "hero";
-@import "navbar";
-@import "recipes";
-@import "recipe-search";
+@import "components/button";
+@import "components/container";
+@import "components/hero";
+@import "components/navbar";
+@import "components/recipes";
+@import "components/recipe-card";
+@import "components/recipe-search";
