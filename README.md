@@ -54,3 +54,5 @@ Run `vendor/bin/dep deploy` to deploy changes.
 - The seeded recipes are made possible by <https://spoonacular.com/food-api>
 - The recipe import feature idea is inspired by <https://fly.io/laravel-bytes/parsing-recipes-with-robot-help/>
 - The recipe import feature is made possible by <https://www.openai.com/>
+- The recipe image placeholder icon is made possible by <https://www.iconbolt.com/iconsets/voyage-icons/meal>
+- Icons on the recipe detail page and the logo are made possible by <https://www.drupal.org/project/umami>
