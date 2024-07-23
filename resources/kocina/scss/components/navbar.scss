@@ -6,6 +6,7 @@ body {
   display: flex;
   position: absolute;
   top: 0;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   z-index: 100;
@@ -40,6 +41,7 @@ body {
 }
 
 .navbar-title {
+  transition: color var(--transition-duration-250) var(--transition-timing-function-default);
   color: var(--color-primary);
   font-weight: 400;
   font-size: 1.5625rem;
@@ -54,8 +56,14 @@ body {
 
 .navbar-search-button,
 .navbar-nav-button {
+  transition: transform var(--transition-duration-250) var(--transition-timing-function-default);
+  cursor: pointer;
   border: none;
   background-color: transparent;
+
+  &:hover {
+    transform: scale(1.2);
+  }
 }
 
 :root {
@@ -68,15 +76,14 @@ body {
 .navbar-nav-button {
   position: relative;
   z-index: 110;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
 
   .bar {
     position: absolute;
     left: 6px;
     border-radius: 2px;
-    background-color: var(--color-black);
+    background-color: currentColor;
     width: 20px;
     height: 2px;
   }
@@ -137,6 +144,28 @@ body {
       background-color var(--transition-duration-250) var(--transition-timing-enter),
       top var(--transition-duration-250),
       transform var(--transition-duration-250) var(--transition-duration-250);
+  }
+}
+
+.navbar-search-bar .search-bar {
+  margin: 0.5rem 0 0;
+}
+
+.navbar-search-bar-close-button {
+  border: none;
+  background-color: transparent;
+  padding: 0 0.75rem;
+
+  svg {
+    transition: transform var(--transition-duration-250) var(--transition-timing-function-default);
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    svg {
+      transform: scale(1.4);
+    }
   }
 }
 

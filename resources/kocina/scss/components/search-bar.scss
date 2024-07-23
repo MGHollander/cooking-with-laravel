@@ -1,12 +1,12 @@
-.recipe-search {
+.search-bar {
   margin: 2rem 0;
 }
 
-.recipe-search-form {
+.search-bar-form {
   display: flex;
 }
 
-.recipe-search-field {
+.search-bar-field {
   border: none;
   border-radius: 6px 0 0 6px;
   background-color: #f9f5f4;
@@ -22,28 +22,40 @@
   }
 }
 
-.recipe-search-field:focus,
-.recipe-search-clear-button:focus {
+.search-bar-field:focus,
+.search-bar-clear-button:focus {
   position: relative;
 }
 
-.recipe-search-clear-button,
-.recipe-search-submit-button {
+.search-bar-clear-button,
+.search-bar-submit-button {
   background-color: #f9f5f4;
+
+  svg {
+    transition: transform var(--transition-duration-250) var(--transition-timing-function-default);
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    svg {
+      transform: scale(1.4);
+    }
+  }
 }
 
-.recipe-search-clear-button,
-.recipe-search-filter-button,
-.recipe-search-submit-button {
+.search-bar-clear-button,
+.search-bar-filter-button,
+.search-bar-submit-button {
   border: none;
   padding: 0.75rem;
 }
 
-.recipe-search-submit-button {
+.search-bar-submit-button {
   border-radius: 0 6px 6px 0;
 }
 
-.recipe-search-filter-button {
+.search-bar-filter-button {
   border: none;
   border-radius: 6px;
   background-color: transparent;

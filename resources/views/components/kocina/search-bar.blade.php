@@ -1,18 +1,25 @@
-<div class="recipe-search" x-data="{ search: '' }">
-    <form action="{{ route('search') }}" class="recipe-search-form">
+<div {{ $attributes->merge(['class' => 'search-bar']) }} x-data="{ search: '' }">
+    <form action="{{ route('search') }}" class="search-bar-form">
+        {{--
+          TODO Very low prio. See if I can fix the bug with the clear button.
+            When you search from the bar and navigate back from the search page,
+            then the clear button is not visible. Probably because Alpine.js does not know that
+            the search field is filled. Maybe something to check on load or on init?
+        --}}
         <input
             type="search"
             name="q"
             x-model="search"
             placeholder="Zoek een recept, ingredient, thema of keuken"
-            class="recipe-search-field"
+            class="search-bar-field"
         />
 
         <button
             type="button"
-            class="recipe-search-clear-button"
+            class="search-bar-clear-button"
             @click="search = ''"
             x-show="search.length > 0"
+            x-transition
         >
             <span class="sr-only">Leeg het zoekveld</span>
             <svg
@@ -29,7 +36,7 @@
             </svg>
         </button>
 
-        <button type="submit" class="recipe-search-submit-button">
+        <button type="submit" class="search-bar-submit-button">
             <span class="sr-only">Zoeken</span>
             <svg width="16" height="16" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle>
@@ -39,7 +46,7 @@
 
         {{--
         TODO Uncomment when filters are added.
-        <button type="button" class="recipe-search-filter-button">
+        <button type="button" class="search-bar-filter-button">
             <span class="sr-only">Open filters</span>
             <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -48,5 +55,7 @@
             </svg>
         </button>
         --}}
+
+        {{ $slot }}
     </form>
 </div>

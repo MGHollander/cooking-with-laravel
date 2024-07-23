@@ -11,7 +11,7 @@
                 </p>
             </div>
 
-            <x-kocina.recipe-search/>
+            <x-kocina.search-bar/>
 
             <div class="recipes">
                 @foreach ($recipes->items() as $recipe)

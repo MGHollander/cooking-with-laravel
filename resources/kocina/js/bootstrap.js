@@ -1,6 +1,7 @@
 import axios from "axios";
 import _ from "lodash";
 import Alpine from "alpinejs";
+import collapse from "@alpinejs/collapse";
 import focus from "@alpinejs/focus";
 
 window._ = _;
@@ -41,6 +42,7 @@ window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
  * jQuery for the modern web. Plop in a script tag and get going.
  */
 
+Alpine.plugin(collapse);
 Alpine.plugin(focus);
 
 window.Alpine = Alpine;

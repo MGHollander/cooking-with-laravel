@@ -1,8 +1,21 @@
 document.addEventListener("alpine:init", () => {
   Alpine.data("navbar", () => ({
     open: false,
+    openSearch: false,
 
-    toggle() {
+    toggleSearch(e) {
+      const search = document.getElementsByName("q");
+
+      // If there are more then 1 search field on the page, then focus on the second.
+      // We can assume that the first search field is the one in the navbar.
+      if (search.length > 1) {
+        search[1].focus();
+      } else {
+        this.openSearch = !this.openSearch;
+      }
+    },
+
+    toggleNav() {
       this.open = !this.open;
     },
 
