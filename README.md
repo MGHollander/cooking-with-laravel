@@ -56,3 +56,4 @@ Run `vendor/bin/dep deploy` to deploy changes.
 - The recipe import feature is made possible by <https://www.openai.com/>
 - The recipe image placeholder icon is made possible by <https://www.iconbolt.com/iconsets/voyage-icons/meal>
 - Icons on the recipe detail page and the logo are made possible by <https://www.drupal.org/project/umami>
+- Favicons are made possible by <https://realfavicongenerator.net/>
