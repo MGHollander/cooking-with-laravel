@@ -1,14 +1,26 @@
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 0.75rem;
-  padding-bottom: 1.5rem;
-  color: #4a4a4a;
+body {
+  margin-top: 75px;
 }
 
-.navbar > * {
-  flex: 1 0 auto;
+.navbar {
+  display: flex;
+  position: absolute;
+  top: 0;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  transition-duration: 0.5s;
+  transition-property: transform, box-shadow;
+  transition-timing-function: ease-out;
+  background-color: var(--color-white);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  width: 100%;
+  color: #4a4a4a;
+
+  > * {
+    flex: 1 0 auto;
+  }
 }
 
 .navbar-left {
@@ -21,10 +33,10 @@
   display: flex;
   justify-content: flex-end;
   margin-left: 0.5rem;
-}
 
-.navbar-right * + * {
-  margin-left: 0.5rem;
+  > * + * {
+    margin-left: 0.5rem;
+  }
 }
 
 .navbar-title {
@@ -44,4 +56,192 @@
 .navbar-nav-button {
   border: none;
   background-color: transparent;
+}
+
+:root {
+  --transition-duration-250: 0.25s;
+  --transition-duration-300: 0.3s;
+  --transition-timing-enter: ease-in;
+  --transition-timing-leave: ease-out;
+}
+
+.navbar-nav-button {
+  position: relative;
+  z-index: 110;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+
+  .bar {
+    position: absolute;
+    left: 6px;
+    border-radius: 2px;
+    background-color: var(--color-black);
+    width: 20px;
+    height: 2px;
+  }
+
+  *:first-child {
+    top: 10px;
+    transition:
+      background-color var(--transition-duration-250) var(--transition-timing-leave) var(--transition-duration-250),
+      top var(--transition-duration-250) var(--transition-duration-300),
+      transform var(--transition-duration-250);
+  }
+
+  *:nth-child(2) {
+    top: 16px;
+    transition: background-color var(--transition-duration-250) var(--transition-timing-leave)
+      var(--transition-duration-250);
+  }
+
+  *:nth-child(3) {
+    top: 22px;
+    transition:
+      background-color var(--transition-duration-250) var(--transition-timing-leave) var(--transition-duration-250),
+      top var(--transition-duration-250) var(--transition-duration-300),
+      transform var(--transition-duration-250);
+  }
+}
+
+.navbar-nav-button-active {
+  .bar {
+    background-color: var(--color-gray);
+  }
+
+  &:hover .bar {
+    background-color: var(--color-white);
+  }
+
+  .bar:first-child {
+    top: 16px;
+    transform: rotate(135deg);
+    transition:
+      background-color var(--transition-duration-250) var(--transition-timing-enter) var(--transition-duration-300),
+      top var(--transition-duration-250),
+      transform var(--transition-duration-250) var(--transition-duration-250);
+  }
+
+  .bar:nth-child(2) {
+    transform: rotate(225deg);
+    transition:
+      background-color var(--transition-duration-250) var(--transition-timing-enter),
+      top var(--transition-duration-250),
+      transform var(--transition-duration-250) var(--transition-duration-250);
+  }
+
+  .bar:nth-child(3) {
+    top: 16px;
+    transform: rotate(315deg);
+    transition:
+      background-color var(--transition-duration-250) var(--transition-timing-enter),
+      top var(--transition-duration-250),
+      transform var(--transition-duration-250) var(--transition-duration-250);
+  }
+}
+
+.navbar-menu-offcanvas {
+  position: fixed;
+  top: 0;
+  right: -100px;
+  z-index: 100;
+  background-color: var(--color-black);
+  width: 375px;
+  height: 200vh;
+}
+
+.navbar-menu-offcanvas ul {
+  margin: 0;
+  padding: 4.5rem 0;
+  width: 275px;
+  list-style: none;
+  text-align: center;
+}
+
+.navbar-menu-offcanvas li + li {
+  margin-top: 0.75rem;
+}
+
+.navbar-menu-offcanvas a {
+  transition: color var(--transition-duration-300) var(--transition-timing-leave);
+  color: var(--color-gray);
+  font-size: 1.375rem;
+  line-height: 1.5;
+
+  &:hover {
+    transition: color var(--transition-duration-300) var(--transition-timing-enter);
+    color: var(--color-white);
+  }
+}
+
+.navbar-menu-offcanvas-transition {
+  &-enter {
+    transition: right 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  }
+
+  &-enter-start,
+  &-leave-end {
+    right: -375px;
+  }
+
+  &-leave {
+    transition: right 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  }
+
+  &-enter-end,
+  &-leave-start {
+    right: -100px;
+  }
+}
+
+.navbar-menu-offcanvas-overlay {
+  position: fixed;
+  z-index: 99;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 200vh;
+}
+
+.navbar-menu-offcanvas-overlay-transition {
+  &-enter {
+    transition: opacity var(--transition-duration-300) var(--transition-timing-leave);
+  }
+
+  &-enter-start,
+  &-leave-end {
+    opacity: 0;
+  }
+
+  &-leave {
+    transition: opacity var(--transition-duration-300) var(--transition-timing-enter);
+  }
+
+  &-enter-end,
+  &-leave-start {
+    opacity: 1;
+  }
+}
+
+/*
+ The menu icon is placed outside of the off canvas menu. The button animates to a close button when
+ the off canvas menu is opened. For a smooth optical animation the button is placed over the
+ off canvas menu.
+ This button is a added to be able to focus on the close button inside of the focus trap.
+ */
+.navbar-menu-offcanvas-button {
+  position: fixed;
+  top: 1.25rem;
+  right: 1rem;
+  border: none;
+  background-color: transparent;
+  width: 32px;
+  height: 32px;
+
+  @media (--kocina-media-breakpoint-s-min) {
+    right: 2rem;
+  }
+
+  @media (--kocina-media-breakpoint-m-min) {
+    right: 2.5rem;
+  }
 }

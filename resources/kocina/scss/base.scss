@@ -10,6 +10,7 @@
 
 html {
   background: var(--color-white);
+  scroll-behavior: smooth;
   color: #4a4a4a;
   font-weight: 400;
   font-size: 100%;
@@ -313,4 +314,9 @@ summary {
 
 template {
   display: none;
+}
+
+// @see https://alpinejs.dev/directives/cloak
+[x-cloak] {
+  display: none !important;
 }

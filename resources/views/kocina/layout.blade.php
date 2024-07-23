@@ -24,26 +24,7 @@
     {!! JsonLd::generate() !!}
 </head>
 <body>
-<div class="navbar container">
-    <div class="navbar-left">
-        <a href="{{ route('home') }}" class="navbar-title">{{ env('APP_NAME') }}</a>
-    </div>
-    <div class="navbar-right">
-        <button class="navbar-search-button">
-            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle>
-                <path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path>
-            </svg>
-        </button>
-        <button class="navbar-nav-button">
-            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <rect y="9" width="20" height="2"></rect>
-                <rect y="3" width="20" height="2"></rect>
-                <rect y="15" width="20" height="2"></rect>
-            </svg>
-        </button>
-    </div>
-</div>
+<x-kocina.navbar/>
 
 {{ $slot }}
 
