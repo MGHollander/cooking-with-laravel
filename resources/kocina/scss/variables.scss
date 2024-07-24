@@ -18,11 +18,11 @@
 @custom-media --kocina-media-breakpoint-s-max (max-width: 639px);
 @custom-media --kocina-media-breakpoint-s-min (min-width: 640px);
 
-@custom-media --kocina-media-breakpoint-m-max (min-width: 959px);
+@custom-media --kocina-media-breakpoint-m-max (max-width: 959px);
 @custom-media --kocina-media-breakpoint-m-min (min-width: 960px);
 
-@custom-media --kocina-media-breakpoint-l-max (min-width: 1199px);
+@custom-media --kocina-media-breakpoint-l-max (max-width: 1199px);
 @custom-media --kocina-media-breakpoint-l-min (min-width: 1200px);
 
-@custom-media --kocina-media-breakpoint-xl-max (min-width: 1599px);
+@custom-media --kocina-media-breakpoint-xl-max (max-width: 1599px);
 @custom-media --kocina-media-breakpoint-xl-min (min-width: 1600px);
