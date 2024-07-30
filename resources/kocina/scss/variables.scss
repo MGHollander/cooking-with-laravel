@@ -8,9 +8,10 @@
   --color-black: #000;
   --color-white: #fff;
   --color-gray: #787878;
+  --color-gray-dark: #4a4a4a;
   --color-primary: #eb4a36;
 
-  --text-color-default: #4a4a4a;
+  --text-color-default: var(--color-gray-dark);
 
   --transition-duration-250: 0.25s;
   --transition-duration-300: 0.3s;
