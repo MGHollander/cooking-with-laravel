@@ -37,14 +37,15 @@
 
                 @auth
                     <button class="navbar-user-button" @click="toggleUserMenu()">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                             xmlns="http://www.w3.org/2000/svg">
+                        <svg width="24" height="24" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <circle
+                                fill="none" stroke="currentColor" stroke-width="1.1"
+                                cx="10.072881" cy="7.0745769" r="3.5"
+                            />
                             <path
-                                d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                                stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
-                                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                                  stroke-linejoin="round"/>
+                                fill="none" stroke="currentColor" stroke-width="1.1"
+                                d="m 3.3728814,16.574577 c 0.7,-3.5 3.4,-6 6.6,-6 3.2999996,0 6.0999996,2.7 6.6999996,6.2"
+                            />
                         </svg>
                     </button>
 
