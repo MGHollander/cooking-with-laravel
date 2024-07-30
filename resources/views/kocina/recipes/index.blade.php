@@ -21,11 +21,12 @@
 
             @if ($recipes->hasPages())
                 <div class="mt-8">
+                    {{-- TODO Test pagination with a lot of pages. --}}
                     {{ $recipes->links() }}
                 </div>
             @endif
         @else
-            {{-- TODO Add a better page when there are no recipes. --}}
+            {{-- TODO Add a better page when there are no recipes. To do for when the website is going to have registration. --}}
             <p>Er zijn nog geen recepten toegevoegd.</p>
 
             @auth

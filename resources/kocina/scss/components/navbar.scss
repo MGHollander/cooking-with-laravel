@@ -279,6 +279,10 @@ body {
   height: 100vh;
   overflow: scroll;
   font-size: 1.375rem;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: none;
+  }
 }
 
 .navbar-menu-offcanvas ul {
@@ -300,6 +304,10 @@ body {
   &:hover {
     color: var(--color-white);
   }
+}
+
+.navbar-menu-offcanvas a.active {
+  color: var(--color-white);
 }
 
 .navbar-menu-offcanvas-user {
@@ -353,7 +361,11 @@ body {
   z-index: 99;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.2);
-  height: 200vh;
+  height: 100vh;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: none;
+  }
 }
 
 .navbar-menu-offcanvas-overlay-transition {
