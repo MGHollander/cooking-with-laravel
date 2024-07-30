@@ -10,7 +10,12 @@
   --color-gray: #787878;
   --color-primary: #eb4a36;
 
-  --transition-duration-250: 0.15s;
+  --text-color-default: #4a4a4a;
+
+  --transition-duration-250: 0.25s;
+  --transition-duration-300: 0.3s;
+  --transition-timing-enter: ease-in;
+  --transition-timing-leave: ease-out;
   --transition-timing-function-default: cubic-bezier(0.4, 0, 0.2, 1);
 }
 

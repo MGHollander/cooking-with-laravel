@@ -1,7 +1,8 @@
 document.addEventListener("alpine:init", () => {
   Alpine.data("navbar", () => ({
-    open: false,
+    openNav: false,
     openSearch: false,
+    openUserMenu: false,
 
     toggleSearch(e) {
       const search = document.getElementsByName("q");
@@ -17,7 +18,11 @@ document.addEventListener("alpine:init", () => {
     },
 
     toggleNav() {
-      this.open = !this.open;
+      this.openNav = !this.openNav;
+    },
+
+    toggleUserMenu() {
+      this.openUserMenu = !this.openUserMenu;
     },
 
     offcanvasTransition: {

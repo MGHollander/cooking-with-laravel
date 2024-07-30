@@ -1,7 +1,6 @@
 .recipe-card {
-  transition: transform var(--transition-duration-250) var(--transition-timing-function-default);
+  transition-property: color, outline-offset, transform;
 
-  &:focus,
   &:hover {
     transform: scale(1.05);
   }
@@ -14,6 +13,7 @@
     // Position and z-index are set to make sure the focussed element is showed about hovered items.
     position: relative;
     z-index: 1;
+    outline-offset: 6px;
   }
 }
 
@@ -30,7 +30,6 @@
     filter var(--transition-duration-250) var(--transition-timing-function-default),
     transform var(--transition-duration-250) var(--transition-timing-function-default);
 
-  .recipe-card-link:focus &,
   .recipe-card:hover & {
     transform: scale(1.1) rotate(2deg);
     filter: brightness(1);
@@ -40,7 +39,6 @@
 .recipe-card-image-placeholder {
   color: rgb(180, 180, 180);
 
-  .recipe-card-link:focus &,
   .recipe-card:hover & {
     filter: brightness(0.8);
   }

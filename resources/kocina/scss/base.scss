@@ -1,17 +1,21 @@
-* {
-  transition: outline-offset 0.25s ease-in-out;
+a,
+button,
+input {
+  transition-duration: var(--transition-duration-250);
+  transition-property: color, outline-offset;
+  transition-timing-function: var(--transition-timing-function-default);
   outline-offset: 0;
-}
 
-*:focus {
-  outline-color: var(--color-primary);
-  outline-offset: 4px;
+  &:focus {
+    outline-color: var(--color-primary);
+    outline-offset: 4px;
+  }
 }
 
 html {
   background: var(--color-white);
   scroll-behavior: smooth;
-  color: #4a4a4a;
+  color: var(--text-color-default);
   font-weight: 400;
   font-size: 100%;
   line-height: 1.5;

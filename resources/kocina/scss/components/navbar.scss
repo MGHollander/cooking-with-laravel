@@ -3,12 +3,8 @@ body {
 }
 
 .navbar {
-  display: flex;
   position: absolute;
   top: 0;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
   z-index: 100;
   transition-duration: 0.5s;
   transition-property: transform, box-shadow;
@@ -18,6 +14,23 @@ body {
   padding-bottom: 1rem;
   width: 100%;
   color: #4a4a4a;
+}
+
+.navbar .button {
+  transition-property: color, background-color, outline-offset, transform;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.navbar-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 
   > * {
     flex: 1 0 auto;
@@ -25,9 +38,8 @@ body {
 }
 
 .navbar-left {
-  // Make sure the
-  inline-size: calc(100% - 5rem);
-  overflow-wrap: break-word;
+  display: flex;
+  align-items: center;
 }
 
 .navbar-right {
@@ -41,12 +53,44 @@ body {
 }
 
 .navbar-title {
-  transition: color var(--transition-duration-250) var(--transition-timing-function-default);
   color: var(--color-primary);
   font-weight: 400;
   font-size: 1.5625rem;
   font-family: "Leckerli One", cursive;
   text-decoration: none;
+}
+
+.navbar-menu-list {
+  display: none;
+  font-size: 0.75rem;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: block;
+  }
+}
+
+.navbar-menu-list ul {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.navbar-menu-list li + li {
+  margin-left: 2rem;
+}
+
+.navbar-menu-list a {
+  color: var(--text-color-default);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  &.active {
+    color: var(--color-primary);
+  }
 }
 
 .navbar-search-button {
@@ -55,8 +99,9 @@ body {
 }
 
 .navbar-search-button,
-.navbar-nav-button {
-  transition: transform var(--transition-duration-250) var(--transition-timing-function-default);
+.navbar-nav-button,
+.navbar-user-button {
+  transition-property: color, outline-offset, transform;
   cursor: pointer;
   border: none;
   background-color: transparent;
@@ -66,18 +111,15 @@ body {
   }
 }
 
-:root {
-  --transition-duration-250: 0.25s;
-  --transition-duration-300: 0.3s;
-  --transition-timing-enter: ease-in;
-  --transition-timing-leave: ease-out;
-}
-
 .navbar-nav-button {
   position: relative;
   z-index: 110;
   width: 2rem;
   height: 2rem;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: none;
+  }
 
   .bar {
     position: absolute;
@@ -147,6 +189,62 @@ body {
   }
 }
 
+.navbar-user-button-group {
+  display: none;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: flex;
+    position: relative;
+  }
+}
+
+.navbar-user-menu {
+  position: absolute;
+  top: 2.5rem;
+  right: -1rem;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  background-color: var(--color-white);
+  padding: 1rem 1.25rem;
+  width: max-content;
+  font-size: 0.85rem;
+}
+
+.navbar-user-menu ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navbar-user-menu li + li {
+  margin-top: 0.5rem;
+}
+
+.navbar-user-menu a {
+  color: var(--text-color-default);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  &.active {
+    color: var(--color-primary);
+  }
+}
+
+.navbar-user-menu button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--text-color-defaults);
+  font-family: inherit;
+}
+
+.navbar-user-menu button:hover {
+  color: var(--color-primary);
+}
+
 .navbar-search-bar .search-bar {
   margin: 0.5rem 0 0;
 }
@@ -170,18 +268,22 @@ body {
 }
 
 .navbar-menu-offcanvas {
+  display: grid;
   position: fixed;
   top: 0;
   right: -100px;
+  align-content: space-between;
   z-index: 100;
   background-color: var(--color-black);
   width: 375px;
-  height: 200vh;
+  height: 100vh;
+  overflow: scroll;
+  font-size: 1.375rem;
 }
 
 .navbar-menu-offcanvas ul {
-  margin: 0;
-  padding: 4.5rem 0;
+  margin: 4.5rem 0 2rem;
+  padding: 0;
   width: 275px;
   list-style: none;
   text-align: center;
@@ -192,15 +294,38 @@ body {
 }
 
 .navbar-menu-offcanvas a {
-  transition: color var(--transition-duration-300) var(--transition-timing-leave);
   color: var(--color-gray);
-  font-size: 1.375rem;
   line-height: 1.5;
 
   &:hover {
-    transition: color var(--transition-duration-300) var(--transition-timing-enter);
     color: var(--color-white);
   }
+}
+
+.navbar-menu-offcanvas-user {
+  width: 275px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.navbar-menu-offcanvas-user ul {
+  margin: 2rem 0 4.5rem;
+}
+
+.navbar-menu-offcanvas-user button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--color-gray);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+.navbar-menu-offcanvas-user .button-primary {
+  padding: 0.5rem 1.25rem;
+  color: var(--color-white);
+  font-size: 1rem;
 }
 
 .navbar-menu-offcanvas-transition {
