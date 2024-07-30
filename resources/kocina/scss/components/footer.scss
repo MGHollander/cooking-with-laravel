@@ -1,0 +1,13 @@
+.footer {
+  margin: 1rem;
+  color: var(--color-gray);
+  font-size: 0.9rem;
+}
+
+.footer a {
+  color: var(--color-gray-dark);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}

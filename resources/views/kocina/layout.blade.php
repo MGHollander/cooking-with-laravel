@@ -27,6 +27,10 @@
 
 {{ $slot }}
 
+<div class="container footer">
+    Ontstaan uit de passie voor programmeren van <a href="https://mghollander.nl" target="_blank">Marc</a>.
+</div>
+
 @stack("scripts")
 </body>
 </html>
