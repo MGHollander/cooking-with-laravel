@@ -40,8 +40,10 @@ Route::redirect('/recepten', '/');
 Route::get('/over-mij', function () {
     return view('kocina.about-me');
 })->name('about-me');
+Route::get('/privacy', function () {
+    return view('kocina.privacy');
+})->name('privacy');
 Route::get('/zoeken', [SearchController::class, 'index'])->name('search');
-Route::get('/privacy', PrivacyController::class)->name('privacy');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/gebruikers/wachtwoord-wijzigen', [ChangePasswordController::class, 'edit'])->name('users.password.edit');

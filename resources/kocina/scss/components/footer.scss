@@ -1,13 +1,17 @@
 .footer {
-  margin: 1rem;
+  margin: 1rem auto;
   color: var(--color-gray);
   font-size: 0.9rem;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
-.footer a {
-  color: var(--color-gray-dark);
-
-  &:hover {
-    color: var(--color-primary);
+.footer-text {
+  margin-bottom: 1rem;
+  @media (--kocina-media-breakpoint-m-min) {
+    flex-grow: 1;
   }
 }

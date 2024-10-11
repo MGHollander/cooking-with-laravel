@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <title>{{ (! empty($title) ? $title . " - " : "") . config("app.name", "Laravel") }}</title>
+    <title>{{ (! empty($title) ? $title . " - " : "") . config("app.name") }}</title>
 
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Leckerli+One&display=swap" rel="stylesheet">
@@ -23,12 +23,17 @@
     {!! JsonLd::generate() !!}
 </head>
 <body>
+@include('piwik')
+
 <x-kocina.navbar/>
 
 {{ $slot }}
 
 <div class="container footer">
-    Ontstaan uit de passie voor programmeren van <a href="https://mghollander.nl" target="_blank">Marc</a>.
+    <div class="footer-text">
+        Ontstaan uit de passie voor programmeren van <a href="https://mghollander.nl" target="_blank">Marc</a>.
+    </div>
+    <div class="footer-links"><a href="{{ route('privacy') }}">Privacy</a></div>
 </div>
 
 @stack("scripts")

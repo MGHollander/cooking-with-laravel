@@ -1,4 +1,8 @@
 <x-kocina.layout>
+    <x-slot:title>
+        Over mij
+    </x-slot>
+    
     <div class="container page">
         <h1>Hi! Ik ben Marc,</h1>
 
