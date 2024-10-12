@@ -11,11 +11,12 @@
                 </p>
             </div>
 
-            <x-kocina.search-bar/>
-
             <div class="recipes">
+                <x-kocina.search-bar class="recipes-search" />
+                <h2 class="recipes-title">Recepten</h2>
+
                 @foreach ($recipes->items() as $recipe)
-                    <x-kocina.recipe-card :recipe="$recipe"/>
+                    <x-kocina.recipe-card :recipe="$recipe" />
                 @endforeach
             </div>
 
