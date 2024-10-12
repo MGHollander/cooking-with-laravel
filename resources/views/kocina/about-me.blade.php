@@ -2,12 +2,12 @@
     <x-slot:title>
         Over mij
     </x-slot>
-    
+
     <div class="container page">
         <h1>Hi! Ik ben Marc,</h1>
 
         <p>
-            een "self-taught" programmeur uit Nederland.
+            een programmeur uit Nederland.
         </p>
 
         <p>
