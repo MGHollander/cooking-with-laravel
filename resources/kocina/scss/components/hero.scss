@@ -35,6 +35,11 @@
 
 .hero-title {
   font-family: "Montserrat", sans-serif;
+  font-size: 2rem;
+
+  @media (--kocina-media-breakpoint-s-min) {
+    font-size: 2.5rem;
+  }
 }
 
 .hero-title,
