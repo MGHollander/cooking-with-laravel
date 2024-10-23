@@ -132,24 +132,21 @@ body {
 
   *:first-child {
     top: 10px;
-    transition:
-      background-color var(--transition-duration-250) var(--transition-timing-leave) var(--transition-duration-250),
-      top var(--transition-duration-250) var(--transition-duration-300),
-      transform var(--transition-duration-250);
+    transition: background-color var(--transition-duration-250) var(--transition-timing-leave) var(--transition-duration-250),
+    top var(--transition-duration-250) var(--transition-duration-300),
+    transform var(--transition-duration-250);
   }
 
   *:nth-child(2) {
     top: 16px;
-    transition: background-color var(--transition-duration-250) var(--transition-timing-leave)
-      var(--transition-duration-250);
+    transition: background-color var(--transition-duration-250) var(--transition-timing-leave) var(--transition-duration-250);
   }
 
   *:nth-child(3) {
     top: 22px;
-    transition:
-      background-color var(--transition-duration-250) var(--transition-timing-leave) var(--transition-duration-250),
-      top var(--transition-duration-250) var(--transition-duration-300),
-      transform var(--transition-duration-250);
+    transition: background-color var(--transition-duration-250) var(--transition-timing-leave) var(--transition-duration-250),
+    top var(--transition-duration-250) var(--transition-duration-300),
+    transform var(--transition-duration-250);
   }
 }
 
@@ -165,27 +162,24 @@ body {
   .bar:first-child {
     top: 16px;
     transform: rotate(135deg);
-    transition:
-      background-color var(--transition-duration-250) var(--transition-timing-enter) var(--transition-duration-300),
-      top var(--transition-duration-250),
-      transform var(--transition-duration-250) var(--transition-duration-250);
+    transition: background-color var(--transition-duration-250) var(--transition-timing-enter) var(--transition-duration-300),
+    top var(--transition-duration-250),
+    transform var(--transition-duration-250) var(--transition-duration-250);
   }
 
   .bar:nth-child(2) {
     transform: rotate(225deg);
-    transition:
-      background-color var(--transition-duration-250) var(--transition-timing-enter),
-      top var(--transition-duration-250),
-      transform var(--transition-duration-250) var(--transition-duration-250);
+    transition: background-color var(--transition-duration-250) var(--transition-timing-enter),
+    top var(--transition-duration-250),
+    transform var(--transition-duration-250) var(--transition-duration-250);
   }
 
   .bar:nth-child(3) {
     top: 16px;
     transform: rotate(315deg);
-    transition:
-      background-color var(--transition-duration-250) var(--transition-timing-enter),
-      top var(--transition-duration-250),
-      transform var(--transition-duration-250) var(--transition-duration-250);
+    transition: background-color var(--transition-duration-250) var(--transition-timing-enter),
+    top var(--transition-duration-250),
+    transform var(--transition-duration-250) var(--transition-duration-250);
   }
 }
 
@@ -311,13 +305,14 @@ body {
 }
 
 .navbar-menu-offcanvas-user {
+  margin-bottom: 4.5rem;
   width: 275px;
   font-size: 1rem;
   text-align: center;
 }
 
 .navbar-menu-offcanvas-user ul {
-  margin: 2rem 0 4.5rem;
+  margin: 2rem 0 0;
 }
 
 .navbar-menu-offcanvas-user button {
