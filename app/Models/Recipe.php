@@ -34,6 +34,11 @@ class Recipe extends Model implements HasMedia
         'source_link',
     ];
 
+    public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     protected function slug(): Attribute
     {
         return Attribute::make(

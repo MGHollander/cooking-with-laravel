@@ -9,6 +9,7 @@
   --color-white: #fff;
   --color-gray: #787878;
   --color-gray-dark: #4a4a4a;
+  --color-gray-light: #eaecf0;
   --color-primary: #eb4a36;
 
   --text-color-default: var(--color-gray-dark);
@@ -20,15 +21,19 @@
   --transition-timing-function-default: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+// The Media query sizes are inspired by TailwindCSS 3.4.
 // @see https://www.npmjs.com/package/postcss-custom-media
+@custom-media --kocina-media-breakpoint-xs-max (max-width: 399px);
+@custom-media --kocina-media-breakpoint-xs-min (min-width: 400px);
+
 @custom-media --kocina-media-breakpoint-s-max (max-width: 639px);
 @custom-media --kocina-media-breakpoint-s-min (min-width: 640px);
 
-@custom-media --kocina-media-breakpoint-m-max (max-width: 959px);
-@custom-media --kocina-media-breakpoint-m-min (min-width: 960px);
+@custom-media --kocina-media-breakpoint-m-max (max-width: 767px);
+@custom-media --kocina-media-breakpoint-m-min (min-width: 768px);
 
-@custom-media --kocina-media-breakpoint-l-max (max-width: 1199px);
-@custom-media --kocina-media-breakpoint-l-min (min-width: 1200px);
+@custom-media --kocina-media-breakpoint-l-max (max-width: 1023px);
+@custom-media --kocina-media-breakpoint-l-min (min-width: 1024px);
 
-@custom-media --kocina-media-breakpoint-xl-max (max-width: 1599px);
-@custom-media --kocina-media-breakpoint-xl-min (min-width: 1600px);
+@custom-media --kocina-media-breakpoint-xl-max (max-width: 1279px);
+@custom-media --kocina-media-breakpoint-xl-min (min-width: 1280px);

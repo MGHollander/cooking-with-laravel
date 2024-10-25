@@ -1,55 +1,90 @@
-<x-blade.layout>
+<x-kocina.layout>
     <x-slot name="title">
         {{ $recipe["title"] }}
     </x-slot>
 
     <x-slot name="meta">
-        <link rel="canonical" href="{{ route("recipes.show", ["slug" => $recipe["slug"]]) }}"/>
+        <link rel="canonical" href="{{ route("recipes.show", ["slug" => $recipe["slug"]]) }}" />
     </x-slot>
 
     @push("scripts")
-        <script>
-            document.addEventListener('alpine:init', () => {
-                const ingredientLists = @json($recipe["ingredients"]);
-                const servings = parseInt({{ $recipe["servings"] }}) ?? 1;
-
-                Alpine.data('recipe', () => {
-                    return {
-                        ingredientLists,
-                        servings,
-                        servingsText() {
-                            return this.servings + ' ' + (this.servings === 1 ? 'portie' : 'porties');
-                        },
-                        incrementServings() {
-                            for (let listKey in this.ingredientLists) {
-                                for (let key in this.ingredientLists[listKey].ingredients) {
-                                    let amount = parseFloat(this.ingredientLists[listKey].ingredients[key].amount);
-                                    // round amount to 2 decimals
-                                    this.ingredientLists[listKey].ingredients[key].amount = amount + amount / parseFloat(this.servings);
-                                }
-                            }
-                            this.servings++;
-                        },
-
-                        decrementServings() {
-                            for (let listKey in this.ingredientLists) {
-                                for (let key in this.ingredientLists[listKey].ingredients) {
-                                    let amount = parseFloat(this.ingredientLists[listKey].ingredients[key].amount);
-                                    this.ingredientLists[listKey].ingredients[key].amount = amount - amount / parseFloat(this.servings);
-                                }
-                            }
-                            this.servings--;
-                        },
-                    };
-                });
-            });
-        </script>
+        <script src="{{ Vite::asset('resources/kocina/js/recipe.js') }}"></script>
     @endpush
 
-    <p class="mb-4"><a href="{{ route("blade.home") }}">Terug naar overzicht</a></p>
+    <div
+        class="container"
+        x-data="recipe({{ Illuminate\Support\Js::from($recipe["ingredients"]) }}, parseInt({{ $recipe["servings"] }}) ?? 1)"
+    >
+        <div class="recipe-header">
+            @if ($recipe["image"])
+                <img
+                    src="{{ $recipe["image"] }}"
+                    class="recipe-image"
+                    alt="{{ $recipe["title"] }}"
+                />
+            @endif
 
-    <div class="space-y-6 bg-white p-6 sm:rounded-lg sm:shadow-lg md:space-y-10 lg:p-10" x-data="recipe">
-        <h1 class="mb-4 text-2xl font-bold md:text-3xl">{{ $recipe["title"] }}</h1>
+            <div class="recipe-header-body">
+                <h1 class="recipe-title">{{ $recipe["title"] }}</h1>
+
+                <div class="recipe-summary">
+                    {!! $recipe["summary"] !!}
+                </div>
+
+                <div class="recipe-meta">
+                    <dl>
+                        <dt>
+                            <div class="recipe-meta-icon">
+                                <x-icon.plate />
+                            </div>
+                            Aantal porties
+                        </dt>
+                        <dd x-text="servingsText">
+                            {{ $recipe["servings"] }} {{ $recipe["servings"] === 1 ? "portie" : "porties" }}
+                        </dd>
+                    </dl>
+
+                    <dl>
+                        <dt>
+                            <div class="recipe-meta-icon">
+                                <x-icon.gauge />
+                            </div>
+                            Moeilijk&shy;heid
+                        </dt>
+                        <dd>{{ $recipe["difficulty"] }}</dd>
+                    </dl>
+
+                    @if ($recipe["preparation_minutes"])
+                        <dl>
+                            <dt>
+                                <div class="recipe-meta-icon">
+                                    <x-icon.knife />
+                                </div>
+                                Voor&shy;be&shy;rei&shy;dings&shy;tijd
+                            </dt>
+                            <dd>{{ $recipe["preparation_minutes"] }} {{ $recipe["preparation_minutes"] === 1 ? "minuut" : "minuten" }}</dd>
+                        </dl>
+                    @endif
+
+                    @if ($recipe["cooking_minutes"])
+                        <dl>
+                            <dt>
+                                <div class="recipe-meta-icon">
+                                    <x-icon.cooking-timer />
+                                </div>
+                                Berei&shy;dings&shy;tijd
+                            </dt>
+                            <dd>{{ $recipe["cooking_minutes"] }} {{ $recipe["cooking_minutes"] === 1 ? "minuut" : "minuten" }}</dd>
+                        </dl>
+                    @endif
+
+                    <div class="recipe-author">
+                        Toegevoegd door {{ $recipe['author'] }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
         @if (count($recipe["tags"]) > 0)
             <div class="!mt-4 flex flex-wrap text-sm">
@@ -61,64 +96,6 @@
             </div>
         @endif
 
-        <div class="md:text-lg">
-            {!! $recipe["summary"] !!}
-        </div>
-
-        <div @class(["grid items-center space-y-6 md:space-y-0", "md:grid-cols-2" => $recipe["image"]])>
-            @if ($recipe["image"])
-                <img
-                    src="{{ $recipe["image"] }}"
-                    class="mx-auto aspect-[4/3] w-full rounded-lg object-cover md:mx-0"
-                    alt="{{ $recipe["title"] }}"
-                />
-            @endif
-
-            <div @class(["grid grid-cols-2 gap-4 text-center", "md:grid-cols-4" => ! $recipe["image"]])>
-                <div>
-                    <div class="mx-auto w-16 fill-orange-600">
-                        <x-icon.plate/>
-                    </div>
-                    <strong>Aantal porties</strong>
-                    <br/>
-                    <span x-text="servingsText">
-                        {{ $recipe["servings"] }} {{ $recipe["servings"] === 1 ? "portie" : "porties" }}
-                    </span>
-                </div>
-
-                <div>
-                    <div class="mx-auto w-16 fill-orange-600">
-                        <x-icon.gauge/>
-                    </div>
-                    <strong>Moeilijkheid</strong>
-                    <br/>
-                    {{ $recipe["difficulty"] }}
-                </div>
-
-                @if ($recipe["preparation_minutes"])
-                    <div>
-                        <div class="mx-auto w-16 fill-emerald-700">
-                            <x-icon.knife/>
-                        </div>
-                        <strong>Voorbereidingstijd</strong>
-                        <br/>
-                        {{ $recipe["preparation_minutes"] }} {{ $recipe["preparation_minutes"] === 1 ? "minuut" : "minuten" }}
-                    </div>
-                @endif
-
-                @if ($recipe["cooking_minutes"])
-                    <div>
-                        <div class="mx-auto w-16 fill-emerald-700">
-                            <x-icon.cooking-timer/>
-                        </div>
-
-                        <strong>Bereidingstijd</strong>
-                        <br/>
-                        {{ $recipe["cooking_minutes"] }} {{ $recipe["cooking_minutes"] === 1 ? "minuut" : "minuten" }}
-                    </div>
-                @endif
-            </div>
-        </div>
 
         <div class="space-y-6 md:flex md:items-start md:space-x-8 md:space-y-0">
             <div class="-mx-6 bg-gray-100 p-6 sm:mx-0 sm:rounded-lg md:w-1/3">
@@ -200,4 +177,4 @@
             </div>
         </div>
     </div>
-</x-blade.layout>
+</x-kocina.layout>

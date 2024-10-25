@@ -90,6 +90,7 @@ class RecipeController extends Controller
         return view('kocina.recipes.show', [
             'recipe'     => [
                 'id'                  => $recipe->id,
+                'author'              => $recipe->author->name,
                 'title'               => $recipe->title,
                 'slug'                => $recipe->slug,
                 'image'               => $recipe->getFirstMediaUrl('recipe_image', 'show'),
