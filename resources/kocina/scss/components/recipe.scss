@@ -1,6 +1,4 @@
 .recipe-header {
-  place-items: stretch;
-
   > * + * {
     margin-top: 2rem;
 
@@ -17,6 +15,12 @@
 }
 
 .recipe-header-body {
+  align-self: center;
+
+  > * + * {
+    margin-top: 2rem;
+  }
+
   @media (--kocina-media-breakpoint-s-min) {
     padding: 0.5rem 0;
     align-items: center;
@@ -31,8 +35,6 @@
 }
 
 .recipe-title {
-  margin-bottom: 2rem;
-
   @media (--kocina-media-breakpoint-m-max) {
     font-size: 1.825rem;
   }
@@ -44,7 +46,7 @@
     grid-template-columns: 1fr;
     column-gap: 1rem;
     margin: 0;
-    padding: 0.75rem 0;
+    padding: 0.25rem 0;
     align-items: center;
 
     &:not(:first-child) {
@@ -57,14 +59,10 @@
   }
 
   dt {
-    display: flex;
+    display: grid;
+    grid-template-columns: 32px 1fr;
     align-items: center;
-
-    .recipe-meta-icon {
-      margin-right: 1rem;
-      width: 2rem;
-      text-align: center;
-    }
+    gap: 1rem;
   }
 
   dd {
@@ -80,3 +78,32 @@
   margin-top: 1.5rem;
   font-size: 0.875rem;
 }
+
+// TODO Choose between compact and extended recipe meta.
+.recipe-meta-extended {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 1.5rem;
+
+  dl {
+    margin: 0;
+    padding: 0 1.5rem;
+    text-align: center;
+
+    &:nth-child(even) {
+      border-left: 1px solid var(--color-gray-light);
+    }
+  }
+
+  dt {
+    .recipe-meta-icon {
+      margin: 0 auto;
+      width: 4rem;
+    }
+  }
+
+  .recipe-author {
+    grid-column: span 2 / span 2;
+  }
+}
+
