@@ -1,0 +1,11 @@
+.strike-animation {
+  background-image: linear-gradient(var(--text-color-default), var(--text-color-default));
+  background-repeat: no-repeat;
+  background-position: center left;
+  background-size: 0 1px;
+  transition: background-size 250ms ease-in-out;
+
+  &.striked {
+    background-size: 100% 1px;
+  }
+}

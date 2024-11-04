@@ -8,11 +8,13 @@
     </x-slot>
 
     @push("scripts")
+        {{-- TODO Think of a way to import the strike helper into recipe --}}
+        <script src="{{ Vite::asset('resources/kocina/js/helpers/strike.js') }}"></script>
         <script src="{{ Vite::asset('resources/kocina/js/recipe.js') }}"></script>
     @endpush
 
     <div
-        class="container"
+        class="container recipe-page"
         x-data="recipe({{ Illuminate\Support\Js::from($recipe["ingredients"]) }}, parseInt({{ $recipe["servings"] }}) ?? 1)"
     >
         <div class="recipe-header">
@@ -86,68 +88,67 @@
             </div>
         </div>
 
-        @if (count($recipe["tags"]) > 0)
-            <div class="!mt-4 flex flex-wrap text-sm">
-                @foreach ($recipe["tags"] as $tag)
-                    <div class="mb-2 mr-2 rounded bg-gray-200 px-2">
-                        {{ $tag }}
-                    </div>
-                @endforeach
-            </div>
-        @endif
+        <div class="recipe-content-container">
+            <div class="recipe-ingredient-container">
+                <h2>Ingredi&euml;nten</h2>
 
+                <div class="recipe-ingredient-controls">
+                    <button
+                        :disabled="servings <= 1"
+                        aria-label="Verminder het aantal porties"
+                        x-on:click="updateServings(servings - 1)"
+                    >
+                        <x-icon.min />
+                    </button>
 
-        <div class="space-y-6 md:flex md:items-start md:space-x-8 md:space-y-0">
-            <div class="-mx-6 bg-gray-100 p-6 sm:mx-0 sm:rounded-lg md:w-1/3">
-                <h2 class="mb-2 text-xl font-bold md:text-2xl">Ingrediënten</h2>
-
-                <div class="-mx-2 mb-4 flex items-center justify-between rounded bg-gray-200 p-2">
                     <p x-text="servingsText">
                         {{ $recipe["servings"] }} {{ $recipe["servings"] === 1 ? "portie" : "porties" }}
                     </p>
 
-                    <div class="space-x-2">
-                        <button
-                            class="inline-block w-8 rounded border-2 border-gray-500 text-lg font-bold text-gray-600 transition-all hover:bg-gray-500 hover:text-white"
-                            aria-label="Verhoog het aantal porties"
-                            x-on:click="incrementServings"
-                        >
-                            +
-                        </button>
+                    <button
+                        aria-label="Verhoog het aantal porties"
+                        x-on:click="updateServings(servings + 1)"
+                    >
+                        <x-icon.plus />
+                    </button>
 
-                        <button
-                            :disabled="servings <= 1"
-                            class="inline-block w-8 rounded border-2 border-gray-500 text-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-gray-600"
-                            aria-label="Verminder het aantal porties"
-                            x-on:click="decrementServings"
-                        >
-                            -
-                        </button>
-                    </div>
+                    <button
+                        aria-label="Terug naar het standaard aantal porties"
+                        x-show="servings !== parseInt({{ $recipe["servings"] }})"
+                        x-on:click="updateServings({{ $recipe["servings"] }})"
+                        x-transition
+                    >
+                        <x-icon.rotate-left />
+                    </button>
                 </div>
-                <template x-for="list in ingredientLists">
-                    <div>
-                        <h3 x-text="list.title" class="mb-2 mt-8 text-lg font-bold"></h3>
 
-                        <ul class="m-0 space-y-1">
+                <template x-for="list in ingredientLists">
+                    <div class="recipe-ingredient-list">
+                        <template x-if="list.title">
+                            <h3 x-text="list.title"></h3>
+                        </template>
+
+                        <ul>
                             <template x-for="ingredient in list.ingredients">
-                                <li class="flex flex-auto">
-                                    <template x-if="ingredient.amount">
-                                        <span x-text="Math.round(ingredient.amount * 100) / 100 + '&nbsp;'"></span>
-                                    </template>
-                                    <template x-if="ingredient.unit">
-                                        <span x-text="ingredient.unit + '&nbsp;'"></span>
-                                    </template>
-                                    <template x-if="ingredient.name_plural && ingredient.amount > 1">
-                                        <span x-text="ingredient.name_plural"></span>
-                                    </template>
-                                    <template
-                                        x-if="! ingredient.name_plural || (ingredient.amount > 0 && ingredient.amount <= 1)">
-                                        <span x-text="ingredient.name"></span>
-                                    </template>
-                                    <template x-if="ingredient.info">
-                                        <span x-text="ingredient.info"></span>
-                                    </template>
+                                <li @click="strikeIngredient($event)">
+                                    <span class="strike-animation">
+                                        <template x-if="ingredient.amount">
+                                            <span x-text="Math.round(ingredient.amount * 100) / 100 + '&nbsp;'"></span>
+                                        </template>
+                                        <template x-if="ingredient.unit">
+                                            <span x-text="ingredient.unit + '&nbsp;'"></span>
+                                        </template>
+                                        <template x-if="ingredient.name_plural && ingredient.amount > 1">
+                                            <span x-text="ingredient.name_plural"></span>
+                                        </template>
+                                        <template
+                                            x-if="! ingredient.name_plural || (ingredient.amount > 0 && ingredient.amount <= 1)">
+                                            <span x-text="ingredient.name"></span>
+                                        </template>
+                                        <template x-if="ingredient.info">
+                                            <span x-text="ingredient.info"></span>
+                                        </template>
+                                    </span>
                                 </li>
                             </template>
                         </ul>
@@ -155,7 +156,7 @@
                 </template>
             </div>
 
-            <div class="space-y-4 sm:px-6 md:w-2/3 md:px-0">
+            <div class="recipe-instructions-container space-y-4 sm:px-6 md:w-2/3 md:px-0">
                 <h2 class="mb-4 text-xl font-bold md:mt-6 md:text-2xl">Instructies</h2>
 
                 <div class="recipe-instructions">
@@ -175,6 +176,14 @@
                     </p>
                 @endif
             </div>
+
+            @if (count($recipe["tags"]) > 0)
+                <div class="recipe-tags-container">
+                    @foreach ($recipe["tags"] as $tag)
+                        <div>{{ $tag }}</div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </div>
 </x-kocina.layout>
