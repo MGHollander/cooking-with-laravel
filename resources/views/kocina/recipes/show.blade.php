@@ -8,8 +8,6 @@
     </x-slot>
 
     @push("scripts")
-        {{-- TODO Think of a way to import the strike helper into recipe --}}
-        <script src="{{ Vite::asset('resources/kocina/js/helpers/strike.js') }}"></script>
         <script src="{{ Vite::asset('resources/kocina/js/recipe.js') }}"></script>
     @endpush
 
@@ -94,9 +92,10 @@
 
                 <div class="recipe-ingredient-controls">
                     <button
+                        class="button button-outline"
                         :disabled="servings <= 1"
                         aria-label="Verminder het aantal porties"
-                        x-on:click="updateServings(servings - 1)"
+                        @click="updateServings(servings - 1)"
                     >
                         <x-icon.min />
                     </button>
@@ -106,54 +105,72 @@
                     </p>
 
                     <button
+                        class="button button-outline"
                         aria-label="Verhoog het aantal porties"
-                        x-on:click="updateServings(servings + 1)"
+                        @click="updateServings(servings + 1)"
                     >
                         <x-icon.plus />
                     </button>
 
                     <button
+                        class="button button-outline"
                         aria-label="Terug naar het standaard aantal porties"
+                        @click="updateServings({{ $recipe["servings"] }})"
                         x-show="servings !== parseInt({{ $recipe["servings"] }})"
-                        x-on:click="updateServings({{ $recipe["servings"] }})"
                         x-transition
                     >
                         <x-icon.rotate-left />
                     </button>
                 </div>
 
-                <template x-for="list in ingredientLists">
-                    <div class="recipe-ingredient-list">
-                        <template x-if="list.title">
-                            <h3 x-text="list.title"></h3>
-                        </template>
+                <div class="recipe-ingredient-list-container">
+                    <button
+                        class="button button-outline recipe-ingredient-list-reset"
+                        aria-label="Reset de afgestreepte ingredi&euml;nten"
+                        @click="strikedIngredientsList.clear()"
+                        x-show="strikedIngredientsList.size > 0"
+                        x-transition
+                    >
+                        <x-icon.rotate-left />
+                    </button>
 
-                        <ul>
-                            <template x-for="ingredient in list.ingredients">
-                                <li @click="strikeIngredient($event)">
-                                    <span class="strike-animation">
-                                        <template x-if="ingredient.amount">
-                                            <span x-text="Math.round(ingredient.amount * 100) / 100 + '&nbsp;'"></span>
-                                        </template>
-                                        <template x-if="ingredient.unit">
-                                            <span x-text="ingredient.unit + '&nbsp;'"></span>
-                                        </template>
-                                        <template x-if="ingredient.name_plural && ingredient.amount > 1">
-                                            <span x-text="ingredient.name_plural"></span>
-                                        </template>
-                                        <template
-                                            x-if="! ingredient.name_plural || (ingredient.amount > 0 && ingredient.amount <= 1)">
-                                            <span x-text="ingredient.name"></span>
-                                        </template>
-                                        <template x-if="ingredient.info">
-                                            <span x-text="ingredient.info"></span>
-                                        </template>
-                                    </span>
-                                </li>
+                    <template x-for="list in ingredientLists">
+                        <div class="recipe-ingredient-list">
+                            <template x-if="list.title">
+                                <h3 x-text="list.title"></h3>
                             </template>
-                        </ul>
-                    </div>
-                </template>
+
+                            <ul>
+                                <template x-for="ingredient in list.ingredients">
+                                    <li @click="strikeIngredient(ingredient)">
+                                        <span
+                                            class="strike-animation"
+                                            :class="{ 'striked' : strikedIngredientsList.has(ingredient) }"
+                                        >
+                                            <template x-if="ingredient.amount">
+                                                <span
+                                                    x-text="Math.round(ingredient.amount * 100) / 100 + '&nbsp;'"></span>
+                                            </template>
+                                            <template x-if="ingredient.unit">
+                                                <span x-text="ingredient.unit + '&nbsp;'"></span>
+                                            </template>
+                                            <template x-if="ingredient.name_plural && ingredient.amount > 1">
+                                                <span x-text="ingredient.name_plural"></span>
+                                            </template>
+                                            <template
+                                                x-if="! ingredient.name_plural || (ingredient.amount > 0 && ingredient.amount <= 1)">
+                                                <span x-text="ingredient.name"></span>
+                                            </template>
+                                            <template x-if="ingredient.info">
+                                                <span x-text="ingredient.info"></span>
+                                            </template>
+                                        </span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                    </template>
+                </div>
             </div>
 
             <div class="recipe-instructions-container space-y-4 sm:px-6 md:w-2/3 md:px-0">

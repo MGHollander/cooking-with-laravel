@@ -17,13 +17,8 @@ body {
 }
 
 .navbar .button {
-  transition-property: color, background-color, outline-offset, transform;
   padding: 0.5rem 1rem;
   font-size: 0.75rem;
-
-  &:hover {
-    transform: scale(1.05);
-  }
 }
 
 .navbar-container {
