@@ -1,0 +1,79 @@
+.recipe-ingredients-container {
+  padding: 1.5rem;
+
+  @media (--kocina-media-breakpoint-s-min) {
+    padding: 2rem;
+  }
+
+  @media (--kocina-media-breakpoint-m-max) {
+    background-color: var(--color-accent);
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+  }
+
+  @media (--kocina-media-breakpoint-m-min) {
+    padding: 0;
+    grid-column-start: 2;
+  }
+
+  button {
+    aspect-ratio: 1;
+    width: 1.75rem;
+    padding: 0;
+
+    svg {
+      width: 0.75rem;
+      aspect-ratio: 1;
+    }
+  }
+}
+
+.recipe-ingredients-controls {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+
+  p {
+    margin: 0;
+    width: 8rem;
+    text-align: center;
+  }
+}
+
+.recipe-ingredients-list-container {
+  position: relative;
+}
+
+.recipe-ingredients {
+  margin-top: 1.5rem;
+
+  h3 {
+    margin-bottom: 0.25rem;
+    font-size: 1.125rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    padding: 0.5rem 0;
+    position: relative;
+
+    + li {
+      border-top: 1px solid var(--color-gray-light);
+    }
+  }
+}
+
+.recipe-ingredients-list-reset {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}

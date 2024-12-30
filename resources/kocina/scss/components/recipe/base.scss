@@ -1,0 +1,57 @@
+.recipe-page > * + * {
+  margin-top: 2rem;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    margin-top: 3rem;
+  }
+}
+
+.recipe-content-container {
+  > * + * {
+    margin-top: 1.5rem;
+  }
+
+  @media (--kocina-media-breakpoint-s-min) {
+    > * + * {
+      margin-top: 2rem;
+    }
+  }
+
+  @media (--kocina-media-breakpoint-m-min) {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: max-content 1fr;
+    grid-template-columns: 1fr 33%;
+    gap: 3rem;
+
+    > * + * {
+      margin-top: 0;
+    }
+  }
+
+  @media (--kocina-media-breakpoint-l-min) {
+    margin: 3.5rem auto 0;
+    max-width: var(--kocina-breakpoint-l);
+  }
+
+  @media (--kocina-media-breakpoint-xl-min) {
+    gap: 4rem;
+  }
+}
+
+@import 'header';
+@import 'ingredients';
+
+.recipe-instructions-container {
+  @media (--kocina-media-breakpoint-m-min) {
+    grid-row: span 3 / span 3;
+  }
+}
+
+.recipe-tags-container {
+  @media (--kocina-media-breakpoint-m-min) {
+    grid-row: span 2 / span 2;
+  }
+}
+

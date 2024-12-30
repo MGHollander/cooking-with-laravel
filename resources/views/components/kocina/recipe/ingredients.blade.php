@@ -2,10 +2,10 @@
     'recipe'
 ])
 
-<div {{ $attributes->class(['recipe-ingredient-container']) }}>
+<div {{ $attributes->class(['recipe-ingredients-container']) }}>
     <h2>Ingredi&euml;nten</h2>
 
-    <div class="recipe-ingredient-controls">
+    <div class="recipe-ingredients-controls">
         <button
             class="button button-outline"
             :disabled="servings <= 1"
@@ -38,9 +38,9 @@
         </button>
     </div>
 
-    <div class="recipe-ingredient-list-container">
+    <div class="recipe-ingredients-list-container">
         <button
-            class="button button-outline recipe-ingredient-list-reset"
+            class="button button-outline recipe-ingredients-list-reset"
             aria-label="Reset de afgestreepte ingredi&euml;nten"
             @click="strikedIngredientsList.clear()"
             x-show="strikedIngredientsList.size > 0"
@@ -50,7 +50,7 @@
         </button>
 
         <template x-for="list in ingredientLists">
-            <div class="recipe-ingredient-list">
+            <div class="recipe-ingredients">
                 <template x-if="list.title">
                     <h3 x-text="list.title"></h3>
                 </template>

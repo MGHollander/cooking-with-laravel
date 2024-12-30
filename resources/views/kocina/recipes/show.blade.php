@@ -18,10 +18,7 @@
         <x-kocina.recipe.header :recipe="$recipe" />
 
         <div class="recipe-content-container">
-            <x-kocina.recipe.ingredient-list :recipe="$recipe" />
-
-            <div class="recipe-instructions-container space-y-4 sm:px-6 md:w-2/3 md:px-0">
-                <h2 class="mb-4 text-xl font-bold md:mt-6 md:text-2xl">Instructies</h2>
+            <x-kocina.recipe.ingredients :recipe="$recipe" />
 
                 <div class="recipe-instructions">
                     {!! $recipe["instructions"] !!}
