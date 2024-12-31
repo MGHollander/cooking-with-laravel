@@ -19,15 +19,8 @@
     grid-column-start: 2;
   }
 
-  button {
-    aspect-ratio: 1;
-    width: 1.75rem;
-    padding: 0;
-
-    svg {
-      width: 0.75rem;
-      aspect-ratio: 1;
-    }
+  .button-icon svg {
+    width: 0.75rem;
   }
 }
 
@@ -64,12 +57,42 @@
   li {
     padding: 0.5rem 0;
     position: relative;
+  }
 
-    + li {
-      border-top: 1px solid var(--color-gray-light);
-    }
+  li + li {
+    border-top: 1px solid var(--color-gray-light);
   }
 }
+
+.recipe-ingredient {
+  background-image: linear-gradient(var(--color-gray) 0%, var(--color-gray) 100%);
+  background-repeat: no-repeat;
+  background-position: center left;
+  background-size: 0 1px;
+  transition-property: background-size, color;
+  transition-duration: var(--transition-duration-250);
+  transition-timing-function: var(--transition-timing-hover);
+  display: inline-flex;
+  align-items: center;
+  margin-left: -0.15rem;
+
+  &::before {
+    content: "";
+    display: inline-flex;
+    margin-right: 0.5rem;
+    margin-left: 0.15rem;
+    width: 0.65rem;
+    aspect-ratio: 1;
+    border-radius: 3px;
+    border: 1px solid var(--text-color-default);
+  }
+
+  &.striked {
+    background-size: 100% 1px;
+    color: var(--color-gray);
+  }
+}
+
 
 .recipe-ingredients-list-reset {
   position: absolute;

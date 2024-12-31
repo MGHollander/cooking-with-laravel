@@ -7,7 +7,7 @@
 
     <div class="recipe-ingredients-controls">
         <button
-            class="button button-outline"
+            class="button button-icon button-outline"
             :disabled="servings <= 1"
             aria-label="Verminder het aantal porties"
             @click="updateServings(servings - 1)"
@@ -20,7 +20,7 @@
         </p>
 
         <button
-            class="button button-outline"
+            class="button button-icon button-outline"
             aria-label="Verhoog het aantal porties"
             @click="updateServings(servings + 1)"
         >
@@ -28,7 +28,7 @@
         </button>
 
         <button
-            class="button button-outline"
+            class="button button-icon button-outline"
             aria-label="Terug naar het standaard aantal porties"
             @click="updateServings({{ $recipe["servings"] }})"
             x-show="servings !== parseInt({{ $recipe["servings"] }})"
@@ -40,7 +40,7 @@
 
     <div class="recipe-ingredients-list-container">
         <button
-            class="button button-outline recipe-ingredients-list-reset"
+            class="button button-outline button-icon recipe-ingredients-list-reset"
             aria-label="Reset de afgestreepte ingredi&euml;nten"
             @click="strikedIngredientsList.clear()"
             x-show="strikedIngredientsList.size > 0"
@@ -59,9 +59,10 @@
                     <template x-for="ingredient in list.ingredients">
                         <li @click="strikeIngredient(ingredient)">
                             <span
-                                class="strike-animation"
+                                class="recipe-ingredient"
                                 :class="{ 'striked' : strikedIngredientsList.has(ingredient) }"
                             >
+
                                 <template x-if="ingredient.amount">
                                     <span x-text="Math.round(ingredient.amount * 100) / 100 + '&nbsp;'"></span>
                                 </template>

@@ -3,8 +3,8 @@ document.addEventListener('alpine:init', () => {
     init() {
       this.$el.querySelectorAll('.recipe-instructions ol li').forEach(li => {
         const label = document.createElement('label');
-        label.innerHTML = '<svg width="16" height="16" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="check"><polyline fill="none" stroke="currentColor" stroke-width="1.1" points="4,10 8,15 17,4"></polyline></svg>';
-        label.classList.add('recipe-instructions-step-checkbox');
+        label.innerHTML = '<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="check"><polyline fill="none" stroke="currentColor" stroke-width="1.1" points="4,10 8,15 17,4"></polyline></svg>';
+        label.classList.add('recipe-instructions-step-checkbox', 'button', 'button-icon', 'button-outline');
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';

@@ -26,21 +26,47 @@
 
 .button-outline {
   background-color: transparent;
-  border: 2px solid var(--color-primary);
+  border: 1px solid currentColor;
   border-radius: 50%;
+  color: var(--color-primary);
+  text-align: center;
+  transition-property: background-color, border-color, color, opacity;
+  transition-duration: var(--transition-duration-250);
+  transition-timing-function: var(--transition-timing-hover);
 
   &:disabled {
     color: var(--color-black);
-    opacity: 0.4;
+    opacity: 0.7;
   }
 
   &:hover:not(:disabled) {
-    background-color: transparent;
-    transform: scale(1.1);
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
   }
 
+  &:has(:checked) {
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+}
+
+.button-icon {
+  width: 1.75rem;
+  padding: 0;
+  aspect-ratio: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   svg {
-    width: 0.75rem;
+    width: 1rem;
     aspect-ratio: 1;
   }
 }

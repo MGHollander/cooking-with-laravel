@@ -50,30 +50,4 @@
   position: absolute;
   top: -0.1rem;
   left: -3rem;
-  width: 1.75rem;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  color: var(--color-primary);
-  border: 1px solid currentColor;
-  background: none;
-  text-align: center;
-  transition-property: background-color, border-color, color, opacity;
-  transition-duration: var(--transition-duration-250);
-  transition-timing-function: var(--transition-timing-hover);
-
-  &:hover {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-white);
-  }
-
-  &:has(:checked) {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
 }
