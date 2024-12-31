@@ -42,12 +42,7 @@
 
 @import 'header';
 @import 'ingredients';
-
-.recipe-instructions-container {
-  @media (--kocina-media-breakpoint-m-min) {
-    grid-row: span 3 / span 3;
-  }
-}
+@import 'instructions';
 
 .recipe-tags-container {
   @media (--kocina-media-breakpoint-m-min) {

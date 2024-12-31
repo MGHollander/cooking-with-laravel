@@ -1,0 +1,79 @@
+.recipe-instructions-container {
+  @media (--kocina-media-breakpoint-m-min) {
+    grid-row: span 3 / span 3;
+  }
+}
+
+.recipe-instructions {
+  > ol {
+    counter-reset: listCounter;
+    padding-left: 3rem;
+    list-style: none;
+
+    > li {
+      counter-increment: listCounter;
+      padding-top: 2.5rem;
+      position: relative;
+      background-image: linear-gradient(var(--color-gray-light) 0%, var(--color-gray-light) 100%);
+      background-repeat: no-repeat;
+      background-position: top 0.7rem left;
+      background-size: 100% 1px;
+      transition-property: color;
+      transition-duration: var(--transition-duration-250);
+      transition-timing-function: var(--transition-timing-hover);
+    }
+
+    > li:has(:checked) {
+      color: var(--color-gray);
+    }
+
+    > li::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: var(--color-primary);
+      font-weight: 500;
+      text-transform: uppercase;
+      width: fit-content;
+      background-color: var(--color-white);
+      padding-right: 1rem;
+      content: var(--step-text, "Step") " " counter(listCounter);
+    }
+
+    > li + li {
+      margin-top: 1.5rem;
+    }
+  }
+}
+
+.recipe-instructions-step-checkbox {
+  position: absolute;
+  top: -0.1rem;
+  left: -3rem;
+  width: 1.75rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: var(--color-primary);
+  border: 1px solid currentColor;
+  background: none;
+  text-align: center;
+  transition-property: background-color, border-color, color, opacity;
+  transition-duration: var(--transition-duration-250);
+  transition-timing-function: var(--transition-timing-hover);
+
+  &:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+  }
+
+  &:has(:checked) {
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

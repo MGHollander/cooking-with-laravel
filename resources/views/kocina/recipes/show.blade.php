@@ -20,23 +20,7 @@
         <div class="recipe-content-container">
             <x-kocina.recipe.ingredients :recipe="$recipe" />
 
-                <div class="recipe-instructions">
-                    {!! $recipe["instructions"] !!}
-                </div>
-
-                @if ($recipe["source_label"] || $recipe["source_link"])
-                    <p>
-                        <strong>Bron:</strong>
-                        @if ($recipe["source_link"])
-                            <a href="{{ $recipe["source_link"] }}" target="_blank">
-                                {{ $recipe["source_label"] ?? $recipe["source_link"] }}
-                            </a>
-                        @elseif ($recipe["source_label"])
-                            {{ $recipe["source_label"] }}
-                        @endif
-                    </p>
-                @endif
-            </div>
+            <x-kocina.recipe.instructions :recipe="$recipe" />
 
             @if (count($recipe["tags"]) > 0)
                 <div class="recipe-tags-container">
