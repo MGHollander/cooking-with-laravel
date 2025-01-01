@@ -32,7 +32,7 @@
 
   @media (--kocina-media-breakpoint-l-min) {
     margin: 3.5rem auto 0;
-    max-width: var(--kocina-breakpoint-l);
+    max-width: calc(var(--kocina-breakpoint-l) - 10rem);
   }
 
   @media (--kocina-media-breakpoint-xl-min) {

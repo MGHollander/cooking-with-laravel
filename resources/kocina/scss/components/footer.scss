@@ -1,5 +1,5 @@
 .footer {
-  margin: 1rem auto;
+  margin: 2.5rem auto 1rem;
   color: var(--color-gray);
   font-size: 0.9rem;
 
@@ -11,7 +11,9 @@
 
 .footer-text {
   margin-bottom: 1rem;
+
   @media (--kocina-media-breakpoint-m-min) {
+    margin-bottom: 0;
     flex-grow: 1;
   }
 }
