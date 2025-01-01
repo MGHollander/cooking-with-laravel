@@ -39,14 +39,3 @@
     gap: 4rem;
   }
 }
-
-@import 'header';
-@import 'ingredients';
-@import 'instructions';
-
-.recipe-tags-container {
-  @media (--kocina-media-breakpoint-m-min) {
-    grid-row: span 2 / span 2;
-  }
-}
-

@@ -23,11 +23,7 @@
             <x-kocina.recipe.instructions :recipe="$recipe" />
 
             @if (count($recipe["tags"]) > 0)
-                <div class="recipe-tags-container">
-                    @foreach ($recipe["tags"] as $tag)
-                        <div>{{ $tag }}</div>
-                    @endforeach
-                </div>
+                <x-kocina.recipe.tags :recipe="$recipe" />
             @endif
         </div>
     </div>
