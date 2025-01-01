@@ -10,6 +10,7 @@
             type="search"
             name="q"
             x-model="search"
+            x-ref="search"
             placeholder="Zoek een recept, ingredient, thema of keuken"
             class="search-bar-field"
         />
@@ -17,31 +18,17 @@
         <button
             type="button"
             class="search-bar-clear-button"
-            @click="search = ''"
-            x-show="search.length > 0"
+            @click="search = '' || $refs.search.focus()"
+            x-show="search?.length > 0"
             x-transition
         >
             <span class="sr-only">Leeg het zoekveld</span>
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 384 512"
-                x-show="search.length > 0"
-                x-transition
-            >
-                <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                <path
-                    d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
-            </svg>
+            <x-icon.cross width="20" />
         </button>
 
         <button type="submit" class="search-bar-submit-button">
             <span class="sr-only">Zoeken</span>
-            <svg width="16" height="16" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <circle fill="none" stroke="#000" stroke-width="1.1" cx="9" cy="9" r="7"></circle>
-                <path fill="none" stroke="#000" stroke-width="1.1" d="M14,14 L18,18 L14,14 Z"></path>
-            </svg>
+            <x-icon.magnify-glass width="20" />
         </button>
 
         {{--

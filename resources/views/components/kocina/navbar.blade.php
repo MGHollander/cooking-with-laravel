@@ -7,16 +7,13 @@
         <div class="navbar-left">
             <a href="{{ route('home') }}" class="navbar-title">{{ env('APP_NAME') }}</a>
             <nav class="navbar-menu-list">
-                <x-kocina.nav-list/>
+                <x-kocina.nav-list />
             </nav>
         </div>
 
         <div class="navbar-right">
             <button class="navbar-search-button" @click="toggleSearch">
-                <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <circle fill="none" stroke="currentColor" stroke-width="1.5" cx="9" cy="9" r="7"></circle>
-                    <path fill="none" stroke="currentColor" stroke-width="1.5" d="M14,14 L18,18 L14,14 Z"></path>
-                </svg>
+                <x-icon.magnify-glass width="24" height="24" />
             </button>
 
             <button
@@ -37,16 +34,7 @@
 
                 @auth
                     <button class="navbar-user-button" @click="toggleUserMenu()">
-                        <svg width="24" height="24" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <circle
-                                fill="none" stroke="currentColor" stroke-width="1.1"
-                                cx="10.072881" cy="7.0745769" r="3.5"
-                            />
-                            <path
-                                fill="none" stroke="currentColor" stroke-width="1.1"
-                                d="m 3.3728814,16.574577 c 0.7,-3.5 3.4,-6 6.6,-6 3.2999996,0 6.0999996,2.7 6.6999996,6.2"
-                            />
-                        </svg>
+                        <x-icon.user width="24" height="24" />
                     </button>
 
                     <nav
@@ -58,7 +46,7 @@
                         @keyup.esc="if(openUserMenu) toggleUserMenu()"
                         x-transition
                     >
-                        <x-kocina.nav-list-user/>
+                        <x-kocina.nav-list-user />
                     </nav>
                 @endauth
             </div>
@@ -80,17 +68,7 @@
                     @click="openSearch = false"
                 >
                     <span class="sr-only">Zoekveld sluiten</span>
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 384 512"
-                        x-transition
-                    >
-                        <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                        <path
-                            d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
-                    </svg>
+                    <x-icon.cross width="24" height="24" />
                 </button>
             </x-kocina.search-bar>
         </div>
@@ -112,7 +90,7 @@
         x-bind="offcanvasTransition"
         class="navbar-menu-offcanvas"
     >
-        <x-kocina.nav-list/>
+        <x-kocina.nav-list />
 
         <div class="navbar-menu-offcanvas-user">
             @guest
@@ -120,7 +98,7 @@
             @endguest
 
             @auth
-                <x-kocina.nav-list-user/>
+                <x-kocina.nav-list-user />
             @endauth
         </div>
 

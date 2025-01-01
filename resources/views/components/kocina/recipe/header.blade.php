@@ -22,7 +22,7 @@
             <dl>
                 <dt>
                     <div class="recipe-meta-icon">
-                        <x-icon.plate />
+                        <x-icon.cutlery />
                     </div>
                     Aantal porties
                 </dt>
@@ -31,23 +31,13 @@
                 </dd>
             </dl>
 
-            <dl>
-                <dt>
-                    <div class="recipe-meta-icon">
-                        <x-icon.gauge />
-                    </div>
-                    Moeilijk&shy;heid
-                </dt>
-                <dd>{{ $recipe["difficulty"] }}</dd>
-            </dl>
-
             @if ($recipe["preparation_minutes"])
                 <dl>
                     <dt>
                         <div class="recipe-meta-icon">
-                            <x-icon.knife />
+                            <x-icon.knife-thin />
                         </div>
-                        Voor&shy;be&shy;rei&shy;dings&shy;tijd
+                        Voor&shy;be&shy;rei&shy;ding
                     </dt>
                     <dd>{{ $recipe["preparation_minutes"] }} {{ $recipe["preparation_minutes"] === 1 ? "minuut" : "minuten" }}</dd>
                 </dl>
@@ -57,9 +47,9 @@
                 <dl>
                     <dt>
                         <div class="recipe-meta-icon">
-                            <x-icon.cooking-timer />
+                            <x-icon.cooking-pot />
                         </div>
-                        Berei&shy;dings&shy;tijd
+                        Be&shy;rei&shy;ding
                     </dt>
                     <dd>{{ $recipe["cooking_minutes"] }} {{ $recipe["cooking_minutes"] === 1 ? "minuut" : "minuten" }}</dd>
                 </dl>

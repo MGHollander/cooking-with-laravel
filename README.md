@@ -59,8 +59,6 @@ Run `vendor/bin/dep deploy` to deploy changes.
   - [Pixabay](https://www.pexels.com/@pixabay/)
   - [cottonbro studio](https://www.pexels.com/@cottonbro/)
 - Icons are made possible by:
-  - <https://fontawesome.com/>
-  - <https://www.drupal.org/project/umami>
+  - <https://www.svgrepo.com/collection/phosphor-thin-icons>
   - <https://www.iconbolt.com/iconsets/voyage-icons/meal>
-  - <https://www.svgrepo.com/svg/532362/user>
 - Favicons are made possible by <https://realfavicongenerator.net/>
