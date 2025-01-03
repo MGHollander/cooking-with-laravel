@@ -5,7 +5,7 @@
 <div {{ $attributes->class(['recipe-instructions-container space-y-4 sm:px-6 md:w-2/3 md:px-0']) }}>
     <h2 class="mb-4 text-xl font-bold md:mt-6 md:text-2xl">Instructies</h2>
 
-    <div class="recipe-instructions" style="--step-text: 'Stap'">
+    <div x-ref="instructions" class="recipe-instructions" style="--step-text: 'Stap'">
         {!! $recipe["instructions"] !!}
     </div>
 

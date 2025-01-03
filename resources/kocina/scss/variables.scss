@@ -15,6 +15,7 @@
   --color-accent: rgb(249, 245, 244);
 
   --text-color-default: var(--color-gray-dark);
+  --text-color-striked: #b0b0b0;
 
   --transition-duration-250: 0.25s;
   --transition-duration-300: 0.3s;
@@ -22,6 +23,8 @@
   --transition-timing-leave: ease-out;
   --transition-timing-hover: ease-in-out;
   --transition-timing-function-default: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --content-max-width: calc(var(--kocina-breakpoint-l) - 10rem);
 }
 
 // The Media query sizes are inspired by TailwindCSS 3.4.

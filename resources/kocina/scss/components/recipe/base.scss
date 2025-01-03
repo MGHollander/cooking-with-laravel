@@ -7,6 +7,8 @@
 }
 
 .recipe-content-container {
+  max-width: var(--content-max-width);
+
   > * + * {
     margin-top: 1.5rem;
   }

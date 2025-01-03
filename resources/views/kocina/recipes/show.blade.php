@@ -17,6 +17,8 @@
     >
         <x-kocina.recipe.header :recipe="$recipe" />
 
+        <x-kocina.recipe.cooking-setting :recipe="$recipe" />
+
         <div class="recipe-content-container">
             <x-kocina.recipe.ingredients :recipe="$recipe" />
 

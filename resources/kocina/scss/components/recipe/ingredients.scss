@@ -61,7 +61,7 @@
 }
 
 .recipe-ingredient {
-  background-image: linear-gradient(var(--color-gray) 0%, var(--color-gray) 100%);
+  background-image: linear-gradient(var(--text-color-striked) 0%, var(--text-color-striked) 100%);
   background-repeat: no-repeat;
   background-position: center left;
   background-size: 0 1px;
@@ -81,11 +81,18 @@
     aspect-ratio: 1;
     border-radius: 3px;
     border: 1px solid var(--text-color-default);
+    transition-property: border;
+    transition-duration: var(--transition-duration-250);
+    transition-timing-function: var(--transition-timing-hover);
   }
 
   &.striked {
     background-size: 100% 1px;
-    color: var(--color-gray);
+    color: var(--text-color-striked);
+
+    &:before {
+      border: 1px solid var(--text-color-striked);
+    }
   }
 }
 

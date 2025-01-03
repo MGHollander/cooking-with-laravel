@@ -24,7 +24,7 @@
     }
 
     > li:has(:checked) {
-      color: var(--color-gray);
+      color: var(--text-color-striked);
     }
 
     > li::after {
