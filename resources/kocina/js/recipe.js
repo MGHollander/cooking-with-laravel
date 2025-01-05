@@ -52,19 +52,11 @@ document.addEventListener('alpine:init', () => {
     isWakeLockEnabled: false,
     // TODO Could this become a performance issue? Because it's always loaded. Maybe load async?
     async initWakeLock() {
-      console.log('Init wake lock');
-
       if (!("wakeLock" in navigator)) {
         return;
       }
 
-      console.log('Wake lock available');
       this.isWakeLockAvailable = true;
-
-      this.wakeLock?.addEventListener("release", () => {
-        // the wake lock has been released
-        console.log('Screen wake lock release event fired');
-      });
 
       document.addEventListener("visibilitychange", async () => {
         if (this.wakeLock && document.visibilityState === "visible") {
@@ -76,11 +68,8 @@ document.addEventListener('alpine:init', () => {
     },
 
     async toggleWakeLock() {
-      console.log('Toggle wake lock', {wakeLock: this.wakeLock, isWakeLockEnabled: this.isWakeLockEnabled});
-
       if (this.wakeLock) {
         this.wakeLock.release().then(() => {
-          console.log('Screen wake lock is released');
           this.wakeLock = undefined;
         }).catch((err) => {
           console.error(`Wake lock release error: ${err.name}, ${err.message}`);
@@ -88,7 +77,6 @@ document.addEventListener('alpine:init', () => {
       } else {
         try {
           this.wakeLock = await navigator.wakeLock.request("screen");
-          console.log('Screen wake lock is enabled');
         } catch (err) {
           // The Wake Lock request has failed - usually system related, such as battery.
           console.error(`Wake lock request error: ${err.name}, ${err.message}`);
