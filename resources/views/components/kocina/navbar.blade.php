@@ -1,5 +1,5 @@
 @push('scripts')
-    <script src="{{ Vite::asset('resources/kocina/js/navbar.js') }}"></script>
+    <script src="{{ Vite::asset('resources/kocina/js/navbar.js') }}" async></script>
 @endpush
 
 <div id="navbar" class="navbar" x-data="navbar" @keyup.escape="if(openNav) toggleNav();">

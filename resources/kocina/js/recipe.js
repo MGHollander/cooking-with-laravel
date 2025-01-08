@@ -49,7 +49,6 @@ document.addEventListener('alpine:init', () => {
     wakeLock: undefined,
     isWakeLockAvailable: false,
     isWakeLockEnabled: false,
-    // TODO Could this become a performance issue? Because it's always loaded. Maybe load async?
     async initWakeLock() {
       if (!("wakeLock" in navigator)) {
         return;

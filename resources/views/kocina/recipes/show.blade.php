@@ -8,7 +8,7 @@
     </x-slot>
 
     @push("scripts")
-        <script src="{{ Vite::asset('resources/kocina/js/recipe.js') }}"></script>
+        <script src="{{ Vite::asset('resources/kocina/js/recipe.js') }}" async></script>
     @endpush
 
     <div
