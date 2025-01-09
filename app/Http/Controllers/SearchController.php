@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Recipe;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\View\View;
 use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 
 class SearchController extends Controller
@@ -14,15 +13,15 @@ class SearchController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return \Inertia\Response
+     * @return \Illuminate\View\View
      */
-    public function index(Request $request): Response
+    public function index(Request $request): View
     {
-        $q       = $request->get('q') ?? '';
-        $recipes = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
+        $searchKey = $request->get('q', '');
+        $recipes   = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
             ->paginate(15)
             ->beginWithWildcard()
-            ->search(strtolower($q))
+            ->search(strtolower($searchKey))
             ->withQueryString()
             ->through(fn($recipe) => [
                 'id'    => $recipe->id,
@@ -31,9 +30,9 @@ class SearchController extends Controller
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
             ]);
 
-        return Inertia::render('Search/Index', [
-            'recipes' => $recipes,
-            'q'       => $q,
+        return view('kocina.search.index', [
+            'recipes'   => $recipes,
+            'searchKey' => $searchKey,
         ]);
     }
 

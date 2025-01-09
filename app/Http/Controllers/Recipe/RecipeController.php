@@ -10,12 +10,15 @@ use App\Http\Resources\StructuredData\Recipe\InstructionsResource;
 use App\Http\Traits\FillableAttributes;
 use App\Models\Recipe;
 use Artesaos\SEOTools\Facades\JsonLd;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Inertia\Inertia;
 use ProtoneMedia\LaravelCrossEloquentSearch\Search;
+use Symfony\Component\HttpFoundation\Response;
 
 class RecipeController extends Controller
 {
@@ -26,11 +29,11 @@ class RecipeController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index(): \Illuminate\View\View
+    public function index(): View
     {
         return view('kocina.recipes.index', [
             'recipes' => Recipe::query()
-                ->paginate(12)
+                ->paginate(15)
                 ->through(fn($recipe) => [
                     'id'    => $recipe->id,
                     'title' => $recipe->title,
@@ -77,7 +80,7 @@ class RecipeController extends Controller
      * @param string                   $slug
      * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response|\Illuminate\View\View
      */
-    public function show(Request $request, string $slug): \Illuminate\Http\JsonResponse|\Illuminate\View\View|\Symfony\Component\HttpFoundation\Response
+    public function show(Request $request, string $slug): JsonResponse|View|Response
     {
         $recipe = Recipe::findBySlug($slug);
 
@@ -186,7 +189,7 @@ class RecipeController extends Controller
         return redirect()->route('home')->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd!");
     }
 
-    private function notFound(Request $request, $slug): \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+    private function notFound(Request $request, $slug): JsonResponse|Response
     {
         $q       = Str::replace('-', ' ', $slug);
         $recipes = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])

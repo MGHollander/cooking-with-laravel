@@ -1,4 +1,6 @@
-<div {{ $attributes->merge(['class' => 'search-bar']) }} x-data="{ search: '' }">
+@props(['searchKey' => ''])
+
+<div {{ $attributes->merge(['class' => 'search-bar']) }} x-data="{ searchKey: '{{ $searchKey }}' }">
     <form action="{{ route('search') }}" class="search-bar-form">
         {{--
           TODO Very low prio. See if I can fix the bug with the clear button.
@@ -9,7 +11,7 @@
         <input
             type="search"
             name="q"
-            x-model="search"
+            x-model="searchKey"
             x-ref="search"
             placeholder="Zoek een recept, ingredient, thema of keuken"
             class="search-bar-field"
@@ -18,8 +20,8 @@
         <button
             type="button"
             class="search-bar-clear-button"
-            @click="search = '' || $refs.search.focus()"
-            x-show="search?.length > 0"
+            @click="searchKey = '' || $refs.search.focus()"
+            x-show="searchKey?.length > 0"
             x-transition
         >
             <span class="sr-only">Leeg het zoekveld</span>

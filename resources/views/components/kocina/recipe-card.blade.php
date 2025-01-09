@@ -1,5 +1,6 @@
 @props([
   "recipe",
+  "title_tag" => "h3",
 ])
 
 <a href="{{ route("recipes.show", ["slug" => $recipe["slug"]]) }}" class="recipe-card recipe-card-link">
@@ -12,9 +13,11 @@
                 class="recipe-card-image"
             />
         @else
-            <x-icon.meal class="recipe-card-image-placeholder"/>
+            <x-icon.meal class="recipe-card-image-placeholder" />
         @endif
     </div>
 
-    <h2 class="recipe-card-title">{{ $recipe["title"] }}</h2>
+    {{-- @formatter:off --}}
+    <{{ $title_tag }} class="recipe-card-title">{{ $recipe["title"] }}</{{ $title_tag }}>
 </a>
+{{-- @formatter:on --}}
