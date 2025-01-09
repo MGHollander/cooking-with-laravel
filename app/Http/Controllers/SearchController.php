@@ -19,7 +19,7 @@ class SearchController extends Controller
     {
         $searchKey = $request->get('q', '');
         $recipes   = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
-            ->paginate(15)
+            ->paginate(12)
             ->beginWithWildcard()
             ->search(strtolower($searchKey))
             ->withQueryString()

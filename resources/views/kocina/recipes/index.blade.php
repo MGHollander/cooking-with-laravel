@@ -1,5 +1,5 @@
 <x-kocina.layout>
-    <div class="container">
+    <div class="container recipes-page">
         @if ($recipes->total() > 0)
             <div class="hero hero-wine">
                 <div class="hero-overlay"></div>
@@ -21,7 +21,7 @@
             </div>
 
             @if ($recipes->hasPages())
-                <div class="mt-8">
+                <div>
                     {{-- TODO Test pagination with a lot of pages. --}}
                     {{ $recipes->links() }}
                 </div>

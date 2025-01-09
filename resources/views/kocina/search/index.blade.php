@@ -23,19 +23,19 @@
             </div>
 
             @if ($recipes->total() > 0)
-                <div class="search-results">
+                <div class="recipes">
                     @foreach ($recipes->items() as $recipe)
                         <x-kocina.recipe-card :recipe="$recipe" title_tag="h2" />
                     @endforeach
                 </div>
             @endif
-        </div>
 
-        @if ($recipes->hasPages())
-            <div class="mt-8">
-                {{-- TODO Test pagination with a lot of pages. --}}
-                {{ $recipes->links() }}
-            </div>
-        @endif
+            @if ($recipes->hasPages())
+                <div>
+                    {{-- TODO Test pagination with a lot of pages. --}}
+                    {{ $recipes->links() }}
+                </div>
+            @endif
+        </div>
     </div>
 </x-kocina.layout>

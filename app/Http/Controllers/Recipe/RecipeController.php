@@ -33,7 +33,7 @@ class RecipeController extends Controller
     {
         return view('kocina.recipes.index', [
             'recipes' => Recipe::query()
-                ->paginate(15)
+                ->paginate(12)
                 ->through(fn($recipe) => [
                     'id'    => $recipe->id,
                     'title' => $recipe->title,
@@ -80,12 +80,13 @@ class RecipeController extends Controller
      * @param string                   $slug
      * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response|\Illuminate\View\View
      */
+    // TODO Are these return types correct? SHould the doc blocks exisit at all or is it overkill with typing?
     public function show(Request $request, string $slug): JsonResponse|View|Response
     {
         $recipe = Recipe::findBySlug($slug);
 
         if (!$recipe) {
-            return $this->notFound($request, $slug);
+            return $this->notFound($slug);
         }
 
         $this->setJsonLdData($recipe);
@@ -189,13 +190,13 @@ class RecipeController extends Controller
         return redirect()->route('home')->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd!");
     }
 
-    private function notFound(Request $request, $slug): JsonResponse|Response
+    private function notFound($slug): \Illuminate\Http\Response
     {
-        $q       = Str::replace('-', ' ', $slug);
-        $recipes = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
+        $searchKey = Str::replace('-', ' ', $slug);
+        $recipes   = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
             ->paginate(12)
             ->beginWithWildcard()
-            ->search($q)
+            ->search($searchKey)
             ->withQueryString()
             ->through(fn($recipe) => [
                 'id'    => $recipe->id,
@@ -204,13 +205,14 @@ class RecipeController extends Controller
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
             ]);
 
-        // TODO !!
-        return Inertia::render('Recipes/NotFound', [
-            'q'       => implode(', ', explode(' ', $q)),
-            'recipes' => $recipes,
-        ])
-            ->toResponse($request)
-            ->setStatusCode(404);
+        return response()->view(
+            'kocina.recipes.not-found',
+            [
+                'recipes'   => $recipes,
+                'searchKey' => implode(', ', explode(' ', $searchKey)),
+            ],
+            Response::HTTP_NOT_FOUND
+        );
     }
 
     private function saveMedia(Request $request, Recipe $recipe): void
@@ -219,12 +221,12 @@ class RecipeController extends Controller
 
         if (!empty($mediaDimensions['card'])) {
             $cardDimensions    = $mediaDimensions['card'];
-            $manipulationsCard = ['manualCrop' => "${cardDimensions['width']},${cardDimensions['height']},${cardDimensions['left']},${cardDimensions['top']}"];
+            $manipulationsCard = ['manualCrop' => "{$cardDimensions['width']},{$cardDimensions['height']},{$cardDimensions['left']},{$cardDimensions['top']}"];
         }
 
         if (!empty($mediaDimensions['show'])) {
             $showDimensions    = $mediaDimensions['show'];
-            $manipulationsShow = ['manualCrop' => "${showDimensions['width']},${showDimensions['height']},${showDimensions['left']},${showDimensions['top']}"];
+            $manipulationsShow = ['manualCrop' => "{$showDimensions['width']},{$showDimensions['height']},{$showDimensions['left']},{$showDimensions['top']}"];
         }
 
         if ($request->hasFile('media')) {
