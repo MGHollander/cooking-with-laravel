@@ -1,7 +1,7 @@
 <x-kocina.layout>
     <div class="container recipes-page">
         @if ($recipes->total() > 0)
-            <div class="hero hero-wine">
+            <div class="hero hero-plates-mirrored">
                 <div class="hero-overlay"></div>
                 <h1 class="hero-title">Ontdek mijn favoriete gerechten</h1>
                 <p class="hero-text">
