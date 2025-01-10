@@ -1,4 +1,4 @@
-.recipes {
+.recipes-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
@@ -15,6 +15,10 @@
 
 .recipes-page > * + * {
   margin-top: 2rem;
+
+  @media (--kocina-media-breakpoint-s-min) {
+    margin-top: 3rem;
+  }
 }
 
 .recipes-title {

@@ -24,7 +24,7 @@
                     <p>Hopelijk zit er iets tussen!</p>
                 </div>
 
-                <div class="recipes">
+                <div class="recipes-grid">
                     @foreach ($recipes->items() as $recipe)
                         <x-kocina.recipe-card :recipe="$recipe" title_tag="h2" />
                     @endforeach
