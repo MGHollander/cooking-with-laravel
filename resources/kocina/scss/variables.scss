@@ -30,16 +30,15 @@
   --transition-timing-hover: ease-in-out;
   --transition-timing-function-default: cubic-bezier(0.4, 0, 0.2, 1);
 
-  --content-max-width: calc(var(--kocina-breakpoint-l) - 10rem);
+  --content-max-width: calc(var(--kocina-breakpoint-xl) - 12rem);
 }
 
 // The Media query sizes are inspired by TailwindCSS 3.4.
-// TODO breakpoint gelijk maken met onderstaande custom media queries.
 :root {
   --kocina-breakpoint-s: 640px;
-  --kocina-breakpoint-m: 960px;
-  --kocina-breakpoint-l: 1200px;
-  --kocina-breakpoint-xl: 1600px;
+  --kocina-breakpoint-m: 768px;
+  --kocina-breakpoint-l: 1024px;
+  --kocina-breakpoint-xl: 1280px;
 }
 
 // @see https://www.npmjs.com/package/postcss-custom-media

@@ -34,10 +34,10 @@
 
   @media (--kocina-media-breakpoint-l-min) {
     margin: 3.5rem auto 0;
-    max-width: calc(var(--kocina-breakpoint-l) - 10rem);
   }
 
   @media (--kocina-media-breakpoint-xl-min) {
+    max-width: var(--content-max-width);
     gap: 4rem;
   }
 }
