@@ -1,26 +1,29 @@
-// TODO Add a nice animation when hovering over a button.
 .button {
   display: inline-block;
   transition-property: color, background-color, border-color, transform, outline-offset;
   border-radius: 10rem;
-  background-color: #eaecf0;
+  background-color: var(--button-default-bg-color);
   padding: 0.75rem 1.5rem;
-  color: #4a4a4a;
+  color: var(--button-default-text-color);
   font-size: 0.9rem;
 
   &:hover:not(:disabled) {
-    background-color: #b4b4b6;
-    transform: scale(1.05);
+    background-color: var(--button-default-bg-color-hover);
+    transform: scale(1.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(1);
   }
 }
 
 .button-primary {
-  background-color: var(--color-primary);
-  color: var(--color-white);
+  background-color: var(--button-primary-bg-color);
+  color: var(--button-primary-text-color);
 
   &:hover:not(:disabled) {
-    background-color: #e9351f;
-    color: var(--color-white);
+    background-color: var(--button-primary-bg-color-hover);
+    color: var(--button-primary-text-color);
   }
 }
 
@@ -28,27 +31,27 @@
   background-color: transparent;
   border: 1px solid currentColor;
   border-radius: 50%;
-  color: var(--color-primary);
+  color: var(--button-outline-text-color);
   text-align: center;
   transition-property: background-color, border-color, color, opacity, outline-offset, transform;
   transition-duration: var(--transition-duration-250);
   transition-timing-function: var(--transition-timing-hover);
 
   &:disabled {
-    color: var(--color-black);
+    color: var(--button-outline-text-color-disabled);
     opacity: 0.7;
   }
 
   &:hover:not(:disabled) {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-white);
+    background-color: var(--button-outline-text-color);
+    border-color: var(--button-outline-text-color);
+    color: var(--button-outline-text-color-active);
   }
 
   &:has(:checked) {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
+    color: var(--button-outline-text-color-active);
+    background-color: var(--button-outline-text-color);
+    border-color: var(--button-outline-text-color);
 
     &:hover {
       opacity: 0.8;

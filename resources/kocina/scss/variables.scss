@@ -11,6 +11,18 @@
   --text-color-default: var(--color-gray-dark);
   --text-color-striked: #b0b0b0;
 
+  --button-default-text-color: var(--color-gray-dark);
+  --button-default-bg-color: var(--color-gray-light);
+  --button-default-bg-color-hover: #b4b4b6;
+
+  --button-primary-text-color: var(--color-white);
+  --button-primary-bg-color: var(--color-primary);
+  --button-primary-bg-color-hover: #e9351f;
+
+  --button-outline-text-color: var(--color-primary);
+  --button-outline-text-color-active: var(--color-white);
+  --button-outline-text-color-disabled: var(--color-gray-dark);
+
   --transition-duration-250: 0.25s;
   --transition-duration-300: 0.3s;
   --transition-timing-enter: ease-in;
