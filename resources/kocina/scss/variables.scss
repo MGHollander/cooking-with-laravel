@@ -34,6 +34,14 @@
 }
 
 // The Media query sizes are inspired by TailwindCSS 3.4.
+// TODO breakpoint gelijk maken met onderstaande custom media queries.
+:root {
+  --kocina-breakpoint-s: 640px;
+  --kocina-breakpoint-m: 960px;
+  --kocina-breakpoint-l: 1200px;
+  --kocina-breakpoint-xl: 1600px;
+}
+
 // @see https://www.npmjs.com/package/postcss-custom-media
 @custom-media --kocina-media-breakpoint-xs-max (max-width: 399px);
 @custom-media --kocina-media-breakpoint-xs-min (min-width: 400px);
