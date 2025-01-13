@@ -5,7 +5,6 @@
 
 <a href="{{ route("recipes.show", ["slug" => $recipe["slug"]]) }}" class="recipe-card recipe-card-link">
     <div class="recipe-card-media">
-        {{-- TODO Lazy load images --}}
         @if ($recipe["image"])
             <img
                 src="{{ $recipe["image"] }}"
