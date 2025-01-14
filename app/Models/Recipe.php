@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
@@ -14,9 +15,7 @@ use Spatie\Tags\HasTags;
 
 class Recipe extends Model implements HasMedia
 {
-    use HasSlug;
-    use HasTags;
-    use InteractsWithMedia;
+    use HasFactory, HasSlug, HasTags, InteractsWithMedia;
 
     protected $fillable = [
         'user_id',
