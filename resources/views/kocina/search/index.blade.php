@@ -31,10 +31,7 @@
             @endif
 
             @if ($recipes->hasPages())
-                <div>
-                    {{-- TODO Test pagination with a lot of pages. --}}
-                    {{ $recipes->links() }}
-                </div>
+                <x-kocina.pagination :paginator="$recipes" />
             @endif
         </div>
     </div>

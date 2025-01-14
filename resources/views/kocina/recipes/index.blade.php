@@ -18,20 +18,15 @@
             </div>
 
             <div class="recipes-grid">
-
                 @foreach ($recipes->items() as $recipe)
                     <x-kocina.recipe-card :recipe="$recipe" />
                 @endforeach
             </div>
 
             @if ($recipes->hasPages())
-                <div>
-                    {{-- TODO Test pagination with a lot of pages. --}}
-                    {{ $recipes->links() }}
-                </div>
+                <x-kocina.pagination :paginator="$recipes" />
             @endif
         @else
-            {{-- TODO Add a better page when there are no recipes. To do for when the website is going to have registration. --}}
             <p>Er zijn nog geen recepten toegevoegd.</p>
 
             @auth

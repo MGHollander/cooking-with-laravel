@@ -7,6 +7,7 @@
   padding: 0;
   color: var(--color-gray);
   list-style: none;
+  overflow-x: auto;
 }
 
 .pagination li {
@@ -21,4 +22,10 @@
 .pagination .active {
   color: var(--color-gray-dark);
   font-weight: 500;
+}
+
+@media (--kocina-media-breakpoint-s-max) {
+  .pagination li:not(.mobile) {
+    display: none;
+  }
 }
