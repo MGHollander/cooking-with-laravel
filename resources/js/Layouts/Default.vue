@@ -1,8 +1,8 @@
 <script setup>
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Link, useForm } from "@inertiajs/vue3";
-import { ref, watchEffect } from "vue";
+import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {useForm} from "@inertiajs/vue3";
+import {ref, watchEffect} from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Button from "@/Components/Button.vue";
 import Dropdown from "@/Components/Dropdown.vue";
@@ -42,9 +42,9 @@ watchEffect(() => {
             <div class="flex">
               <!-- Logo -->
               <div class="flex shrink-0 items-center">
-                <Link :href="route('home')">
+                <a :href="route('home')">
                   <ApplicationLogo class="block h-9 w-auto" />
-                </Link>
+                </a>
               </div>
 
               <!-- Navigation Links -->

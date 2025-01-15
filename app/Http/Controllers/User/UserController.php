@@ -113,7 +113,7 @@ class UserController extends Controller
 
         $user->update($attributes);
 
-        return redirect()->route('users.index')->with('success', 'De gebruiker “<i>{$user->name}</i>” is succesvol aangepast!');
+        return redirect()->route('users.edit', $user)->with('success', "De gebruiker “<i>{$user->name}</i>” is succesvol aangepast!");
     }
 
 

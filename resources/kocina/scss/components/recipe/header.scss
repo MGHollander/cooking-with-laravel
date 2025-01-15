@@ -86,5 +86,13 @@
 .recipe-author {
   margin-top: 1.5rem;
   font-size: 0.875rem;
+}
+
+.recipe-author,
+.recipe-management {
   grid-column: span 2 / span 2;
+
+  @media ((--kocina-media-breakpoint-xs-min) and (--kocina-media-breakpoint-s-max)) or (--kocina-media-breakpoint-l-min) {
+    grid-column: span 3 / span 3;
+  }
 }

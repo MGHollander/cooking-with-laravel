@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 
@@ -26,7 +27,7 @@ class ChangePasswordController extends Controller
      * Handle an incoming new password request.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -44,6 +45,8 @@ class ChangePasswordController extends Controller
 
         event(new PasswordReset($user));
 
-        return redirect()->route('home')->with('success', 'Je wachtwoord is succesvol gewijzigd!');
+        Session::flash('success', 'Je wachtwoord is succesvol gewijzigd!');
+
+        return Inertia::location(route('users.password.edit'));
     }
 }

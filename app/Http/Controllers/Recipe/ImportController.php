@@ -85,7 +85,7 @@ class ImportController extends Controller
         if ($request->get('return_to_import_page')) {
             return redirect()->route('import.index')->with('success', 'Het recept “<a href="' . route('recipes.show', $recipe->slug) . '"><i>' . $recipe->title . '</i></a>” is succesvol geïmporteerd!');
         }
-        return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol geïmporteerd!");
+        return redirect()->route('recipes.edit', $recipe->id)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol geïmporteerd!");
     }
 
     private function parseStructuredData($url)

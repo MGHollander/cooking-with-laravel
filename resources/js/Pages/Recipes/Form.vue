@@ -1,22 +1,22 @@
 <script setup>
-import { ClassicEditor } from "@ckeditor/ckeditor5-editor-classic";
-import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Head, router, useForm } from "@inertiajs/vue3";
+import {ClassicEditor} from "@ckeditor/ckeditor5-editor-classic";
+import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {Head, router, useForm} from "@inertiajs/vue3";
 import "../../../css/ckeditor.css";
 import "../../../css/ckeditor-content-styles.css";
-import { onMounted, ref } from "vue";
-import { Cropper } from "vue-advanced-cropper";
+import {onMounted, ref} from "vue";
+import {Cropper} from "vue-advanced-cropper";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
-import { instructionsEditorConfig, summaryEditorConfig } from "@/editorConfig";
+import {instructionsEditorConfig, summaryEditorConfig} from "@/editorConfig";
 import DefaultLayout from "@/Layouts/Default.vue";
 import "vue-advanced-cropper/dist/style.css";
 
-const props = defineProps({ recipe: Object });
+const props = defineProps({recipe: Object});
 const edit = route().current("recipes.edit") ?? false;
 
 const form = useForm({
@@ -43,14 +43,14 @@ const title = edit ? `Wijzig recept “${form.title}”` : "Voeg een nieuw recep
 
 const editor = ClassicEditor;
 const file = ref(null);
-const image = ref({ src: props.recipe?.media?.original_url ?? null, type: null });
+const image = ref({src: props.recipe?.media?.original_url ?? null, type: null});
 const cropperCard = ref(null);
 const cropperShow = ref(null);
 
 const save = () => {
   form.media_dimensions = {
-    card: cropperCard.value ? cropperCard.value.getResult().coordinates : null,
-    show: cropperShow.value ? cropperShow.value.getResult().coordinates : null,
+    card: cropperCard?.value ? cropperCard.value.getResult().coordinates : null,
+    show: cropperShow?.value ? cropperShow.value.getResult().coordinates : null,
   };
 
   form.post(edit ? route("recipes.update", props.recipe.id) : route("recipes.store"));
@@ -60,12 +60,12 @@ const clearMediaField = () => {
   form.destroy_media = true;
   form.media = null;
   file.value.value = null;
-  image.value = { src: null, type: null };
+  image.value = {src: null, type: null};
 };
 
 // Source: https://advanced-cropper.github.io/vue-advanced-cropper/guides/recipes.html#load-image-from-a-disc
 function loadImage(event) {
-  const { files } = event.target;
+  const {files} = event.target;
   if (files && files[0]) {
     form.media = files[0];
     form.destroy_image = false;

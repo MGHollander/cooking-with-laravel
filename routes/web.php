@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [RecipeController::class, 'index'])->name('home');
+Route::get('/recepten', function () {
+    return redirect()->route('home');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/recepten/toevoegen', [RecipeController::class, 'create'])->name('recipes.create');
@@ -35,7 +38,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/recepten/{slug}', [RecipeController::class, 'show'])->name('recipes.show');
-Route::redirect('/recepten', '/');
 
 Route::get('/over-mij', function () {
     return view('kocina.about-me');

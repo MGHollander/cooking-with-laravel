@@ -13,6 +13,7 @@ use Artesaos\SEOTools\Facades\JsonLd;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -57,7 +58,7 @@ class RecipeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param RecipeRequest $request
-     * @return RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function store(RecipeRequest $request)
     {
@@ -70,7 +71,9 @@ class RecipeController extends Controller
 
         $this->saveMedia($request, $recipe);
 
-        return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol toegevoegd!");
+        Session::flash('success', "Het recept is succesvol toegevoegd!");
+
+        return Inertia::location(route('recipes.edit', $recipe->id));
     }
 
     /**
@@ -80,7 +83,7 @@ class RecipeController extends Controller
      * @param string                   $slug
      * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response|\Illuminate\View\View
      */
-    // TODO Are these return types correct? SHould the doc blocks exisit at all or is it overkill with typing?
+    // TODO Are these return types correct? Should the doc blocks exisit at all or is it overkill with typing?
     public function show(Request $request, string $slug): JsonResponse|View|Response
     {
         $recipe = Recipe::findBySlug($slug);
@@ -95,6 +98,7 @@ class RecipeController extends Controller
             'recipe'     => [
                 'id'                  => $recipe->id,
                 'author'              => $recipe->author->name,
+                'user_id'             => $recipe->user_id,
                 'title'               => $recipe->title,
                 'slug'                => $recipe->slug,
                 'image'               => $recipe->getFirstMediaUrl('recipe_image', 'show'),
@@ -174,7 +178,7 @@ class RecipeController extends Controller
 
         $this->saveMedia($request, $recipe);
 
-        return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol gewijzigd!");
+        return redirect()->route('recipes.edit', $recipe->id)->with('success', "Het recept is succesvol gewijzigd!");
     }
 
     /**
