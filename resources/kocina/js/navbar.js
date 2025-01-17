@@ -7,8 +7,8 @@ document.addEventListener("alpine:init", () => {
     toggleSearch(e) {
       const search = document.getElementsByName("q");
 
-      // If there are more then 1 search field on the page, then focus on the second.
-      // We can assume that the first search field is the one in the navbar.
+      // If there is more then 1 search field on the page, then focus on the second.
+      // We can assume that the first search field is the one in the navbar and the second is visible on the page.
       if (search.length > 1) {
         search[1].scrollIntoView();
         search[1].focus();
@@ -45,27 +45,27 @@ document.addEventListener("alpine:init", () => {
 });
 
 const navbar = document.getElementById("navbar");
-const navbarHeight = navbar.offsetHeight;
 let prevScrollPos = window.scrollY;
 
 window.onscroll = function () {
-  let currentScrollPos = window.scrollY;
+  const navbarHeight = navbar.offsetHeight;
+  const currentScrollPos = window.scrollY;
 
   if (prevScrollPos > currentScrollPos) {
     // Scrolling up
     if (currentScrollPos > navbarHeight) {
       navbar.style.position = "fixed";
       navbar.style.transform = "translateY(0)";
-      navbar.style.boxShadow = "rgba(0, 0, 0, 0.1) 0px 0.25rem 0.75rem";
+      navbar.classList.add("navbar-floating");
     }
 
     if (currentScrollPos === 0) {
       navbar.style.position = "absolute";
-      navbar.style.boxShadow = "none";
+      navbar.classList.remove("navbar-floating");
     }
   } else {
     // Scrolling down
-    navbar.style.boxShadow = "none";
+    navbar.classList.remove("navbar-floating");
 
     if (currentScrollPos < navbarHeight) {
       navbar.style.position = "absolute";

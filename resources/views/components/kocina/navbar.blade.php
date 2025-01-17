@@ -2,7 +2,8 @@
     <script src="{{ Vite::asset('resources/kocina/js/navbar.js') }}" async></script>
 @endpush
 
-<div id="navbar" class="navbar" x-data="navbar" @keyup.escape="if(openNav) toggleNav();">
+<div id="navbar" class="navbar" x-data="navbar" @keyup.escape="if(openNav) toggleNav();"
+     :class="{ 'navbar-search-open' : openSearch }">
     <div class="container navbar-container">
         <div class="navbar-left">
             <a href="{{ route('home') }}" class="navbar-title">{{ env('APP_NAME') }}</a>
