@@ -6,8 +6,17 @@
 
     <title>{{ (! empty($title) ? $title . " - " : "") . config("app.name") }}</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Leckerli+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Leckerli+One&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap"
+          media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Leckerli+One&display=swap" media="print"
+          onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Leckerli+One&display=swap" />
+    </noscript>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2.0">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2.0">
