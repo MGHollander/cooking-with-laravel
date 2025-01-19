@@ -1,3 +1,18 @@
+html {
+  background: var(--color-white);
+  scroll-behavior: smooth;
+  min-width: 400px;
+  color: var(--text-color-default);
+  font-weight: 400;
+  font-size: 100%;
+  line-height: 1.5;
+  font-family: "Montserrat", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
 a,
 button,
 input {
@@ -10,20 +25,6 @@ input {
     outline-color: var(--color-primary);
     outline-offset: 4px;
   }
-}
-
-html {
-  background: var(--color-white);
-  scroll-behavior: smooth;
-  color: var(--text-color-default);
-  font-weight: 400;
-  font-size: 100%;
-  line-height: 1.5;
-  font-family: "Montserrat", sans-serif;
-}
-
-body {
-  margin: 0;
 }
 
 a {
@@ -289,10 +290,9 @@ pre {
   padding: 0.625em;
   overflow: auto;
   color: #4a4a4a;
-  font:
-    0.875rem / 1.5 Consolas,
-    monaco,
-    monospace;
+  font: 0.875rem / 1.5 Consolas,
+  monaco,
+  monospace;
   -moz-tab-size: 4;
   tab-size: 4;
 }
