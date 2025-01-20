@@ -42,8 +42,8 @@
 }
 
 // @see https://www.npmjs.com/package/postcss-custom-media
-@custom-media --kocina-media-breakpoint-xs-max (max-width: 399px);
-@custom-media --kocina-media-breakpoint-xs-min (min-width: 400px);
+@custom-media --kocina-media-breakpoint-xs-max (max-width: 359px);
+@custom-media --kocina-media-breakpoint-xs-min (min-width: 360px);
 
 @custom-media --kocina-media-breakpoint-s-max (max-width: 639px);
 @custom-media --kocina-media-breakpoint-s-min (min-width: 640px);

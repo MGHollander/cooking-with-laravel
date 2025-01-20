@@ -1,7 +1,6 @@
 html {
   background: var(--color-white);
   scroll-behavior: smooth;
-  min-width: 400px;
   color: var(--text-color-default);
   font-weight: 400;
   font-size: 100%;
@@ -11,6 +10,7 @@ html {
 
 body {
   margin: 0;
+  min-width: 360px;
 }
 
 a,
