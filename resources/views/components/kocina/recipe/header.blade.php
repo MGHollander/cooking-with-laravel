@@ -54,18 +54,18 @@
                     <dd>{{ $recipe["cooking_minutes"] }} {{ $recipe["cooking_minutes"] === 1 ? "minuut" : "minuten" }}</dd>
                 </dl>
             @endif
-
-            <div class="recipe-author">
-                Toegevoegd door {{ $recipe['author'] }}
-            </div>
-
-            @if ($recipe['user_id'] === auth()->id())
-                <div class="recipe-management">
-                    <a href="{{ route('recipes.edit', $recipe['id']) }}" class="button button-primary button-small">
-                        Bewerk recept
-                    </a>
-                </div>
-            @endif
         </div>
+
+        <div class="recipe-author">
+            Toegevoegd door {{ $recipe['author'] }}
+        </div>
+
+        @if ($recipe['user_id'] === auth()->id())
+            <div class="recipe-management">
+                <a href="{{ route('recipes.edit', $recipe['id']) }}" class="button button-primary button-small">
+                    Bewerk recept
+                </a>
+            </div>
+        @endif
     </div>
 </div>

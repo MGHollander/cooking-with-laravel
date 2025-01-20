@@ -1,8 +1,10 @@
 .recipe-header {
-  @media (--kocina-media-breakpoint-s-min) {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+  &:has(.recipe-image) {
+    @media (--kocina-media-breakpoint-s-min) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
   }
 
   @media (--kocina-media-breakpoint-m-min) {
@@ -50,27 +52,35 @@
 }
 
 .recipe-meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   row-gap: 1.5rem;
   font-size: 0.875rem;
-
-  @media ((--kocina-media-breakpoint-xs-min) and (--kocina-media-breakpoint-s-max)) or (--kocina-media-breakpoint-l-min) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
 
   dl {
     margin: 0;
     padding: 0 1.5rem;
     text-align: center;
+    width: 50%;
+    box-sizing: border-box;
 
-    &:nth-child(even) {
+    // Quantity query that applies to to all elements as soon as there are three or more.
+    &:nth-last-child(n + 3),
+    &:nth-last-child(n + 3) ~ dl {
+      width: 33.3333%;
+    }
+
+    &:not(:first-child) {
       border-left: 1px solid var(--color-gray-light);
     }
 
-    @media ((--kocina-media-breakpoint-xs-min) and (--kocina-media-breakpoint-s-max)) or (--kocina-media-breakpoint-l-min) {
-      &:not(:first-child) {
-        border-left: 1px solid var(--color-gray-light);
+    .recipe-header:has(.recipe-image) & {
+      @media (--kocina-media-breakpoint-s-min) and (--kocina-media-breakpoint-l-max) {
+        width: 50%;
+
+        &:nth-child(odd) {
+          border-left: none;
+        }
       }
     }
   }
@@ -90,9 +100,5 @@
 
 .recipe-author,
 .recipe-management {
-  grid-column: span 2 / span 2;
-
-  @media ((--kocina-media-breakpoint-xs-min) and (--kocina-media-breakpoint-s-max)) or (--kocina-media-breakpoint-l-min) {
-    grid-column: span 3 / span 3;
-  }
+  width: 100%;
 }
