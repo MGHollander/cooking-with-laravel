@@ -68,8 +68,6 @@
   transition-property: background-size, color;
   transition-duration: var(--transition-duration-250);
   transition-timing-function: var(--transition-timing-hover);
-  display: inline-flex;
-  align-items: center;
   margin-left: -0.15rem;
 
   &::before {
