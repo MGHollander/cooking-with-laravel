@@ -3,21 +3,7 @@ document.addEventListener("alpine:init", () => {
     openNav: false,
     openSearch: false,
     openUserMenu: false,
-
-    init() {
-      this.$nextTick(() => {
-        let _this = this;
-
-        window.onresize = function () {
-          let breakpoint = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue("--kocina-breakpoint-m"));
-          // When the window is resized to a size that does not have an offcanvas menu, 
-          // close the offcanvas menu to remove the overflow hidden on the html.
-          if (window.innerWidth >= breakpoint && _this.openNav) {
-            _this.openNav = false;
-          }
-        }
-      });
-    },
+    prevScrollPos: window.scrollY,
 
     toggleSearch(e) {
       const search = document.getElementsByName("q");
@@ -46,6 +32,56 @@ document.addEventListener("alpine:init", () => {
       this.openUserMenu = !this.openUserMenu;
     },
 
+    events: {
+      ['@keyup.escape']() {
+        if (this.openNav) {
+          this.toggleNav();
+        }
+      },
+
+      ['@resize.window']() {
+        const breakpoint = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue("--kocina-breakpoint-m"));
+        // When the window is resized to a size that does not have an offcanvas menu,
+        // close the offcanvas menu to remove the overflow hidden on the html.
+        if (window.innerWidth >= breakpoint && this.openNav) {
+          this.openNav = false;
+        }
+      },
+
+      ['@scroll.window']() {
+        const navbar = this.$el;
+        const navbarHeight = navbar.offsetHeight;
+        const currentScrollPos = window.scrollY;
+
+        if (this.prevScrollPos > currentScrollPos) {
+          // Scrolling up
+          if (currentScrollPos > navbarHeight) {
+            navbar.style.position = "fixed";
+            navbar.style.transform = "translateY(0)";
+            navbar.classList.add("navbar-floating");
+          }
+
+          if (currentScrollPos === 0) {
+            navbar.style.position = "absolute";
+            navbar.classList.remove("navbar-floating");
+          }
+        } else {
+          // Scrolling down
+          navbar.classList.remove("navbar-floating");
+
+          if (currentScrollPos < navbarHeight) {
+            navbar.style.position = "absolute";
+          }
+
+          if (currentScrollPos > navbarHeight) {
+            navbar.style.transform = `translateY(-${navbarHeight}px)`;
+          }
+        }
+
+        this.prevScrollPos = currentScrollPos;
+      },
+    },
+
     offcanvasTransition: {
       ["x-transition:enter"]: "navbar-menu-offcanvas-transition-enter",
       ["x-transition:enter-start"]: "navbar-menu-offcanvas-transition-enter-start",
@@ -64,38 +100,3 @@ document.addEventListener("alpine:init", () => {
     },
   }));
 });
-
-const navbar = document.getElementById("navbar");
-let prevScrollPos = window.scrollY;
-
-window.onscroll = function () {
-  const navbarHeight = navbar.offsetHeight;
-  const currentScrollPos = window.scrollY;
-
-  if (prevScrollPos > currentScrollPos) {
-    // Scrolling up
-    if (currentScrollPos > navbarHeight) {
-      navbar.style.position = "fixed";
-      navbar.style.transform = "translateY(0)";
-      navbar.classList.add("navbar-floating");
-    }
-
-    if (currentScrollPos === 0) {
-      navbar.style.position = "absolute";
-      navbar.classList.remove("navbar-floating");
-    }
-  } else {
-    // Scrolling down
-    navbar.classList.remove("navbar-floating");
-
-    if (currentScrollPos < navbarHeight) {
-      navbar.style.position = "absolute";
-    }
-
-    if (currentScrollPos > navbarHeight) {
-      navbar.style.transform = `translateY(-${navbarHeight}px)`;
-    }
-  }
-
-  prevScrollPos = currentScrollPos;
-};

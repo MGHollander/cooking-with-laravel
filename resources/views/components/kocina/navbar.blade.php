@@ -2,8 +2,7 @@
     <script src="{{ Vite::asset('resources/kocina/js/navbar.js') }}" async></script>
 @endpush
 
-<div id="navbar" class="navbar" x-data="navbar" @keyup.escape="if(openNav) toggleNav();"
-     :class="{ 'navbar-search-open' : openSearch }">
+<div id="navbar" class="navbar" x-data="navbar" x-bind="events" :class="{ 'navbar-search-open' : openSearch }">
     <div class="container navbar-container">
         <div class="navbar-left">
             <a href="{{ route('home') }}" class="navbar-title">{{ env('APP_NAME') }}</a>
@@ -13,7 +12,7 @@
         </div>
 
         <div class="navbar-right">
-            <button class="navbar-search-button" @click="toggleSearch">
+            <button class="navbar-search-button" @click="toggleSearch()">
                 <x-icon.magnify-glass width="24" height="24" />
             </button>
 
