@@ -19,6 +19,12 @@ document.addEventListener("alpine:init", () => {
 
     toggleNav() {
       this.openNav = !this.openNav;
+
+      if (this.openNav) {
+        // Set the root element to fixed position when the offcanvas menu is opened.
+        // This prevents the navbar from moving when it got position: absolute from the sticky scroling behavior.
+        this.$root.style.position = "fixed";
+      }
     },
 
     toggleUserMenu() {
