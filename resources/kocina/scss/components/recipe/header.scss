@@ -46,9 +46,15 @@
 }
 
 .recipe-title {
+  text-wrap: balance;
+
   @media (--kocina-media-breakpoint-m-max) {
     font-size: 1.825rem;
   }
+}
+
+.recipe-summary {
+  text-wrap: pretty;
 }
 
 .recipe-meta {

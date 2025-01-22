@@ -26,9 +26,8 @@
 .recipe-card-image,
 .recipe-card-image-placeholder {
   filter: brightness(0.8);
-  transition:
-    filter var(--transition-duration-250) var(--transition-timing-function-default),
-    transform var(--transition-duration-250) var(--transition-timing-function-default);
+  transition: filter var(--transition-duration-250) var(--transition-timing-function-default),
+  transform var(--transition-duration-250) var(--transition-timing-function-default);
 
   .recipe-card:hover & {
     transform: scale(1.1) rotate(2deg);
@@ -57,6 +56,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-wrap: balance;
 
   @media (--kocina-media-breakpoint-m-min) {
     font-size: 1rem;
