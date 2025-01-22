@@ -13,7 +13,7 @@
         "artesaos/seotools": "^1.3",
         "brick/structured-data": "^0.1.1",
         "guzzlehttp/guzzle": "^7.2",
-        "inertiajs/inertia-laravel": "^0.6.0",
+        "inertiajs/inertia-laravel": "^0.6",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.7",
