@@ -4,6 +4,21 @@ document.addEventListener("alpine:init", () => {
     openSearch: false,
     openUserMenu: false,
 
+    init() {
+      this.$nextTick(() => {
+        let _this = this;
+
+        window.onresize = function () {
+          let breakpoint = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue("--kocina-breakpoint-m"));
+          // When the window is resized to a size that does not have an offcanvas menu, 
+          // close the offcanvas menu to remove the overflow hidden on the html.
+          if (window.innerWidth >= breakpoint && _this.openNav) {
+            _this.openNav = false;
+          }
+        }
+      });
+    },
+
     toggleSearch(e) {
       const search = document.getElementsByName("q");
 
