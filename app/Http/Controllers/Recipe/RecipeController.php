@@ -219,20 +219,41 @@ class RecipeController extends Controller
         );
     }
 
+    /**
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
+     */
     private function saveMedia(Request $request, Recipe $recipe): void
     {
         $mediaDimensions = $request->get('media_dimensions', []);
 
         if (!empty($mediaDimensions['card'])) {
             $cardDimensions    = $mediaDimensions['card'];
-            $manipulationsCard = ['manualCrop' => "{$cardDimensions['width']},{$cardDimensions['height']},{$cardDimensions['left']},{$cardDimensions['top']}"];
+            $manipulationsCard = [
+                'manualCrop' => [
+                    (int) $cardDimensions['width'],
+                    (int) $cardDimensions['height'],
+                    (int) $cardDimensions['left'],
+                    (int) $cardDimensions['top'],
+                ],
+                'width'      => [600],
+            ];
         }
 
         if (!empty($mediaDimensions['show'])) {
             $showDimensions    = $mediaDimensions['show'];
-            $manipulationsShow = ['manualCrop' => "{$showDimensions['width']},{$showDimensions['height']},{$showDimensions['left']},{$showDimensions['top']}"];
+            $manipulationsShow = [
+                'manualCrop' => [
+                    (int) $showDimensions['width'],
+                    (int) $showDimensions['height'],
+                    (int) $showDimensions['left'],
+                    (int) $showDimensions['top'],
+                ],
+                'width'      => [1200],
+            ];
         }
 
+        // New media
         if ($request->hasFile('media')) {
             $recipe->addMediaFromRequest('media')
                 ->withManipulations([
@@ -242,7 +263,9 @@ class RecipeController extends Controller
                 ->toMediaCollection('recipe_image');
         }
 
-        if ($media = $recipe->getFirstMedia('recipe_image')) {
+        // Existing media
+        $media = $recipe->getFirstMedia('recipe_image');
+        if ($media) {
             $media->manipulations = [
                 'card' => $manipulationsCard ?? [],
                 'show' => $manipulationsShow ?? [],

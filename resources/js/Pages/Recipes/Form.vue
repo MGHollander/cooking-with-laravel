@@ -121,7 +121,7 @@ function confirmDeletion() {
 onMounted(() => {
   const coordinatesCard = props.recipe?.media?.manipulations?.card?.manualCrop;
   if (coordinatesCard) {
-    const [width, height, left, top] = coordinatesCard.split(",");
+    const [width, height, left, top] = coordinatesCard;
 
     cropperCard.value.setCoordinates({
       width: width,
@@ -133,7 +133,7 @@ onMounted(() => {
 
   const coordinatesShow = props.recipe?.media?.manipulations?.show?.manualCrop;
   if (coordinatesShow) {
-    const [width, height, left, top] = coordinatesShow.split(",");
+    const [width, height, left, top] = coordinatesShow;
 
     cropperShow.value.setCoordinates({
       width: width,
