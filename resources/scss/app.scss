@@ -1,26 +1,26 @@
+@use "sass:meta";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-    p + p {
-        @apply mt-4;
-    }
+  p + p {
+    @apply mt-4;
+  }
 
-    a {
-        @apply text-emerald-700 underline transition-all;
+  a {
+    @apply text-emerald-700 underline transition-all;
 
-        &:hover {
-            @apply text-black;
-        }
+    &:hover {
+      @apply text-black;
     }
+  }
 
-    ul, ol {
-        @apply list-disc list-inside my-4;
-    }
+  ul, ol {
+    @apply list-disc list-inside my-4;
+  }
 }
 
-@layer components {
-    @import 'resources/scss/components/recipe-instructions';
-    @import 'resources/scss/components/recipe-card';
-}
+@include meta.load-css('components/recipe-instructions');
+@include meta.load-css('components/recipe-card');
