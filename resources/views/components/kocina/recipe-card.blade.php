@@ -10,8 +10,8 @@
                 src="{{ $recipe["image"] }}"
                 alt="{{ $recipe["title"] }}"
                 class="recipe-card-image"
-                width="285"
-                height="115"
+                width="300"
+                height="160"
             />
         @else
             <x-icon.meal class="recipe-card-image-placeholder" />
