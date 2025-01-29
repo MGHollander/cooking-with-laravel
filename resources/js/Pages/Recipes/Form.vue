@@ -1,8 +1,10 @@
 <script setup>
-import {ClassicEditor} from "@ckeditor/ckeditor5-editor-classic";
+import {Ckeditor} from '@ckeditor/ckeditor5-vue';
+import {ClassicEditor} from 'ckeditor5';
 import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {Head, router, useForm} from "@inertiajs/vue3";
+import 'ckeditor5/ckeditor5.css';
 import "../../../css/ckeditor.css";
 import "../../../css/ckeditor-content-styles.css";
 import {onMounted, ref} from "vue";

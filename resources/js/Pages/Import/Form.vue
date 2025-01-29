@@ -1,6 +1,8 @@
 <script setup>
-import { ClassicEditor } from "@ckeditor/ckeditor5-editor-classic";
-import { Head, useForm } from "@inertiajs/vue3";
+import {Ckeditor} from '@ckeditor/ckeditor5-vue';
+import {ClassicEditor} from 'ckeditor5';
+import {Head, useForm} from "@inertiajs/vue3";
+import 'ckeditor5/ckeditor5.css';
 import "../../../css/ckeditor.css";
 import "../../../css/ckeditor-content-styles.css";
 import Button from "@/Components/Button.vue";
@@ -8,10 +10,10 @@ import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
-import { instructionsEditorConfig, summaryEditorConfig } from "@/editorConfig";
+import {instructionsEditorConfig, summaryEditorConfig} from "@/editorConfig";
 import DefaultLayout from "@/Layouts/Default.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
 
 const props = defineProps({
   url: String,
