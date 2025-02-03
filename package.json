@@ -1,7 +1,6 @@
 {
     "name": "@mghollander/cooking-with-laravel",
     "private": true,
-    "type": "module",
     "scripts": {
         "dev": "vite",
         "build": "vite build",
