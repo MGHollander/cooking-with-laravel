@@ -1,6 +1,9 @@
 {
     "name": "@mghollander/cooking-with-laravel",
     "private": true,
+    "engines": {
+        "node": "22.x"
+    },
     "scripts": {
         "dev": "vite",
         "build": "vite build",
