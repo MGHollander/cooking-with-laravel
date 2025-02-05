@@ -24,6 +24,7 @@
         "lodash": "^4.17.19",
         "postcss": "^8.4.39",
         "postcss-custom-media": "^11.0.5",
+        "postcss-import": "^16.1.0",
         "prettier": "^3.3.3",
         "prettier-plugin-blade": "^2.1.19",
         "prettier-plugin-css-order": "^2.1.2",
