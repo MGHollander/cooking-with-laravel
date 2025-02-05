@@ -3,6 +3,7 @@ document.addEventListener("alpine:init", () => {
     openNav: false,
     openSearch: false,
     openUserMenu: false,
+    openAddRecipeMenu: false,
     prevScrollPos: window.scrollY,
 
     toggleSearch(e) {
@@ -30,6 +31,9 @@ document.addEventListener("alpine:init", () => {
 
     toggleUserMenu() {
       this.openUserMenu = !this.openUserMenu;
+    },
+    toggleAddRecipeMenu() {
+      this.openAddRecipeMenu = !this.openAddRecipeMenu;
     },
 
     events: {
