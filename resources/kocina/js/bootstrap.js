@@ -4,6 +4,9 @@ import Alpine from "alpinejs";
 import collapse from "@alpinejs/collapse";
 import focus from "@alpinejs/focus";
 
+import "./components/recipe";
+import "./components/navbar";
+
 window._ = _;
 
 /**

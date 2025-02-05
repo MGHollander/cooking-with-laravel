@@ -7,10 +7,6 @@
         <link rel="canonical" href="{{ route("recipes.show", ["slug" => $recipe["slug"]]) }}" />
     </x-slot>
 
-    @push("scripts")
-        <script src="{{ Vite::asset('resources/kocina/js/components/recipe.js') }}" async></script>
-    @endpush
-
     <div
         class="container recipe-page"
         x-data="recipe({{ Illuminate\Support\Js::from($recipe["ingredients"]) }}, parseInt({{ $recipe["servings"] }}) ?? 1)"
