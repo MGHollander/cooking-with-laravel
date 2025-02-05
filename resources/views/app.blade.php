@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('head')
-    @routes
+    @routes()
     @vite('resources/js/app.js')
     @inertiaHead
 @endsection

@@ -1,5 +1,5 @@
 {
-    "name": "laravel/laravel",
+    "name": "mghollander/cooking-with-laravel",
     "type": "project",
     "description": "The Laravel Framework.",
     "keywords": [
@@ -11,31 +11,32 @@
         "php": "^8.2.0",
         "ext-dom": "*",
         "artesaos/seotools": "^1.3",
-        "brick/structured-data": "^0.1.1",
+        "brick/structured-data": "^0.1",
         "guzzlehttp/guzzle": "^7.2",
-        "inertiajs/inertia-laravel": "^0.6.0",
-        "laravel/framework": "^10.0",
-        "laravel/sanctum": "^3.2",
+        "inertiajs/inertia-laravel": "^2.0",
+        "laravel/framework": "^11.0",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.7",
-        "openai-php/client": "^0.6.2",
+        "openai-php/client": "^0.10",
         "protonemedia/laravel-cross-eloquent-search": "^3.2",
-        "spatie/laravel-medialibrary": "^10.0.0",
+        "spatie/laravel-medialibrary": "^11.0",
         "spatie/laravel-sluggable": "^3.5",
         "spatie/laravel-tags": "^4.4",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^2.5.0"
     },
     "require-dev": {
         "deployer/deployer": "^7.3",
-        "fakerphp/faker": "^1.9.1",
+        "fakerphp/faker": "^1.9",
         "itsgoingd/clockwork": "^5.2",
-        "laravel/breeze": "^1.11",
+        "laravel/breeze": "^2.3",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.16",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^7.6",
-        "phpunit/phpunit": "^10.2",
+        "nunomaduro/collision": "^8.5",
+        "phpunit/phpunit": "^11.5",
         "roave/security-advisories": "dev-latest",
-        "spatie/laravel-ignition": "^2.0"
+        "spatie/laravel-error-solutions": "^1.0",
+        "spatie/laravel-ignition": "^2.9"
     },
     "autoload": {
         "psr-4": {

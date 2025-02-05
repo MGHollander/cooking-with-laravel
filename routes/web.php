@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [RecipeController::class, 'index'])->name('home');
+Route::get('/recepten', function () {
+    return redirect()->route('home');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/recepten/toevoegen', [RecipeController::class, 'create'])->name('recipes.create');
@@ -34,12 +37,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/recepten/importeren', [ImportController::class, 'store'])->name('import.store');
 });
 
-Route::get('/recepten/{slug}', [RecipeController::class, 'show'])
-    ->name('recipes.show');
-Route::redirect('/recepten', '/');
+Route::get('/recepten/{slug}', [RecipeController::class, 'show'])->name('recipes.show');
 
+Route::get('/over-mij', function () {
+    return view('kocina.about-me');
+})->name('about-me');
+Route::get('/privacy', function () {
+    return view('kocina.privacy');
+})->name('privacy');
 Route::get('/zoeken', [SearchController::class, 'index'])->name('search');
-Route::get('/privacy', PrivacyController::class)->name('privacy');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/gebruikers/wachtwoord-wijzigen', [ChangePasswordController::class, 'edit'])->name('users.password.edit');

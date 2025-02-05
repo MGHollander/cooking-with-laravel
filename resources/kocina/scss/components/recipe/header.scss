@@ -1,0 +1,110 @@
+.recipe-header {
+  &:has(.recipe-image) {
+    @media (--kocina-media-breakpoint-s-min) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+  }
+
+  @media (--kocina-media-breakpoint-m-min) {
+    gap: 3rem;
+  }
+
+  @media (--kocina-media-breakpoint-xl-min) {
+    gap: 4rem;
+  }
+
+  > * + * {
+    margin-top: 2rem;
+
+    @media (--kocina-media-breakpoint-s-min) {
+      margin-top: 0;
+    }
+  }
+}
+
+.recipe-header-body {
+  align-self: center;
+
+  @media (--kocina-media-breakpoint-s-min) {
+    padding: 1rem 0;
+    align-items: center;
+  }
+
+  > * + * {
+    margin-top: 2rem;
+  }
+}
+
+.recipe-image {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 1.25rem;
+  object-fit: cover;
+}
+
+.recipe-title {
+  text-wrap: balance;
+
+  @media (--kocina-media-breakpoint-m-max) {
+    font-size: 1.825rem;
+  }
+}
+
+.recipe-summary {
+  text-wrap: pretty;
+}
+
+.recipe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 1.5rem;
+  font-size: 0.875rem;
+
+  dl {
+    margin: 0;
+    padding: 0 1.5rem;
+    text-align: center;
+    width: 50%;
+    box-sizing: border-box;
+
+    // Quantity query that applies to to all elements as soon as there are three or more.
+    &:nth-last-child(n + 3),
+    &:nth-last-child(n + 3) ~ dl {
+      width: 33.3333%;
+    }
+
+    &:not(:first-child) {
+      border-left: 1px solid var(--color-gray-light);
+    }
+
+    .recipe-header:has(.recipe-image) & {
+      @media (--kocina-media-breakpoint-s-min) and (--kocina-media-breakpoint-l-max) {
+        width: 50%;
+
+        &:nth-child(odd) {
+          border-left: none;
+        }
+      }
+    }
+  }
+
+  dt {
+    .recipe-meta-icon {
+      margin: 0 auto;
+      width: 2.5rem;
+    }
+  }
+}
+
+.recipe-author {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.recipe-author,
+.recipe-management {
+  width: 100%;
+}

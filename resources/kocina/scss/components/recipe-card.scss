@@ -1,0 +1,68 @@
+.recipe-card {
+  transition-property: color, outline-offset, transform;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.recipe-card-link {
+  border-radius: 0.75rem;
+
+  &:focus {
+    // Position and z-index are set to make sure the focussed element is showed about hovered items.
+    position: relative;
+    z-index: 1;
+    outline-offset: 6px;
+  }
+}
+
+.recipe-card-media {
+  border-radius: 0.75rem;
+  background-color: rgb(210, 210, 210);
+  overflow: hidden;
+}
+
+.recipe-card-image,
+.recipe-card-image-placeholder {
+  filter: brightness(0.8);
+  transition: filter var(--transition-duration-250) var(--transition-timing-function-default),
+  transform var(--transition-duration-250) var(--transition-timing-function-default);
+
+  .recipe-card:hover & {
+    transform: scale(1.1) rotate(2deg);
+    filter: brightness(1);
+  }
+}
+
+.recipe-card-image-placeholder {
+  color: rgb(180, 180, 180);
+
+  .recipe-card:hover & {
+    filter: brightness(0.8);
+  }
+}
+
+.recipe-card-title {
+  display: -webkit-box;
+  transition: color var(--transition-duration-250) var(--transition-timing-function-default);
+  margin: 1rem 0 0.25rem;
+  max-width: 400px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-wrap: balance;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    font-size: 1rem;
+  }
+
+  .recipe-card:hover & {
+    color: var(--color-primary);
+  }
+}

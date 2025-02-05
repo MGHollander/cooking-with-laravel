@@ -1,0 +1,43 @@
+.recipe-page > * + * {
+  margin-top: 2rem;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    margin-top: 3rem;
+  }
+}
+
+.recipe-content-container {
+  max-width: var(--content-max-width);
+
+  > * + * {
+    margin-top: 1.5rem;
+  }
+
+  @media (--kocina-media-breakpoint-s-min) {
+    > * + * {
+      margin-top: 2rem;
+    }
+  }
+
+  @media (--kocina-media-breakpoint-m-min) {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: max-content 1fr;
+    grid-template-columns: 1fr 33%;
+    gap: 3rem;
+
+    > * + * {
+      margin-top: 0;
+    }
+  }
+
+  @media (--kocina-media-breakpoint-l-min) {
+    margin: 3.5rem auto 0;
+  }
+
+  @media (--kocina-media-breakpoint-xl-min) {
+    max-width: var(--content-max-width);
+    gap: 4rem;
+  }
+}

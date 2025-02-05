@@ -1,22 +1,24 @@
 <script setup>
-import { ClassicEditor } from "@ckeditor/ckeditor5-editor-classic";
-import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Head, router, useForm } from "@inertiajs/vue3";
+import {Ckeditor} from '@ckeditor/ckeditor5-vue';
+import {ClassicEditor} from 'ckeditor5';
+import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {Head, router, useForm} from "@inertiajs/vue3";
+import 'ckeditor5/ckeditor5.css';
 import "../../../css/ckeditor.css";
 import "../../../css/ckeditor-content-styles.css";
-import { onMounted, ref } from "vue";
-import { Cropper } from "vue-advanced-cropper";
+import {onMounted, ref} from "vue";
+import {Cropper} from "vue-advanced-cropper";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
-import { instructionsEditorConfig, summaryEditorConfig } from "@/editorConfig";
+import {instructionsEditorConfig, summaryEditorConfig} from "@/editorConfig";
 import DefaultLayout from "@/Layouts/Default.vue";
 import "vue-advanced-cropper/dist/style.css";
 
-const props = defineProps({ recipe: Object });
+const props = defineProps({recipe: Object});
 const edit = route().current("recipes.edit") ?? false;
 
 const form = useForm({
@@ -27,7 +29,7 @@ const form = useForm({
   media: null,
   media_dimensions: null,
   destroy_media: false,
-  summary: edit ? props.recipe.summary ?? "" : "",
+  summary: edit ? (props.recipe.summary ?? "") : "",
   tags: edit ? props.recipe.tags : "",
   preparation_minutes: edit ? props.recipe.preparation_minutes?.toString() : "",
   cooking_minutes: edit ? props.recipe.cooking_minutes?.toString() : "",
@@ -43,14 +45,14 @@ const title = edit ? `Wijzig recept “${form.title}”` : "Voeg een nieuw recep
 
 const editor = ClassicEditor;
 const file = ref(null);
-const image = ref({ src: props.recipe?.media?.original_url ?? null, type: null });
+const image = ref({src: props.recipe?.media?.original_url ?? null, type: null});
 const cropperCard = ref(null);
 const cropperShow = ref(null);
 
 const save = () => {
   form.media_dimensions = {
-    card: cropperCard.value ? cropperCard.value.getResult().coordinates : null,
-    show: cropperShow.value ? cropperShow.value.getResult().coordinates : null,
+    card: cropperCard?.value ? cropperCard.value.getResult().coordinates : null,
+    show: cropperShow?.value ? cropperShow.value.getResult().coordinates : null,
   };
 
   form.post(edit ? route("recipes.update", props.recipe.id) : route("recipes.store"));
@@ -60,12 +62,12 @@ const clearMediaField = () => {
   form.destroy_media = true;
   form.media = null;
   file.value.value = null;
-  image.value = { src: null, type: null };
+  image.value = {src: null, type: null};
 };
 
 // Source: https://advanced-cropper.github.io/vue-advanced-cropper/guides/recipes.html#load-image-from-a-disc
 function loadImage(event) {
-  const { files } = event.target;
+  const {files} = event.target;
   if (files && files[0]) {
     form.media = files[0];
     form.destroy_image = false;
@@ -121,7 +123,7 @@ function confirmDeletion() {
 onMounted(() => {
   const coordinatesCard = props.recipe?.media?.manipulations?.card?.manualCrop;
   if (coordinatesCard) {
-    const [width, height, left, top] = coordinatesCard.split(",");
+    const [width, height, left, top] = coordinatesCard;
 
     cropperCard.value.setCoordinates({
       width: width,
@@ -133,7 +135,7 @@ onMounted(() => {
 
   const coordinatesShow = props.recipe?.media?.manipulations?.show?.manualCrop;
   if (coordinatesShow) {
-    const [width, height, left, top] = coordinatesShow.split(",");
+    const [width, height, left, top] = coordinatesShow;
 
     cropperShow.value.setCoordinates({
       width: width,
@@ -180,9 +182,9 @@ onMounted(() => {
                   class="vue-advanced-cropper !max-h-[16rem] max-w-full"
                   :src="image.src"
                   :stencil-props="{
-                    aspectRatio: 16 / 9,
+                    aspectRatio: 75 / 40,
                   }"
-                  :min-width="390"
+                  :min-width="300"
                   background-class="cropper-bg"
                 />
               </div>
@@ -193,9 +195,9 @@ onMounted(() => {
                   class="vue-advanced-cropper !max-h-[16rem] max-w-full"
                   :src="image.src"
                   :stencil-props="{
-                    aspectRatio: 4 / 3,
+                    aspectRatio: 1,
                   }"
-                  :min-width="575"
+                  :min-width="600"
                   background-class="cropper-bg"
                 />
               </div>
@@ -352,7 +354,7 @@ onMounted(() => {
 
 <style>
 .cropper-bg {
-  background-color: transparent;
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC);
+  background-color: transparent;
 }
 </style>

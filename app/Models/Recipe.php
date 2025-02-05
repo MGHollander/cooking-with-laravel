@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
@@ -14,9 +15,7 @@ use Spatie\Tags\HasTags;
 
 class Recipe extends Model implements HasMedia
 {
-    use HasSlug;
-    use HasTags;
-    use InteractsWithMedia;
+    use HasFactory, HasSlug, HasTags, InteractsWithMedia;
 
     protected $fillable = [
         'user_id',
@@ -33,6 +32,11 @@ class Recipe extends Model implements HasMedia
         'source_label',
         'source_link',
     ];
+
+    public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     protected function slug(): Attribute
     {
@@ -60,13 +64,11 @@ class Recipe extends Model implements HasMedia
     {
         $this
             ->addMediaConversion('show')
-            ->crop('crop-center', 1024, 768)
             ->performOnCollections('recipe_image')
             ->nonQueued();
 
         $this
             ->addMediaConversion('card')
-            ->crop('crop-center', 1024, 576)
             ->performOnCollections('recipe_image')
             ->nonQueued();
     }

@@ -1,24 +1,27 @@
-.recipe-instructions {
+@layer components {
+
+  .recipe-instructions {
     h3 {
-        @apply text-lg font-bold my-4;
+      @apply text-lg font-bold my-4;
     }
 
     ol,
     ul {
-        @apply pl-4 list-outside;
+      @apply pl-4 list-outside;
     }
 
     ol > li {
-        @apply relative min-h-[1.5em] pb-2 pl-4 list-none;
-        counter-increment: step-counter;
+      @apply relative min-h-[1.5em] pb-2 pl-4 list-none;
+      counter-increment: step-counter;
 
-        &::before {
-            @apply absolute -top-0.5 -left-4 text-xl text-emerald-700 font-bold;
-            content: counter(step-counter);
-        }
+      &::before {
+        @apply absolute -top-0.5 -left-4 text-xl text-emerald-700 font-bold;
+        content: counter(step-counter);
+      }
     }
 
     ul > li {
-        @apply list-disc;
+      @apply list-disc;
     }
+  }
 }

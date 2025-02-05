@@ -1,0 +1,413 @@
+body {
+  margin-top: 5.5rem;
+}
+
+.navbar {
+  position: absolute;
+  top: 0;
+  z-index: 100;
+  transition-duration: 0.5s;
+  transition-property: transform, box-shadow;
+  transition-timing-function: ease-out;
+  background-color: var(--color-white);
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  width: 100%;
+  color: #4a4a4a;
+}
+
+.navbar-floating,
+.navbar-search-open {
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+}
+
+.navbar .button {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+
+.navbar-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+
+  > * {
+    flex: 1 0 auto;
+  }
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-right {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: 0.5rem;
+
+  > * + * {
+    margin-left: 0.5rem;
+  }
+}
+
+.navbar-title {
+  color: var(--color-primary);
+  font-weight: 400;
+  font-size: 1.5625rem;
+  font-family: "Leckerli One", cursive;
+  text-decoration: none;
+}
+
+.navbar-menu-list {
+  display: none;
+  font-size: 0.75rem;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: block;
+  }
+}
+
+.navbar-menu-list ul {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.navbar-menu-list li + li {
+  margin-left: 2rem;
+}
+
+.navbar-menu-list a {
+  color: var(--text-color-default);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  &.active {
+    color: var(--color-primary);
+  }
+}
+
+.navbar-search-button {
+  width: 2rem;
+  height: 2rem;
+}
+
+.navbar-search-button,
+.navbar-nav-button,
+.navbar-user-button {
+  transition-property: color, outline-offset, transform;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.navbar-nav-button {
+  position: relative;
+  z-index: 110;
+  width: 2rem;
+  height: 2rem;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: none;
+  }
+
+  .bar {
+    position: absolute;
+    left: 6px;
+    border-radius: 2px;
+    background-color: currentColor;
+    width: 20px;
+    height: 1px;
+  }
+
+  *:first-child {
+    top: 10px;
+    transition: background-color var(--transition-duration-250) var(--transition-timing-leave) var(--transition-duration-250),
+    top var(--transition-duration-250) var(--transition-duration-300),
+    transform var(--transition-duration-250);
+  }
+
+  *:nth-child(2) {
+    top: 16px;
+    transition: background-color var(--transition-duration-250) var(--transition-timing-leave) var(--transition-duration-250);
+  }
+
+  *:nth-child(3) {
+    top: 22px;
+    transition: background-color var(--transition-duration-250) var(--transition-timing-leave) var(--transition-duration-250),
+    top var(--transition-duration-250) var(--transition-duration-300),
+    transform var(--transition-duration-250);
+  }
+}
+
+.navbar-nav-button-active {
+  .bar {
+    background-color: var(--color-gray);
+  }
+
+  &:hover .bar {
+    background-color: var(--color-white);
+  }
+
+  .bar:first-child {
+    top: 16px;
+    transform: rotate(135deg);
+    transition: background-color var(--transition-duration-250) var(--transition-timing-enter) var(--transition-duration-300),
+    top var(--transition-duration-250),
+    transform var(--transition-duration-250) var(--transition-duration-250);
+  }
+
+  .bar:nth-child(2) {
+    transform: rotate(225deg);
+    transition: background-color var(--transition-duration-250) var(--transition-timing-enter),
+    top var(--transition-duration-250),
+    transform var(--transition-duration-250) var(--transition-duration-250);
+  }
+
+  .bar:nth-child(3) {
+    top: 16px;
+    transform: rotate(315deg);
+    transition: background-color var(--transition-duration-250) var(--transition-timing-enter),
+    top var(--transition-duration-250),
+    transform var(--transition-duration-250) var(--transition-duration-250);
+  }
+}
+
+.navbar-user-button-group {
+  display: none;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: flex;
+    position: relative;
+  }
+}
+
+.navbar-user-menu {
+  position: absolute;
+  top: 2.5rem;
+  right: -1rem;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0.25rem 0.75rem;
+  border-radius: 0.75rem;
+  background-color: var(--color-white);
+  padding: 1rem 1.25rem;
+  width: max-content;
+  font-size: 0.85rem;
+}
+
+.navbar-user-menu ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navbar-user-menu li + li {
+  margin-top: 0.5rem;
+}
+
+.navbar-user-menu a {
+  color: var(--text-color-default);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  &.active {
+    color: var(--color-primary);
+  }
+}
+
+.navbar-user-menu button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--text-color-defaults);
+  font-family: inherit;
+}
+
+.navbar-user-menu button:hover {
+  color: var(--color-primary);
+}
+
+.navbar-search-bar {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.navbar-search-bar .search-bar {
+  margin: 0.5rem 0 0;
+}
+
+.navbar-search-bar-close-button {
+  border: none;
+  background-color: transparent;
+  padding: 0 0.75rem;
+
+  svg {
+    transition: transform var(--transition-duration-250) var(--transition-timing-function-default);
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    svg {
+      transform: scale(1.4);
+    }
+  }
+}
+
+.navbar-menu-offcanvas {
+  display: grid;
+  position: fixed;
+  top: 0;
+  right: -100px;
+  align-content: space-between;
+  z-index: 100;
+  background-color: var(--color-black);
+  width: 375px;
+  height: 100vh;
+  overflow: scroll;
+  font-size: 1.375rem;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: none;
+  }
+}
+
+.navbar-menu-offcanvas ul {
+  margin: 4.5rem 0 2rem;
+  padding: 0;
+  width: 275px;
+  list-style: none;
+  text-align: center;
+}
+
+.navbar-menu-offcanvas li + li {
+  margin-top: 0.75rem;
+}
+
+.navbar-menu-offcanvas a {
+  color: var(--color-gray);
+  line-height: 1.5;
+
+  &:hover {
+    color: var(--color-white);
+  }
+}
+
+.navbar-menu-offcanvas a.active {
+  color: var(--color-white);
+}
+
+.navbar-menu-offcanvas-user {
+  margin-bottom: 4.5rem;
+  width: 275px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.navbar-menu-offcanvas-user ul {
+  margin: 2rem 0 0;
+}
+
+.navbar-menu-offcanvas-user button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--color-gray);
+  font-size: 1rem;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+.navbar-menu-offcanvas-user .button-primary {
+  padding: 0.5rem 1.25rem;
+  color: var(--color-white);
+  font-size: 1rem;
+}
+
+.navbar-menu-offcanvas-transition {
+  &-enter {
+    transition: right 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  }
+
+  &-enter-start,
+  &-leave-end {
+    right: -375px;
+  }
+
+  &-leave {
+    transition: right 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+  }
+
+  &-enter-end,
+  &-leave-start {
+    right: -100px;
+  }
+}
+
+.navbar-menu-offcanvas-overlay {
+  position: fixed;
+  z-index: 99;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 100vh;
+
+  @media (--kocina-media-breakpoint-m-min) {
+    display: none;
+  }
+}
+
+.navbar-menu-offcanvas-overlay-transition {
+  &-enter {
+    transition: opacity var(--transition-duration-300) var(--transition-timing-leave);
+  }
+
+  &-enter-start,
+  &-leave-end {
+    opacity: 0;
+  }
+
+  &-leave {
+    transition: opacity var(--transition-duration-300) var(--transition-timing-enter);
+  }
+
+  &-enter-end,
+  &-leave-start {
+    opacity: 1;
+  }
+}
+
+/*
+ The menu icon is placed outside of the off canvas menu. The button animates to a close button when
+ the off canvas menu is opened. For a smooth optical animation the button is placed over the
+ off canvas menu.
+ This button is a added to be able to focus on the close button inside of the focus trap.
+ */
+.navbar-menu-offcanvas-button {
+  position: fixed;
+  top: 1.75rem;
+  right: 1.5rem;
+  border: none;
+  background-color: transparent;
+  width: 32px;
+  height: 32px;
+
+  @media (--kocina-media-breakpoint-s-min) {
+    right: 2rem;
+  }
+
+  @media (--kocina-media-breakpoint-m-min) {
+    right: 2.5rem;
+  }
+}

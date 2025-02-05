@@ -1,0 +1,58 @@
+:root {
+  --color-black: #000;
+  --color-white: #fff;
+  --color-gray: #787878;
+  --color-gray-dark: #4a4a4a;
+  --color-gray-light: #eaecf0;
+  --color-primary: #eb4a36;
+
+  --color-accent: rgb(249, 245, 244);
+
+  --text-color-default: var(--color-gray-dark);
+  --text-color-striked: #b0b0b0;
+
+  --button-default-text-color: var(--color-gray-dark);
+  --button-default-bg-color: var(--color-gray-light);
+  --button-default-bg-color-hover: #b4b4b6;
+
+  --button-primary-text-color: var(--color-white);
+  --button-primary-bg-color: var(--color-primary);
+  --button-primary-bg-color-hover: #e9351f;
+
+  --button-outline-text-color: var(--color-primary);
+  --button-outline-text-color-active: var(--color-white);
+  --button-outline-text-color-disabled: var(--color-gray-dark);
+
+  --transition-duration-250: 0.25s;
+  --transition-duration-300: 0.3s;
+  --transition-timing-enter: ease-in;
+  --transition-timing-leave: ease-out;
+  --transition-timing-hover: ease-in-out;
+  --transition-timing-function-default: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --content-max-width: calc(var(--kocina-breakpoint-xl) - 12rem);
+}
+
+// The Media query sizes are inspired by TailwindCSS 3.4.
+:root {
+  --kocina-breakpoint-s: 640px;
+  --kocina-breakpoint-m: 768px;
+  --kocina-breakpoint-l: 1024px;
+  --kocina-breakpoint-xl: 1280px;
+}
+
+// @see https://www.npmjs.com/package/postcss-custom-media
+@custom-media --kocina-media-breakpoint-xs-max (max-width: 359px);
+@custom-media --kocina-media-breakpoint-xs-min (min-width: 360px);
+
+@custom-media --kocina-media-breakpoint-s-max (max-width: 639px);
+@custom-media --kocina-media-breakpoint-s-min (min-width: 640px);
+
+@custom-media --kocina-media-breakpoint-m-max (max-width: 767px);
+@custom-media --kocina-media-breakpoint-m-min (min-width: 768px);
+
+@custom-media --kocina-media-breakpoint-l-max (max-width: 1023px);
+@custom-media --kocina-media-breakpoint-l-min (min-width: 1024px);
+
+@custom-media --kocina-media-breakpoint-xl-max (max-width: 1279px);
+@custom-media --kocina-media-breakpoint-xl-min (min-width: 1280px);

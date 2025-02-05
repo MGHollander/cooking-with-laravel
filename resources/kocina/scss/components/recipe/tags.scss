@@ -1,0 +1,24 @@
+.recipe-tags-container {
+  @media (--kocina-media-breakpoint-m-min) {
+    grid-row: span 2 / span 2;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  li {
+    padding: 0.5rem 1rem;
+    background-color: var(--color-accent);
+    border-radius: 0.25rem;
+  }
+}
+

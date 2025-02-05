@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kocima | Cooking Recipe HTML Template</title>
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Leckerli+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css"/>
+    <script src="js/uikit.js"></script>
+</head>
+
+<body>
+
+<nav class="uk-navbar-container uk-letter-spacing-small">
+    <div class="uk-container">
+        <div class="uk-position-z-index" data-uk-navbar>
+            <div class="uk-navbar-left">
+                <a class="uk-navbar-item uk-logo" href="index.html">Kocina</a>
+                <ul class="uk-navbar-nav uk-visible@m uk-margin-large-left">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="recipe.html">Recipe</a></li>
+                    <li><a href="search.html">Search</a></li>
+                    <li class="uk-active"><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="uk-navbar-right">
+                <div>
+                    <a class="uk-navbar-toggle" data-uk-search-icon href="#"></a>
+                    <div class="uk-drop uk-background-default" data-uk-drop="mode: click; pos: left-center; offset: 0">
+                        <form class="uk-search uk-search-navbar uk-width-1-1">
+                            <input class="uk-search-input uk-text-demi-bold" type="search" placeholder="Search..."
+                                   autofocus>
+                        </form>
+                    </div>
+                </div>
+                <ul class="uk-navbar-nav uk-visible@m">
+                    <li><a href="sign-in.html">Sign In</a></li>
+                </ul>
+                <div class="uk-navbar-item">
+                    <div><a class="uk-button uk-button-primary" href="sign-up.html">Sign Up</a></div>
+                </div>
+                <a class="uk-navbar-toggle uk-hidden@m" href="#offcanvas" data-uk-toggle><span
+                    data-uk-navbar-toggle-icon></span></a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="uk-section uk-section-default uk-padding-remove-top">
+    <div class="uk-container">
+        <div class="uk-grid-large" data-uk-grid>
+            <div class="uk-width-1-2@m uk-flex uk-flex-middle">
+                <div>
+                    <h1 class="uk-margin-bottom">Hello, what's on your mind?</h1>
+                    <p>Credibly administrate market positioning deliverables rather than clicks-and-mortar
+                        methodologies.
+                        Proactively formulate out-of-the-box technology with clicks-and-mortar testing procedures.
+                        Uniquely
+                        promote leveraged web-readiness for standards compliant value. Rapidiously pontificate
+                        cooperative
+                        mindshare via maintainable applications.</p>
+                    <a href="#" class="uk-button uk-button-primary uk-margin-top">Schedule a call</a>
+                </div>
+            </div>
+            <div class="uk-width-1-2@m">
+                <div class="uk-background-primary uk-border-rounded-large uk-light uk-padding uk-margin-top">
+                    <form class="uk-form-stacked">
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="name">Name</label>
+                            <div class="uk-form-controls">
+                                <input id="name" class="uk-input uk-border-pill" name="name" type="text" required>
+                            </div>
+                        </div>
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="_replyto">Email</label>
+                            <div class="uk-form-controls">
+                                <input id="_replyto" class="uk-input uk-border-pill" name="_replyto" type="email"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="uk-margin-bottom">
+                            <label class="uk-form-label" for="message">Message</label>
+                            <div class="uk-form-controls">
+                                <textarea id="message" class="uk-textarea uk-border-rounded-large" name="message"
+                                          rows="5" minlength="10" required></textarea>
+                            </div>
+                        </div>
+                        <div class="uk-text-center">
+                            <input class="uk-button uk-button-warning uk-border-pill" type="submit"
+                                   value="Send Message">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="uk-section uk-section-default">
+    <div class="uk-container uk-text-secondary uk-text-500">
+        <div class="uk-child-width-1-2@s" data-uk-grid>
+            <div>
+                <a href="#" class="uk-logo">Kocina</a>
+            </div>
+            <div class="uk-flex uk-flex-middle uk-flex-right@s">
+                <div data-uk-grid class="uk-child-width-auto uk-grid-small">
+                    <div>
+                        <a href="https://www.facebook.com/" data-uk-icon="icon: facebook; ratio: 0.8"
+                           class="uk-icon-button facebook" target="_blank"></a>
+                    </div>
+                    <div>
+                        <a href="https://www.instagram.com/" data-uk-icon="icon: instagram; ratio: 0.8"
+                           class="uk-icon-button instagram" target="_blank"></a>
+                    </div>
+                    <div>
+                        <a href="mailto:info@blacompany.com" data-uk-icon="icon: twitter; ratio: 0.8"
+                           class="uk-icon-button twitter" target="_blank"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="uk-child-width-1-2@s uk-child-width-1-4@m" data-uk-grid>
+            <div>
+                <ul class="uk-list uk-text-small">
+                    <li><a class="uk-link-text" href="#">Presentations</a></li>
+                    <li><a class="uk-link-text" href="#">Professionals</a></li>
+                    <li><a class="uk-link-text" href="#">Stores</a></li>
+                </ul>
+            </div>
+            <div>
+                <ul class="uk-list uk-text-small">
+                    <li><a class="uk-link-text" href="#">Webinars</a></li>
+                    <li><a class="uk-link-text" href="#">Workshops</a></li>
+                    <li><a class="uk-link-text" href="#">Local Meetups</a></li>
+                </ul>
+            </div>
+            <div>
+                <ul class="uk-list uk-text-small">
+                    <li><a class="uk-link-text" href="#">Our Initiatives</a></li>
+                    <li><a class="uk-link-text" href="#">Giving Back</a></li>
+                    <li><a class="uk-link-text" href="#">Communities</a></li>
+                </ul>
+            </div>
+            <div>
+                <ul class="uk-list uk-text-small">
+                    <li><a class="uk-link-text" href="#">Contact Form</a></li>
+                    <li><a class="uk-link-text" href="#">Work With Us</a></li>
+                    <li><a class="uk-link-text" href="#">Visit Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="uk-margin-medium-top uk-text-small uk-text-muted">
+            <div>Made by <a class="uk-link-muted" href="https://unbound.studio/" target="_blank">Unbound Studio</a> in
+                Guatemala City.
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div id="offcanvas" data-uk-offcanvas="flip: true; overlay: true">
+    <div class="uk-offcanvas-bar">
+        <a class="uk-logo" href="index.html">Kocina</a>
+        <button class="uk-offcanvas-close" type="button" data-uk-close="ratio: 1.2"></button>
+        <ul class="uk-nav uk-nav-primary uk-nav-offcanvas uk-margin-medium-top uk-text-center">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="recipe.html">Recipe</a></li>
+            <li><a href="search.html">Search</a></li>
+            <li class="uk-active"><a href="contact.html">Contact</a></li>
+            <li><a href="sign-in.html">Sign In</a></li>
+            <li><a href="sign-up.html">Sign Up</a></li>
+        </ul>
+        <div class="uk-margin-medium-top">
+            <a class="uk-button uk-width-1-1 uk-button-primary" href="sign-up.html">Sign Up</a>
+        </div>
+        <div class="uk-margin-medium-top uk-text-center">
+            <div data-uk-grid class="uk-child-width-auto uk-grid-small uk-flex-center">
+                <div>
+                    <a href="https://twitter.com/" data-uk-icon="icon: twitter" class="uk-icon-link"
+                       target="_blank"></a>
+                </div>
+                <div>
+                    <a href="https://www.facebook.com/" data-uk-icon="icon: facebook" class="uk-icon-link"
+                       target="_blank"></a>
+                </div>
+                <div>
+                    <a href="https://www.instagram.com/" data-uk-icon="icon: instagram" class="uk-icon-link"
+                       target="_blank"></a>
+                </div>
+                <div>
+                    <a href="https://vimeo.com/" data-uk-icon="icon: vimeo" class="uk-icon-link" target="_blank"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

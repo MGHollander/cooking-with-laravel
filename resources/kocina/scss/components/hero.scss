@@ -1,0 +1,68 @@
+.hero {
+  position: relative;
+  border-radius: 1.5rem;
+  background-position: center;
+  background-size: cover;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0) 100%);
+}
+
+// TODO Look for an image that fits the hero better. Like a family diner that has more focus on the right, so the text can be on the left.
+.hero-family {
+  background-image: url("../img/family-diner.jpg");
+}
+
+.hero-wine {
+  background-image: url("../img/serving-wine.jpg");
+}
+
+.hero-wine-mirrored {
+  background-image: url("../img/serving-wine-mirrored.jpg");
+}
+
+.hero-plates {
+  background-image: url("../img/serving-plates.jpg");
+}
+
+.hero-plates-mirrored {
+  background-image: url("../img/serving-plates-mirrored.jpg");
+}
+
+.hero-title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2rem;
+
+  @media (--kocina-media-breakpoint-s-min) {
+    font-size: 2.5rem;
+  }
+}
+
+.hero-title,
+.hero-text {
+  position: relative;
+  color: var(--color-white);
+  text-shadow: 1px 1px 2px #3d3d3d;
+  text-wrap: balance;
+}
+
+@media (--kocina-media-breakpoint-s-max) {
+  .hero-text {
+    display: none;
+  }
+}
+
+@media (--kocina-media-breakpoint-m-min) {
+  .hero-title,
+  .hero-text {
+    width: 60%;
+  }
+}

@@ -1,0 +1,103 @@
+.recipe-ingredients-container {
+  padding: 1.5rem;
+
+  @media (--kocina-media-breakpoint-s-min) {
+    padding: 2rem;
+  }
+
+  @media (--kocina-media-breakpoint-m-max) {
+    background-color: var(--color-accent);
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+  }
+
+  @media (--kocina-media-breakpoint-m-min) {
+    padding: 0;
+    grid-column-start: 2;
+  }
+}
+
+.recipe-ingredients-controls {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+
+  p {
+    margin: 0;
+    width: 8rem;
+    text-align: center;
+  }
+}
+
+.recipe-ingredients-list-container {
+  position: relative;
+}
+
+.recipe-ingredients {
+  margin-top: 1.5rem;
+
+  h3 {
+    margin-bottom: 0.25rem;
+    font-size: 1.125rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    padding: 0.5rem 0;
+    position: relative;
+  }
+
+  li + li {
+    border-top: 1px solid var(--color-gray-light);
+  }
+}
+
+.recipe-ingredient {
+  background-image: linear-gradient(var(--text-color-striked) 0%, var(--text-color-striked) 100%);
+  background-repeat: no-repeat;
+  background-position: center left;
+  background-size: 0 1px;
+  transition-property: background-size, color;
+  transition-duration: var(--transition-duration-250);
+  transition-timing-function: var(--transition-timing-hover);
+  margin-left: -0.15rem;
+
+  &::before {
+    content: "";
+    display: inline-flex;
+    margin-right: 0.5rem;
+    margin-left: 0.15rem;
+    width: 0.65rem;
+    aspect-ratio: 1;
+    border-radius: 3px;
+    border: 1px solid var(--text-color-default);
+    transition-property: border;
+    transition-duration: var(--transition-duration-250);
+    transition-timing-function: var(--transition-timing-hover);
+  }
+
+  &.striked {
+    background-size: 100% 1px;
+    color: var(--text-color-striked);
+
+    &:before {
+      border: 1px solid var(--text-color-striked);
+    }
+  }
+}
+
+
+.recipe-ingredients-list-reset {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}

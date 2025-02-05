@@ -54,3 +54,11 @@ Run `vendor/bin/dep deploy` to deploy changes.
 - The seeded recipes are made possible by <https://spoonacular.com/food-api>
 - The recipe import feature idea is inspired by <https://fly.io/laravel-bytes/parsing-recipes-with-robot-help/>
 - The recipe import feature is made possible by <https://www.openai.com/>
+- Hero images are made possible by:
+  - [Nicole Michalou](https://www.pexels.com/@nicole-michalou/)
+  - [Pixabay](https://www.pexels.com/@pixabay/)
+  - [cottonbro studio](https://www.pexels.com/@cottonbro/)
+- Icons are made possible by:
+  - <https://www.svgrepo.com/collection/phosphor-thin-icons>
+  - <https://www.iconbolt.com/iconsets/voyage-icons/meal>
+- Favicons are made possible by <https://realfavicongenerator.net/>

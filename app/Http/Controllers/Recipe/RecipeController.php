@@ -10,12 +10,16 @@ use App\Http\Resources\StructuredData\Recipe\InstructionsResource;
 use App\Http\Traits\FillableAttributes;
 use App\Models\Recipe;
 use Artesaos\SEOTools\Facades\JsonLd;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Inertia\Inertia;
 use ProtoneMedia\LaravelCrossEloquentSearch\Search;
+use Symfony\Component\HttpFoundation\Response;
 
 class RecipeController extends Controller
 {
@@ -24,13 +28,13 @@ class RecipeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Inertia\Response
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(): View
     {
-        return Inertia::render('Recipes/Index', [
+        return view('kocina.recipes.index', [
             'recipes' => Recipe::query()
-                ->paginate(17)
+                ->paginate(12)
                 ->through(fn($recipe) => [
                     'id'    => $recipe->id,
                     'title' => $recipe->title,
@@ -54,7 +58,7 @@ class RecipeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param RecipeRequest $request
-     * @return RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function store(RecipeRequest $request)
     {
@@ -67,7 +71,9 @@ class RecipeController extends Controller
 
         $this->saveMedia($request, $recipe);
 
-        return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol toegevoegd!");
+        Session::flash('success', "Het recept is succesvol toegevoegd!");
+
+        return Inertia::location(route('recipes.edit', $recipe->id));
     }
 
     /**
@@ -75,21 +81,24 @@ class RecipeController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param string                   $slug
-     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response|\Inertia\Response
+     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response|\Illuminate\View\View
      */
-    public function show(Request $request, string $slug)
+    // TODO Are these return types correct? Should the doc blocks exisit at all or is it overkill with typing?
+    public function show(Request $request, string $slug): JsonResponse|View|Response
     {
         $recipe = Recipe::findBySlug($slug);
 
         if (!$recipe) {
-            return $this->notFound($request, $slug);
+            return $this->notFound($slug);
         }
 
         $this->setJsonLdData($recipe);
 
-        return Inertia::render('Recipes/Show', [
-            'recipe' => [
+        return view('kocina.recipes.show', [
+            'recipe'     => [
                 'id'                  => $recipe->id,
+                'author'              => $recipe->author->name,
+                'user_id'             => $recipe->user_id,
                 'title'               => $recipe->title,
                 'slug'                => $recipe->slug,
                 'image'               => $recipe->getFirstMediaUrl('recipe_image', 'show'),
@@ -99,13 +108,20 @@ class RecipeController extends Controller
                 'preparation_minutes' => $recipe->preparation_minutes,
                 'cooking_minutes'     => $recipe->cooking_minutes,
                 'difficulty'          => Str::ucfirst(__('recipes.' . $recipe->difficulty)),
-                'ingredients'         => new IngredientsResource($recipe->ingredients),
+                // TODO I think this is not the way to go, but for the experiment it's fine.
+                'ingredients'         => (new IngredientsResource(""))->transformIngredients($recipe->ingredients),
                 'instructions'        => $recipe->instructions,
                 'source_label'        => $recipe->source_label,
                 'source_link'         => $recipe->source_link,
                 'created_at'          => $recipe->created_at,
+                'structured_data'     => [
+                    'description'  => strip_tags($recipe->summary),
+                    'ingredients'  => new StructuredDataIngredientsResource($recipe->ingredients),
+                    'instructions' => new InstructionsResource($recipe->instructions),
+                    'keywords'     => implode(',', $recipe->tags->pluck('name')->toArray()),
+                ],
             ],
-        ])->withViewData([
+            // TODO Replace for SEO Tools
             'open_graph' => [
                 'title' => $recipe->title,
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
@@ -162,7 +178,7 @@ class RecipeController extends Controller
 
         $this->saveMedia($request, $recipe);
 
-        return redirect()->route('recipes.show', $recipe->slug)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol gewijzigd!");
+        return redirect()->route('recipes.edit', $recipe->id)->with('success', "Het recept is succesvol gewijzigd!");
     }
 
     /**
@@ -178,13 +194,13 @@ class RecipeController extends Controller
         return redirect()->route('home')->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd!");
     }
 
-    private function notFound(Request $request, $slug): \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
+    private function notFound($slug): \Illuminate\Http\Response
     {
-        $q       = Str::replace('-', ' ', $slug);
-        $recipes = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
+        $searchKey = Str::replace('-', ' ', $slug);
+        $recipes   = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
             ->paginate(12)
             ->beginWithWildcard()
-            ->search($q)
+            ->search($searchKey)
             ->withQueryString()
             ->through(fn($recipe) => [
                 'id'    => $recipe->id,
@@ -193,28 +209,51 @@ class RecipeController extends Controller
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
             ]);
 
-        return Inertia::render('Recipes/NotFound', [
-            'q'       => implode(', ', explode(' ', $q)),
-            'recipes' => $recipes,
-        ])
-            ->toResponse($request)
-            ->setStatusCode(404);
+        return response()->view(
+            'kocina.recipes.not-found',
+            [
+                'recipes'   => $recipes,
+                'searchKey' => implode(', ', explode(' ', $searchKey)),
+            ],
+            Response::HTTP_NOT_FOUND
+        );
     }
 
+    /**
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
+     */
     private function saveMedia(Request $request, Recipe $recipe): void
     {
         $mediaDimensions = $request->get('media_dimensions', []);
 
         if (!empty($mediaDimensions['card'])) {
             $cardDimensions    = $mediaDimensions['card'];
-            $manipulationsCard = ['manualCrop' => "${cardDimensions['width']},${cardDimensions['height']},${cardDimensions['left']},${cardDimensions['top']}"];
+            $manipulationsCard = [
+                'manualCrop' => [
+                    (int) $cardDimensions['width'],
+                    (int) $cardDimensions['height'],
+                    (int) $cardDimensions['left'],
+                    (int) $cardDimensions['top'],
+                ],
+                'width'      => [600],
+            ];
         }
 
         if (!empty($mediaDimensions['show'])) {
             $showDimensions    = $mediaDimensions['show'];
-            $manipulationsShow = ['manualCrop' => "${showDimensions['width']},${showDimensions['height']},${showDimensions['left']},${showDimensions['top']}"];
+            $manipulationsShow = [
+                'manualCrop' => [
+                    (int) $showDimensions['width'],
+                    (int) $showDimensions['height'],
+                    (int) $showDimensions['left'],
+                    (int) $showDimensions['top'],
+                ],
+                'width'      => [1200],
+            ];
         }
 
+        // New media
         if ($request->hasFile('media')) {
             $recipe->addMediaFromRequest('media')
                 ->withManipulations([
@@ -224,7 +263,9 @@ class RecipeController extends Controller
                 ->toMediaCollection('recipe_image');
         }
 
-        if ($media = $recipe->getFirstMedia('recipe_image')) {
+        // Existing media
+        $media = $recipe->getFirstMedia('recipe_image');
+        if ($media) {
             $media->manipulations = [
                 'card' => $manipulationsCard ?? [],
                 'show' => $manipulationsShow ?? [],
