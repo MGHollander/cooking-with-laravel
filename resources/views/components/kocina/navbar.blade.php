@@ -29,6 +29,22 @@
                 @endguest
 
                 @auth
+                    <button class="navbar-user-button" @click="toggleAddRecipeMenu()">
+                        <x-icon.plus width="24" height="24" />
+                    </button>
+
+                    <nav
+                        class="navbar-user-menu"
+                        x-cloak
+                        x-show="openAddRecipeMenu"
+                        x-trap="openAddRecipeMenu"
+                        @click.outside="if(openAddRecipeMenu) toggleAddRecipeMenu()"
+                        @keyup.esc="if(openAddRecipeMenu) toggleAddRecipeMenu()"
+                        x-transition
+                    >
+                        <x-kocina.nav-list-add-recipe />
+                    </nav>
+
                     <button class="navbar-user-button" @click="toggleUserMenu()">
                         <x-icon.user width="24" height="24" />
                     </button>
@@ -94,6 +110,7 @@
             @endguest
 
             @auth
+                <x-kocina.nav-list-add-recipe />
                 <x-kocina.nav-list-user />
             @endauth
         </div>
