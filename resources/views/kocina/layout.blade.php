@@ -44,5 +44,7 @@
     </div>
     <div class="footer-links"><a href="{{ route('privacy') }}">Privacy</a></div>
 </div>
+
+@stack("scripts")
 </body>
 </html>
