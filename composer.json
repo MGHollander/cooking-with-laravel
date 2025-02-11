@@ -25,6 +25,7 @@
         "tightenco/ziggy": "^2.5.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^3.5",
         "deployer/deployer": "^7.3",
         "fakerphp/faker": "^1.9",
         "itsgoingd/clockwork": "^5.2",
