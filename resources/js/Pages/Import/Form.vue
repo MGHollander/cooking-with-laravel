@@ -1,16 +1,10 @@
 <script setup>
-import {Ckeditor} from '@ckeditor/ckeditor5-vue';
-import {ClassicEditor} from 'ckeditor5';
 import {Head, useForm} from "@inertiajs/vue3";
-import 'ckeditor5/ckeditor5.css';
-import "../../../css/ckeditor.css";
-import "../../../css/ckeditor-content-styles.css";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
-import {instructionsEditorConfig, summaryEditorConfig} from "@/editorConfig";
 import DefaultLayout from "@/Layouts/Default.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
@@ -37,8 +31,6 @@ const form = useForm({
   source_link: props.recipe.source_link,
   return_to_import_page: false,
 });
-
-const editor = ClassicEditor;
 </script>
 
 <template>
@@ -72,7 +64,7 @@ const editor = ClassicEditor;
 
           <div class="col-span-12 space-y-1">
             <Label for="summary" value="Samenvatting (optioneel)" />
-            <ckeditor v-model="form.summary" :editor="editor" :config="summaryEditorConfig" />
+            <Textarea v-model="form.summary" class="block w-full" rows="4" />
             <InputError :message="form.errors.summary" />
           </div>
 
@@ -123,12 +115,7 @@ const editor = ClassicEditor;
           <div class="col-span-12 grid grid-cols-12 gap-6">
             <div class="col-span-12 space-y-1">
               <Label>Ingredienten</Label>
-              <textarea
-                v-model="form.ingredients"
-                rows="10"
-                class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                required
-              />
+              <Textarea v-model="form.ingredients" rows="10" class="block max-w-full" required />
               <InputError :message="form.errors.ingredients" />
               <p class="!my-3 text-xs text-gray-500">Je kunt de ingredienten verrijken met de volgende opties:</p>
               <ul class="list-outside pl-4 text-xs text-gray-500">
@@ -155,7 +142,7 @@ const editor = ClassicEditor;
         <div class="grid grid-cols-12 gap-6 px-4 py-5 sm:p-6">
           <div class="col-span-12 space-y-1">
             <Label for="instructions" value="Instructies" />
-            <ckeditor v-model="form.instructions" :editor="editor" :config="instructionsEditorConfig" />
+            <Textarea v-model="form.instructions" class="block w-full" rows="10" />
             <InputError :message="form.errors.instructions" />
           </div>
 
