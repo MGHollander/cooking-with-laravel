@@ -264,7 +264,7 @@ onMounted(() => {
           <div class="col-span-12 grid grid-cols-12 gap-6">
             <div class="col-span-12 space-y-1">
               <Label>Ingredienten</Label>
-              <Textarea v-model="form.ingredients" rows="10" class="block max-w-full" required />
+              <Textarea v-model="form.ingredients" rows="10" class="block w-full" required />
               <InputError :message="form.errors.ingredients" />
               <p class="!my-3 text-xs text-gray-500">Je kunt de ingredienten verrijken met de volgende opties:</p>
               <ul class="list-outside pl-4 text-xs text-gray-500">
