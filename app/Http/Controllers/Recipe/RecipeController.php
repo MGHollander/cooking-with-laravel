@@ -51,7 +51,12 @@ class RecipeController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Recipes/Form');
+        return Inertia::render('Recipes/Form', [
+            'config' => [
+                'max_file_size' => config('media-library.max_file_size'),
+                'image_dimensions' => config('media-library.image_dimensions.recipe'),
+            ],
+        ]);
     }
 
     /**
@@ -155,6 +160,10 @@ class RecipeController extends Controller
                 'source_label'        => $recipe->source_label,
                 'source_link'         => $recipe->source_link,
             ],
+            'config' => [
+                'max_file_size' => config('media-library.max_file_size'),
+                'image_dimensions' => config('media-library.image_dimensions.recipe'),
+            ],
         ]);
     }
 
@@ -236,7 +245,7 @@ class RecipeController extends Controller
                     (int) $cardDimensions['left'],
                     (int) $cardDimensions['top'],
                 ],
-                'width'      => [600],
+                'width' => [config('media-library.image_dimensions.recipe.conversions.card.width')],
             ];
         }
 
@@ -249,7 +258,7 @@ class RecipeController extends Controller
                     (int) $showDimensions['left'],
                     (int) $showDimensions['top'],
                 ],
-                'width'      => [1200],
+                'width' => [config('media-library.image_dimensions.recipe.conversions.show.width')],
             ];
         }
 

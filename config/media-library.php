@@ -12,7 +12,26 @@ return [
      * The maximum file size of an item in bytes.
      * Adding a larger file will result in an exception.
      */
-    'max_file_size'                             => 1024 * 1024 * 10, // 10MB
+    'max_file_size' =>  1024 * 1024 * 4, // 4MB
+
+    'image_dimensions' => [
+        'recipe' => [
+            'advised_minimum' => [
+                'width'  => 600,
+                'height' => 600,
+            ],
+            'conversions' => [
+                'card' => [
+                    'width'  => 300,
+                    'height' => 170,
+                ],
+                'show' => [
+                    'width'  => 600,
+                    'height' => 600,
+                ],
+            ],
+        ],
+    ],
 
     /*
      * This queue connection will be used to generate derived and responsive images.
