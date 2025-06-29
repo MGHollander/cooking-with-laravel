@@ -65,11 +65,13 @@ class Recipe extends Model implements HasMedia
         $this
             ->addMediaConversion('show')
             ->performOnCollections('recipe_image')
+            ->format('webp')
             ->nonQueued();
 
         $this
             ->addMediaConversion('card')
             ->performOnCollections('recipe_image')
+            ->format('webp')
             ->nonQueued();
     }
 }

@@ -262,23 +262,22 @@ class RecipeController extends Controller
             ];
         }
 
+        $manipulations = [
+            'card' => $manipulationsCard ?? [],
+            'show' => $manipulationsShow ?? [],
+        ];
+
         // New media
         if ($request->hasFile('media')) {
             $recipe->addMediaFromRequest('media')
-                ->withManipulations([
-                    'card' => $manipulationsCard ?? [],
-                    'show' => $manipulationsShow ?? [],
-                ])
+                ->withManipulations($manipulations)
                 ->toMediaCollection('recipe_image');
         }
 
         // Existing media
         $media = $recipe->getFirstMedia('recipe_image');
-        if ($media) {
-            $media->manipulations = [
-                'card' => $manipulationsCard ?? [],
-                'show' => $manipulationsShow ?? [],
-            ];
+        if ($media && $media->manipulations !== $manipulations) {
+            $media->manipulations = $manipulations;
             $media->save();
         }
     }
