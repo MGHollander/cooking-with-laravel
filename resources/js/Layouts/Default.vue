@@ -6,6 +6,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Button from "@/Components/Button.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
+import FlashMessage from "@/Components/FlashMessage.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 
@@ -222,26 +223,23 @@ const toggleNav = (nav) => {
         </div>
       </header>
 
-      <div v-if="$page.props.flash.error" class="flex justify-between rounded-lg bg-red-100 py-4 text-red-700">
-        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p v-html="$page.props.flash.error" />
-        </div>
-      </div>
+      <FlashMessage
+        v-if="$page.props.flash.error"
+        type="error"
+        :message="$page.props.flash.error"
+      />
 
-      <div
+      <FlashMessage
         v-if="$page.props.flash.success"
-        class="flex justify-between rounded-lg bg-emerald-100 py-4 text-emerald-800"
-      >
-        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p v-html="$page.props.flash.success" />
-        </div>
-      </div>
+        type="success"
+        :message="$page.props.flash.success"
+      />
 
-      <div v-if="$page.props.flash.warning" class="flex justify-between rounded-lg bg-yellow-100 py-4 text-yellow-700">
-        <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p v-html="$page.props.flash.warning" />
-        </div>
-      </div>
+      <FlashMessage
+        v-if="$page.props.flash.warning"
+        type="warning"
+        :message="$page.props.flash.warning"
+      />
 
       <!-- Page Content -->
       <main>

@@ -60,16 +60,18 @@ class Recipe extends Model implements HasMedia
             ->singleFile();
     }
 
-    public function registerMediaConversions(Media $media = null): void
+    public function registerMediaConversions(?Media $media = null): void
     {
         $this
             ->addMediaConversion('show')
             ->performOnCollections('recipe_image')
+            ->format('webp')
             ->nonQueued();
 
         $this
             ->addMediaConversion('card')
             ->performOnCollections('recipe_image')
+            ->format('webp')
             ->nonQueued();
     }
 }
