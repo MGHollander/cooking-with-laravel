@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ['...', 'vim', "imagemagick", "php82Extensions.imagick"]
+nixPkgs = ['...', 'vim']
 
 [staticAssets]
 "nginx.template.conf" = '''
