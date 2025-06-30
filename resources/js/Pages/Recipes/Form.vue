@@ -1,9 +1,9 @@
 <script setup>
-import {faExternalLink} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {Head, router, useForm} from "@inertiajs/vue3";
-import {onMounted, ref, computed} from "vue";
-import {Cropper} from "vue-advanced-cropper";
+import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { Head, router, useForm } from "@inertiajs/vue3";
+import { onMounted, ref } from "vue";
+import { Cropper } from "vue-advanced-cropper";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
@@ -12,9 +12,9 @@ import Textarea from "@/Components/Textarea.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 import "vue-advanced-cropper/dist/style.css";
-import FlashMessage from '@/Components/FlashMessage.vue';
+import FlashMessage from "@/Components/FlashMessage.vue";
 
-const props = defineProps({recipe: Object, config: Object});
+const props = defineProps({ recipe: Object, config: Object });
 const edit = route().current("recipes.edit") ?? false;
 
 const form = useForm({
@@ -40,7 +40,7 @@ const form = useForm({
 const title = edit ? `Wijzig recept "${form.title}"` : "Voeg een nieuw recept toe";
 
 const file = ref(null);
-const image = ref({src: props.recipe?.media?.original_url ?? null, type: null});
+const image = ref({ src: props.recipe?.media?.original_url ?? null, type: null });
 const cropperCard = ref(null);
 const cropperShow = ref(null);
 const imageSizeWarning = ref("");
@@ -64,12 +64,12 @@ function destroyMedia() {
   form.destroy_media = true;
   form.media = null;
   form.media_dimensions = null;
-  image.value = {src: null, type: null};
+  image.value = { src: null, type: null };
 }
 
 // Source: https://advanced-cropper.github.io/vue-advanced-cropper/guides/recipes.html#load-image-from-a-disc
 function loadImage(event) {
-  const {files} = event.target;
+  const { files } = event.target;
 
   if (files && files[0]) {
     resetErrors();
@@ -82,8 +82,11 @@ function loadImage(event) {
     form.media = files[0];
 
     const img = new Image();
-    img.onload = function() {
-      if (img.width < props.config.image_dimensions.advised_minimum.width || img.height < props.config.image_dimensions.advised_minimum.height) {
+    img.onload = function () {
+      if (
+        img.width < props.config.image_dimensions.advised_minimum.width ||
+        img.height < props.config.image_dimensions.advised_minimum.height
+      ) {
         imageSizeWarning.value = `De afbeelding is kleiner dan ${props.config.image_dimensions.advised_minimum.width}x${props.config.image_dimensions.advised_minimum.height} pixels. Als je deze gebruikt, dan wordt deze vergroot. Dit gaat ten koste van de kwaliteit.`;
       }
     };
@@ -129,7 +132,7 @@ function getMimeType(file, fallback = null) {
   }
 }
 
-function getStencilSize({boundaries}) {
+function getStencilSize({ boundaries }) {
   return {
     width: boundaries.width - 25,
     height: boundaries.height - 25,
@@ -210,7 +213,8 @@ onMounted(() => {
                     handlers: {},
                     movable: false,
                     resizable: false,
-                    aspectRatio: config.image_dimensions.conversions.card.width / config.image_dimensions.conversions.card.height,
+                    aspectRatio:
+                      config.image_dimensions.conversions.card.width / config.image_dimensions.conversions.card.height,
                     previewClass: 'cropper-preview',
                   }"
                   :min-width="1"
@@ -221,23 +225,24 @@ onMounted(() => {
               </div>
               <div>
                 <strong class="text-sm">Recept pagina</strong>
-                  <cropper
-                    ref="cropperShow"
-                    class="vue-advanced-cropper h-[16rem] max-w-full"
-                    :src="image.src"
-                    :stencil-size="getStencilSize"
-                    :stencil-props="{
-                      handlers: {},
-                      movable: false,
-                      resizable: false,
-                      aspectRatio: config.image_dimensions.conversions.show.width / config.image_dimensions.conversions.show.height,
-                      previewClass: 'cropper-preview',
-                    }"
-                    :min-width="1"
-                    :min-height="1"
-                    image-restriction="stencil"
-                    background-class="cropper-bg"
-                  />
+                <cropper
+                  ref="cropperShow"
+                  class="vue-advanced-cropper h-[16rem] max-w-full"
+                  :src="image.src"
+                  :stencil-size="getStencilSize"
+                  :stencil-props="{
+                    handlers: {},
+                    movable: false,
+                    resizable: false,
+                    aspectRatio:
+                      config.image_dimensions.conversions.show.width / config.image_dimensions.conversions.show.height,
+                    previewClass: 'cropper-preview',
+                  }"
+                  :min-width="1"
+                  :min-height="1"
+                  image-restriction="stencil"
+                  background-class="cropper-bg"
+                />
               </div>
             </div>
 
@@ -255,7 +260,12 @@ onMounted(() => {
             <InputError :message="form.errors.media" />
           </div>
 
-          <FlashMessage v-if="imageSizeWarning" :message="imageSizeWarning" type="warning" class="col-span-12 text-sm"/>
+          <FlashMessage
+            v-if="imageSizeWarning"
+            :message="imageSizeWarning"
+            type="warning"
+            class="col-span-12 text-sm"
+          />
 
           <div class="col-span-12 space-y-1">
             <Label for="summary" value="Samenvatting (optioneel)" />
@@ -389,7 +399,7 @@ onMounted(() => {
 
 <style scss>
 /* Styling the cropper requires a global selector. @see https://advanced-cropper.github.io/vue-advanced-cropper/guides/customize-appearance.html#styling-notice */
-.cropper-bg{
+.cropper-bg {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC);
   background-color: transparent;
 }
