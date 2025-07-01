@@ -13,7 +13,11 @@ return [
     |
     */
 
-    'previous' => '&laquo; Vorige',
-    'next'     => 'Volgende &raquo;',
+    'first' => 'Eerste',
+    'label' => 'Paginering',
+    'last' => 'Laatste',
+    'next' => 'Volgende',
+    'page' => 'Pagina :page van :total',
+    'previous' => 'Vorige',
 
 ];
