@@ -29,3 +29,9 @@
     display: none;
   }
 }
+
+@media (--kocina-media-breakpoint-s-min) {
+  .pagination .mobile-only {
+    display: none;
+  }
+}
