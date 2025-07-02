@@ -145,6 +145,7 @@ address,
 fieldset,
 figure {
   margin: 0 0 1.25rem 0;
+  word-break: break-word;
 }
 
 * + p,
@@ -169,6 +170,7 @@ h6 {
   font-weight: 600;
   font-family: "Montserrat", sans-serif;
   text-transform: none;
+  word-break: break-word;
 }
 
 * + h1,
