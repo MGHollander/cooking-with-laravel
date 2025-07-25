@@ -37,14 +37,16 @@ document.addEventListener("alpine:init", () => {
     },
 
     events: {
-      ['@keyup.escape']() {
+      ["@keyup.escape"]() {
         if (this.openNav) {
           this.toggleNav();
         }
       },
 
-      ['@resize.window']() {
-        const breakpoint = parseInt(window.getComputedStyle(document.documentElement).getPropertyValue("--kocina-breakpoint-m"));
+      ["@resize.window"]() {
+        const breakpoint = parseInt(
+          window.getComputedStyle(document.documentElement).getPropertyValue("--kocina-breakpoint-m"),
+        );
         // When the window is resized to a size that does not have an offcanvas menu,
         // close the offcanvas menu to remove the overflow hidden on the html.
         if (window.innerWidth >= breakpoint && this.openNav) {
@@ -52,7 +54,7 @@ document.addEventListener("alpine:init", () => {
         }
       },
 
-      ['@scroll.window']() {
+      ["@scroll.window"]() {
         const navbar = this.$el;
         const navbarHeight = navbar.offsetHeight;
         const currentScrollPos = window.scrollY;
