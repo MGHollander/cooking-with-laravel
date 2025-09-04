@@ -1,11 +1,11 @@
-@extends('layout')
+@extends("layout")
 
-@section('head')
-    @routes()
-    @vite('resources/js/app.js')
-    @inertiaHead
+@section("head")
+  @routes()
+  @vite("resources/js/app.js")
+  @inertiaHead
 @endsection
 
-@section('content')
-    @inertia
+@section("content")
+  @inertia
 @endsection
