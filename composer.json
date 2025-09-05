@@ -30,6 +30,7 @@
     "deployer/deployer": "^7.3",
     "fakerphp/faker": "^1.9",
     "itsgoingd/clockwork": "^5.2",
+    "laravel/boost": "^1.1",
     "laravel/breeze": "^2.3",
     "laravel/pint": "^1.0",
     "laravel/sail": "^1.16",
