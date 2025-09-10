@@ -26,6 +26,7 @@ const props = defineProps({
       underline: true,
       bulletList: true,
       orderedList: true,
+      heading: false,
     }),
   },
 });
@@ -39,7 +40,7 @@ const fallbackTextarea = ref(null);
 const getExtensions = () => {
   const extensions = [
     StarterKit.configure({
-      heading: false,
+      heading: props.toolbar.heading ? { levels: [3] } : false,
       horizontalRule: false,
       blockquote: false,
       bulletList: props.toolbar.bulletList,
@@ -182,6 +183,22 @@ const runCommand = (command) => {
             title="Underline"
           >
             <span style="text-decoration: underline">U</span>
+          </button>
+        </template>
+
+        <template v-if="props.toolbar.heading">
+          <div class="w-px h-4 bg-gray-300 mx-1"></div>
+          <button
+            type="button"
+            @click="runCommand((chain) => chain.toggleHeading({ level: 3 }).run())"
+            :class="{
+              'bg-gray-200': isActive('heading', { level: 3 }),
+              'hover:bg-gray-200': !isActive('heading', { level: 3 }),
+            }"
+            class="px-2 py-1 text-sm font-medium rounded transition-colors duration-200"
+            title="Heading 3"
+          >
+            H3
           </button>
         </template>
 

@@ -165,6 +165,7 @@ const form = useForm({
                 underline: true,
                 bulletList: true,
                 orderedList: true,
+                heading: true,
               }"
             />
             <InputError :message="form.errors.instructions" />
