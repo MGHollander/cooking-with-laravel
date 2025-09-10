@@ -274,13 +274,7 @@ onMounted(() => {
               v-model="form.summary"
               placeholder="Voer een korte samenvatting van het recept in..."
               :rows="4"
-              :toolbar="{
-                bold: true,
-                italic: true,
-                underline: true,
-                bulletList: false,
-                orderedList: false,
-              }"
+              :toolbar="['bold', 'italic', 'underline']"
             />
             <InputError :message="form.errors.summary" />
           </div>
@@ -363,14 +357,7 @@ onMounted(() => {
               v-model="form.instructions"
               placeholder="Voer de bereidingsinstructies in..."
               :rows="10"
-              :toolbar="{
-                bold: true,
-                italic: true,
-                underline: true,
-                bulletList: true,
-                orderedList: true,
-                heading: true,
-              }"
+              :toolbar="['bold', 'italic', 'underline', '|', 'heading', '|', 'orderedList']"
             />
             <InputError :message="form.errors.instructions" />
           </div>
