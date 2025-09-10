@@ -153,7 +153,7 @@ const form = useForm({
               v-model="form.instructions"
               placeholder="Voer de bereidingsinstructies in..."
               :rows="10"
-              :toolbar="['bold', 'italic', 'underline', '|', 'heading', '|', 'orderedList']"
+              :toolbar="['orderedList', '|', 'bold', 'italic', 'underline', '|', 'heading']"
             />
             <InputError :message="form.errors.instructions" />
           </div>
