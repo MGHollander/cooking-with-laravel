@@ -4,6 +4,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import ListItem from "@tiptap/extension-list-item";
 import { watch, ref, onMounted, onBeforeUnmount } from "vue";
+import TipTapToolbar from "@/Components/TipTapToolbar.vue";
 
 const props = defineProps({
   modelValue: {
@@ -19,14 +20,8 @@ const props = defineProps({
     default: 4,
   },
   toolbar: {
-    type: Object,
-    default: () => ({
-      bold: true,
-      italic: true,
-      underline: true,
-      bulletList: true,
-      orderedList: true,
-    }),
+    type: Array,
+    default: () => ["bold", "italic", "underline", "|", "bulletList", "orderedList"],
   },
 });
 
@@ -37,23 +32,30 @@ const editorError = ref(false);
 const fallbackTextarea = ref(null);
 
 const getExtensions = () => {
+  const hasHeading = props.toolbar.includes("heading");
+  const hasBulletList = props.toolbar.includes("bulletList");
+  const hasOrderedList = props.toolbar.includes("orderedList");
+  const hasBold = props.toolbar.includes("bold");
+  const hasItalic = props.toolbar.includes("italic");
+  const hasUnderline = props.toolbar.includes("underline");
+
   const extensions = [
     StarterKit.configure({
-      heading: false,
+      heading: hasHeading ? { levels: [3] } : false,
       horizontalRule: false,
       blockquote: false,
-      bulletList: props.toolbar.bulletList,
-      orderedList: props.toolbar.orderedList,
-      bold: props.toolbar.bold,
-      italic: props.toolbar.italic,
+      bulletList: hasBulletList,
+      orderedList: hasOrderedList,
+      bold: hasBold,
+      italic: hasItalic,
     }),
   ];
 
-  if (props.toolbar.underline) {
+  if (hasUnderline) {
     extensions.push(Underline);
   }
 
-  if (props.toolbar.bulletList || props.toolbar.orderedList) {
+  if (hasBulletList || hasOrderedList) {
     extensions.push(
       ListItem.configure({
         HTMLAttributes: {
@@ -119,16 +121,6 @@ onBeforeUnmount(() => {
 const handleTextareaInput = (event) => {
   emit("update:modelValue", event.target.value);
 };
-
-const isActive = (name, attributes = {}) => {
-  return editor.value ? editor.value.isActive(name, attributes) : false;
-};
-
-const runCommand = (command) => {
-  if (editor.value) {
-    command(editor.value.chain().focus());
-  }
-};
 </script>
 
 <template>
@@ -139,86 +131,7 @@ const runCommand = (command) => {
       class="border border-gray-300 rounded-md shadow-sm focus-within:border-indigo-300 focus-within:ring focus-within:ring-indigo-200 focus-within:ring-opacity-50"
     >
       <!-- Toolbar -->
-      <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-md">
-        <template v-if="props.toolbar.bold">
-          <button
-            type="button"
-            @click="runCommand((chain) => chain.toggleBold().run())"
-            :class="{
-              'bg-gray-200': isActive('bold'),
-              'hover:bg-gray-200': !isActive('bold'),
-            }"
-            class="px-2 py-1 text-sm font-medium rounded transition-colors duration-200"
-            title="Bold"
-          >
-            <strong>B</strong>
-          </button>
-        </template>
-
-        <template v-if="props.toolbar.italic">
-          <button
-            type="button"
-            @click="runCommand((chain) => chain.toggleItalic().run())"
-            :class="{
-              'bg-gray-200': isActive('italic'),
-              'hover:bg-gray-200': !isActive('italic'),
-            }"
-            class="px-2 py-1 text-sm font-medium rounded transition-colors duration-200"
-            title="Italic"
-          >
-            <em>I</em>
-          </button>
-        </template>
-
-        <template v-if="props.toolbar.underline">
-          <button
-            type="button"
-            @click="runCommand((chain) => chain.toggleUnderline().run())"
-            :class="{
-              'bg-gray-200': isActive('underline'),
-              'hover:bg-gray-200': !isActive('underline'),
-            }"
-            class="px-2 py-1 text-sm font-medium rounded transition-colors duration-200"
-            title="Underline"
-          >
-            <span style="text-decoration: underline">U</span>
-          </button>
-        </template>
-
-        <template v-if="props.toolbar.bulletList || props.toolbar.orderedList">
-          <div class="w-px h-4 bg-gray-300 mx-1"></div>
-        </template>
-
-        <template v-if="props.toolbar.bulletList">
-          <button
-            type="button"
-            @click="runCommand((chain) => chain.toggleBulletList().run())"
-            :class="{
-              'bg-gray-200': isActive('bulletList'),
-              'hover:bg-gray-200': !isActive('bulletList'),
-            }"
-            class="px-2 py-1 text-sm font-medium rounded transition-colors duration-200"
-            title="Bullet List"
-          >
-            •
-          </button>
-        </template>
-
-        <template v-if="props.toolbar.orderedList">
-          <button
-            type="button"
-            @click="runCommand((chain) => chain.toggleOrderedList().run())"
-            :class="{
-              'bg-gray-200': isActive('orderedList'),
-              'hover:bg-gray-200': !isActive('orderedList'),
-            }"
-            class="px-2 py-1 text-sm font-medium rounded transition-colors duration-200"
-            title="Numbered List"
-          >
-            1.
-          </button>
-        </template>
-      </div>
+      <TipTapToolbar :toolbar="props.toolbar" :editor="editor" />
 
       <!-- Editor Content -->
       <EditorContent :editor="editor" class="min-h-[100px] max-h-[400px] overflow-y-auto" />
