@@ -32,6 +32,7 @@ class RecipeController extends Controller
     {
         return view('kocina.recipes.index', [
             'recipes' => Recipe::query()
+                ->orderBy('id', 'desc')
                 ->paginate(12)
                 ->through(fn ($recipe) => [
                     'id' => $recipe->id,
