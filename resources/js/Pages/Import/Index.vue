@@ -8,6 +8,7 @@ import Label from "@/Components/Label.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 
 const props = defineProps({
+  firecrawl: Boolean,
   openAI: Boolean,
 });
 
@@ -38,7 +39,7 @@ let showHelp = ref(false);
               <InputError :message="form.errors.url" />
             </div>
 
-            <div v-if="props.openAI" class="col-span-12 space-y-1">
+            <div v-if="props.firecrawl || props.openAI" class="col-span-12 space-y-1">
               <Label for="parser" value="Methode" />
               <div>
                 <label>
@@ -46,7 +47,13 @@ let showHelp = ref(false);
                   Structured data
                 </label>
               </div>
-              <div>
+              <div v-if="props.firecrawl">
+                <label>
+                  <input v-model="form.parser" value="firecrawl" required type="radio" />
+                  Firecrawl
+                </label>
+              </div>
+              <div v-if="props.openAI">
                 <label>
                   <input v-model="form.parser" value="open-ai" required type="radio" />
                   Open AI (experimenteel)
@@ -69,12 +76,17 @@ let showHelp = ref(false);
           <div v-if="showHelp" class="border-t border-gray-200 bg-sky-100 p-4 text-sky-700 md:rounded-b">
             <p>
               <strong>Structured data</strong><br />
-              Bij het importeren wordt er op een webpagina gezocht naar een recept dat is gedefineerd in het
+              Bij het importeren wordt er op een webpagina gezocht naar een recept dat is gedefinieerd in het
               <a href="https://schema.org/Recipe" class="text-sky-900">schema.org/Recipe</a> formaat. Er wordt gezocht
               naar Microdata, RDFa en JSON-LD markups.<br />
               Als er geen recept wordt gevonden dan wordt er een foutmelding weergegeven.
             </p>
-            <p>
+            <p v-if="props.firecrawl">
+              <strong>Firecrawl</strong><br />
+              Firecrawl is een geavanceerde web scraping service die gebruik maakt van AI om recepten van webpagina's te
+              halen. Er zijn kosten verbonden aan het gebruik van Firecrawl.
+            </p>
+            <p v-if="props.openAI">
               <strong>Open AI</strong><br />
               Met behulp van Open AI wordt er een tekst gegenereerd op basis van de inhoud van de webpagina. Deze tekst
               wordt vervolgens geanalyseerd om te kijken of er een recept in staat. Als er een recept wordt gevonden dan

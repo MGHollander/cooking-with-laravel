@@ -8,6 +8,7 @@ use App\Http\Requests\Recipe\RecipeRequest;
 use App\Http\Resources\Recipe\ImportResource;
 use App\Http\Traits\FillableAttributes;
 use App\Models\Recipe;
+use App\Support\FirecrawlRecipeParser;
 use App\Support\OpenAIRecipeParser;
 use App\Support\StructuredDataRecipeParser;
 use Brick\StructuredData\HTMLReader;
@@ -26,6 +27,7 @@ class ImportController extends Controller
     {
         return Inertia::render('Import/Index', [
             'openAI' => !empty(config('services.open_ai.api_key')),
+            'firecrawl' => !empty(config('services.firecrawl.api_key')),
         ]);
     }
 
@@ -34,20 +36,14 @@ class ImportController extends Controller
         $url    = $request->get('url');
         $parser = $request->get('parser', 'structured-data');
 
-        // TODO: Use proper validation. This is just a quick fix.
-        try {
-            Http::throw()->get($url);
-        } catch (\Exception $e) {
-            return back()->with('warning', 'Helaas, de URL die je hebt opgegeven lijkt niet (meer) te bestaan. Probeer een andere URL.');
-        }
-
         match ($parser) {
             'structured-data' => $recipe = $this->parseStructuredData($url),
             'open-ai'         => $recipe = new ImportResource(OpenAIRecipeParser::read($url)),
+            'firecrawl'       => $recipe = new ImportResource(FirecrawlRecipeParser::read($url)),
         };
 
         if (!$recipe) {
-            return back()->with('warning', 'Helaas, het is niet gelukt om een recept te vinden op deze pagina. Heeft deze pagina wel een recept? Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.');
+            return back()->with('warning', 'Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.');
         }
 
         return Inertia::render('Import/Form', [
@@ -78,7 +74,7 @@ class ImportController extends Controller
                 $recipe->addMediaFromUrl($externalImage)
                     ->toMediaCollection('recipe_image');
             } catch (\Exception $e) {
-                // @TODO handle exception
+                // TODO handle exception
             }
         }
 
@@ -90,7 +86,11 @@ class ImportController extends Controller
 
     private function parseStructuredData($url)
     {
-        $response = Http::throw()->get($url);
+        try {
+            $response = Http::throw()->get($url);
+        } catch (\Exception $e) {
+            return null;
+        }
 
         // The XML HTML readers don't handle UTF-8 for you
         $html = mb_convert_encoding($response->body(), 'HTML-ENTITIES', 'UTF-8');

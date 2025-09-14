@@ -15,7 +15,7 @@ class ImportRequest extends FormRequest
     {
         return [
             'url'    => ['required', 'url'],
-            'parser' => ['required', 'string', 'in:structured-data,open-ai'],
+            'parser' => ['required', 'string', 'in:structured-data,open-ai,firecrawl'],
         ];
     }
 }
