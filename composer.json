@@ -20,6 +20,7 @@
     "laravel/tinker": "^2.7",
     "openai-php/client": "^0.10",
     "protonemedia/laravel-cross-eloquent-search": "^3.2",
+    "sentry/sentry-laravel": "^4.16",
     "spatie/laravel-medialibrary": "^11.0",
     "spatie/laravel-sluggable": "^3.5",
     "spatie/laravel-tags": "^4.4",
