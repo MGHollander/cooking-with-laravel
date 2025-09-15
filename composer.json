@@ -16,7 +16,6 @@
     "guzzlehttp/guzzle": "^7.2",
     "inertiajs/inertia-laravel": "^2.0",
     "laravel/framework": "^11.0",
-    "laravel/nightwatch": "^1.13",
     "laravel/sanctum": "^4.0",
     "laravel/tinker": "^2.7",
     "openai-php/client": "^0.10",
