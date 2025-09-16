@@ -20,7 +20,7 @@ class ImportLogFactory extends Factory
     {
         return [
             'url' => $this->faker->url(),
-            'source' => $this->faker->randomElement(['structured-data', 'firecrawl', 'open-ai']),
+            'source' => $this->faker->randomElement(['structured-data', 'firecrawl', 'open-ai', 'local']),
             'user_id' => User::factory(),
             'recipe_id' => null, // Default to null, can be overridden
             'parsed_data' => [
@@ -29,9 +29,9 @@ class ImportLogFactory extends Factory
                 'keywords' => $this->faker->words(3, true),
                 'ingredients' => $this->faker->sentences(5),
                 'steps' => $this->faker->sentences(8),
-                'prepTime' => 'PT' . $this->faker->numberBetween(5, 60) . 'M',
-                'cookTime' => 'PT' . $this->faker->numberBetween(15, 120) . 'M',
-                'totalTime' => 'PT' . $this->faker->numberBetween(30, 180) . 'M',
+                'prepTime' => 'PT'.$this->faker->numberBetween(5, 60).'M',
+                'cookTime' => 'PT'.$this->faker->numberBetween(15, 120).'M',
+                'totalTime' => 'PT'.$this->faker->numberBetween(30, 180).'M',
                 'yield' => $this->faker->numberBetween(2, 8),
                 'difficulty' => $this->faker->randomElement(['easy', 'average', 'difficult']),
                 'images' => [$this->faker->imageUrl()],

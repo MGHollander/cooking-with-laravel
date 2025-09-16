@@ -35,6 +35,7 @@ class ImportLogService
     public function updateImportLogWithRecipe(ImportLog $importLog, Recipe $recipe): ImportLog
     {
         $importLog->update(['recipe_id' => $recipe->id]);
+
         return $importLog->fresh();
     }
 
@@ -70,21 +71,68 @@ class ImportLogService
     public function hasUserImportedUrl(User $user, string $url): bool
     {
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         return ImportLog::where('user_id', $user->id)
             ->where('url', $cleanUrl)
             ->exists();
     }
 
     /**
-     * Get the most recently imported recipe for a URL by any user.
+     * Get the most recently imported recipe for a URL by any user, excluding 'local' source.
      */
     public function getLastImportForUrl(string $url): ?ImportLog
     {
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         return ImportLog::where('url', $cleanUrl)
+            ->where('source', '!=', 'local')
             ->with(['recipe', 'user'])
+            ->latest()
+            ->first();
+    }
+
+    /**
+     * Get the most recently imported recipe for a URL by any user, excluding 'local' source.
+     */
+    public function getLastNonLocalImportForUrl(string $url): ?ImportLog
+    {
+        $cleanUrl = FileHelper::cleanUrl($url);
+
+        return ImportLog::where('url', $cleanUrl)
+            ->where('source', '!=', 'local')
+            ->with(['recipe', 'user'])
+            ->latest()
+            ->first();
+    }
+
+    /**
+     * Create a new import log with 'local' source using existing parsed data.
+     */
+    public function createLocalImportLog(
+        string $url,
+        User $user,
+        array $parsedData,
+        ?Recipe $recipe = null
+    ): ImportLog {
+        return ImportLog::create([
+            'url' => FileHelper::cleanUrl($url),
+            'source' => 'local',
+            'user_id' => $user->id,
+            'recipe_id' => $recipe?->id,
+            'parsed_data' => $parsedData,
+        ]);
+    }
+
+    /**
+     * Get the existing import log for a user and URL, including recipe if available.
+     */
+    public function getUserImportForUrl(User $user, string $url): ?ImportLog
+    {
+        $cleanUrl = FileHelper::cleanUrl($url);
+
+        return ImportLog::where('user_id', $user->id)
+            ->where('url', $cleanUrl)
+            ->with(['recipe'])
             ->latest()
             ->first();
     }

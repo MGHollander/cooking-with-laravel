@@ -10,6 +10,7 @@ use App\Http\Traits\FillableAttributes;
 use App\Models\ImportLog;
 use App\Models\Recipe;
 use App\Services\ImportLogService;
+use App\Services\RecipeParsing\Data\ParsedRecipeData;
 use App\Services\RecipeParsing\Services\RecipeParsingService;
 use App\Support\FileHelper;
 use Illuminate\Http\RedirectResponse;
@@ -36,7 +37,54 @@ class ImportController extends Controller
     {
         $url = FileHelper::cleanUrl($request->get('url'));
         $parser = $request->get('parser', 'structured-data');
+        $user = $request->user();
 
+        // Check if current user already imported this URL
+        $userImport = $this->importLogService->getUserImportForUrl($user, $url);
+
+        if ($userImport && $userImport->recipe) {
+            return back()->with('warning',
+                'Je hebt dit recept al geïmporteerd: <a href="'.
+                route('recipes.show', $userImport->recipe->slug).
+                '">'.$userImport->recipe->title.'</a>'
+            );
+        }
+
+        // Check if another user imported this URL (excluding 'local' sources)
+        $existingImport = $this->importLogService->getLastNonLocalImportForUrl($url);
+        if ($existingImport && $existingImport->parsed_data) {
+            try {
+                // Validate existing parsed data
+                $parsedData = ParsedRecipeData::fromArray($existingImport->parsed_data);
+                if (! $parsedData->isValid()) {
+                    throw new \InvalidArgumentException('Invalid parsed data from existing import');
+                }
+
+                // Create local import log for current user
+                $importLog = $this->importLogService->createLocalImportLog(
+                    $url,
+                    $user,
+                    $existingImport->parsed_data
+                );
+
+                $recipe = new ImportResource($parsedData->toArray());
+
+                return Inertia::render('Import/Form', [
+                    'url' => $url,
+                    'recipe' => $recipe,
+                    'import_log_id' => $importLog->id,
+                ]);
+            } catch (\Exception $e) {
+                // Fall through to normal API parsing if existing data is invalid
+                \Illuminate\Support\Facades\Log::warning('Failed to reuse existing import data', [
+                    'url' => $url,
+                    'existing_import_id' => $existingImport->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        // Proceed with normal API parsing
         try {
             $parsedRecipe = $this->recipeParsingService->parseWithParser($url, $parser);
 
@@ -48,7 +96,7 @@ class ImportController extends Controller
             $importLog = $this->importLogService->logSuccessfulImport(
                 $url,
                 $parser,
-                $request->user(),
+                $user,
                 $parsedRecipe
             );
 
