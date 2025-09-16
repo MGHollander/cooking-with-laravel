@@ -26,46 +26,44 @@ class ImportController extends Controller
     public function index()
     {
         return Inertia::render('Import/Index', [
-            'openAI' => !empty(config('services.open_ai.api_key')),
-            'firecrawl' => !empty(config('services.firecrawl.api_key')),
+            'openAI' => ! empty(config('services.open_ai.api_key')),
+            'firecrawl' => ! empty(config('services.firecrawl.api_key')),
         ]);
     }
 
     public function create(ImportRequest $request)
     {
-        $url    = $request->get('url');
+        $url = $request->get('url');
         $parser = $request->get('parser', 'structured-data');
 
         match ($parser) {
             'structured-data' => $recipe = $this->parseStructuredData($url),
-            'open-ai'         => $recipe = new ImportResource(OpenAIRecipeParser::read($url)),
-            'firecrawl'       => $recipe = new ImportResource(FirecrawlRecipeParser::read($url)),
+            'open-ai' => $recipe = new ImportResource(OpenAIRecipeParser::read($url)),
+            'firecrawl' => $recipe = new ImportResource(FirecrawlRecipeParser::read($url)),
         };
 
-        if (!$recipe) {
+        if (! $recipe) {
             return back()->with('warning', 'Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.');
         }
 
         return Inertia::render('Import/Form', [
-            'url'    => $url,
+            'url' => $url,
             'recipe' => $recipe ?? null,
         ]);
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
-     * @param RecipeRequest $request
      * @return RedirectResponse
      */
     public function store(RecipeRequest $request)
     {
-        $attributes            = $request->validated();
+        $attributes = $request->validated();
         $attributes['user_id'] = $request->user()->id;
         // TODO Make a mutator for this.
         // Convert tags to lowercase and trim whitespace.
-        $attributes['tags'] = !empty($attributes['tags']) ? array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags'])))) : [];
+        $attributes['tags'] = ! empty($attributes['tags']) ? array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags'])))) : [];
 
         $recipe = (new Recipe)->create($this->fillableAttributes(new Recipe, $attributes));
 
@@ -79,8 +77,9 @@ class ImportController extends Controller
         }
 
         if ($request->get('return_to_import_page')) {
-            return redirect()->route('import.index')->with('success', 'Het recept “<a href="' . route('recipes.show', $recipe->slug) . '"><i>' . $recipe->title . '</i></a>” is succesvol geïmporteerd!');
+            return redirect()->route('import.index')->with('success', 'Het recept “<a href="'.route('recipes.show', $recipe->slug).'"><i>'.$recipe->title.'</i></a>” is succesvol geïmporteerd!');
         }
+
         return redirect()->route('recipes.edit', $recipe->id)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol geïmporteerd!");
     }
 
@@ -96,9 +95,9 @@ class ImportController extends Controller
         $html = mb_convert_encoding($response->body(), 'HTML-ENTITIES', 'UTF-8');
 
         $readers = [
-            'JsonLdReader'    => new HTMLReader(new JsonLdReader()),
-            'MicrodataReader' => new HTMLReader(new MicrodataReader()),
-            'RdfaLiteReader'  => new HTMLReader(new RdfaLiteReader()),
+            'JsonLdReader' => new HTMLReader(new JsonLdReader),
+            'MicrodataReader' => new HTMLReader(new MicrodataReader),
+            'RdfaLiteReader' => new HTMLReader(new RdfaLiteReader),
         ];
 
         foreach ($readers as $reader) {
