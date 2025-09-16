@@ -53,8 +53,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['daily', 'sentry_logs'],
-            'ignore_exceptions' => false,
+            'channels' => ['daily', 'bugsnag'],
         ],
 
         'single' => [
@@ -68,6 +67,11 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
+        ],
+
+        'bugsnag' => [
+            'driver' => 'bugsnag',
+            'level' => 'debug', // Allow all log levels including info
         ],
 
         'sentry_logs' => [

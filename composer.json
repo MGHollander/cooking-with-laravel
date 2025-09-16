@@ -13,6 +13,7 @@
     "ext-imagick": "*",
     "artesaos/seotools": "^1.3",
     "brick/structured-data": "^0.1",
+    "bugsnag/bugsnag-laravel": "^2.0",
     "guzzlehttp/guzzle": "^7.2",
     "inertiajs/inertia-laravel": "^2.0",
     "laravel/framework": "^11.0",
