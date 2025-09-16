@@ -40,4 +40,27 @@ class ImportControllerTest extends TestCase
         $service = app(RecipeParsingService::class);
         $this->assertTrue($service->isParserAvailable('structured-data'));
     }
+
+    public function test_import_create_accepts_post_request(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('import.create'), [
+            'url' => 'https://example.com/recipe',
+            'parser' => 'structured-data',
+        ]);
+
+        // The response should not be a 405 Method Not Allowed
+        $this->assertNotEquals(405, $response->getStatusCode());
+    }
+
+    public function test_import_create_rejects_get_request(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->get(route('import.create') . '?url=https://example.com/recipe&parser=structured-data');
+
+        // Should return 405 Method Not Allowed since we changed from GET to POST
+        $response->assertStatus(405);
+    }
 }

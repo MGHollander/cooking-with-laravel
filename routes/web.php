@@ -33,7 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/recepten/{recipe}', [RecipeController::class, 'destroy'])->name('recipes.destroy');
 
     Route::get('/recepten/importeren', [ImportController::class, 'index'])->name('import.index');
-    Route::get('/recepten/importeren/controleren', [ImportController::class, 'create'])->name('import.create');
+    Route::post('/recepten/importeren/controleren', [ImportController::class, 'create'])->name('import.create');
     Route::post('/recepten/importeren', [ImportController::class, 'store'])->name('import.store');
 });
 
