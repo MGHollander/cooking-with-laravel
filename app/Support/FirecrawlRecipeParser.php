@@ -67,7 +67,7 @@ class FirecrawlRecipeParser
                     'description' => 'Recipe image URLs',
                 ],
             ],
-            'required' => ['title', 'yield', 'ingredients', 'instructions'],
+            'required' => ['title', 'ingredients', 'steps'],
         ];
 
         try {
@@ -127,11 +127,13 @@ class FirecrawlRecipeParser
 
             $recipeData = $data['data']['json'] ?? null;
 
-            if (empty($recipeData) || empty($recipeData['title'])) {
+            if (empty($recipeData) || empty($recipeData['title']) || empty($recipeData['ingredients']) || empty($recipeData['steps'])) {
                 Log::warning('Firecrawl API returned empty or invalid recipe data', [
                     'url' => $url,
                     'has_data' => ! empty($recipeData),
                     'has_title' => ! empty($recipeData['title'] ?? null),
+                    'has_ingredients' => ! empty($recipeData['ingredients'] ?? null),
+                    'has_steps' => ! empty($recipeData['steps'] ?? null),
                     'data' => ! empty($recipeData) ? $recipeData : [],
                     'user_id' => optional(auth()->user())->id,
                 ]);
