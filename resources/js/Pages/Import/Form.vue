@@ -14,6 +14,7 @@ import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
 const props = defineProps({
   url: String,
   recipe: Object,
+  import_log_id: Number,
 });
 
 const title = "Geïmporteerd recept controleren";
@@ -31,6 +32,7 @@ const form = useForm({
   instructions: props.recipe.instructions,
   source_label: props.recipe.source_label,
   source_link: props.recipe.source_link,
+  import_log_id: props.import_log_id,
   return_to_import_page: false,
 });
 </script>

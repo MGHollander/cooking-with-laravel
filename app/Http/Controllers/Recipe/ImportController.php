@@ -7,8 +7,11 @@ use App\Http\Requests\Import\ImportRequest;
 use App\Http\Requests\Recipe\RecipeRequest;
 use App\Http\Resources\Recipe\ImportResource;
 use App\Http\Traits\FillableAttributes;
+use App\Models\ImportLog;
 use App\Models\Recipe;
+use App\Services\ImportLogService;
 use App\Services\RecipeParsing\Services\RecipeParsingService;
+use App\Support\FileHelper;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 
@@ -17,9 +20,9 @@ class ImportController extends Controller
     use FillableAttributes;
 
     public function __construct(
-        private readonly RecipeParsingService $recipeParsingService
-    ) {
-    }
+        private readonly RecipeParsingService $recipeParsingService,
+        private readonly ImportLogService $importLogService
+    ) {}
 
     public function index()
     {
@@ -31,25 +34,34 @@ class ImportController extends Controller
 
     public function create(ImportRequest $request)
     {
-        $url = $request->get('url');
+        $url = FileHelper::cleanUrl($request->get('url'));
         $parser = $request->get('parser', 'structured-data');
 
         try {
             $parsedRecipe = $this->recipeParsingService->parseWithParser($url, $parser);
-            
-            if (!$parsedRecipe) {
+
+            if (! $parsedRecipe) {
                 return back()->with('warning', 'Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.');
             }
+
+            // Log successful import immediately after parsing succeeds
+            $importLog = $this->importLogService->logSuccessfulImport(
+                $url,
+                $parser,
+                $request->user(),
+                $parsedRecipe
+            );
 
             $recipe = new ImportResource($parsedRecipe->toArray());
 
             return Inertia::render('Import/Form', [
                 'url' => $url,
                 'recipe' => $recipe,
+                'import_log_id' => $importLog->id, // Pass the import log ID to connect it later
             ]);
 
         } catch (\Exception $e) {
-            return back()->with('warning', 'Er is een fout opgetreden bij het ophalen van het recept: ' . $e->getMessage() . '. Probeer een andere methode of voer het recept handmatig in.');
+            return back()->with('warning', 'Er is een fout opgetreden bij het ophalen van het recept. Probeer een andere methode of voer het recept handmatig in.');
         }
     }
 
@@ -77,11 +89,27 @@ class ImportController extends Controller
             }
         }
 
-        if ($request->get('return_to_import_page')) {
-            return redirect()->route('import.index')->with('success', 'Het recept “<a href="'.route('recipes.show', $recipe->slug).'"><i>'.$recipe->title.'</i></a>” is succesvol geïmporteerd!');
+        // Update import log with created recipe if this was imported from a URL
+        if ($importLogId = $request->get('import_log_id')) {
+            try {
+                $importLog = ImportLog::find($importLogId);
+                if ($importLog) {
+                    $this->importLogService->updateImportLogWithRecipe($importLog, $recipe);
+                }
+            } catch (\Exception $e) {
+                // Don't fail the recipe creation if import log update fails
+                \Illuminate\Support\Facades\Log::warning('Failed to update import log with recipe', [
+                    'recipe_id' => $recipe->id,
+                    'import_log_id' => $importLogId,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
-        return redirect()->route('recipes.edit', $recipe->id)->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol geïmporteerd!");
-    }
+        if ($request->get('return_to_import_page')) {
+            return redirect()->route('import.index')->with('success', 'Het recept "<a href="'.route('recipes.show', $recipe->slug).'"><i>'.$recipe->title.'</i></a>" is succesvol geïmporteerd!');
+        }
 
+        return redirect()->route('recipes.edit', $recipe->id)->with('success', 'Het recept "'.$recipe->title.'" is succesvol geïmporteerd!');
+    }
 }
