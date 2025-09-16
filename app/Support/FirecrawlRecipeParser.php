@@ -29,7 +29,7 @@ class FirecrawlRecipeParser
                 'ingredients' => [
                     'type' => 'array',
                     'items' => ['type' => 'string'],
-                    'description' => 'List of recipe ingredients with quantities',
+                    'description' => 'List of recipe ingredients with quantities and measurements. Each ingredient must include the amount, unit, and ingredient name separated by spaces. Format: "[quantity] [unit] [ingredient name]". Examples: "100 ml milk", "100 g sugar", "1 large egg", "2 cans diced tomatoes", "1 tbsp olive oil". Never concatenate without spaces like "100mlmilk".',
                 ],
                 'steps' => [
                     'type' => 'array',
@@ -88,7 +88,6 @@ class FirecrawlRecipeParser
             ])->timeout(120)->post('https://api.firecrawl.dev/v2/scrape', [
                 'url' => $url,
                 'formats' => [
-                    'html',
                     [
                         'type' => 'json',
                         'schema' => $schema,
@@ -104,7 +103,7 @@ class FirecrawlRecipeParser
                 'url' => $url,
                 'status_code' => $response->status(),
                 'response_time_ms' => round($requestDuration, 2),
-                'response_body' => $response->body(),
+                'response_json' => $response->json(),
                 'user_id' => optional(auth()->user())->id,
             ];
 
@@ -117,7 +116,7 @@ class FirecrawlRecipeParser
 
             $data = $response->json();
 
-            if (!$data['success'] ?? false) {
+            if (! $data['success'] ?? false) {
                 Log::error('Firecrawl API returned unsuccessful response', [
                     'url' => $url,
                     'response_data' => $data,
@@ -133,7 +132,7 @@ class FirecrawlRecipeParser
                     'url' => $url,
                     'has_data' => ! empty($recipeData),
                     'has_title' => ! empty($recipeData['title'] ?? null),
-                    'data_keys' => ! empty($recipeData) ? array_keys($recipeData) : [],
+                    'data' => ! empty($recipeData) ? $recipeData : [],
                     'user_id' => optional(auth()->user())->id,
                 ]);
 
