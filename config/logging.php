@@ -74,11 +74,6 @@ return [
             'level' => 'debug', // Allow all log levels including info
         ],
 
-        'sentry_logs' => [
-            'driver' => 'sentry_logs',
-            'level' => env('LOG_LEVEL', 'info'), // or 'debug', 'error', etc.
-        ],
-
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
