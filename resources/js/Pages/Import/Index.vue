@@ -30,7 +30,7 @@ let showHelp = ref(false);
     </template>
 
     <div class="mx-auto max-w-3xl space-y-8">
-      <form class="mb-12 space-y-8" @submit.prevent="form.post(route('import.create'))">
+      <form class="mb-12 space-y-8" @submit.prevent="form.get(route('import.create'))">
         <div class="bg-white shadow sm:rounded-md">
           <div class="grid grid-cols-12 gap-6 px-4 py-5 sm:p-6">
             <div class="col-span-12 space-y-1">
