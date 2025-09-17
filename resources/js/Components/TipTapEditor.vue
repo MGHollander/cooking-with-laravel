@@ -1,8 +1,6 @@
 <script setup>
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import ListItem from "@tiptap/extension-list-item";
 import { watch, ref, onMounted, onBeforeUnmount } from "vue";
 import TipTapToolbar from "@/Components/TipTapToolbar.vue";
 
@@ -48,22 +46,9 @@ const getExtensions = () => {
       orderedList: hasOrderedList,
       bold: hasBold,
       italic: hasItalic,
+      underline: hasUnderline,
     }),
   ];
-
-  if (hasUnderline) {
-    extensions.push(Underline);
-  }
-
-  if (hasBulletList || hasOrderedList) {
-    extensions.push(
-      ListItem.configure({
-        HTMLAttributes: {
-          class: "list-item",
-        },
-      }),
-    );
-  }
 
   return extensions;
 };
