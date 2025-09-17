@@ -14,6 +14,8 @@ use App\Services\RecipeParsing\Data\ParsedRecipeData;
 use App\Services\RecipeParsing\Services\RecipeParsingService;
 use App\Support\FileHelper;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ImportController extends Controller
@@ -50,9 +52,15 @@ class ImportController extends Controller
             );
         }
 
-        // Check if another user imported this URL (excluding 'local' sources)
+        // Check if this URL has been imported before (excluding 'local' sources)
         $existingImport = $this->importLogService->getLastNonLocalImportForUrl($url);
         if ($existingImport && $existingImport->parsed_data) {
+            Log::info('Import recipe from import logs', [
+                'url' => $url,
+                'import_logs_id' => $existingImport->id,
+                'user_id' => Auth::id(),
+            ]);
+
             try {
                 // Validate existing parsed data
                 $parsedData = ParsedRecipeData::fromArray($existingImport->parsed_data);
