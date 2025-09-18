@@ -36,33 +36,33 @@ class FileHelper
     public static function cleanUrl(string $url): string
     {
         $parsedUrl = parse_url($url);
-        
+
         if (!$parsedUrl) {
             return $url; // Return original if parsing fails
         }
 
         $cleanUrl = '';
-        
+
         // Add scheme
         if (isset($parsedUrl['scheme'])) {
             $cleanUrl .= $parsedUrl['scheme'] . '://';
         }
-        
+
         // Add host
         if (isset($parsedUrl['host'])) {
             $cleanUrl .= $parsedUrl['host'];
         }
-        
+
         // Add port if present and not default
         if (isset($parsedUrl['port'])) {
             $cleanUrl .= ':' . $parsedUrl['port'];
         }
-        
+
         // Add path
         if (isset($parsedUrl['path'])) {
             $cleanUrl .= $parsedUrl['path'];
         }
-        
+
         return $cleanUrl;
     }
 }
