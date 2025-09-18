@@ -46,6 +46,7 @@ class HtmlFetcherService implements HtmlFetcherInterface
 
             Log::error('Failed to fetch HTML content', [
                 'url' => $url,
+                'error_code' => $e->getCode(),
                 'error_message' => $e->getMessage(),
                 'response_time_ms' => round($duration, 2),
                 'user_id' => Auth::id(),
@@ -58,7 +59,7 @@ class HtmlFetcherService implements HtmlFetcherInterface
     public function fetchForStructuredData(string $url): string
     {
         $html = $this->fetch($url);
-        
+
         // Convert encoding for structured data parsing as done in the original code
         return mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
     }

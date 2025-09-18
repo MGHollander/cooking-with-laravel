@@ -98,6 +98,7 @@ class RecipeParsingService
             Log::error('Recipe parsing failed with specific parser', [
                 'url' => $url,
                 'parser' => $parser->getName(),
+                'error_code' => $e->getCode(),
                 'error_message' => $e->getMessage(),
                 'total_processing_time_ms' => round($totalDuration, 2),
                 'user_id' => Auth::id(),
