@@ -15,6 +15,7 @@ const props = defineProps({
 const form = useForm({
   url: "",
   parser: "structured-data",
+  force_import: false,
 });
 
 const title = "Recept importeren";
@@ -42,24 +43,31 @@ let showHelp = ref(false);
             <div v-if="props.firecrawl || props.openAI" class="col-span-12 space-y-1">
               <Label for="parser" value="Methode" />
               <div>
-                <label>
+                <label class="flex items-center space-x-2">
                   <input v-model="form.parser" value="structured-data" required type="radio" />
-                  Structured data
+                  <span>Structured data</span>
                 </label>
               </div>
               <div v-if="props.firecrawl">
-                <label>
+                <label class="flex items-center space-x-2">
                   <input v-model="form.parser" value="firecrawl" required type="radio" />
-                  Firecrawl
+                  <span>Firecrawl</span>
                 </label>
               </div>
               <div v-if="props.openAI">
-                <label>
+                <label class="flex items-center space-x-2">
                   <input v-model="form.parser" value="open-ai" required type="radio" />
-                  Open AI (experimenteel)
+                  <span>AI (experimenteel)</span>
                 </label>
               </div>
               <InputError :message="form.errors.parser" />
+            </div>
+
+            <div class="col-span-12 space-y-1">
+              <label class="flex items-center space-x-2">
+                <input v-model="form.force_import" value="true" type="checkbox" />
+                <span>Forceer importeren van de originele bron.</span>
+              </label>
             </div>
           </div>
 

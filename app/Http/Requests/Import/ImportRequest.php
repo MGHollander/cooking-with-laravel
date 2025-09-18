@@ -14,8 +14,9 @@ class ImportRequest extends FormRequest
     public function rules()
     {
         return [
-            'url'    => ['required', 'url'],
+            'url' => ['required', 'url'],
             'parser' => ['required', 'string', 'in:structured-data,open-ai,firecrawl'],
+            'force_import' => ['sometimes', 'string', 'in:true,false'],
         ];
     }
 }

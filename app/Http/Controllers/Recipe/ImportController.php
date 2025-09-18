@@ -39,12 +39,13 @@ class ImportController extends Controller
     {
         $url = FileHelper::cleanUrl($request->get('url'));
         $parser = $request->get('parser', 'structured-data');
+        $forceImport = filter_var($request->get('force_import', false), FILTER_VALIDATE_BOOLEAN);
         $user = $request->user();
 
         // Check if current user already imported this URL
         $userImport = $this->importLogService->getUserImportForUrl($user, $url);
 
-        if ($userImport && $userImport->recipe) {
+        if (!$forceImport && $userImport && $userImport->recipe) {
             return back()->with('warning',
                 'Je hebt dit recept al geïmporteerd: <a href="'.
                 route('recipes.show', $userImport->recipe->slug).
@@ -54,7 +55,8 @@ class ImportController extends Controller
 
         // Check if this URL has been imported before (excluding 'local' sources)
         $existingImport = $this->importLogService->getLastNonLocalImportForUrl($url);
-        if ($existingImport && $existingImport->parsed_data) {
+
+        if (!$forceImport && $existingImport && $existingImport->parsed_data) {
             Log::info('Import recipe from import logs', [
                 'url' => $url,
                 'import_logs_id' => $existingImport->id,
@@ -84,7 +86,7 @@ class ImportController extends Controller
                 ]);
             } catch (\Exception $e) {
                 // Fall through to normal API parsing if existing data is invalid
-                \Illuminate\Support\Facades\Log::warning('Failed to reuse existing import data', [
+                Log::warning('Failed to reuse existing import data', [
                     'url' => $url,
                     'existing_import_id' => $existingImport->id,
                     'error' => $e->getMessage(),
@@ -94,6 +96,13 @@ class ImportController extends Controller
 
         // Proceed with normal API parsing
         try {
+            if ($forceImport) {
+                Log::info('Force recipe import', [
+                    'url'=> $url,
+                    'user_id' => Auth::id(),
+                ]);
+            }
+
             $parsedRecipe = $this->recipeParsingService->parseWithParser($url, $parser);
 
             if (! $parsedRecipe) {
@@ -154,7 +163,7 @@ class ImportController extends Controller
                 }
             } catch (\Exception $e) {
                 // Don't fail the recipe creation if import log update fails
-                \Illuminate\Support\Facades\Log::warning('Failed to update import log with recipe', [
+                Log::warning('Failed to update import log with recipe', [
                     'recipe_id' => $recipe->id,
                     'import_log_id' => $importLogId,
                     'error' => $e->getMessage(),
