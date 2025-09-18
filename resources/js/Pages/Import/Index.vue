@@ -8,12 +8,13 @@ import Label from "@/Components/Label.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 
 const props = defineProps({
+  url: String,
   firecrawl: Boolean,
   openAI: Boolean,
 });
 
 const form = useForm({
-  url: "",
+  url: props.url ?? "",
   parser: "structured-data",
   force_import: false,
 });

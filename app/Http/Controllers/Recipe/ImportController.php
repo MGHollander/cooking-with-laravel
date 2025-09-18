@@ -14,6 +14,7 @@ use App\Services\RecipeParsing\Data\ParsedRecipeData;
 use App\Services\RecipeParsing\Services\RecipeParsingService;
 use App\Support\FileHelper;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -27,9 +28,10 @@ class ImportController extends Controller
         private readonly ImportLogService $importLogService
     ) {}
 
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Import/Index', [
+            'url' => $request->session()->get('url'),
             'openAI' => $this->recipeParsingService->isParserAvailable('open-ai'),
             'firecrawl' => $this->recipeParsingService->isParserAvailable('firecrawl'),
         ]);
@@ -37,28 +39,28 @@ class ImportController extends Controller
 
     public function create(ImportRequest $request)
     {
-        $url = FileHelper::cleanUrl($request->get('url'));
+        $url = $request->get('url');
+        $cleanUrl = FileHelper::cleanUrl($url);
         $parser = $request->get('parser', 'structured-data');
         $forceImport = filter_var($request->get('force_import', false), FILTER_VALIDATE_BOOLEAN);
         $user = $request->user();
 
         // Check if current user already imported this URL
-        $userImport = $this->importLogService->getUserImportForUrl($user, $url);
+        $userImport = $this->importLogService->getUserImportForUrl($user, $cleanUrl);
 
         if (!$forceImport && $userImport && $userImport->recipe) {
-            return back()->with('warning',
-                'Je hebt dit recept al geïmporteerd: <a href="'.
-                route('recipes.show', $userImport->recipe->slug).
-                '">'.$userImport->recipe->title.'</a>'
-            );
+            $recipeUrl = route('recipes.show', $userImport->recipe->slug);
+            return back()
+                ->with('warning', "Je hebt dit recept al geïmporteerd: <a href=\"{$recipeUrl}\">{$userImport->recipe->title}</a>")
+                ->with('url', $url);
         }
 
         // Check if this URL has been imported before (excluding 'local' sources)
-        $existingImport = $this->importLogService->getLastNonLocalImportForUrl($url);
+        $existingImport = $this->importLogService->getLastNonLocalImportForUrl($cleanUrl);
 
         if (!$forceImport && $existingImport && $existingImport->parsed_data) {
             Log::info('Import recipe from import logs', [
-                'url' => $url,
+                'url' => $cleanUrl,
                 'import_logs_id' => $existingImport->id,
                 'user_id' => Auth::id(),
             ]);
@@ -72,7 +74,7 @@ class ImportController extends Controller
 
                 // Create local import log for current user
                 $importLog = $this->importLogService->createLocalImportLog(
-                    $url,
+                    $cleanUrl,
                     $user,
                     $existingImport->parsed_data
                 );
@@ -80,14 +82,14 @@ class ImportController extends Controller
                 $recipe = new ImportResource($parsedData->toArray());
 
                 return Inertia::render('Import/Form', [
-                    'url' => $url,
+                    'url' => $cleanUrl,
                     'recipe' => $recipe,
                     'import_log_id' => $importLog->id,
                 ]);
             } catch (\Exception $e) {
                 // Fall through to normal API parsing if existing data is invalid
                 Log::warning('Failed to reuse existing import data', [
-                    'url' => $url,
+                    'url' => $cleanUrl,
                     'existing_import_id' => $existingImport->id,
                     'error' => $e->getMessage(),
                 ]);
@@ -98,20 +100,22 @@ class ImportController extends Controller
         try {
             if ($forceImport) {
                 Log::info('Force recipe import', [
-                    'url'=> $url,
+                    'url'=> $cleanUrl,
                     'user_id' => Auth::id(),
                 ]);
             }
 
-            $parsedRecipe = $this->recipeParsingService->parseWithParser($url, $parser);
+            $parsedRecipe = $this->recipeParsingService->parseWithParser($cleanUrl, $parser);
 
             if (! $parsedRecipe) {
-                return back()->with('warning', 'Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.');
+                return back()
+                    ->with('warning', 'Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.')
+                    ->with('url', $url);
             }
 
             // Log successful import immediately after parsing succeeds
             $importLog = $this->importLogService->logSuccessfulImport(
-                $url,
+                $cleanUrl,
                 $parser,
                 $user,
                 $parsedRecipe
@@ -120,13 +124,15 @@ class ImportController extends Controller
             $recipe = new ImportResource($parsedRecipe->toArray());
 
             return Inertia::render('Import/Form', [
-                'url' => $url,
+                'url' => $cleanUrl,
                 'recipe' => $recipe,
                 'import_log_id' => $importLog->id, // Pass the import log ID to connect it later
             ]);
 
         } catch (\Exception $e) {
-            return back()->with('warning', 'Er is een fout opgetreden bij het ophalen van het recept. Probeer een andere methode of voer het recept handmatig in.');
+            return back()
+                ->with('warning', 'Er is een fout opgetreden bij het ophalen van het recept. Probeer een andere methode of voer het recept handmatig in.')
+                ->with('url', $url);
         }
     }
 
