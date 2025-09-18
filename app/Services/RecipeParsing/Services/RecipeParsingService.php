@@ -44,7 +44,7 @@ class RecipeParsingService
         $startTime = microtime(true);
 
         $parser = $this->parsers->get($parserIdentifier);
-        
+
         if (!$parser) {
             throw new RecipeParsingException(
                 message: "Parser '{$parserIdentifier}' not found",
@@ -62,7 +62,7 @@ class RecipeParsingService
         }
 
         try {
-            Log::info('Starting recipe parsing with specific parser', [
+            Log::info("Try recipe parsing with {$parser->getName()}", [
                 'url' => $url,
                 'parser' => $parser->getName(),
                 'parser_identifier' => $parserIdentifier,
@@ -125,7 +125,7 @@ class RecipeParsingService
 
         foreach ($preferredOrder as $parserIdentifier) {
             $parser = $this->parsers->get($parserIdentifier);
-            
+
             if (!$parser || !$parser->isAvailable()) {
                 $attempts->push([
                     'parser' => $parserIdentifier,

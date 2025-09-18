@@ -59,7 +59,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             foreach ($readers as $readerName => $reader) {
                 $items = $reader->read($html, $url);
 
-                Log::debug('Trying structured data reader', [
+                Log::debug("Trying {$readerName} structured data reader", [
                     'url' => $url,
                     'reader' => $readerName,
                     'items_count' => count($items),
