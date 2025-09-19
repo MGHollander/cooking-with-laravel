@@ -6,6 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ImportRequest extends FormRequest
 {
+    public function validationData(): array
+    {
+        return $this->query();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
