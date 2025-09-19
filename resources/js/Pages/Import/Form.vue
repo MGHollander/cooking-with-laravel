@@ -21,7 +21,7 @@ const title = "Geïmporteerd recept controleren";
 
 const form = useForm({
   title: props.recipe.title,
-  external_image: props.recipe.image,
+  external_image: props.recipe.images && props.recipe.images.length > 0 ? props.recipe.images[0] : "",
   summary: props.recipe.summary,
   tags: props.recipe.tags,
   preparation_minutes: String(props.recipe.preparation_minutes),
@@ -56,14 +56,32 @@ const form = useForm({
             <InputError :message="form.errors.title" />
           </div>
 
-          <div class="col-span-12 space-y-1">
-            <Label for="image" value="Externe afbeelding (optioneel)" />
-            <Input v-model="form.external_image" type="url" class="block w-full" />
+          <div v-if="recipe.images && recipe.images.length > 0" class="col-span-12 space-y-1">
+            <Label for="image" value="Afbeelding" />
+            <div class="flex gap-2">
+              <label
+                v-for="(image, index) in recipe.images"
+                :key="index"
+                class="relative cursor-pointer rounded-md border-2 border-transparent p-0.5 hover:border-indigo-300 has-[:checked]:border-2 has-[:checked]:border-indigo-500"
+                :for="'image-' + index"
+              >
+                <input
+                  type="radio"
+                  v-model="form.external_image"
+                  :value="image"
+                  class="m-2 absolute"
+                  :id="'image-' + index"
+                  :checked="form.external_image === image"
+                />
+                <img
+                  :src="image"
+                  :alt="'Image ' + (index + 1)"
+                  class="max-h-32 max-w-full rounded-md"
+                  @click="$event.target.previousElementSibling.click()"
+                />
+              </label>
+            </div>
             <InputError :message="form.errors.external_image" />
-            <img
-              class="!mt-2 block max-h-32 max-w-full rounded-md bg-contain bg-center bg-no-repeat"
-              :src="form.external_image"
-            />
           </div>
 
           <div class="col-span-12 space-y-1">
