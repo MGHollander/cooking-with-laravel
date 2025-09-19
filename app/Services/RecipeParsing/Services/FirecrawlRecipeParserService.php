@@ -39,12 +39,6 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
             ]);
 
             $result = $this->makeRequest($url, 'basic');
-
-            if ($result['success']) {
-                return $this->processSuccessfulResponse($result['data'], $result['requestDuration'], $startTime, $url);
-            }
-
-            // Check if we should retry with stealth proxy
             $shouldRetry = $this->shouldRetryWithStealth($result['response'], $result['data']);
 
             if ($shouldRetry) {
@@ -75,13 +69,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
                 $result = $retryResult;
             }
 
-            // Handle failure
-            $this->handleRequestFailure($result['response'], $result['data'], $url, $result['requestDuration']);
-
-            return null; // Unreachable, but satisfies linter
-
-        } catch (RecipeParsingException $e) {
-            throw $e;
+            return $this->processSuccessfulResponse($result['data'], $result['requestDuration'], $startTime, $url);
         } catch (\Exception $e) {
             $totalDuration = (microtime(true) - $startTime) * 1000;
 
@@ -97,7 +85,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
             ]);
 
             throw new RecipeParsingException(
-                message: 'Firecrawl parsing failed: '.$e->getMessage(),
+                message: 'Firecrawl parsing failed: ' . $e->getMessage(),
                 previous: $e,
                 url: $url,
                 parser: $this->getName()
@@ -191,7 +179,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
 
         $response = $this->httpClient
             ->withHeaders([
-                'Authorization' => 'Bearer '.$this->apiKey,
+                'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type' => 'application/json',
             ])
             ->timeout(self::TIMEOUT)
@@ -228,7 +216,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
 
         return [
             'response' => $response,
-            'data' => $data,
+            'data' => $data['data'],
             'requestDuration' => $requestDuration,
             'success' => $response->successful() && ($data['success'] ?? false),
             'failureReason' => $this->getFailureReason($response, $data),
@@ -267,7 +255,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
         }
 
         if (! $response->successful()) {
-            return "HTTP {$statusCode}: ".$response->body();
+            return "HTTP {$statusCode}: " . $response->body();
         }
 
         if (! ($data['success'] ?? false)) {
@@ -279,7 +267,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
 
     private function processSuccessfulResponse(array $data, float $requestDuration, float $startTime, string $url): ?ParsedRecipeData
     {
-        $recipeData = $data['data']['json'] ?? null;
+        $recipeData = $data['json'] ?? null;
 
         if (empty($recipeData)) {
             Log::warning('Firecrawl API returned empty recipe data', [
@@ -329,32 +317,5 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
         ]);
 
         return $parsedData;
-    }
-
-    private function handleRequestFailure($response, $data, string $url, float $requestDuration): never
-    {
-        $context = [
-            'url' => $url,
-            'status_code' => $response->status(),
-            'response_time_ms' => round($requestDuration, 2),
-            'response_json' => $response->json(),
-            'user_id' => Auth::id(),
-        ];
-
-        Log::error('Firecrawl API request failed', $context);
-
-        if (! ($data['success'] ?? false)) {
-            Log::error('Firecrawl API returned unsuccessful response', [
-                'url' => $url,
-                'response_data' => $data,
-                'user_id' => Auth::id(),
-            ]);
-        }
-
-        throw new RecipeParsingException(
-            message: 'Firecrawl API request failed: '.$response->body(),
-            url: $url,
-            parser: $this->getName()
-        );
     }
 }
