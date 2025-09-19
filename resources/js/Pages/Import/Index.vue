@@ -15,7 +15,7 @@ const props = defineProps({
 
 const form = useForm({
   url: props.url ?? "",
-  parser: "structured-data",
+  parser: "auto",
   force_import: false,
 });
 
@@ -41,8 +41,14 @@ let showHelp = ref(false);
               <InputError :message="form.errors.url" />
             </div>
 
-            <div v-if="props.firecrawl || props.openAI" class="col-span-12 space-y-1">
+            <div class="col-span-12 space-y-1">
               <Label for="parser" value="Methode" />
+              <div>
+                <label class="flex items-center space-x-2">
+                  <input v-model="form.parser" value="auto" required type="radio" />
+                  <span>Automatisch (aanbevolen)</span>
+                </label>
+              </div>
               <div>
                 <label class="flex items-center space-x-2">
                   <input v-model="form.parser" value="structured-data" required type="radio" />
@@ -83,6 +89,10 @@ let showHelp = ref(false);
           </div>
 
           <div v-if="showHelp" class="border-t border-gray-200 bg-sky-100 p-4 text-sky-700 md:rounded-b">
+            <p>
+              <strong>Automatisch</strong><br />
+              Probeert automatisch de beste methode te kiezen om een recept van de webpagina te halen. Dit is de aanbevolen optie omdat het de hoogste kans op succes heeft.
+            </p>
             <p>
               <strong>Structured data</strong><br />
               Bij het importeren wordt er op een webpagina gezocht naar een recept dat is gedefinieerd in het

@@ -25,6 +25,7 @@ class RecipeParsingService
     public function registerParser(RecipeParserInterface $parser): self
     {
         $this->parsers->put($parser->getIdentifier(), $parser);
+
         return $this;
     }
 
@@ -33,7 +34,7 @@ class RecipeParsingService
      */
     public function getAvailableParsers(): Collection
     {
-        return $this->parsers->filter(fn(RecipeParserInterface $parser) => $parser->isAvailable());
+        return $this->parsers->filter(fn (RecipeParserInterface $parser) => $parser->isAvailable());
     }
 
     /**
@@ -45,7 +46,7 @@ class RecipeParsingService
 
         $parser = $this->parsers->get($parserIdentifier);
 
-        if (!$parser) {
+        if (! $parser) {
             throw new RecipeParsingException(
                 message: "Parser '{$parserIdentifier}' not found",
                 url: $url,
@@ -53,7 +54,7 @@ class RecipeParsingService
             );
         }
 
-        if (!$parser->isAvailable()) {
+        if (! $parser->isAvailable()) {
             throw new RecipeParsingException(
                 message: "Parser '{$parserIdentifier}' is not available (missing API key or configuration)",
                 url: $url,
@@ -110,8 +111,10 @@ class RecipeParsingService
 
     /**
      * Try parsing with multiple parsers in order of preference until one succeeds.
+     *
+     * @return array{parser: string, recipeData: ParsedRecipeData}|null
      */
-    public function parseWithFallback(string $url, array $preferredOrder = ['structured-data', 'firecrawl', 'open-ai']): ?ParsedRecipeData
+    public function parseWithFallback(string $url, array $preferredOrder = ['structured-data', 'firecrawl', 'open-ai']): ?array
     {
         $startTime = microtime(true);
 
@@ -127,12 +130,13 @@ class RecipeParsingService
         foreach ($preferredOrder as $parserIdentifier) {
             $parser = $this->parsers->get($parserIdentifier);
 
-            if (!$parser || !$parser->isAvailable()) {
+            if (! $parser || ! $parser->isAvailable()) {
                 $attempts->push([
                     'parser' => $parserIdentifier,
                     'status' => 'skipped',
-                    'reason' => !$parser ? 'not found' : 'not available',
+                    'reason' => ! $parser ? 'not found' : 'not available',
                 ]);
+
                 continue;
             }
 
@@ -168,7 +172,10 @@ class RecipeParsingService
                         'user_id' => Auth::id(),
                     ]);
 
-                    return $result;
+                    return [
+                        'parser' => $parser->getIdentifier(),
+                        'recipeData' => $result,
+                    ];
                 } else {
                     $attempts->push([
                         'parser' => $parser->getName(),
@@ -230,6 +237,7 @@ class RecipeParsingService
     public function isParserAvailable(string $parserIdentifier): bool
     {
         $parser = $this->parsers->get($parserIdentifier);
+
         return $parser?->isAvailable() ?? false;
     }
 }

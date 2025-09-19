@@ -20,7 +20,7 @@ class ImportRequest extends FormRequest
     {
         return [
             'url' => ['required', 'url'],
-            'parser' => ['required', 'string', 'in:structured-data,open-ai,firecrawl'],
+            'parser' => ['required', 'string', 'in:auto,structured-data,open-ai,firecrawl'],
             'force_import' => ['sometimes', 'string', 'in:true,false'],
         ];
     }

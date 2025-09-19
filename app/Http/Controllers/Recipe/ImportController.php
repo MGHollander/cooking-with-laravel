@@ -109,7 +109,17 @@ class ImportController extends Controller
                 ]);
             }
 
-            $parsedRecipe = $this->recipeParsingService->parseWithParser($cleanUrl, $parser);
+            if ($parser === 'auto') {
+                $parsingResult = $this->recipeParsingService->parseWithFallback($cleanUrl);
+                if ($parsingResult) {
+                    $parser = $parsingResult['parser'];
+                    $parsedRecipe = $parsingResult['recipeData'];
+                } else {
+                    $parsedRecipe = null;
+                }
+            } else {
+                $parsedRecipe = $this->recipeParsingService->parseWithParser($cleanUrl, $parser);
+            }
 
             if (! $parsedRecipe) {
                 return back()
@@ -137,6 +147,12 @@ class ImportController extends Controller
             ]);
 
         } catch (\Exception $e) {
+            Log::error('Failed to import recipe', [
+                'url' => $cleanUrl,
+                'code' => $e->getCode(),
+                'message' => $e->getMessage(),
+            ]);
+
             return back()
                 ->with('warning', 'Er is een fout opgetreden bij het ophalen van het recept. Probeer een andere methode of voer het recept handmatig in.')
                 ->with('import_url', $url);
