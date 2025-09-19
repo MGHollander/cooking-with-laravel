@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted, ref, watch } from "vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
@@ -10,18 +11,26 @@ import ValidationErrors from "@/Components/ValidationErrors.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
+import { Cropper } from "vue-advanced-cropper";
+import "vue-advanced-cropper/dist/style.css";
 
 const props = defineProps({
   url: String,
   recipe: Object,
   import_log_id: Number,
+  config: Object,
 });
 
 const title = "Geïmporteerd recept controleren";
 
+const cropperCard = ref(null);
+const cropperShow = ref(null);
+const image = ref({ src: null, type: null });
+
 const form = useForm({
   title: props.recipe.title,
   external_image: props.recipe.images && props.recipe.images.length > 0 ? props.recipe.images[0] : "",
+  media_dimensions: null,
   summary: props.recipe.summary,
   tags: props.recipe.tags,
   preparation_minutes: String(props.recipe.preparation_minutes),
@@ -35,6 +44,43 @@ const form = useForm({
   import_log_id: props.import_log_id,
   return_to_import_page: false,
 });
+
+const submitForm = () => {
+  form.media_dimensions = {
+    card: cropperCard?.value ? cropperCard.value.getResult().coordinates : null,
+    show: cropperShow?.value ? cropperShow.value.getResult().coordinates : null,
+  };
+  form.post(route("import.store"));
+};
+
+const loadExternalImage = () => {
+  if (!form.external_image) {
+    image.value = { src: null, type: null };
+    return;
+  }
+
+  // Use our backend proxy to avoid CORS issues with external images
+  const proxyUrl = route('import.proxy-image', { url: form.external_image });
+  image.value = {
+    src: proxyUrl,
+    type: null, // We don't need the type for external images
+  };
+};
+
+const getStencilSize = ({ boundaries }) => {
+  return {
+    width: boundaries.width - 25,
+    height: boundaries.height - 25,
+  };
+};
+
+watch(() => form.external_image, loadExternalImage);
+
+onMounted(() => {
+  if (form.external_image) {
+    loadExternalImage();
+  }
+});
 </script>
 
 <template>
@@ -45,7 +91,7 @@ const form = useForm({
       {{ title }}
     </template>
 
-    <form class="mx-auto mb-12 max-w-3xl space-y-8" @submit.prevent="form.post(route('import.store'))">
+    <form class="mx-auto mb-12 max-w-3xl space-y-8" @submit.prevent="submitForm">
       <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6">
         <div class="grid grid-cols-12 gap-6">
           <ValidationErrors class="col-span-12 -mx-4 -mt-5 p-4 sm:-mx-6 sm:-mt-6 sm:rounded-t" />
@@ -58,9 +104,9 @@ const form = useForm({
 
           <div v-if="recipe.images && recipe.images.length > 0" class="col-span-12 space-y-1">
             <Label for="image" value="Afbeelding" />
-            <div class="flex gap-2">
+            <div class="flex gap-2 mb-4">
               <label
-                v-for="(image, index) in recipe.images"
+                v-for="(img, index) in recipe.images"
                 :key="index"
                 class="relative cursor-pointer rounded-md border-2 border-transparent p-0.5 hover:border-indigo-300 has-[:checked]:border-2 has-[:checked]:border-indigo-500"
                 :for="'image-' + index"
@@ -68,19 +114,60 @@ const form = useForm({
                 <input
                   type="radio"
                   v-model="form.external_image"
-                  :value="image"
+                  :value="img"
                   class="m-2 absolute"
                   :id="'image-' + index"
-                  :checked="form.external_image === image"
+                  :checked="form.external_image === img"
                 />
-                <img
-                  :src="image"
-                  :alt="'Image ' + (index + 1)"
-                  class="max-h-32 max-w-full rounded-md"
-                  @click="$event.target.previousElementSibling.click()"
-                />
+                <img :src="img" :alt="'Image ' + (index + 1)" class="max-h-32 max-w-full rounded-md" />
               </label>
             </div>
+
+            <div v-if="image.src" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <strong class="text-sm">Overzicht pagina's</strong>
+                <cropper
+                  ref="cropperCard"
+                  class="vue-advanced-cropper h-[16rem] max-w-full"
+                  :src="image.src"
+                  :stencil-size="getStencilSize"
+                  :stencil-props="{
+                    handlers: {},
+                    movable: false,
+                    resizable: false,
+                    aspectRatio:
+                      config.image_dimensions.conversions.card.width / config.image_dimensions.conversions.card.height,
+                    previewClass: 'cropper-preview',
+                  }"
+                  :min-width="1"
+                  :min-height="1"
+                  image-restriction="stencil"
+                  background-class="cropper-bg"
+                />
+              </div>
+              <div>
+                <strong class="text-sm">Recept pagina</strong>
+                <cropper
+                  ref="cropperShow"
+                  class="vue-advanced-cropper h-[16rem] max-w-full"
+                  :src="image.src"
+                  :stencil-size="getStencilSize"
+                  :stencil-props="{
+                    handlers: {},
+                    movable: false,
+                    resizable: false,
+                    aspectRatio:
+                      config.image_dimensions.conversions.show.width / config.image_dimensions.conversions.show.height,
+                    previewClass: 'cropper-preview',
+                  }"
+                  :min-width="1"
+                  :min-height="1"
+                  image-restriction="stencil"
+                  background-class="cropper-bg"
+                />
+              </div>
+            </div>
+
             <InputError :message="form.errors.external_image" />
           </div>
 
@@ -228,3 +315,20 @@ const form = useForm({
     </form>
   </DefaultLayout>
 </template>
+
+<style scss>
+/* Styling the cropper requires a global selector. @see https://advanced-cropper.github.io/vue-advanced-cropper/guides/customize-appearance.html#styling-notice */
+.cropper-bg {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC);
+  background-color: transparent;
+}
+
+.cropper-preview {
+  border-width: 2px;
+  border-color: dodgerblue;
+}
+
+.vue-simple-line {
+  border-width: 0px;
+}
+</style>

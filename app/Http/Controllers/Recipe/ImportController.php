@@ -31,7 +31,7 @@ class ImportController extends Controller
     public function index(Request $request)
     {
         return Inertia::render('Import/Index', [
-            'url' => $request->session()->get('url'),
+            'url' => $request->session()->get('import_url'),
             'openAI' => $this->recipeParsingService->isParserAvailable('open-ai'),
             'firecrawl' => $this->recipeParsingService->isParserAvailable('firecrawl'),
         ]);
@@ -48,17 +48,18 @@ class ImportController extends Controller
         // Check if current user already imported this URL
         $userImport = $this->importLogService->getUserImportForUrl($user, $cleanUrl);
 
-        if (!$forceImport && $userImport && $userImport->recipe) {
+        if (! $forceImport && $userImport && $userImport->recipe) {
             $recipeUrl = route('recipes.show', $userImport->recipe->slug);
+
             return back()
                 ->with('warning', "Je hebt dit recept al geïmporteerd: <a href=\"{$recipeUrl}\">{$userImport->recipe->title}</a>")
-                ->with('url', $url);
+                ->with('import_url', $url);
         }
 
         // Check if this URL has been imported before (excluding 'local' sources)
         $existingImport = $this->importLogService->getLastNonLocalImportForUrl($cleanUrl);
 
-        if (!$forceImport && $existingImport && $existingImport->parsed_data) {
+        if (! $forceImport && $existingImport && $existingImport->parsed_data) {
             Log::info('Import recipe from import logs', [
                 'url' => $cleanUrl,
                 'import_logs_id' => $existingImport->id,
@@ -85,6 +86,9 @@ class ImportController extends Controller
                     'url' => $cleanUrl,
                     'recipe' => $recipe,
                     'import_log_id' => $importLog->id,
+                    'config' => [
+                        'image_dimensions' => config('media-library.image_dimensions.recipe'),
+                    ],
                 ]);
             } catch (\Exception $e) {
                 // Fall through to normal API parsing if existing data is invalid
@@ -100,7 +104,7 @@ class ImportController extends Controller
         try {
             if ($forceImport) {
                 Log::info('Force recipe import', [
-                    'url'=> $cleanUrl,
+                    'url' => $cleanUrl,
                     'user_id' => Auth::id(),
                 ]);
             }
@@ -110,7 +114,7 @@ class ImportController extends Controller
             if (! $parsedRecipe) {
                 return back()
                     ->with('warning', 'Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.')
-                    ->with('url', $url);
+                    ->with('import_url', $url);
             }
 
             // Log successful import immediately after parsing succeeds
@@ -127,12 +131,44 @@ class ImportController extends Controller
                 'url' => $cleanUrl,
                 'recipe' => $recipe,
                 'import_log_id' => $importLog->id, // Pass the import log ID to connect it later
+                'config' => [
+                    'image_dimensions' => config('media-library.image_dimensions.recipe'),
+                ],
             ]);
 
         } catch (\Exception $e) {
             return back()
                 ->with('warning', 'Er is een fout opgetreden bij het ophalen van het recept. Probeer een andere methode of voer het recept handmatig in.')
-                ->with('url', $url);
+                ->with('import_url', $url);
+        }
+    }
+
+    /**
+     * Proxy external images to avoid CORS issues
+     */
+    public function proxyImage(Request $request)
+    {
+        $url = $request->get('url');
+
+        if (! $url) {
+            return response()->json(['error' => 'URL parameter is required'], 400);
+        }
+
+        try {
+            $response = \Illuminate\Support\Facades\Http::get($url);
+
+            if ($response->successful()) {
+                return response($response->body())
+                    ->header('Content-Type', $response->header('Content-Type'))
+                    ->header('Access-Control-Allow-Origin', '*')
+                    ->header('Access-Control-Allow-Methods', 'GET')
+                    ->header('Access-Control-Allow-Headers', '*')
+                    ->header('Cache-Control', 'public, max-age=3600');
+            }
+
+            return response()->json(['error' => 'Failed to fetch image'], $response->status());
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch image: '.$e->getMessage()], 500);
         }
     }
 
@@ -152,8 +188,12 @@ class ImportController extends Controller
         $recipe = (new Recipe)->create($this->fillableAttributes(new Recipe, $attributes));
 
         if ($externalImage = $request->get('external_image')) {
+            $mediaDimensions = $request->get('media_dimensions', []);
+            $manipulations = $this->buildManipulations($mediaDimensions);
+
             try {
                 $recipe->addMediaFromUrl($externalImage)
+                    ->withManipulations($manipulations)
                     ->toMediaCollection('recipe_image');
             } catch (\Exception $e) {
                 // TODO handle exception
@@ -182,5 +222,39 @@ class ImportController extends Controller
         }
 
         return redirect()->route('recipes.edit', $recipe->id)->with('success', 'Het recept "'.$recipe->title.'" is succesvol geïmporteerd!');
+    }
+
+    // TODO dry this code. Is pretty much the same as in app/Http/Controllers/Recipe/RecipeController.php@saveMedia
+    private function buildManipulations(array $mediaDimensions): array
+    {
+        $manipulations = [];
+
+        if (! empty($mediaDimensions['card'])) {
+            $cardDimensions = $mediaDimensions['card'];
+            $manipulations['card'] = [
+                'manualCrop' => [
+                    (int) $cardDimensions['width'],
+                    (int) $cardDimensions['height'],
+                    (int) $cardDimensions['left'],
+                    (int) $cardDimensions['top'],
+                ],
+                'width' => [config('media-library.image_dimensions.recipe.conversions.card.width')],
+            ];
+        }
+
+        if (! empty($mediaDimensions['show'])) {
+            $showDimensions = $mediaDimensions['show'];
+            $manipulations['show'] = [
+                'manualCrop' => [
+                    (int) $showDimensions['width'],
+                    (int) $showDimensions['height'],
+                    (int) $showDimensions['left'],
+                    (int) $showDimensions['top'],
+                ],
+                'width' => [config('media-library.image_dimensions.recipe.conversions.show.width')],
+            ];
+        }
+
+        return $manipulations;
     }
 }
