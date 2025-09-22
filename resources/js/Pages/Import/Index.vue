@@ -9,14 +9,16 @@ import DefaultLayout from "@/Layouts/Default.vue";
 
 const props = defineProps({
   url: String,
+  parser: String,
+  forceImport: Boolean,
   firecrawl: Boolean,
   openAI: Boolean,
 });
 
 const form = useForm({
   url: props.url ?? "",
-  parser: "auto",
-  force_import: false,
+  parser: props.parser ?? "auto",
+  force_import: props.forceImport ?? false,
 });
 
 const title = "Recept importeren";
@@ -91,7 +93,8 @@ let showHelp = ref(false);
           <div v-if="showHelp" class="border-t border-gray-200 bg-sky-100 p-4 text-sky-700 md:rounded-b">
             <p>
               <strong>Automatisch</strong><br />
-              Probeert automatisch de beste methode te kiezen om een recept van de webpagina te halen. Dit is de aanbevolen optie omdat het de hoogste kans op succes heeft.
+              Probeert automatisch de beste methode te kiezen om een recept van de webpagina te halen. Dit is de
+              aanbevolen optie omdat het de hoogste kans op succes heeft.
             </p>
             <p>
               <strong>Structured data</strong><br />

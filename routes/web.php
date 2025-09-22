@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/recepten/importeren', [ImportController::class, 'index'])->name('import.index');
     Route::get('/recepten/importeren/controleren', [ImportController::class, 'create'])->name('import.create');
+    Route::post('/recepten/importeren/import-recipe', [ImportController::class, 'importRecipe'])->name('import.import-recipe');
     Route::post('/recepten/importeren', [ImportController::class, 'store'])->name('import.store');
     Route::get('/recepten/importeren/proxy-image', [ImportController::class, 'proxyImage'])->name('import.proxy-image');
 });

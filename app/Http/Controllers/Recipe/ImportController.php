@@ -15,7 +15,6 @@ use App\Services\RecipeParsing\Services\RecipeParsingService;
 use App\Support\FileHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -32,6 +31,8 @@ class ImportController extends Controller
     {
         return Inertia::render('Import/Index', [
             'url' => $request->session()->get('import_url'),
+            'parser' => $request->session()->get('parser'),
+            'forceImport' => $request->session()->get('force_import'),
             'openAI' => $this->recipeParsingService->isParserAvailable('open-ai'),
             'firecrawl' => $this->recipeParsingService->isParserAvailable('firecrawl'),
         ]);
@@ -56,24 +57,35 @@ class ImportController extends Controller
                 ->with('import_url', $url);
         }
 
-        // Check if this URL has been imported before (excluding 'local' sources)
+        // Render form with loading state
+        return Inertia::render('Import/Form', [
+            'url' => $cleanUrl,
+            'parser' => $parser,
+            'force_import' => $forceImport,
+            'config' => [
+                'image_dimensions' => config('media-library.image_dimensions.recipe'),
+            ],
+        ]);
+    }
+
+    private function parseAndPrepareRecipeData(string $cleanUrl, string $parser, bool $forceImport, $user): array
+    {
+        // Check existing import
         $existingImport = $this->importLogService->getLastNonLocalImportForUrl($cleanUrl);
 
         if (! $forceImport && $existingImport && $existingImport->parsed_data) {
             Log::info('Import recipe from import logs', [
                 'url' => $cleanUrl,
                 'import_logs_id' => $existingImport->id,
-                'user_id' => Auth::id(),
+                'user_id' => $user->id,
             ]);
 
             try {
-                // Validate existing parsed data
                 $parsedData = ParsedRecipeData::fromArray($existingImport->parsed_data);
                 if (! $parsedData->isValid()) {
                     throw new \InvalidArgumentException('Invalid parsed data from existing import');
                 }
 
-                // Create local import log for current user
                 $importLog = $this->importLogService->createLocalImportLog(
                     $cleanUrl,
                     $user,
@@ -82,16 +94,14 @@ class ImportController extends Controller
 
                 $recipe = new ImportResource($parsedData->toArray());
 
-                return Inertia::render('Import/Form', [
-                    'url' => $cleanUrl,
+                return [
                     'recipe' => $recipe,
                     'import_log_id' => $importLog->id,
                     'config' => [
                         'image_dimensions' => config('media-library.image_dimensions.recipe'),
                     ],
-                ]);
+                ];
             } catch (\Exception $e) {
-                // Fall through to normal API parsing if existing data is invalid
                 Log::warning('Failed to reuse existing import data', [
                     'url' => $cleanUrl,
                     'existing_import_id' => $existingImport->id,
@@ -105,7 +115,7 @@ class ImportController extends Controller
             if ($forceImport) {
                 Log::info('Force recipe import', [
                     'url' => $cleanUrl,
-                    'user_id' => Auth::id(),
+                    'user_id' => $user->id,
                 ]);
             }
 
@@ -122,12 +132,9 @@ class ImportController extends Controller
             }
 
             if (! $parsedRecipe) {
-                return back()
-                    ->with('warning', 'Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.')
-                    ->with('import_url', $url);
+                throw new \Exception('Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.');
             }
 
-            // Log successful import immediately after parsing succeeds
             $importLog = $this->importLogService->logSuccessfulImport(
                 $cleanUrl,
                 $parser,
@@ -137,25 +144,38 @@ class ImportController extends Controller
 
             $recipe = new ImportResource($parsedRecipe->toArray());
 
-            return Inertia::render('Import/Form', [
-                'url' => $cleanUrl,
+            return [
                 'recipe' => $recipe,
-                'import_log_id' => $importLog->id, // Pass the import log ID to connect it later
-                'config' => [
-                    'image_dimensions' => config('media-library.image_dimensions.recipe'),
-                ],
-            ]);
-
+            ];
         } catch (\Exception $e) {
             Log::error('Failed to import recipe', [
                 'url' => $cleanUrl,
                 'code' => $e->getCode(),
                 'message' => $e->getMessage(),
             ]);
+            throw $e;
+        }
+    }
 
-            return back()
-                ->with('warning', 'Er is een fout opgetreden bij het ophalen van het recept. Probeer een andere methode of voer het recept handmatig in.')
-                ->with('import_url', $url);
+    public function importRecipe(Request $request)
+    {
+        $url = $request->get('url');
+        $cleanUrl = FileHelper::cleanUrl($url);
+        $parser = $request->get('parser', 'structured-data');
+        $forceImport = filter_var($request->get('force_import', false), FILTER_VALIDATE_BOOLEAN);
+        $user = $request->user();
+
+        try {
+            $data = $this->parseAndPrepareRecipeData($cleanUrl, $parser, $forceImport, $user);
+
+            return response()->json($data);
+        } catch (\Exception $e) {
+            $request->session()->flash('warning', $e->getMessage());
+            $request->session()->flash('import_url', $url);
+            $request->session()->flash('parser', $parser);
+            $request->session()->flash('force_import', $forceImport);
+
+            return response()->json(['error' => $e->getMessage()], 400);
         }
     }
 
@@ -184,7 +204,7 @@ class ImportController extends Controller
 
             return response()->json(['error' => 'Failed to fetch image'], $response->status());
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch image: '.$e->getMessage()], 500);
+            return response()->json(['error' => 'Failed to fetch image: ' . $e->getMessage()], 500);
         }
     }
 
@@ -212,7 +232,10 @@ class ImportController extends Controller
                     ->withManipulations($manipulations)
                     ->toMediaCollection('recipe_image');
             } catch (\Exception $e) {
-                // TODO handle exception
+                Log::error('Failed to save the recipe image from url', [
+                    'recipe_id' => $recipe->id,
+                    'error' => $e->getMessage(),
+                ]);
             }
         }
 
@@ -234,10 +257,10 @@ class ImportController extends Controller
         }
 
         if ($request->get('return_to_import_page')) {
-            return redirect()->route('import.index')->with('success', 'Het recept "<a href="'.route('recipes.show', $recipe->slug).'"><i>'.$recipe->title.'</i></a>" is succesvol geïmporteerd!');
+            return redirect()->route('import.index')->with('success', 'Het recept "<a href="' . route('recipes.show', $recipe->slug) . '"><i>' . $recipe->title . '</i></a>" is succesvol geïmporteerd!');
         }
 
-        return redirect()->route('recipes.edit', $recipe->id)->with('success', 'Het recept "'.$recipe->title.'" is succesvol geïmporteerd!');
+        return redirect()->route('recipes.edit', $recipe->id)->with('success', 'Het recept "' . $recipe->title . '" is succesvol geïmporteerd!');
     }
 
     // TODO dry this code. Is pretty much the same as in app/Http/Controllers/Recipe/RecipeController.php@saveMedia
