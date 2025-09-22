@@ -5,6 +5,7 @@ namespace App\Services\RecipeParsing\Services;
 use App\Services\RecipeParsing\Contracts\HtmlFetcherInterface;
 use App\Services\RecipeParsing\Contracts\RecipeParserInterface;
 use App\Services\RecipeParsing\Data\ParsedRecipeData;
+use App\Services\RecipeParsing\Data\ParserResult;
 use App\Services\RecipeParsing\Exceptions\RecipeParsingException;
 use Brick\StructuredData\HTMLReader;
 use Brick\StructuredData\Item;
@@ -34,10 +35,9 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
 
     public function __construct(
         private readonly HtmlFetcherInterface $htmlFetcher
-    ) {
-    }
+    ) {}
 
-    public function parse(string $url): ?ParsedRecipeData
+    public function parse(string $url): ?ParserResult
     {
         $startTime = microtime(true);
 
@@ -66,13 +66,15 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
                     'user_id' => Auth::id(),
                 ]);
 
-                if ($result = $this->parseItems($items, $url)) {
+                $parsed = $this->parseItems($items, $url);
+                if ($parsed) {
+                    $result = new ParserResult($parsed);
                     $totalDuration = (microtime(true) - $startTime) * 1000;
 
                     Log::info('Recipe successfully parsed from structured data', [
                         'url' => $url,
                         'reader_used' => $readerName,
-                        'recipe_title' => $result->title,
+                        'recipe_title' => $result->recipe->title,
                         'total_processing_time_ms' => round($totalDuration, 2),
                         'user_id' => Auth::id(),
                     ]);
@@ -87,7 +89,6 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             ]);
 
             return null;
-
         } catch (\Exception $e) {
             $totalDuration = (microtime(true) - $startTime) * 1000;
 
@@ -169,7 +170,6 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             }
 
             return null;
-
         } catch (\Exception $e) {
             Log::error('Failed to parse structured data items', [
                 'url' => $url,
@@ -241,7 +241,6 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             ]);
 
             return $parsedData;
-
         } catch (\Exception $e) {
             Log::error('Structured data recipe parsing failed', [
                 'url' => $this->recipeData['url'],
@@ -264,13 +263,13 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             'title' => null,
             'url' => $url,
             'keywords' => null,
-            'ingredients' => null,
-            'steps' => null,
+            'ingredients' => [],
+            'steps' => [],
             'yield' => null,
             'prepTime' => null,
             'cookTime' => null,
             'totalTime' => null,
-            'images' => null,
+            'images' => [],
             'description' => null,
         ];
     }

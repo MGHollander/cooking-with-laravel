@@ -4,6 +4,7 @@ namespace App\Services\RecipeParsing\Services;
 
 use App\Services\RecipeParsing\Contracts\RecipeParserInterface;
 use App\Services\RecipeParsing\Data\ParsedRecipeData;
+use App\Services\RecipeParsing\Data\ParserResult;
 use App\Services\RecipeParsing\Exceptions\RecipeParsingException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +41,7 @@ class RecipeParsingService
     /**
      * Parse a recipe from a URL using the specified parser.
      */
-    public function parseWithParser(string $url, string $parserIdentifier): ?ParsedRecipeData
+    public function parseWithParser(string $url, string $parserIdentifier): ?ParserResult
     {
         $startTime = microtime(true);
 
@@ -74,11 +75,11 @@ class RecipeParsingService
 
             $totalDuration = (microtime(true) - $startTime) * 1000;
 
-            if ($result) {
+            if ($result && $result->isValid()) {
                 Log::info('Recipe parsing completed successfully', [
                     'url' => $url,
                     'parser' => $parser->getName(),
-                    'recipe_title' => $result->title,
+                    'recipe_title' => $result->recipe->title,
                     'total_processing_time_ms' => round($totalDuration, 2),
                     'user_id' => Auth::id(),
                 ]);
@@ -153,7 +154,7 @@ class RecipeParsingService
                 $result = $parser->parse($url);
                 $attemptDuration = (microtime(true) - $attemptStart) * 1000;
 
-                if ($result) {
+                if ($result && $result->isValid()) {
                     $totalDuration = (microtime(true) - $startTime) * 1000;
 
                     $attempts->push([
@@ -165,7 +166,7 @@ class RecipeParsingService
                     Log::info('Recipe parsing succeeded with fallback strategy', [
                         'url' => $url,
                         'successful_parser' => $parser->getName(),
-                        'recipe_title' => $result->title,
+                        'recipe_title' => $result->recipe->title,
                         'total_attempts' => $attempts->count(),
                         'total_processing_time_ms' => round($totalDuration, 2),
                         'attempts' => $attempts->all(),
@@ -174,7 +175,7 @@ class RecipeParsingService
 
                     return [
                         'parser' => $parser->getIdentifier(),
-                        'recipeData' => $result,
+                        'result' => $result,
                     ];
                 } else {
                     $attempts->push([

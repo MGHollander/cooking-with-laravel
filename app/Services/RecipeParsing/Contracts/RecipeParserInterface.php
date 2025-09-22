@@ -2,14 +2,14 @@
 
 namespace App\Services\RecipeParsing\Contracts;
 
-use App\Services\RecipeParsing\Data\ParsedRecipeData;
+use App\Services\RecipeParsing\Data\ParserResult;
 
 interface RecipeParserInterface
 {
     /**
      * Parse a recipe from the given URL.
      */
-    public function parse(string $url): ?ParsedRecipeData;
+    public function parse(string $url): ?ParserResult;
 
     /**
      * Check if the parser is available (API keys, dependencies, etc.).

@@ -4,6 +4,7 @@ namespace App\Services\RecipeParsing\Services;
 
 use App\Services\RecipeParsing\Contracts\RecipeParserInterface;
 use App\Services\RecipeParsing\Data\ParsedRecipeData;
+use App\Services\RecipeParsing\Data\ParserResult;
 use App\Services\RecipeParsing\Exceptions\ApiKeyMissingException;
 use App\Services\RecipeParsing\Exceptions\RecipeParsingException;
 use Illuminate\Http\Client\Factory as HttpFactory;
@@ -23,7 +24,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
         private readonly string $apiKey
     ) {}
 
-    public function parse(string $url): ?ParsedRecipeData
+    public function parse(string $url): ?ParserResult
     {
         if (! $this->isAvailable()) {
             throw new ApiKeyMissingException('Firecrawl', $url);
@@ -39,7 +40,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
             ]);
 
             $result = $this->makeRequest($url, 'basic');
-            $shouldRetry = $this->shouldRetryWithStealth($result['response'], $result['data']);
+            $shouldRetry = $this->shouldRetryWithStealth($result['response'], $result['data'] ?? []);
 
             if ($shouldRetry) {
                 Log::info('Firecrawl basic proxy failed, retrying with stealth proxy', [
@@ -69,7 +70,15 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
                 $result = $retryResult;
             }
 
-            return $this->processSuccessfulResponse($result['data'], $result['requestDuration'], $startTime, $url);
+            if ($result['success']) {
+                return $this->processSuccessfulResponse($result['data'], $result['requestDuration'], $startTime, $url);
+            } else {
+                throw new RecipeParsingException(
+                    message: 'Firecrawl scraping failed: ' . $result['failureReason'],
+                    url: $url,
+                    parser: $this->getName()
+                );
+            }
         } catch (\Exception $e) {
             $totalDuration = (microtime(true) - $startTime) * 1000;
 
@@ -91,6 +100,8 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
                 parser: $this->getName()
             );
         }
+
+        return null;
     }
 
     public function isAvailable(): bool
@@ -216,7 +227,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
 
         return [
             'response' => $response,
-            'data' => $data['data'],
+            'data' => $data['data'] ?? null,
             'requestDuration' => $requestDuration,
             'success' => $response->successful() && ($data['success'] ?? false),
             'failureReason' => $this->getFailureReason($response, $data),
@@ -265,8 +276,17 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
         return 'Unknown failure';
     }
 
-    private function processSuccessfulResponse(array $data, float $requestDuration, float $startTime, string $url): ?ParsedRecipeData
+    private function processSuccessfulResponse(?array $data, float $requestDuration, float $startTime, string $url): ?ParserResult
     {
+        if ($data === null) {
+            Log::warning('Firecrawl API returned no data', [
+                'url' => $url,
+                'user_id' => Auth::id(),
+            ]);
+
+            return null;
+        }
+
         $recipeData = $data['json'] ?? null;
 
         if (empty($recipeData)) {
@@ -305,17 +325,23 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
             return null;
         }
 
+        $creditsUsed = $data['metadata']['creditsUsed'] ?? null;
+
         $totalDuration = (microtime(true) - $startTime) * 1000;
 
         Log::info('Recipe successfully parsed from Firecrawl', [
             'url' => $url,
             'recipe_title' => $parsedData->title,
             'extracted_fields' => array_keys(array_filter($parsedData->toArray())),
+            'credits_used' => $creditsUsed,
             'total_processing_time_ms' => round($totalDuration, 2),
             'api_response_time_ms' => round($requestDuration, 2),
             'user_id' => Auth::id(),
         ]);
 
-        return $parsedData;
+        return new ParserResult(
+            recipe: $parsedData,
+            creditsUsed: $creditsUsed
+        );
     }
 }

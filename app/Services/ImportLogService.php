@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\ImportLog;
 use App\Models\Recipe;
 use App\Models\User;
-use App\Services\RecipeParsing\Data\ParsedRecipeData;
+use App\Services\RecipeParsing\Data\ParserResult;
 use App\Support\FileHelper;
 
 class ImportLogService
@@ -17,7 +17,7 @@ class ImportLogService
         string $url,
         string $source,
         User $user,
-        ParsedRecipeData $parsedData,
+        ParserResult $result,
         ?Recipe $recipe = null
     ): ImportLog {
         return ImportLog::create([
@@ -25,7 +25,8 @@ class ImportLogService
             'source' => $source,
             'user_id' => $user->id,
             'recipe_id' => $recipe?->id,
-            'parsed_data' => $parsedData->toArray(),
+            'parsed_data' => $result->recipe->toArray(),
+            'credits_used' => $result->creditsUsed ?? 0,
         ]);
     }
 

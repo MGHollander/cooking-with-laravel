@@ -4,6 +4,7 @@ namespace App\Services\RecipeParsing\Services;
 
 use App\Services\RecipeParsing\Contracts\RecipeParserInterface;
 use App\Services\RecipeParsing\Data\ParsedRecipeData;
+use App\Services\RecipeParsing\Data\ParserResult;
 use App\Services\RecipeParsing\Exceptions\ApiKeyMissingException;
 use App\Services\RecipeParsing\Exceptions\RecipeParsingException;
 use Illuminate\Support\Facades\Auth;
@@ -15,10 +16,9 @@ class OpenAIRecipeParserService implements RecipeParserInterface
     public function __construct(
         private readonly ?OpenAIClient $openAIClient,
         private readonly ?string $apiKey
-    ) {
-    }
+    ) {}
 
-    public function parse(string $url): ?ParsedRecipeData
+    public function parse(string $url): ?ParserResult
     {
         if (!$this->isAvailable()) {
             throw new ApiKeyMissingException('OpenAI', $url);
@@ -46,7 +46,7 @@ class OpenAIRecipeParserService implements RecipeParserInterface
             ]);
 
             $content = json_decode($result->choices[0]->message->content, true, 512, JSON_THROW_ON_ERROR);
-            
+
             if (empty($content['title'])) {
                 Log::warning('OpenAI returned empty or invalid recipe data', [
                     'url' => $url,
@@ -59,18 +59,23 @@ class OpenAIRecipeParserService implements RecipeParserInterface
 
             $parsedData = ParsedRecipeData::fromArray(array_merge($content, ['url' => $url]));
 
+            $creditsUsed = $result->usage->totalTokens ?? null;
+
             $totalDuration = (microtime(true) - $startTime) * 1000;
 
             Log::info('Recipe successfully parsed from OpenAI', [
                 'url' => $url,
                 'recipe_title' => $parsedData->title,
                 'extracted_fields' => array_keys(array_filter($parsedData->toArray())),
+                'credits_used' => $creditsUsed,
                 'total_processing_time_ms' => round($totalDuration, 2),
                 'user_id' => Auth::id(),
             ]);
 
-            return $parsedData;
-
+            return new ParserResult(
+                recipe: $parsedData,
+                creditsUsed: $creditsUsed
+            );
         } catch (\JsonException $e) {
             $totalDuration = (microtime(true) - $startTime) * 1000;
 

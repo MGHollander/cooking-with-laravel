@@ -16,6 +16,7 @@ class ImportLog extends Model
         'user_id',
         'recipe_id',
         'parsed_data',
+        'credits_used',
     ];
 
     protected $casts = [

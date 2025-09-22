@@ -123,15 +123,15 @@ class ImportController extends Controller
                 $parsingResult = $this->recipeParsingService->parseWithFallback($cleanUrl);
                 if ($parsingResult) {
                     $parser = $parsingResult['parser'];
-                    $parsedRecipe = $parsingResult['recipeData'];
+                    $parsedResult = $parsingResult['result'];
                 } else {
-                    $parsedRecipe = null;
+                    $parsedResult = null;
                 }
             } else {
-                $parsedRecipe = $this->recipeParsingService->parseWithParser($cleanUrl, $parser);
+                $parsedResult = $this->recipeParsingService->parseWithParser($cleanUrl, $parser);
             }
 
-            if (! $parsedRecipe) {
+            if (! $parsedResult || ! $parsedResult->isValid()) {
                 throw new \Exception('Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.');
             }
 
@@ -139,10 +139,10 @@ class ImportController extends Controller
                 $cleanUrl,
                 $parser,
                 $user,
-                $parsedRecipe
+                $parsedResult
             );
 
-            $recipe = new ImportResource($parsedRecipe->toArray());
+            $recipe = new ImportResource($parsedResult->recipe->toArray());
 
             return [
                 'recipe' => $recipe,
