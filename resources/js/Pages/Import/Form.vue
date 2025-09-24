@@ -194,6 +194,10 @@ onMounted(() => {
                   <img :src="img" :alt="'Image ' + (index + 1)" class="max-h-32 max-w-full rounded-md" />
                 </label>
               </div>
+              <label class="flex items-center gap-2">
+                <input type="radio" v-model="form.external_image" value="" />
+                <span>Importeer zonder afbeelding</span>
+              </label>
 
               <div v-if="image" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
