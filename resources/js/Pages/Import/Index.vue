@@ -8,12 +8,17 @@ import Label from "@/Components/Label.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 
 const props = defineProps({
+  url: String,
+  parser: String,
+  forceImport: Boolean,
+  firecrawl: Boolean,
   openAI: Boolean,
 });
 
 const form = useForm({
-  url: "",
-  parser: "structured-data",
+  url: props.url ?? "",
+  parser: props.parser ?? "auto",
+  force_import: props.forceImport ?? false,
 });
 
 const title = "Recept importeren";
@@ -38,21 +43,40 @@ let showHelp = ref(false);
               <InputError :message="form.errors.url" />
             </div>
 
-            <div v-if="props.openAI" class="col-span-12 space-y-1">
+            <div class="col-span-12 space-y-1">
               <Label for="parser" value="Methode" />
               <div>
-                <label>
-                  <input v-model="form.parser" value="structured-data" required type="radio" />
-                  Structured data
+                <label class="flex items-center space-x-2">
+                  <input v-model="form.parser" value="auto" required type="radio" />
+                  <span>Automatisch (aanbevolen)</span>
                 </label>
               </div>
               <div>
-                <label>
+                <label class="flex items-center space-x-2">
+                  <input v-model="form.parser" value="structured-data" required type="radio" />
+                  <span>Structured data</span>
+                </label>
+              </div>
+              <div v-if="props.firecrawl">
+                <label class="flex items-center space-x-2">
+                  <input v-model="form.parser" value="firecrawl" required type="radio" />
+                  <span>Firecrawl</span>
+                </label>
+              </div>
+              <div v-if="props.openAI">
+                <label class="flex items-center space-x-2">
                   <input v-model="form.parser" value="open-ai" required type="radio" />
-                  Open AI (experimenteel)
+                  <span>AI (experimenteel)</span>
                 </label>
               </div>
               <InputError :message="form.errors.parser" />
+            </div>
+
+            <div class="col-span-12 space-y-1">
+              <label class="flex items-center space-x-2">
+                <input v-model="form.force_import" value="true" type="checkbox" />
+                <span>Forceer importeren van de originele bron.</span>
+              </label>
             </div>
           </div>
 
@@ -68,13 +92,23 @@ let showHelp = ref(false);
 
           <div v-if="showHelp" class="border-t border-gray-200 bg-sky-100 p-4 text-sky-700 md:rounded-b">
             <p>
+              <strong>Automatisch</strong><br />
+              Probeert automatisch de beste methode te kiezen om een recept van de webpagina te halen. Dit is de
+              aanbevolen optie omdat het de hoogste kans op succes heeft.
+            </p>
+            <p>
               <strong>Structured data</strong><br />
-              Bij het importeren wordt er op een webpagina gezocht naar een recept dat is gedefineerd in het
+              Bij het importeren wordt er op een webpagina gezocht naar een recept dat is gedefinieerd in het
               <a href="https://schema.org/Recipe" class="text-sky-900">schema.org/Recipe</a> formaat. Er wordt gezocht
               naar Microdata, RDFa en JSON-LD markups.<br />
               Als er geen recept wordt gevonden dan wordt er een foutmelding weergegeven.
             </p>
-            <p>
+            <p v-if="props.firecrawl">
+              <strong>Firecrawl</strong><br />
+              Firecrawl is een geavanceerde web scraping service die gebruik maakt van AI om recepten van webpagina's te
+              halen. Er zijn kosten verbonden aan het gebruik van Firecrawl.
+            </p>
+            <p v-if="props.openAI">
               <strong>Open AI</strong><br />
               Met behulp van Open AI wordt er een tekst gegenereerd op basis van de inhoud van de webpagina. Deze tekst
               wordt vervolgens geanalyseerd om te kijken of er een recept in staat. Als er een recept wordt gevonden dan

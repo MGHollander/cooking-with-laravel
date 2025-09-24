@@ -25,6 +25,10 @@ return [
         'api_key' => env('OPEN_AI_API_KEY'),
     ],
 
+    'firecrawl' => [
+        'api_key' => env('FIRECRAWL_API_KEY'),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

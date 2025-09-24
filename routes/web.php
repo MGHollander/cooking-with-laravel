@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\Recipe\ImportController;
 use App\Http\Controllers\Recipe\RecipeController;
-use App\Http\Controllers\Recipe\RecipeNotFoundController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\User\ChangePasswordController;
 use App\Http\Controllers\User\UserController;
@@ -34,7 +32,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/recepten/importeren', [ImportController::class, 'index'])->name('import.index');
     Route::get('/recepten/importeren/controleren', [ImportController::class, 'create'])->name('import.create');
+    Route::post('/recepten/importeren/import-recipe', [ImportController::class, 'importRecipe'])->name('import.import-recipe');
     Route::post('/recepten/importeren', [ImportController::class, 'store'])->name('import.store');
+    Route::get('/recepten/importeren/proxy-image', [ImportController::class, 'proxyImage'])->name('import.proxy-image');
 });
 
 Route::get('/recepten/{slug}', [RecipeController::class, 'show'])->name('recipes.show');
@@ -60,4 +60,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/gebruikers/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

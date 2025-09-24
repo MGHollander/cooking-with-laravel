@@ -28,6 +28,8 @@ class RecipeRequest extends FormRequest
             'instructions'        => 'required',
             'source_label'        => 'nullable',
             'source_link'         => ['nullable', 'url'],
+            'import_log_id'       => ['nullable', 'integer', 'exists:import_logs,id'],
+            'return_to_import_page' => ['nullable', 'boolean'],
         ];
     }
 }
