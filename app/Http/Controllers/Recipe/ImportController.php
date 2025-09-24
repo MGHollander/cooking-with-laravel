@@ -260,7 +260,7 @@ class ImportController extends Controller
             return redirect()->route('import.index')->with('success', 'Het recept "<a href="' . route('recipes.show', $recipe->slug) . '"><i>' . $recipe->title . '</i></a>" is succesvol geïmporteerd!');
         }
 
-        return Inertia::location(route('recipes.show', $recipe->id));
+        return Inertia::location(route('recipes.show', $recipe->slug));
     }
 
     // TODO dry this code. Is pretty much the same as in app/Http/Controllers/Recipe/RecipeController.php@saveMedia
