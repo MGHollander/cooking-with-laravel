@@ -74,7 +74,7 @@ class RecipeController extends Controller
 
         $this->saveMedia($request, $recipe);
 
-        Session::flash('success', 'Het recept is succesvol toegevoegd!');
+        Session::flash('success', 'Het recept is succesvol toegevoegd! 🧑‍🍳');
 
         return Inertia::location(route('recipes.edit', $recipe->id));
     }
@@ -178,7 +178,9 @@ class RecipeController extends Controller
 
         $this->saveMedia($request, $recipe);
 
-        return redirect()->route('recipes.edit', $recipe->id)->with('success', 'Het recept is succesvol gewijzigd!');
+        Session::flash('success', 'Het recept is succesvol gewijzigd!  🧑‍🍳');
+
+        return Inertia::location(route('recipes.show', $recipe->slug));
     }
 
     /**
@@ -190,7 +192,9 @@ class RecipeController extends Controller
     {
         $recipe->delete();
 
-        return redirect()->route('home')->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd!");
+        Session::flash('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd! 🧑‍🍳");
+
+        return Inertia::location(route('home'));
     }
 
     private function notFound($slug): \Illuminate\Http\Response

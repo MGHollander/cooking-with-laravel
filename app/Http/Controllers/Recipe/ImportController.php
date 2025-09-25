@@ -16,6 +16,7 @@ use App\Support\FileHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class ImportController extends Controller
@@ -257,8 +258,10 @@ class ImportController extends Controller
         }
 
         if ($request->get('return_to_import_page')) {
-            return redirect()->route('import.index')->with('success', 'Het recept "<a href="' . route('recipes.show', $recipe->slug) . '"><i>' . $recipe->title . '</i></a>" is succesvol geïmporteerd!');
+            return redirect()->route('import.index')->with('success', 'Het recept "<a href="' . route('recipes.show', $recipe->slug) . '"><i>' . $recipe->title . '</i></a>" is succesvol geïmporteerd! 🎉');
         }
+
+        Session::flash('success', 'Het recept is succesvol geïmporteerd! 🎉');
 
         return Inertia::location(route('recipes.show', $recipe->slug));
     }
