@@ -1,19 +1,21 @@
 .recipe-card {
+  position: relative;
+}
+
+.recipe-card-link {
+  display: block;
   transition-property: color, outline-offset, transform;
+  border-radius: 0.5rem;
 
   &:hover {
     transform: scale(1.05);
   }
-}
-
-.recipe-card-link {
-  border-radius: 0.75rem;
 
   &:focus {
     // Position and z-index are set to make sure the focussed element is showed about hovered items.
     position: relative;
     z-index: 1;
-    outline-offset: 6px;
+    outline-offset: 0.75rem;
   }
 }
 
@@ -32,7 +34,7 @@
   aspect-ratio: 30 / 17;
   object-fit: cover;
 
-  .recipe-card:hover & {
+  .recipe-card-link:hover & {
     transform: scale(1.1) rotate(2deg);
     filter: brightness(1);
   }
@@ -41,7 +43,7 @@
 .recipe-card-image-placeholder {
   color: rgb(180, 180, 180);
 
-  .recipe-card:hover & {
+  .recipe-card-link:hover & {
     filter: brightness(0.8);
   }
 }
@@ -65,7 +67,33 @@
     font-size: 1rem;
   }
 
-  .recipe-card:hover & {
+  .recipe-card-link:hover & {
     color: var(--color-primary);
+  }
+}
+
+.recipe-card-edit {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  transition: transform var(--transition-duration-250) var(--transition-timing-function-default);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 0.25rem;
+  width: 1.5rem;
+  color: var(--color-white);
+
+  svg {
+    transition: fill var(--transition-duration-250) var(--transition-timing-function-default);
+    fill: white;
+  }
+
+  &:hover {
+    transform: scale(1.2) rotate(365deg);
+
+    svg {
+      fill: var(--color-primary);
+    }
   }
 }
