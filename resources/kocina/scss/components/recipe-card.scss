@@ -26,8 +26,11 @@
 .recipe-card-image,
 .recipe-card-image-placeholder {
   filter: brightness(0.8);
-  transition: filter var(--transition-duration-250) var(--transition-timing-function-default),
-  transform var(--transition-duration-250) var(--transition-timing-function-default);
+  transition:
+    filter var(--transition-duration-250) var(--transition-timing-function-default),
+    transform var(--transition-duration-250) var(--transition-timing-function-default);
+  aspect-ratio: 30 / 17;
+  object-fit: cover;
 
   .recipe-card:hover & {
     transform: scale(1.1) rotate(2deg);
@@ -48,11 +51,11 @@
   transition: color var(--transition-duration-250) var(--transition-timing-function-default);
   margin: 1rem 0 0.25rem;
   max-width: 400px;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   font-weight: 500;
   font-size: 0.9rem;
   line-height: 1.4;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
