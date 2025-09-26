@@ -122,25 +122,27 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
     private function getRecipeSchema(): array
     {
         return [
+            // TODO Wrap in a recipe object to try to prevent to return content that is not a recipe at all.
             'type' => 'object',
+            'required' => ['title', 'ingredients', 'steps'],
             'properties' => [
                 'title' => [
                     'type' => 'string',
-                    'description' => 'Recipe title or name',
-                ],
-                'description' => [
-                    'type' => 'string',
-                    'description' => 'Recipe description, summary or introduction',
+                    'description' => 'Recipe title or name. Never add a title that is not related to a recipe, food or cooking.',
                 ],
                 'ingredients' => [
                     'type' => 'array',
                     'items' => ['type' => 'string'],
-                    'description' => 'List of recipe ingredients with quantities and measurements. Each ingredient must include the amount, unit, and ingredient name separated by spaces. Format: "[quantity] [unit] [ingredient name]". Examples: "100 ml milk", "100 g sugar", "1 large egg", "2 cans diced tomatoes", "1 tbsp olive oil". Never concatenate without spaces like "100mlmilk".',
+                    'description' => 'List of recipe ingredients with quantities and measurements. Each ingredient must include the amount, unit, and ingredient name separated by spaces. Format: "[quantity] [unit] [ingredient name]". Examples: "100 ml milk", "100 g sugar", "1 large egg", "2 cans diced tomatoes", "1 tbsp olive oil". Never concatenate without spaces like "100mlmilk". Never add "ingredients" that is not related to food or cooking.',
                 ],
                 'steps' => [
                     'type' => 'array',
                     'items' => ['type' => 'string'],
-                    'description' => 'Step-by-step cooking instructions',
+                    'description' => 'Step-by-step cooking instructions. Never add steps that are not related to a recipe, food or cooking.',
+                ],
+                'description' => [
+                    'type' => 'string',
+                    'description' => 'Recipe description, summary or introduction',
                 ],
                 'prepTime' => [
                     'type' => 'string',
@@ -173,7 +175,6 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
                     'description' => 'Recipe image URLs',
                 ],
             ],
-            'required' => ['title', 'ingredients', 'steps'],
         ];
     }
 
