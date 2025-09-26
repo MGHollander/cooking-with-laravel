@@ -9,6 +9,7 @@ import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import Textarea from "@/Components/Textarea.vue";
+import TipTapEditor from "@/Components/TipTapEditor.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 import "vue-advanced-cropper/dist/style.css";
@@ -269,7 +270,12 @@ onMounted(() => {
 
           <div class="col-span-12 space-y-1">
             <Label for="summary" value="Samenvatting (optioneel)" />
-            <Textarea v-model="form.summary" class="block w-full" rows="4" />
+            <TipTapEditor
+              v-model="form.summary"
+              placeholder="Voer een korte samenvatting van het recept in..."
+              :rows="4"
+              :toolbar="['bold', 'italic', 'underline']"
+            />
             <InputError :message="form.errors.summary" />
           </div>
 
@@ -347,7 +353,12 @@ onMounted(() => {
         <div class="grid grid-cols-12 gap-6">
           <div class="col-span-12 space-y-1">
             <Label for="instructions" value="Instructies" />
-            <Textarea v-model="form.instructions" class="block w-full" rows="10" />
+            <TipTapEditor
+              v-model="form.instructions"
+              placeholder="Voer de bereidingsinstructies in..."
+              :rows="10"
+              :toolbar="['orderedList', 'bulletList', '|', 'bold', 'italic', 'underline', '|', 'heading']"
+            />
             <InputError :message="form.errors.instructions" />
           </div>
 

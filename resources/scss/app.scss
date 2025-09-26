@@ -5,6 +5,10 @@
 @tailwind utilities;
 
 @layer base {
+  h3 {
+    @apply text-xl font-bold;
+  }
+
   p + p {
     @apply mt-4;
   }
@@ -17,10 +21,23 @@
     }
   }
 
-  ul, ol {
-    @apply list-disc list-inside my-4;
+  ul,
+  ol {
+    @apply list-inside my-4;
+
+    li > p {
+      @apply inline m-0;
+    }
+  }
+
+  ul {
+    @apply list-disc marker:ml-0;
+  }
+
+  ol {
+    @apply list-decimal;
   }
 }
 
-@include meta.load-css('components/recipe-instructions');
-@include meta.load-css('components/recipe-card');
+@include meta.load-css("components/recipe-instructions");
+@include meta.load-css("components/recipe-card");

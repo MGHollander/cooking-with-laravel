@@ -225,6 +225,11 @@ ol {
   padding-left: 1.875rem;
 }
 
+ul li > p,
+ol lu > p {
+  margin: 0;
+}
+
 ul > li > ul,
 ul > li > ol,
 ol > li > ol,
@@ -290,9 +295,10 @@ pre {
   padding: 0.625em;
   overflow: auto;
   color: #4a4a4a;
-  font: 0.875rem / 1.5 Consolas,
-  monaco,
-  monospace;
+  font:
+    0.875rem / 1.5 Consolas,
+    monaco,
+    monospace;
   -moz-tab-size: 4;
   tab-size: 4;
 }

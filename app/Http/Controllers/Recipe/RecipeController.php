@@ -32,8 +32,9 @@ class RecipeController extends Controller
     {
         return view('kocina.recipes.index', [
             'recipes' => Recipe::query()
+                ->orderBy('id', 'desc')
                 ->paginate(12)
-                ->through(fn ($recipe) => [
+                ->through(fn($recipe) => [
                     'id' => $recipe->id,
                     'title' => $recipe->title,
                     'slug' => $recipe->slug,
@@ -73,7 +74,7 @@ class RecipeController extends Controller
 
         $this->saveMedia($request, $recipe);
 
-        Session::flash('success', 'Het recept is succesvol toegevoegd!');
+        Session::flash('success', 'Het recept is succesvol toegevoegd! 🧑‍🍳');
 
         return Inertia::location(route('recipes.edit', $recipe->id));
     }
@@ -100,15 +101,15 @@ class RecipeController extends Controller
                 'title' => $recipe->title,
                 'slug' => $recipe->slug,
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
-                'summary' => $recipe->summary,
+                'summary' => strip_tags($recipe->summary, '<strong><em><u>'),
                 'tags' => $recipe->tags->pluck('name'),
                 'servings' => $recipe->servings,
                 'preparation_minutes' => $recipe->preparation_minutes,
                 'cooking_minutes' => $recipe->cooking_minutes,
-                'difficulty' => Str::ucfirst(__('recipes.'.$recipe->difficulty)),
+                'difficulty' => Str::ucfirst(__('recipes.' . $recipe->difficulty)),
                 // TODO I think this is not the way to go, but for the experiment it's fine.
                 'ingredients' => (new IngredientsResource(''))->transformIngredients($recipe->ingredients),
-                'instructions' => $recipe->instructions,
+                'instructions' => strip_tags($recipe->instructions, '<strong><em><u><h3><ol><ul><li>'),
                 'source_label' => $recipe->source_label,
                 'source_link' => $recipe->source_link,
                 'created_at' => $recipe->created_at,
@@ -141,14 +142,14 @@ class RecipeController extends Controller
                 'title' => $recipe->title,
                 'slug' => $recipe->slug,
                 'media' => $recipe->getFirstMedia('recipe_image'),
-                'summary' => $recipe->summary,
+                'summary' => strip_tags($recipe->summary, '<strong><em><u>'),
                 'tags' => $recipe->tags->pluck('name')->implode(', '),
                 'servings' => $recipe->servings,
                 'preparation_minutes' => $recipe->preparation_minutes,
                 'cooking_minutes' => $recipe->cooking_minutes,
                 'difficulty' => $recipe->difficulty,
                 'ingredients' => $recipe->ingredients,
-                'instructions' => $recipe->instructions,
+                'instructions' => strip_tags($recipe->instructions, '<strong><em><u><h3><ol><ul><li>'),
                 'source_label' => $recipe->source_label,
                 'source_link' => $recipe->source_link,
             ],
@@ -177,7 +178,9 @@ class RecipeController extends Controller
 
         $this->saveMedia($request, $recipe);
 
-        return redirect()->route('recipes.edit', $recipe->id)->with('success', 'Het recept is succesvol gewijzigd!');
+        Session::flash('success', 'Het recept is succesvol gewijzigd!  🧑‍🍳');
+
+        return Inertia::location(route('recipes.show', $recipe->slug));
     }
 
     /**
@@ -189,7 +192,9 @@ class RecipeController extends Controller
     {
         $recipe->delete();
 
-        return redirect()->route('home')->with('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd!");
+        Session::flash('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd! 🧑‍🍳");
+
+        return Inertia::location(route('home'));
     }
 
     private function notFound($slug): \Illuminate\Http\Response
@@ -200,7 +205,7 @@ class RecipeController extends Controller
             ->beginWithWildcard()
             ->search($searchKey)
             ->withQueryString()
-            ->through(fn ($recipe) => [
+            ->through(fn($recipe) => [
                 'id' => $recipe->id,
                 'title' => $recipe->title,
                 'slug' => $recipe->slug,
@@ -309,7 +314,6 @@ class RecipeController extends Controller
         if ($recipe->tags->count() > 0) {
             JsonLd::addValue('keywords', implode(',', $recipe->tags->pluck('name')->toArray()));
         }
-
     }
 
     /*
@@ -318,13 +322,13 @@ class RecipeController extends Controller
      */
     private function minutesToISODuration($minutes): ?string
     {
-        $isoHours = (int) $minutes > 59 ? floor($minutes / 60).'H' : '';
-        $isoMinutes = (int) $minutes % 60 ? ($minutes % 60).'M' : '';
+        $isoHours = (int) $minutes > 59 ? floor($minutes / 60) . 'H' : '';
+        $isoMinutes = (int) $minutes % 60 ? ($minutes % 60) . 'M' : '';
 
         if (empty($isoMinutes) && empty($isoHours)) {
             return null;
         }
 
-        return 'PT'.$isoHours.$isoMinutes;
+        return 'PT' . $isoHours . $isoMinutes;
     }
 }
