@@ -13,18 +13,18 @@ class ImportResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'title'               => $this->resource['title'],
-            'images'              => isset($this->resource['images']) && is_string($this->resource['images']) ? [$this->resource['images']] : $this->resource['images'] ?? null,
-            'description'         => $this->resource['description'] ?? null,
-            'tags'                => isset($this->resource['keywords']) ? Str::lower($this->resource['keywords']) : null,
+            'title' => $this->resource['title'],
+            'images' => isset($this->resource['images']) && is_string($this->resource['images']) ? [$this->resource['images']] : $this->resource['images'] ?? null,
+            'description' => $this->resource['description'] ?? null,
+            'tags' => isset($this->resource['keywords']) ? Str::lower($this->resource['keywords']) : null,
             'preparation_minutes' => isset($this->resource['prepTime']) ? $this->transformTime($this->resource['prepTime']) : null,
-            'cooking_minutes'     => isset($this->resource['cookTime']) || isset($this->resource['totalTime']) ? $this->transformTime($this->resource['cookTime'] ?? $this->transformTime($this->resource['totalTime'])) : null,
-            'servings'            => (int) $this->resource['yield'],
-            'difficulty'          => $this->resource['difficulty'] ?? 'easy',
-            'ingredients'         => isset($this->resource['ingredients']) && is_array($this->resource['ingredients']) ? implode("\n", $this->resource['ingredients']) : $this->resource['ingredients'] ?? null,
-            'instructions'        => isset($this->resource['steps']) ? $this->transformInstructions($this->resource['steps']) : null,
-            'source_label'        => isset($this->resource['url']) ? Str::replace('www.', '', parse_url($this->resource['url'], PHP_URL_HOST)) : null,
-            'source_link'         => $this->resource['url'] ?? null,
+            'cooking_minutes' => isset($this->resource['cookTime']) || isset($this->resource['totalTime']) ? $this->transformTime($this->resource['cookTime'] ?? $this->transformTime($this->resource['totalTime'])) : null,
+            'servings' => (int) $this->resource['yield'],
+            'difficulty' => $this->resource['difficulty'] ?? 'easy',
+            'ingredients' => isset($this->resource['ingredients']) && is_array($this->resource['ingredients']) ? implode("\n", $this->resource['ingredients']) : $this->resource['ingredients'] ?? null,
+            'instructions' => isset($this->resource['steps']) ? $this->transformInstructions($this->resource['steps']) : null,
+            'source_label' => isset($this->resource['url']) ? Str::replace('www.', '', parse_url($this->resource['url'], PHP_URL_HOST)) : null,
+            'source_link' => $this->resource['url'] ?? null,
         ];
     }
 
@@ -32,6 +32,7 @@ class ImportResource extends JsonResource
     {
         try {
             $prepTime = CarbonInterval::fromString($timeString)->totalMinutes;
+
             return $prepTime > 0 ? $prepTime : null;
         } catch (\Exception $e) {
         }
@@ -54,7 +55,7 @@ class ImportResource extends JsonResource
             }
 
             if ($listSteps) {
-                return '<ol><li>' . implode('</li><li>', $steps) . '</li></ol>';
+                return '<ol><li>'.implode('</li><li>', $steps).'</li></ol>';
             }
 
             return implode('', $steps);

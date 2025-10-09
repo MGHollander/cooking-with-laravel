@@ -34,7 +34,7 @@ class RecipeController extends Controller
             'recipes' => Recipe::query()
                 ->orderBy('id', 'desc')
                 ->paginate(12)
-                ->through(fn($recipe) => [
+                ->through(fn ($recipe) => [
                     'id' => $recipe->id,
                     'title' => $recipe->title,
                     'slug' => $recipe->slug,
@@ -106,7 +106,7 @@ class RecipeController extends Controller
                 'servings' => $recipe->servings,
                 'preparation_minutes' => $recipe->preparation_minutes,
                 'cooking_minutes' => $recipe->cooking_minutes,
-                'difficulty' => Str::ucfirst(__('recipes.' . $recipe->difficulty)),
+                'difficulty' => Str::ucfirst(__('recipes.'.$recipe->difficulty)),
                 // TODO I think this is not the way to go, but for the experiment it's fine.
                 'ingredients' => (new IngredientsResource(''))->transformIngredients($recipe->ingredients),
                 'instructions' => strip_tags($recipe->instructions, '<strong><em><u><h3><ol><ul><li>'),
@@ -205,7 +205,7 @@ class RecipeController extends Controller
             ->beginWithWildcard()
             ->search($searchKey)
             ->withQueryString()
-            ->through(fn($recipe) => [
+            ->through(fn ($recipe) => [
                 'id' => $recipe->id,
                 'title' => $recipe->title,
                 'slug' => $recipe->slug,
@@ -322,13 +322,13 @@ class RecipeController extends Controller
      */
     private function minutesToISODuration($minutes): ?string
     {
-        $isoHours = (int) $minutes > 59 ? floor($minutes / 60) . 'H' : '';
-        $isoMinutes = (int) $minutes % 60 ? ($minutes % 60) . 'M' : '';
+        $isoHours = (int) $minutes > 59 ? floor($minutes / 60).'H' : '';
+        $isoMinutes = (int) $minutes % 60 ? ($minutes % 60).'M' : '';
 
         if (empty($isoMinutes) && empty($isoHours)) {
             return null;
         }
 
-        return 'PT' . $isoHours . $isoMinutes;
+        return 'PT'.$isoHours.$isoMinutes;
     }
 }

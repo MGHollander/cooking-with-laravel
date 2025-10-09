@@ -15,7 +15,6 @@ class ChangePasswordController extends Controller
     /**
      * Display the password reset view.
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Inertia\Response
      */
     public function edit(Request $request)
@@ -26,7 +25,6 @@ class ChangePasswordController extends Controller
     /**
      * Handle an incoming new password request.
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -35,7 +33,7 @@ class ChangePasswordController extends Controller
     {
         $request->validate([
             'current_password' => ['required', 'current_password'],
-            'new_password'     => ['required', 'confirmed', Rules\Password::defaults()],
+            'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = $request->user();

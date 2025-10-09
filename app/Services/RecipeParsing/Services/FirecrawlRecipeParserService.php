@@ -74,7 +74,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
                 return $this->processSuccessfulResponse($result['data'], $result['requestDuration'], $startTime, $url);
             } else {
                 throw new RecipeParsingException(
-                    message: 'Firecrawl scraping failed: ' . $result['failureReason'],
+                    message: 'Firecrawl scraping failed: '.$result['failureReason'],
                     url: $url,
                     parser: $this->getName()
                 );
@@ -94,7 +94,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
             ]);
 
             throw new RecipeParsingException(
-                message: 'Firecrawl parsing failed: ' . $e->getMessage(),
+                message: 'Firecrawl parsing failed: '.$e->getMessage(),
                 previous: $e,
                 url: $url,
                 parser: $this->getName()
@@ -191,7 +191,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
 
         $response = $this->httpClient
             ->withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Authorization' => 'Bearer '.$this->apiKey,
                 'Content-Type' => 'application/json',
             ])
             ->timeout(self::TIMEOUT)
@@ -267,7 +267,7 @@ class FirecrawlRecipeParserService implements RecipeParserInterface
         }
 
         if (! $response->successful()) {
-            return "HTTP {$statusCode}: " . $response->body();
+            return "HTTP {$statusCode}: ".$response->body();
         }
 
         if (! ($data['success'] ?? false)) {

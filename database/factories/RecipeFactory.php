@@ -17,11 +17,11 @@ class RecipeFactory extends Factory
     public function definition(): array
     {
         return [
-            'title'        => $this->faker->sentence,
-            'user_id'      => 1,
-            'servings'     => $this->faker->numberBetween(1, 10),
-            'difficulty'   => $this->faker->randomElement(['easy', 'medium', 'hard']),
-            'ingredients'  => $this->faker->paragraph,
+            'title' => $this->faker->sentence,
+            'user_id' => 1,
+            'servings' => $this->faker->numberBetween(1, 10),
+            'difficulty' => $this->faker->randomElement(['easy', 'medium', 'hard']),
+            'ingredients' => $this->faker->paragraph,
             'instructions' => $this->faker->paragraph,
         ];
     }

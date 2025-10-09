@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Enable Laravel's strict mode for development
         // @see https://coderflex.com/blog/laravel-strict-mode-all-what-you-need-to-know#all-in-one
-        Model::shouldBeStrict(!$this->app->isProduction());
+        Model::shouldBeStrict(! $this->app->isProduction());
 
         Paginator::defaultView('pagination::default');
         Paginator::defaultSimpleView('pagination::simple-default');

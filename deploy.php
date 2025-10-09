@@ -40,8 +40,8 @@ task('deploy:update_code', function () {
         runLocally('rm -rf {{ local_deploy_path }} ');
     }
 
-    if (!testLocally('git show-ref {{ branch }} >/dev/null 2>&1')) {
-        throw new Exception('No Git reference to ' . get('branch') . ' found.');
+    if (! testLocally('git show-ref {{ branch }} >/dev/null 2>&1')) {
+        throw new Exception('No Git reference to '.get('branch').' found.');
     }
 
     writeLn('Clone <info>{{ branch }}</info> into <info>{{ local_deploy_path }}</info>');

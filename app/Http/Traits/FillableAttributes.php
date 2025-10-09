@@ -11,7 +11,7 @@ trait FillableAttributes
     {
         return array_filter(
             $attributes,
-            static fn($key) => in_array($key, $recipe->getFillable(), true),
+            static fn ($key) => in_array($key, $recipe->getFillable(), true),
             ARRAY_FILTER_USE_KEY
         );
     }

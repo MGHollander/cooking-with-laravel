@@ -31,7 +31,7 @@ class RecipeParsingServiceProvider extends ServiceProvider
 
         // Register the main orchestrating service
         $this->app->singleton(RecipeParsingService::class, function ($app) {
-            $service = new RecipeParsingService();
+            $service = new RecipeParsingService;
 
             // Register all available parsers
             $service->registerParser($app->make('recipe.parser.firecrawl'));
@@ -75,5 +75,4 @@ class RecipeParsingServiceProvider extends ServiceProvider
             );
         });
     }
-
 }

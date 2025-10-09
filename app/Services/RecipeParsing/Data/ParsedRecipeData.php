@@ -17,8 +17,7 @@ class ParsedRecipeData
         public readonly ?string $difficulty = null,
         public readonly ?array $images = null,
         public readonly ?string $url = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Convert to array format for compatibility with existing ImportResource.
@@ -67,8 +66,8 @@ class ParsedRecipeData
      */
     public function isValid(): bool
     {
-        return !empty($this->title) 
-            && !empty($this->ingredients) 
-            && !empty($this->steps);
+        return ! empty($this->title)
+            && ! empty($this->ingredients)
+            && ! empty($this->steps);
     }
 }

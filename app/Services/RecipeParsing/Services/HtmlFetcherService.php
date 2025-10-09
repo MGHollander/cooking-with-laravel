@@ -12,8 +12,7 @@ class HtmlFetcherService implements HtmlFetcherInterface
 {
     public function __construct(
         private readonly HttpFactory $httpClient
-    ) {
-    }
+    ) {}
 
     public function fetch(string $url): string
     {

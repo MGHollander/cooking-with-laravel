@@ -51,9 +51,9 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             $this->recipeData['url'] = $url;
 
             $readers = [
-                'JsonLdReader' => new HTMLReader(new JsonLdReader()),
-                'MicrodataReader' => new HTMLReader(new MicrodataReader()),
-                'RdfaLiteReader' => new HTMLReader(new RdfaLiteReader()),
+                'JsonLdReader' => new HTMLReader(new JsonLdReader),
+                'MicrodataReader' => new HTMLReader(new MicrodataReader),
+                'RdfaLiteReader' => new HTMLReader(new RdfaLiteReader),
             ];
 
             foreach ($readers as $readerName => $reader) {
@@ -104,7 +104,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             ]);
 
             throw new RecipeParsingException(
-                message: 'Structured data parsing failed: ' . $e->getMessage(),
+                message: 'Structured data parsing failed: '.$e->getMessage(),
                 previous: $e,
                 url: $url,
                 parser: $this->getName()
@@ -144,6 +144,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
                             'recipe_title' => $result->title,
                             'user_id' => Auth::id(),
                         ]);
+
                         return $result;
                     }
                 }
@@ -159,6 +160,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
                         'recipe_title' => $result->title,
                         'user_id' => Auth::id(),
                     ]);
+
                     return $result;
                 } else {
                     Log::warning('Structured data parsing failed - single item did not contain recipe', [
@@ -197,7 +199,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
 
             foreach ($properties as $name => $values) {
                 try {
-                    $methodName = 'parse_' . $this->sanitizeName($name);
+                    $methodName = 'parse_'.$this->sanitizeName($name);
                     if (method_exists($this, $methodName)) {
                         $this->$methodName($values);
                         $processedProperties[] = $name;
@@ -215,11 +217,17 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
 
             $parsedData = ParsedRecipeData::fromArray($this->recipeData);
 
-            if (!$parsedData->isValid()) {
+            if (! $parsedData->isValid()) {
                 $missingFields = [];
-                if (empty($this->recipeData['title'])) $missingFields[] = 'title';
-                if (empty($this->recipeData['ingredients']) || !is_array($this->recipeData['ingredients'])) $missingFields[] = 'ingredients';
-                if (empty($this->recipeData['steps']) || !is_array($this->recipeData['steps'])) $missingFields[] = 'steps';
+                if (empty($this->recipeData['title'])) {
+                    $missingFields[] = 'title';
+                }
+                if (empty($this->recipeData['ingredients']) || ! is_array($this->recipeData['ingredients'])) {
+                    $missingFields[] = 'ingredients';
+                }
+                if (empty($this->recipeData['steps']) || ! is_array($this->recipeData['steps'])) {
+                    $missingFields[] = 'steps';
+                }
 
                 Log::warning('Structured data parsing failed - required fields missing', [
                     'url' => $this->recipeData['url'],
@@ -341,7 +349,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
         try {
             if (is_array($values)) {
                 $this->recipeData['ingredients'] = Collection::make($values)
-                    ->transform(fn($item) => html_entity_decode($item))
+                    ->transform(fn ($item) => html_entity_decode($item))
                     ->all();
 
                 Log::debug('Successfully parsed recipe ingredients', [
@@ -406,7 +414,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             $name = $this->sanitizeName($name);
 
             if ($name === 'name') {
-                $this->recipeData['steps'][] = '<p><strong>' . html_entity_decode($values[0]) . '</strong></p>';
+                $this->recipeData['steps'][] = '<p><strong>'.html_entity_decode($values[0]).'</strong></p>';
             }
 
             if ($name === 'itemlistelement') {
@@ -445,7 +453,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             $name = $this->sanitizeName($name);
 
             if ($name === 'text') {
-                $this->recipeData['steps'][] = '<li>' . html_entity_decode($values[0]) . '</li>';
+                $this->recipeData['steps'][] = '<li>'.html_entity_decode($values[0]).'</li>';
             }
         }
     }

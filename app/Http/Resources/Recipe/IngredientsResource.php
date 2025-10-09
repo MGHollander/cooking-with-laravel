@@ -16,19 +16,21 @@ class IngredientsResource extends JsonResource
 
     public function transformIngredients(string $ingredients): array
     {
-        $ingredientsArray       = explode("\n", $ingredients);
+        $ingredientsArray = explode("\n", $ingredients);
         $transformedIngredients = [];
-        $index                  = 0;
+        $index = 0;
 
         foreach ($ingredientsArray as $line) {
             if (Str::startsWith($line, '#')) {
                 $index++;
                 $transformedIngredients[$index]['title'] = trim(Str::after($line, '#'));
+
                 continue;
             }
 
             if (empty(trim($line))) {
                 $index++;
+
                 continue;
             }
 
@@ -43,7 +45,7 @@ class IngredientsResource extends JsonResource
         $ingredient = ['full' => $ingredientString];
 
         // Search for an amount as number, fraction or decimal.
-        if (preg_match('/^(\d+\/\d+)|(\d+\s\d+\/\d+)|(\d+.\d+)|\d+/', $ingredientString, $matches)) { //Check To See If The Ingredient contains a certain amount.
+        if (preg_match('/^(\d+\/\d+)|(\d+\s\d+\/\d+)|(\d+.\d+)|\d+/', $ingredientString, $matches)) { // Check To See If The Ingredient contains a certain amount.
             $ingredient['amount'] = trim($matches[0]);
             // Remove the amount to extract the unit.
             $ingredientString = trim(str_replace($ingredient['amount'], '', $ingredientString));
@@ -51,7 +53,7 @@ class IngredientsResource extends JsonResource
 
         // Search for a unit.
         foreach ($this->getCookingUnits() as $unit) {
-            if (preg_match('/^' . $unit . '\.?\s+/i', $ingredientString, $matches)) {
+            if (preg_match('/^'.$unit.'\.?\s+/i', $ingredientString, $matches)) {
                 $ingredient['unit'] = strtolower(trim(str_replace('.', '', $matches[0])));
                 // Remove the unit and amount to extract the name.
                 $ingredientString = trim(str_replace($matches[0], '', $ingredientString));
@@ -69,12 +71,11 @@ class IngredientsResource extends JsonResource
         // The name is what's left :-).
         $singularPluralArray = explode('|', $ingredientString);
         if (count($singularPluralArray) > 1) {
-            $ingredient['name']        = trim($singularPluralArray[0]);
+            $ingredient['name'] = trim($singularPluralArray[0]);
             $ingredient['name_plural'] = trim($singularPluralArray[1]);
         } else {
             $ingredient['name'] = trim($ingredientString);
         }
-
 
         return $ingredient;
     }

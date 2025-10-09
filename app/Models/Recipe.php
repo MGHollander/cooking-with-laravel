@@ -41,7 +41,7 @@ class Recipe extends Model implements HasMedia
     protected function slug(): Attribute
     {
         return Attribute::make(
-            set: fn($value) => Str::of($value)->slug(),
+            set: fn ($value) => Str::of($value)->slug(),
         );
     }
 

@@ -16,14 +16,15 @@ class FileHelper
 
         $contents = file_get_contents($url);
 
-        if (!$imageName) {
+        if (! $imageName) {
             $imageName = basename($url);
         }
 
-        $image = 'images/recipes/' . $imageName;
+        $image = 'images/recipes/'.$imageName;
 
-        if (!Storage::disk('public')->put($image, $contents)) {
+        if (! Storage::disk('public')->put($image, $contents)) {
             Log::error('The external image could not be saved.', ['url' => $url]);
+
             return false;
         }
 
@@ -37,7 +38,7 @@ class FileHelper
     {
         $parsedUrl = parse_url($url);
 
-        if (!$parsedUrl) {
+        if (! $parsedUrl) {
             return $url; // Return original if parsing fails
         }
 
@@ -45,7 +46,7 @@ class FileHelper
 
         // Add scheme
         if (isset($parsedUrl['scheme'])) {
-            $cleanUrl .= $parsedUrl['scheme'] . '://';
+            $cleanUrl .= $parsedUrl['scheme'].'://';
         }
 
         // Add host
@@ -55,7 +56,7 @@ class FileHelper
 
         // Add port if present and not default
         if (isset($parsedUrl['port'])) {
-            $cleanUrl .= ':' . $parsedUrl['port'];
+            $cleanUrl .= ':'.$parsedUrl['port'];
         }
 
         // Add path

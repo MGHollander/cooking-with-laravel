@@ -205,7 +205,7 @@ class ImportController extends Controller
 
             return response()->json(['error' => 'Failed to fetch image'], $response->status());
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch image: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Failed to fetch image: '.$e->getMessage()], 500);
         }
     }
 
@@ -258,7 +258,7 @@ class ImportController extends Controller
         }
 
         if ($request->get('return_to_import_page')) {
-            return redirect()->route('import.index')->with('success', 'Het recept "<a href="' . route('recipes.show', $recipe->slug) . '"><i>' . $recipe->title . '</i></a>" is succesvol geïmporteerd! 🎉');
+            return redirect()->route('import.index')->with('success', 'Het recept "<a href="'.route('recipes.show', $recipe->slug).'"><i>'.$recipe->title.'</i></a>" is succesvol geïmporteerd! 🎉');
         }
 
         Session::flash('success', 'Het recept is succesvol geïmporteerd! 🎉');

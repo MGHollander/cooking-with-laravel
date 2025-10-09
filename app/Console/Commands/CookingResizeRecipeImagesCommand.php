@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Spatie\Image\Enums\CropPosition;
 use Spatie\Image\Enums\Fit;
 use Spatie\Image\Image;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -40,7 +39,7 @@ class CookingResizeRecipeImagesCommand extends Command
     {
         $media = Media::where('collection_name', '=', 'recipe_image')
             ->where('manipulations', '=', '[]');
-        $bar   = $this->output->createProgressBar($media->count());
+        $bar = $this->output->createProgressBar($media->count());
 
         $bar->start();
 
@@ -64,7 +63,7 @@ class CookingResizeRecipeImagesCommand extends Command
                     ->fit(Fit::Crop, $width, $height)
                     ->save();
 
-                    $bar->advance();
+                $bar->advance();
             });
         });
 
@@ -74,7 +73,7 @@ class CookingResizeRecipeImagesCommand extends Command
     private function updateMediaManipulations(): void
     {
         $media = Media::where('collection_name', '=', 'recipe_image');
-        $bar   = $this->output->createProgressBar($media->count());
+        $bar = $this->output->createProgressBar($media->count());
 
         $bar->start();
 

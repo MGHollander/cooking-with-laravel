@@ -20,11 +20,11 @@ class OpenAIRecipeParserService implements RecipeParserInterface
 
     public function parse(string $url): ?ParserResult
     {
-        if (!$this->isAvailable()) {
+        if (! $this->isAvailable()) {
             throw new ApiKeyMissingException('OpenAI', $url);
         }
 
-        if (!$this->openAIClient) {
+        if (! $this->openAIClient) {
             throw new ApiKeyMissingException('OpenAI', $url);
         }
 
@@ -50,10 +50,11 @@ class OpenAIRecipeParserService implements RecipeParserInterface
             if (empty($content['title'])) {
                 Log::warning('OpenAI returned empty or invalid recipe data', [
                     'url' => $url,
-                    'has_title' => !empty($content['title'] ?? null),
+                    'has_title' => ! empty($content['title'] ?? null),
                     'response_content' => $content,
                     'user_id' => Auth::id(),
                 ]);
+
                 return null;
             }
 
@@ -87,7 +88,7 @@ class OpenAIRecipeParserService implements RecipeParserInterface
             ]);
 
             throw new RecipeParsingException(
-                message: 'OpenAI parsing failed - invalid JSON response: ' . $e->getMessage(),
+                message: 'OpenAI parsing failed - invalid JSON response: '.$e->getMessage(),
                 previous: $e,
                 url: $url,
                 parser: $this->getName()
@@ -107,7 +108,7 @@ class OpenAIRecipeParserService implements RecipeParserInterface
             ]);
 
             throw new RecipeParsingException(
-                message: 'OpenAI parsing failed: ' . $e->getMessage(),
+                message: 'OpenAI parsing failed: '.$e->getMessage(),
                 previous: $e,
                 url: $url,
                 parser: $this->getName()
@@ -117,7 +118,7 @@ class OpenAIRecipeParserService implements RecipeParserInterface
 
     public function isAvailable(): bool
     {
-        return !empty($this->apiKey) && $this->openAIClient !== null;
+        return ! empty($this->apiKey) && $this->openAIClient !== null;
     }
 
     public function getName(): string

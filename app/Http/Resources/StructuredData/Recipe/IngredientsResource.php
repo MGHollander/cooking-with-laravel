@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\StructuredData\Recipe;
 
-use DOMDocument;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;

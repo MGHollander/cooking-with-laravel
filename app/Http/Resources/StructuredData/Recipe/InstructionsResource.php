@@ -17,10 +17,10 @@ class InstructionsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $dom = new DOMDocument();
+        $dom = new DOMDocument;
         $dom->loadHTML($this->resource);
 
-        $instructions        = [];
+        $instructions = [];
         $currentSectionIndex = 0;
 
         foreach ($dom->getElementsByTagName('body')->item(0)->childNodes as $node) {
@@ -47,26 +47,18 @@ class InstructionsResource extends JsonResource
 
     /**
      * Parse heading element and add section to instructions array.
-     *
-     * @param \DOMElement $headingNode
-     * @param array       $instructions
-     * @param int         $sectionIndex
      */
     private function parseHeading(\DOMElement $headingNode, array &$instructions, int $sectionIndex): void
     {
         $instructions[$sectionIndex] = [
-            '@type'           => 'HowToSection',
-            'name'            => $headingNode->textContent,
+            '@type' => 'HowToSection',
+            'name' => $headingNode->textContent,
             'itemListElement' => [],
         ];
     }
 
     /**
      * Parse list elements and add to instructions array.
-     *
-     * @param \DOMElement $listNode
-     * @param array       $instructions
-     * @param int         $sectionIndex
      */
     private function parseList(\DOMElement $listNode, array &$instructions, int $sectionIndex): void
     {
@@ -82,10 +74,6 @@ class InstructionsResource extends JsonResource
 
     /**
      * Parse step element (e.g., paragraph) and add to instructions array.
-     *
-     * @param \DOMElement $stepNode
-     * @param array       $instructions
-     * @param int         $sectionIndex
      */
     private function parseParagraph(\DOMElement $stepNode, array &$instructions, int $sectionIndex): void
     {
@@ -95,24 +83,17 @@ class InstructionsResource extends JsonResource
 
     /**
      * Create a new step array.
-     *
-     * @param string $text
-     * @return array
      */
     private function createStep(string $text): array
     {
         return [
             '@type' => 'HowToStep',
-            'text'  => $text,
+            'text' => $text,
         ];
     }
 
     /**
      * Add the step to the appropriate location in the instructions array.
-     *
-     * @param array $instructions
-     * @param int   $sectionIndex
-     * @param array $step
      */
     private function addItem(array &$instructions, int $sectionIndex, array $step): void
     {

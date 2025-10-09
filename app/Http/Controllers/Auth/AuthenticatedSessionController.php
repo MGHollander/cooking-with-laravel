@@ -21,14 +21,13 @@ class AuthenticatedSessionController extends Controller
     {
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
-            'status'           => session('status'),
+            'status' => session('status'),
         ]);
     }
 
     /**
      * Handle an incoming authentication request.
      *
-     * @param \App\Http\Requests\Auth\LoginRequest $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function store(LoginRequest $request)
@@ -48,7 +47,6 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function destroy(Request $request)

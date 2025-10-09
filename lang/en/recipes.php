@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'easy'      => 'easy',
-    'average'   => 'average',
+    'easy' => 'easy',
+    'average' => 'average',
     'difficult' => 'difficult',
 ];

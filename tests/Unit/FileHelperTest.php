@@ -11,7 +11,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'https://example.com/recipe?utm_source=newsletter&utm_medium=email';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('https://example.com/recipe', $cleanUrl);
     }
 
@@ -19,7 +19,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'https://example.com/recipe#instructions';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('https://example.com/recipe', $cleanUrl);
     }
 
@@ -27,7 +27,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'https://example.com/recipe?param=value&another=test#section';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('https://example.com/recipe', $cleanUrl);
     }
 
@@ -35,7 +35,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'https://example.com/recipes/chocolate-cake?source=google#ingredients';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('https://example.com/recipes/chocolate-cake', $cleanUrl);
     }
 
@@ -43,7 +43,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'https://recipes.example.com/chocolate-cake?utm_source=facebook';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('https://recipes.example.com/chocolate-cake', $cleanUrl);
     }
 
@@ -51,7 +51,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'https://example.com:8080/recipe?param=value';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('https://example.com:8080/recipe', $cleanUrl);
     }
 
@@ -59,7 +59,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'https://example.com/recipe';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('https://example.com/recipe', $cleanUrl);
     }
 
@@ -67,7 +67,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'https://example.com/?param=value#section';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('https://example.com/', $cleanUrl);
     }
 
@@ -75,7 +75,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'https://example.com?param=value#section';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('https://example.com', $cleanUrl);
     }
 
@@ -83,7 +83,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'http://example.com/recipe?param=value#section';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('http://example.com/recipe', $cleanUrl);
     }
 
@@ -91,7 +91,7 @@ class FileHelperTest extends TestCase
     {
         $url = 'https://example.com/recipe?utm_source=social&utm_medium=facebook&utm_campaign=summer2024&fbclid=IwAR123456789';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('https://example.com/recipe', $cleanUrl);
     }
 
@@ -99,7 +99,7 @@ class FileHelperTest extends TestCase
     {
         $invalidUrl = 'not-a-valid-url';
         $cleanUrl = FileHelper::cleanUrl($invalidUrl);
-        
+
         $this->assertEquals($invalidUrl, $cleanUrl);
     }
 
@@ -107,7 +107,7 @@ class FileHelperTest extends TestCase
     {
         $url = '';
         $cleanUrl = FileHelper::cleanUrl($url);
-        
+
         $this->assertEquals('', $cleanUrl);
     }
 }

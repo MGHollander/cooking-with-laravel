@@ -18,10 +18,9 @@ class ImportControllerTest extends TestCase
         $response = $this->actingAs($user)->get(route('import.index'));
 
         $response->assertStatus(200);
-        $response->assertInertia(fn($page) =>
-            $page->component('Import/Index')
-                ->has('openAI')
-                ->has('firecrawl')
+        $response->assertInertia(fn ($page) => $page->component('Import/Index')
+            ->has('openAI')
+            ->has('firecrawl')
         );
     }
 

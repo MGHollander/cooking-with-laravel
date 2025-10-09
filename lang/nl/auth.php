@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed'   => 'Deze logingegevens komen niet voor in het systeem.',
+    'failed' => 'Deze logingegevens komen niet voor in het systeem.',
     'password' => 'Het ingevulde wachtwoord is onjuist.',
     'throttle' => 'Te veel mislukte login pogingen. Probeer het over :seconds seconden nog eens.',
 
