@@ -64,7 +64,7 @@
                             >
 
                                 <template x-if="ingredient.amount">
-                                    <span x-text="Math.round(ingredient.amount * 100) / 100 + '&nbsp;'"></span>
+                                    <span x-text="(Math.round(parseFloat(ingredient.amount.replace(',', '.')) * 100) / 100).toLocaleString('nl-NL') + '&nbsp;'"></span>
                                 </template>
                                 <template x-if="ingredient.unit">
                                     <span x-text="ingredient.unit + '&nbsp;'"></span>
