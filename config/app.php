@@ -215,4 +215,5 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    'editor' => env('EDITOR', 'vscode'),
 ];
