@@ -15,6 +15,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/sanctum (SANCTUM) - v4
 - tightenco/ziggy (ZIGGY) - v2
 - laravel/breeze (BREEZE) - v2
+- laravel/mcp (MCP) - v0
 - laravel/pint (PINT) - v1
 - laravel/sail (SAIL) - v1
 - phpunit/phpunit (PHPUNIT) - v11
@@ -152,7 +153,9 @@ Route::get('/users', function () {
 - When using deferred props on the frontend, you should add a nice empty state with pulsing / animated skeleton.
 
 ### Inertia Form General Guidance
-- Build forms using the `useForm` helper. Use the code examples and `search-docs` tool with a query of `useForm helper` for guidance.
+- The recommended way to build forms when using Inertia is with the `<Form>` component - a useful example is below. Use `search-docs` with a query of `form component` for guidance.
+- Forms can also be built using the `useForm` helper for more programmatic control, or to follow existing conventions. Use `search-docs` with a query of `useForm helper` for guidance.
+- `resetOnError`, `resetOnSuccess`, and `setDefaultsOnSuccess` are available on the `<Form>` component. Use `search-docs` with a query of 'form component resetting' for guidance.
 
 
 === laravel/core rules ===
@@ -276,32 +279,39 @@ Route::get('/users', function () {
 
 ## Inertia + Vue Forms
 
-<code-snippet name="Inertia Vue useForm example" lang="vue">
+<code-snippet name="`<Form>` Component Example" lang="vue">
 
-<script setup>
-    import { useForm } from '@inertiajs/vue3'
+<Form
+    action="/users"
+    method="post"
+    #default="{
+        errors,
+        hasErrors,
+        processing,
+        progress,
+        wasSuccessful,
+        recentlySuccessful,
+        setError,
+        clearErrors,
+        resetAndClearErrors,
+        defaults,
+        isDirty,
+        reset,
+        submit,
+  }"
+>
+    <input type="text" name="name" />
 
-    const form = useForm({
-        email: null,
-        password: null,
-        remember: false,
-    })
-</script>
+    <div v-if="errors.name">
+        {{ errors.name }}
+    </div>
 
-<template>
-    <form @submit.prevent="form.post('/login')">
-        <!-- email -->
-        <input type="text" v-model="form.email">
-        <div v-if="form.errors.email">{{ form.errors.email }}</div>
-        <!-- password -->
-        <input type="password" v-model="form.password">
-        <div v-if="form.errors.password">{{ form.errors.password }}</div>
-        <!-- remember me -->
-        <input type="checkbox" v-model="form.remember"> Remember Me
-        <!-- submit -->
-        <button type="submit" :disabled="form.processing">Login</button>
-    </form>
-</template>
+    <button type="submit" :disabled="processing">
+        {{ processing ? 'Creating...' : 'Create User' }}
+    </button>
+
+    <div v-if="wasSuccessful">User created successfully!</div>
+</Form>
 
 </code-snippet>
 
@@ -344,4 +354,45 @@ Route::get('/users', function () {
 
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test` with a specific filename or filter.
+
+
+=== .ai/context rules ===
+
+# Application Context
+
+Cooking with Laravel is a personal recipe management web application built with Laravel and Vue.js. It solves the common problem of losing track of favorite recipes scattered across different websites, apps, and sources. The application allows users to create, edit, and organize their recipes in one centralized location, complete with features like recipe import from web pages using AI-powered tools, search functionality, and simple user management. It's designed to be a practical solution for home cooks who want to keep their favorite recipes organized and easily accessible.
+
+## Development Guidelines
+
+- When implementing any new functionality that would affect the project's installation process, update the readme to reflect the new steps
+- Never include comments in the code unless absolutely necessary. If you feel like you need to add a comment, consider if the code can be refactored to be more readable instead
+- Mimic the code style of the existing project, use existing libraries and utilities, and follow existing patterns
+- Focus on creating code that provides an excellent developer experience (DX), good autocompletion, type safety, and comprehensive docblocks
+
+
+=== .ai/testing rules ===
+
+# Testing
+
+- If asked to write a test, never start with implementation. If asked to write a test, just write the test
+- Every time a test has been updated, run the test
+- When writing a test, don't start fixing other parts of the tests or implementation code - even if you see a linter error you really want to fix. Don't get distracted, and focus on writing the test you have been asked to write
+- If you have created new code, generate a test for it
+- If you have refactored or restructured code, run the tests afterwards
+- Prefer feature tests when testing models
+- Don't bother making tests for things that are basic Laravel behavior (eg. casts on a model)
+
+
+=== .ai/php rules ===
+
+# Write great PHP code
+
+- Use the latest PHP features, such as short closures, nullsafe operator, constructor promotion and match expressions
+- Never include a docblock where a typehint is sufficient - only use it if the docblock can be more specific (for example `@param array<string, string> $data` or `@return array<string, string>`)
+- Implement proper error handling and logging:
+  - Use Laravel's exception handling and logging features
+  - Create custom exceptions when necessary
+  - Use try-catch blocks for expected exceptions
+- Always prefer to import classes using the `use` statement rather than using fully qualified class names (FQCN) in the code
+- After writing or changing any code, run `composer fix` to automatically fix any code style issues
 </laravel-boost-guidelines>
