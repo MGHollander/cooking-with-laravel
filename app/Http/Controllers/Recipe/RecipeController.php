@@ -116,7 +116,7 @@ class RecipeController extends Controller
                 'structured_data' => [
                     'description' => strip_tags($recipe->summary),
                     'ingredients' => new StructuredDataIngredientsResource($recipe->ingredients),
-                    'instructions' => new InstructionsResource($recipe->instructions),
+                    'instructions' => !empty($recipe->instructions) ? new InstructionsResource($recipe->instructions) : $recipe->instructions,
                     'keywords' => implode(',', $recipe->tags->pluck('name')->toArray()),
                 ],
             ],
@@ -290,7 +290,7 @@ class RecipeController extends Controller
             'datePublished' => $recipe->created_at,
             'recipeYield' => $recipe->servings,
             'recipeIngredient' => new StructuredDataIngredientsResource($recipe->ingredients),
-            'recipeInstructions' => new InstructionsResource($recipe->instructions),
+            'recipeInstructions' => !empty($recipe->instructions) ? new InstructionsResource($recipe->instructions) : $recipe->instructions,
         ]);
 
         $image = $recipe->getFirstMediaUrl('recipe_image', 'show');
