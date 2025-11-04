@@ -14,19 +14,19 @@
 
         @if(session()->has('error'))
             <div class="flash-message flash-error">
-                {{ session('error') }}
+                {!! strip_tags(session('error'), '<a><i>') !!}
             </div>
         @endif
 
         @if(session()->has('warning'))
             <div class="flash-message flash-warning">
-                {{ session('warning') }}
+                {!! strip_tags(session('warning'), '<a><i>') !!}
             </div>
         @endif
 
         @if(session()->has('info'))
             <div class="flash-message flash-info">
-                {{ session('info') }}
+                {!! strip_tags(session('info'), '<a><i>') !!}
             </div>
         @endif
     </div>
