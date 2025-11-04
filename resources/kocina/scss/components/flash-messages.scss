@@ -1,9 +1,5 @@
 .flash-messages {
-  margin-bottom: 2rem;
-
-  @media (--kocina-media-breakpoint-s-min) {
-    margin-bottom: 3rem;
-  }
+  margin-bottom: 1.5rem;
 
   > * + * {
     margin-top: 0.5rem;
