@@ -31,6 +31,18 @@
   --transition-timing-function-default: cubic-bezier(0.4, 0, 0.2, 1);
 
   --content-max-width: calc(var(--kocina-breakpoint-xl) - 12rem);
+
+  --info-bg-color: #e0f2f7;
+  --info-text-color: #026aa7;
+
+  --success-bg-color: #e6ffed;
+  --success-text-color: #2d764a;
+
+  --error-bg-color: #ffebeb;
+  --error-text-color: #c53030;
+
+  --warning-bg-color: #fff8e6;
+  --warning-text-color: #975a16;
 }
 
 // The Media query sizes are inspired by TailwindCSS 3.4.

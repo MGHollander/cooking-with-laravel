@@ -41,6 +41,7 @@
   </head>
   <body>
     <x-kocina.navbar />
+    <x-kocina.flash-messages />
 
     {{ $slot }}
 

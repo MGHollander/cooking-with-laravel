@@ -1,0 +1,36 @@
+.flash-messages {
+  margin-bottom: 2rem;
+
+  @media (--kocina-media-breakpoint-s-min) {
+    margin-bottom: 3rem;
+  }
+
+  > * + * {
+    margin-top: 0.5rem;
+  }
+
+  .flash-message {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+  }
+
+  .flash-status, .flash-info {
+    background-color: var(--info-bg-color);
+    color: var(--info-text-color);
+  }
+
+  .flash-success {
+    background-color: var(--success-bg-color);
+    color: var(--success-text-color);
+  }
+
+  .flash-error {
+    background-color: var(--error-bg-color);
+    color: var(--error-text-color);
+  }
+
+  .flash-warning {
+    background-color: var(--warning-bg-color);
+    color: var(--warning-text-color);
+  }
+}
