@@ -8,7 +8,7 @@
 
         @if(session()->has('success'))
             <div class="flash-message flash-success">
-                {{ session('success') }}
+                {!! strip_tags(session('success'), '<a><i>') !!}
             </div>
         @endif
 
