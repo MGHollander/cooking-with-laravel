@@ -13,6 +13,7 @@ use Artesaos\SEOTools\Facades\JsonLd;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -187,7 +188,12 @@ class RecipeController extends Controller
      */
     public function destroy(Recipe $recipe)
     {
+        $userId = auth()->id();
+        $recipeId = $recipe->id;
+        
         $recipe->deletePreservingMedia();
+        
+        Log::info("Recipe {$recipeId} deleted by user {$userId}");
 
         Session::flash('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd! 🧑‍🍳");
 

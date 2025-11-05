@@ -8,6 +8,7 @@ use App\Notifications\UserCreated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -116,7 +117,12 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
+        $userId = auth()->id();
+        $deletedUserId = $user->id;
+        
         $user->delete();
+        
+        Log::info("User {$deletedUserId} deleted by {$userId}");
 
         return redirect()->route('users.index')->with('success', "De gebruiker “<i>{$user->name}</i>” is succesvol verwijderd!");
     }

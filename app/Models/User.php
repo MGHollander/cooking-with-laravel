@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Jobs\DeleteUserWithRecipes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -46,9 +47,9 @@ class User extends Authenticatable
 
     protected static function booted()
     {
-        static::deleting(function ($user) {
+        static::deleted(function ($user) {
             if (!$user->isForceDeleting()) {
-                $user->recipes()->delete();
+                DeleteUserWithRecipes::dispatch($user->id);
             }
         });
     }
