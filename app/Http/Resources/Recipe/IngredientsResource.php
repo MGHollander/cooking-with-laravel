@@ -45,10 +45,11 @@ class IngredientsResource extends JsonResource
         $ingredient = ['full' => $ingredientString];
 
         // Search for an amount as number, fraction or decimal.
-        if (preg_match('/^(\d+\/\d+)|(\d+\s\d+\/\d+)|(\d+.\d+)|\d+/', $ingredientString, $matches)) { // Check To See If The Ingredient contains a certain amount.
-            $ingredient['amount'] = trim($matches[0]);
+        if (preg_match('/^(\d+\/\d+)|(\d+\s\d+\/\d+)|(\d+[.,]\d+)|\d+/', $ingredientString, $matches)) {
+            $amount = $matches[0];
+            $ingredient['amount'] = trim(str_replace(',', '.', $amount));
             // Remove the amount to extract the unit.
-            $ingredientString = trim(str_replace($ingredient['amount'], '', $ingredientString));
+            $ingredientString = trim(str_replace($amount, '', $ingredientString));
         }
 
         // Search for a unit.
