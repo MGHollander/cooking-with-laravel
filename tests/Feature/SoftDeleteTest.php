@@ -53,8 +53,10 @@ class SoftDeleteTest extends TestCase
     public function test_soft_deleted_records_are_excluded_from_queries()
     {
         $activeUser = User::factory()->create();
+        $activeRecipe = Recipe::factory()->for($activeUser, 'author')->create();
 
         $deletedUser = User::factory()->create();
+        $deletedUserRecipe = Recipe::factory()->for($deletedUser, 'author')->create();
 
         $deletedUser->delete();
 
@@ -76,5 +78,34 @@ class SoftDeleteTest extends TestCase
 
         $this->assertEquals(1, User::onlyTrashed()->count());
         $this->assertEquals($deletedUser->id, User::onlyTrashed()->first()->id);
+    }
+
+    public function test_recipes_from_deleted_users_are_not_shown_in_index()
+    {
+        $activeUser = User::factory()->create();
+        $activeRecipe = Recipe::factory()->for($activeUser, 'author')->create();
+
+        $deletedUser = User::factory()->create();
+        $deletedUserRecipe = Recipe::factory()->for($deletedUser, 'author')->create();
+
+        $deletedUser->delete();
+
+        $response = $this->get(route('home'));
+
+        $response->assertStatus(200);
+        $response->assertSee($activeRecipe->title);
+        $response->assertDontSee($deletedUserRecipe->title);
+    }
+
+    public function test_recipes_from_deleted_users_return_404_on_show()
+    {
+        $deletedUser = User::factory()->create();
+        $recipe = Recipe::factory()->for($deletedUser, 'author')->create();
+
+        $deletedUser->delete();
+
+        $response = $this->get(route('recipes.show', $recipe->slug));
+
+        $response->assertStatus(404);
     }
 }

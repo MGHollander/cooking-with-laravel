@@ -122,7 +122,7 @@ class UserController extends Controller
         
         $user->delete();
         
-        Log::info("User {$deletedUserId} deleted by {$userId}");
+        Log::info("User {$deletedUserId} deleted by user {$userId}");
 
         return redirect()->route('users.index')->with('success', "De gebruiker “<i>{$user->name}</i>” is succesvol verwijderd!");
     }

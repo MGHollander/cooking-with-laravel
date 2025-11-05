@@ -76,4 +76,9 @@ class Recipe extends Model implements HasMedia
             ->format('webp')
             ->nonQueued();
     }
+
+    public function scopeWithActiveAuthor($query)
+    {
+        return $query->whereHas('author');
+    }
 }

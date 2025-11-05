@@ -33,6 +33,7 @@ class RecipeController extends Controller
     {
         return view('kocina.recipes.index', [
             'recipes' => Recipe::query()
+                ->whereHas('author')
                 ->orderBy('id', 'desc')
                 ->paginate(12)
                 ->through(fn ($recipe) => [
@@ -87,7 +88,7 @@ class RecipeController extends Controller
     // TODO Are these return types correct? Should the doc blocks exisit at all or is it overkill with typing?
     public function show(Request $request, string $slug): JsonResponse|View|Response
     {
-        $recipe = Recipe::findBySlug($slug);
+        $recipe = Recipe::where('slug', $slug)->whereHas('author')->first();
 
         if (! $recipe) {
             return $this->notFound($slug);

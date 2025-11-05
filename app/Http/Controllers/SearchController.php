@@ -15,7 +15,7 @@ class SearchController extends Controller
     public function index(Request $request): View
     {
         $searchKey = $request->get('q', '');
-        $recipes = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
+        $recipes = Search::add(Recipe::with('author')->withActiveAuthor(), ['title', 'ingredients', 'instructions', 'tags.name'])
             ->paginate(12)
             ->beginWithWildcard()
             ->search(strtolower($searchKey))
