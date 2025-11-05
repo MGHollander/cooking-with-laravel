@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Recipe\RecipeRequest;
 use App\Http\Resources\Recipe\IngredientsResource;
 use App\Http\Resources\StructuredData\Recipe\IngredientsResource as StructuredDataIngredientsResource;
-use App\Http\Resources\StructuredData\Recipe\InstructionsResource;
+use App\Http\Resources\StructuredData\Recipe\InstructionsResource as StructuredDataInstructionsResource;
 use App\Http\Traits\FillableAttributes;
 use App\Models\Recipe;
 use Artesaos\SEOTools\Facades\JsonLd;
@@ -113,12 +113,6 @@ class RecipeController extends Controller
                 'source_label' => $recipe->source_label,
                 'source_link' => $recipe->source_link,
                 'created_at' => $recipe->created_at,
-                'structured_data' => [
-                    'description' => strip_tags($recipe->summary),
-                    'ingredients' => new StructuredDataIngredientsResource($recipe->ingredients),
-                    'instructions' => new InstructionsResource($recipe->instructions),
-                    'keywords' => implode(',', $recipe->tags->pluck('name')->toArray()),
-                ],
             ],
             // TODO Replace for SEO Tools
             'open_graph' => [
@@ -290,7 +284,7 @@ class RecipeController extends Controller
             'datePublished' => $recipe->created_at,
             'recipeYield' => $recipe->servings,
             'recipeIngredient' => new StructuredDataIngredientsResource($recipe->ingredients),
-            'recipeInstructions' => new InstructionsResource($recipe->instructions),
+            'recipeInstructions' => new StructuredDataInstructionsResource($recipe->instructions),
         ]);
 
         $image = $recipe->getFirstMediaUrl('recipe_image', 'show');

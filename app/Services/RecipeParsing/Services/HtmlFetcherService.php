@@ -60,6 +60,6 @@ class HtmlFetcherService implements HtmlFetcherInterface
         $html = $this->fetch($url);
 
         // Convert encoding for structured data parsing as done in the original code
-        return mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        return mb_convert_encoding($html, 'UTF-8', 'UTF-8');
     }
 }

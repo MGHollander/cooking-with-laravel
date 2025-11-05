@@ -285,37 +285,37 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
     // Property parsing methods (simplified versions of the original)
     private function parse_name($values): void
     {
-        $this->recipeData['title'] = $this->getFirstValue($values);
+        $this->recipeData['title'] = $this->cleanText($this->getFirstValue($values));
     }
 
     private function parse_description($values): void
     {
-        $this->recipeData['description'] = $this->getFirstValue($values);
+        $this->recipeData['description'] = $this->cleanText($this->getFirstValue($values));
     }
 
     private function parse_keywords($values): void
     {
-        $this->recipeData['keywords'] = $this->getFirstValue($values);
+        $this->recipeData['keywords'] = $this->cleanText($this->getFirstValue($values));
     }
 
     private function parse_recipeyield($values): void
     {
-        $this->recipeData['yield'] = $this->getFirstValue($values);
+        $this->recipeData['yield'] = $this->cleanText($this->getFirstValue($values));
     }
 
     private function parse_preptime($values): void
     {
-        $this->recipeData['prepTime'] = $this->getFirstValue($values);
+        $this->recipeData['prepTime'] = $this->cleanText($this->getFirstValue($values));
     }
 
     private function parse_cooktime($values): void
     {
-        $this->recipeData['cookTime'] = $this->getFirstValue($values);
+        $this->recipeData['cookTime'] = $this->cleanText($this->getFirstValue($values));
     }
 
     private function parse_totaltime($values): void
     {
-        $this->recipeData['totalTime'] = $this->getFirstValue($values);
+        $this->recipeData['totalTime'] = $this->cleanText($this->getFirstValue($values));
     }
 
     private function parse_image($values): void
@@ -349,7 +349,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
         try {
             if (is_array($values)) {
                 $this->recipeData['ingredients'] = Collection::make($values)
-                    ->transform(fn ($item) => html_entity_decode($item))
+                    ->transform(fn ($item) => $this->cleanText($item))
                     ->all();
 
                 Log::debug('Successfully parsed recipe ingredients', [
@@ -375,7 +375,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
                 if ($item instanceof Item) {
                     $this->processInstructionItem($item);
                 } else {
-                    $this->recipeData['steps'][] = html_entity_decode($item);
+                    $this->recipeData['steps'][] = $this->cleanText($item);
                 }
             }
 
@@ -414,7 +414,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             $name = $this->sanitizeName($name);
 
             if ($name === 'name') {
-                $this->recipeData['steps'][] = '<p><strong>'.html_entity_decode($values[0]).'</strong></p>';
+                $this->recipeData['steps'][] = '<p><strong>'.$this->cleanText($values[0]).'</strong></p>';
             }
 
             if ($name === 'itemlistelement') {
@@ -429,7 +429,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             $name = $this->sanitizeName($name);
 
             if ($name === 'text') {
-                $this->recipeData['steps'][] = html_entity_decode($values[0]);
+                $this->recipeData['steps'][] = $this->cleanText($values[0]);
             }
         }
     }
@@ -453,7 +453,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
             $name = $this->sanitizeName($name);
 
             if ($name === 'text') {
-                $this->recipeData['steps'][] = '<li>'.html_entity_decode($values[0]).'</li>';
+                $this->recipeData['steps'][] = '<li>'.$this->cleanText($values[0]).'</li>';
             }
         }
     }
@@ -492,5 +492,14 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
     private function sanitizeName(string $name): string
     {
         return Str::replace(['http://schema.org/', 'https://schema.org/'], '', Str::lower($name));
+    }
+
+    private function cleanText(string $text): string
+    {
+        // First ensure the text is properly UTF-8 encoded
+        $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
+        
+        // Decode HTML entities
+        return html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 }
