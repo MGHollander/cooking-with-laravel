@@ -38,8 +38,13 @@ class RecipeSeeder extends Seeder
             ]);
 
             if (! empty($recipe->image)) {
-                $model->addMediaFromUrl($recipe->image)
-                    ->toMediaCollection('recipe_image');
+                try {
+                    $model->addMediaFromUrl($recipe->image)
+                        ->toMediaCollection('recipe_image');
+                } catch (\Spatie\MediaLibrary\MediaCollections\Exceptions\UnreachableUrl $e) {
+                    // Log the error and continue seeding
+                    
+                }
             }
         }
     }

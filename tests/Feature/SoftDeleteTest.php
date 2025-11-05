@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\DeleteUserWithRecipes;
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,9 +15,12 @@ class SoftDeleteTest extends TestCase
     public function test_user_soft_delete_cascades_to_recipes()
     {
         $user = User::factory()->create();
-        $recipe = Recipe::factory()->for($user)->create();
+        $recipe = Recipe::factory()->for($user, 'author')->create();
 
         $user->delete();
+
+        $job = new DeleteUserWithRecipes($user->id);
+        $job->handle();
 
         $this->assertTrue($user->trashed());
         $this->assertTrue($recipe->fresh()->trashed());
@@ -38,7 +42,6 @@ class SoftDeleteTest extends TestCase
     {
         $recipe = Recipe::factory()->create();
 
-        // Simulate adding media (we'll test the relationship exists)
         $mediaCount = $recipe->getMedia('recipe_image')->count();
 
         $recipe->delete();
@@ -50,12 +53,13 @@ class SoftDeleteTest extends TestCase
     public function test_soft_deleted_records_are_excluded_from_queries()
     {
         $activeUser = User::factory()->create();
-        $activeRecipe = Recipe::factory()->for($activeUser)->create();
 
         $deletedUser = User::factory()->create();
-        $deletedRecipe = Recipe::factory()->for($deletedUser)->create();
 
         $deletedUser->delete();
+
+        $job = new DeleteUserWithRecipes($deletedUser->id);
+        $job->handle();
 
         $this->assertEquals(1, User::count());
         $this->assertEquals(1, Recipe::count());
