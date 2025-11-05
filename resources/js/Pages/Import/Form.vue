@@ -49,6 +49,7 @@ const form = useForm({
   source_link: "",
   import_log_id: null,
   return_to_import_page: false,
+  no_index: true, // Default to true for imported recipes
 });
 
 const submitForm = () => {
@@ -364,6 +365,14 @@ onMounted(() => {
                 </Button>
               </div>
               <InputError :message="form.errors.source_link" />
+            </div>
+
+            <div class="col-span-12 space-y-1">
+              <label class="flex items-center">
+                <input v-model="form.no_index" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
+                <span class="ml-2 text-sm text-gray-600">Zoekmachines mogen dit recept niet indexeren</span>
+              </label>
+              <InputError :message="form.errors.no_index" />
             </div>
           </div>
 

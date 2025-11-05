@@ -25,6 +25,7 @@ class SearchController extends Controller
                 'title' => $recipe->title,
                 'slug' => $recipe->slug,
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
+                'no_index' => $recipe->no_index,
             ]);
 
         return view('kocina.search.index', [

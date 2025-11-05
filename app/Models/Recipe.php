@@ -31,6 +31,7 @@ class Recipe extends Model implements HasMedia
         'instructions',
         'source_label',
         'source_link',
+        'no_index',
     ];
 
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo

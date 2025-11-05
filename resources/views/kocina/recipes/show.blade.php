@@ -4,7 +4,9 @@
     </x-slot>
 
     <x-slot name="meta">
-        <link rel="canonical" href="{{ route("recipes.show", ["slug" => $recipe["slug"]]) }}" />
+        @if($recipe["no_index"])
+            <meta name="robots" content="noindex" />
+        @endif
     </x-slot>
 
     <div

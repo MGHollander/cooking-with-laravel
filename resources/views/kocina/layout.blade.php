@@ -6,6 +6,10 @@
 
     <title>{{ (! empty($title) ? $title . " - " : "") . config("app.name") }}</title>
 
+    @if (!empty($meta))
+      {{ $meta }}
+    @endif
+
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap" />
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Leckerli+One&display=swap" />

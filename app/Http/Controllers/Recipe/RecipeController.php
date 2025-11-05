@@ -39,6 +39,7 @@ class RecipeController extends Controller
                     'title' => $recipe->title,
                     'slug' => $recipe->slug,
                     'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
+                    'no_index' => $recipe->no_index,
                 ]),
         ]);
     }
@@ -113,6 +114,7 @@ class RecipeController extends Controller
                 'source_label' => $recipe->source_label,
                 'source_link' => $recipe->source_link,
                 'created_at' => $recipe->created_at,
+                'no_index' => $recipe->no_index,
             ],
             // TODO Replace for SEO Tools
             'open_graph' => [
@@ -146,6 +148,7 @@ class RecipeController extends Controller
                 'instructions' => strip_tags($recipe->instructions, '<strong><em><u><h3><ol><ul><li>'),
                 'source_label' => $recipe->source_label,
                 'source_link' => $recipe->source_link,
+                'no_index' => $recipe->no_index,
             ],
             'config' => [
                 'max_file_size' => config('media-library.max_file_size'),
@@ -204,6 +207,7 @@ class RecipeController extends Controller
                 'title' => $recipe->title,
                 'slug' => $recipe->slug,
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
+                'no_index' => $recipe->no_index,
             ]);
 
         return response()->view(
