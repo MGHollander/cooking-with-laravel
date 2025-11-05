@@ -187,7 +187,7 @@ class RecipeController extends Controller
      */
     public function destroy(Recipe $recipe)
     {
-        $recipe->delete();
+        $recipe->deletePreservingMedia();
 
         Session::flash('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd! 🧑‍🍳");
 
