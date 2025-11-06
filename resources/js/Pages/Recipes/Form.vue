@@ -248,7 +248,7 @@ onMounted(() => {
               </div>
             </div>
 
-            <input ref="file" type="file" class="hidden" accept="image/jpeg,image/png" @change="loadImage($event)" />
+            <input ref="file" type="file" class="hidden" accept="image/jpeg,image/png,image/webp,image/avif" @change="loadImage($event)" />
             <template v-if="image.src">
               <Button class="mr-1 text-xs" button-style="secondary" @click="file.click()">Vervang afbeelding</Button>
               <Button class="text-xs" button-style="danger" @click="destroyMedia">Verwijder afbeelding</Button>

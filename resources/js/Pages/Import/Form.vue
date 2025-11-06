@@ -250,6 +250,15 @@ onMounted(() => {
               <InputError :message="form.errors.external_image" />
             </div>
 
+            <div v-else class="col-span-12 space-y-1">
+              <Label for="image" value="Afbeelding" />
+              <div class="rounded-md bg-yellow-50 p-4 border border-yellow-200">
+                <p class="text-sm text-yellow-800">
+                  Er zijn geen geldige afbeeldingen gevonden voor dit recept. Het recept wordt geïmporteerd zonder afbeelding.
+                </p>
+              </div>
+            </div>
+
             <div class="col-span-12 space-y-1">
               <Label for="summary" value="Samenvatting (optioneel)" />
               <TipTapEditor

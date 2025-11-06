@@ -140,7 +140,7 @@ return [
     'custom' => [
         'external_image' => [
             'not_found' => 'De externe afbeelding kon niet worden gevonden.',
-            'invalid_type' => 'De externe afbeelding is van een ongeldig type. Alleen JPEG en PNG zijn toegestaan.',
+            'invalid_type' => 'De externe afbeelding is van een ongeldig type. Alleen AVIF, JPEG, PNG en WEBP zijn toegestaan.',
         ],
     ],
 

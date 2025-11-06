@@ -93,7 +93,12 @@ class ImportController extends Controller
                     $existingImport->parsed_data
                 );
 
-                $recipe = new ImportResource($parsedData->toArray());
+                $validImages = $this->filterValidImages($parsedData->images);
+
+                $recipeArray = $parsedData->toArray();
+                $recipeArray['images'] = $validImages;
+
+                $recipe = new ImportResource($recipeArray);
 
                 return [
                     'recipe' => $recipe,
@@ -143,7 +148,12 @@ class ImportController extends Controller
                 $parsedResult
             );
 
-            $recipe = new ImportResource($parsedResult->recipe->toArray());
+            $validImages = $this->filterValidImages($parsedResult->recipe->images);
+
+            $recipeArray = $parsedResult->recipe->toArray();
+            $recipeArray['images'] = $validImages;
+
+            $recipe = new ImportResource($recipeArray);
 
             return [
                 'recipe' => $recipe,
@@ -207,6 +217,40 @@ class ImportController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch image: '.$e->getMessage()], 500);
         }
+    }
+
+    private function filterValidImages(?array $images): array
+    {
+        if (empty($images)) {
+            return [];
+        }
+
+        $validImages = [];
+
+        foreach ($images as $imageUrl) {
+            try {
+                $response = \Illuminate\Support\Facades\Http::timeout(5)->get($imageUrl);
+
+                if (! $response->successful()) {
+                    continue;
+                }
+
+                $imageInfo = getimagesizefromstring($response->body());
+
+                if ($imageInfo !== false && in_array($imageInfo[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_AVIF, IMAGETYPE_WEBP], true)) {
+                    $validImages[] = $imageUrl;
+                }
+            } catch (\Exception $e) {
+                Log::debug('Failed to validate image', [
+                    'url' => $imageUrl,
+                    'error' => $e->getMessage(),
+                ]);
+
+                continue;
+            }
+        }
+
+        return $validImages;
     }
 
     /**

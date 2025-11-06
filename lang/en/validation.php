@@ -151,7 +151,7 @@ return [
     'custom' => [
         'external_image' => [
             'not_found' => 'The external image could not be found.',
-            'invalid_type' => 'The external image is not a valid image type. Only JPEG and PNG are allowed.',
+            'invalid_type' => 'The external image is not a valid image type. Only AVIF, JPEG, PNG and WEBP are allowed.',
         ],
     ],
 

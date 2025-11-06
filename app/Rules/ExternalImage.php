@@ -22,9 +22,18 @@ class ExternalImage implements ValidationRule
             return;
         }
 
-        $imageType = exif_imagetype($value);
-        if (! in_array($imageType, [IMAGETYPE_JPEG, IMAGETYPE_PNG], true)) {
+        try {
+            $imageInfo = getimagesizefromstring($externalImage->body());
+
+            if ($imageInfo === false || ! in_array($imageInfo[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_AVIF, IMAGETYPE_WEBP], true)) {
+                $fail('validation.custom.external_image.invalid_type')->translate();
+
+                return;
+            }
+        } catch (\Throwable $e) {
             $fail('validation.custom.external_image.invalid_type')->translate();
+
+            return;
         }
     }
 }
