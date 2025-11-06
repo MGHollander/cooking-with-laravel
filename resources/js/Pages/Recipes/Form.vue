@@ -181,7 +181,7 @@ onMounted(() => {
 
   <DefaultLayout>
     <template #header>
-      {{ title }} <a v-if="edit" :href="route('recipes.show', props.recipe)" class="ml-4 text-sm">Bekijk het recept</a>
+      {{ title }} <a v-if="edit" :href="route('recipes.show', props.recipe.slug)" class="ml-4 text-sm">Bekijk het recept</a>
     </template>
 
     <form class="mx-auto mb-12 max-w-3xl space-y-8" @submit.prevent="save">
