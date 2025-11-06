@@ -90,13 +90,13 @@ onMounted(() => {
       })
       .then((response) => {
         const recipe = response.data.recipe;
-
+        
         form.title = recipe.title;
         form.external_image = recipe?.images?.length > 0 ? recipe.images[0] : "";
         form.summary = recipe.summary;
         form.tags = recipe.tags;
-        form.preparation_minutes = String(recipe.preparation_minutes);
-        form.cooking_minutes = String(recipe.cooking_minutes);
+        form.preparation_minutes = recipe.preparation_minutes ? String(recipe.preparation_minutes) : "";
+        form.cooking_minutes = recipe.cooking_minutes ? String(recipe.cooking_minutes) : "";
         form.servings = String(recipe.servings);
         form.difficulty = recipe.difficulty;
         form.ingredients = recipe.ingredients;
