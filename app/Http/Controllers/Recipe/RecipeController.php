@@ -21,6 +21,7 @@ use Illuminate\View\View;
 use Inertia\Inertia;
 use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 use Symfony\Component\HttpFoundation\Response;
+use App\Support\ImageTypeHelper;
 
 class RecipeController extends Controller
 {
@@ -57,6 +58,7 @@ class RecipeController extends Controller
             'config' => [
                 'max_file_size' => config('media-library.max_file_size'),
                 'image_dimensions' => config('media-library.image_dimensions.recipe'),
+                'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
         ]);
     }
@@ -155,6 +157,7 @@ class RecipeController extends Controller
             'config' => [
                 'max_file_size' => config('media-library.max_file_size'),
                 'image_dimensions' => config('media-library.image_dimensions.recipe'),
+                'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Support\ImageTypeHelper;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Http;
@@ -25,13 +26,17 @@ class ExternalImage implements ValidationRule
         try {
             $imageInfo = getimagesizefromstring($externalImage->body());
 
-            if ($imageInfo === false || ! in_array($imageInfo[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_AVIF, IMAGETYPE_WEBP], true)) {
-                $fail('validation.custom.external_image.invalid_type')->translate();
+            if ($imageInfo === false || ! in_array($imageInfo[2], ImageTypeHelper::getImageTypeConstants(), true)) {
+                $fail('validation.custom.external_image.invalid_type', [
+                    'supported_types' => ImageTypeHelper::getHumanReadableList('recipe', app()->getLocale()),
+                ])->translate();
 
                 return;
             }
         } catch (\Throwable $e) {
-            $fail('validation.custom.external_image.invalid_type')->translate();
+            $fail('validation.custom.external_image.invalid_type', [
+                'supported_types' => ImageTypeHelper::getHumanReadableList('recipe', app()->getLocale()),
+            ])->translate();
 
             return;
         }

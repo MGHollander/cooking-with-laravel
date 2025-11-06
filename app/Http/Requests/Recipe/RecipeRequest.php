@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Recipe;
 
 use App\Rules\ExternalImage;
+use App\Support\ImageTypeHelper;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RecipeRequest extends FormRequest
@@ -16,7 +17,7 @@ class RecipeRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'media' => ['nullable', 'image', 'mimes:jpg,png,webp,avif', 'max:'.(config('media-library.max_file_size', 1024 * 1024 * 4) / 1024)],
+            'media' => ['nullable', 'image', 'mimes:' . ImageTypeHelper::getMimes(), 'max:'.(config('media-library.max_file_size', 1024 * 1024 * 4) / 1024)],
             'external_image' => ['nullable', 'url', new ExternalImage],
             'tags' => ['nullable', 'string'],
             'servings' => ['required', 'integer', 'min:1'],

@@ -34,6 +34,49 @@ return [
     ],
 
     /*
+     * Supported image types for different contexts
+     *
+     * This configuration centralizes all supported image types in one place.
+     * When you need to add a new image type (e.g., GIF), simply add it here
+     * and all validation rules, HTML accept attributes, and error messages
+     * will automatically update throughout the application.
+     *
+     * Structure:
+     * - extension: File extension used in Laravel validation (e.g., 'jpg')
+     * - mime_type: MIME type for HTML accept attributes (e.g., 'image/jpeg')
+     * - imagetype_constant: PHP IMAGETYPE_* constant for getimagesize() validation
+     * - display_name: Human-readable name for error messages
+     *
+     * Usage:
+     * - Laravel validation: App\Support\ImageTypeHelper::getMimes()
+     * - HTML accept attr: App\Support\ImageTypeHelper::getMimeTypes()
+     * - PHP validation: App\Support\ImageTypeHelper::getImageTypeConstants()
+     * - Error messages: App\Support\ImageTypeHelper::getHumanReadableList()
+     */
+    'supported_image_types' => [
+        'recipe' => [
+            'jpeg' => [
+                'extension' => 'jpg',
+                'mime_type' => 'image/jpeg',
+                'imagetype_constant' => IMAGETYPE_JPEG,
+                'display_name' => 'JPEG',
+            ],
+            'png' => [
+                'extension' => 'png',
+                'mime_type' => 'image/png',
+                'imagetype_constant' => IMAGETYPE_PNG,
+                'display_name' => 'PNG',
+            ],
+            'webp' => [
+                'extension' => 'webp',
+                'mime_type' => 'image/webp',
+                'imagetype_constant' => IMAGETYPE_WEBP,
+                'display_name' => 'WEBP',
+            ],
+        ],
+    ],
+
+    /*
      * This queue connection will be used to generate derived and responsive images.
      * Leave empty to use the default queue connection.
      */

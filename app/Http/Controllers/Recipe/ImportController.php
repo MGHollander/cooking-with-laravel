@@ -13,6 +13,7 @@ use App\Services\ImportLogService;
 use App\Services\RecipeParsing\Data\ParsedRecipeData;
 use App\Services\RecipeParsing\Services\RecipeParsingService;
 use App\Support\FileHelper;
+use App\Support\ImageTypeHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -65,6 +66,7 @@ class ImportController extends Controller
             'force_import' => $forceImport,
             'config' => [
                 'image_dimensions' => config('media-library.image_dimensions.recipe'),
+                'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
         ]);
     }
@@ -105,6 +107,7 @@ class ImportController extends Controller
                     'import_log_id' => $importLog->id,
                     'config' => [
                         'image_dimensions' => config('media-library.image_dimensions.recipe'),
+                        'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
                     ],
                 ];
             } catch (\Exception $e) {
@@ -237,7 +240,7 @@ class ImportController extends Controller
 
                 $imageInfo = getimagesizefromstring($response->body());
 
-                if ($imageInfo !== false && in_array($imageInfo[2], [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_AVIF, IMAGETYPE_WEBP], true)) {
+                if ($imageInfo !== false && in_array($imageInfo[2], ImageTypeHelper::getImageTypeConstants(), true)) {
                     $validImages[] = $imageUrl;
                 }
             } catch (\Exception $e) {
