@@ -11,7 +11,7 @@
       </div>
 
       <div class="recipes-grid">
-        <h2 class="recipes-title">Recepten</h2>
+        <h2 class="recipes-title">{{ __('recipes.index.title') }}</h2>
 
         <x-kocina.search-bar class="recipes-search" />
       </div>

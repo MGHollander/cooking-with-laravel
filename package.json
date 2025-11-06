@@ -52,6 +52,7 @@
         "@vueuse/core": "^10.11.0",
         "alpinejs": "^3.14.1",
         "dayjs": "^1.11.9",
+        "laravel-vue-i18n": "^2.8.0",
         "vue-advanced-cropper": "^2.8.8",
         "ziggy-js": "^2.5.0"
     }

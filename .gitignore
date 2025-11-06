@@ -5,6 +5,7 @@
 /storage/*.key
 /storage/media-library
 /vendor
+lang/php_*.json
 .env
 .env.backup
 .phpunit.result.cache
