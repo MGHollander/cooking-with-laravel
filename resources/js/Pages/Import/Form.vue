@@ -318,12 +318,7 @@ onMounted(() => {
                 <Textarea v-model="form.ingredients" rows="10" class="block w-full" required />
                 <InputError :message="form.errors.ingredients" />
                 <p class="!my-3 text-xs text-gray-500">{{ $t('recipes.form.ingredients_help') }}</p>
-                <ul class="list-outside pl-4 text-xs text-gray-500">
-                  <li>{{ $t('recipes.form.ingredients_help_1') }}</li>
-                  <li>{{ $t('recipes.form.ingredients_help_2') }}</li>
-                  <li>{{ $t('recipes.form.ingredients_help_3') }}</li>
-                  <li>{{ $t('recipes.form.ingredients_help_4') }}</li>
-                </ul>
+                <ul class="list-outside pl-4 text-xs text-gray-500" v-html="$t('recipes.form.ingredients_help_text')" />
               </div>
             </div>
           </div>
