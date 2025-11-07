@@ -20,4 +20,5 @@ return [
         'switch_language' => 'Taal wijzigen',
     ],
 
+    'copyright' => 'Ontstaan uit de passie voor programmeren van <a href="https://mghollander.nl" target="_blank">Marc</a>.',
 ];

@@ -23,7 +23,7 @@ const toggleNav = (nav) => {
 
 <template>
   <div>
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-gray-100 relative">
       <nav class="border-b border-gray-100 bg-white">
         <!-- Primary Navigation Menu -->
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -296,10 +296,13 @@ const toggleNav = (nav) => {
         </div>
       </main>
 
-      <footer>
+      <footer class="absolute bottom-0 w-full">
         <div class="px-4 pb-4">
           <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <a :href="route('privacy')" class="text-gray-900 hover:text-gray-500">{{ $t('nav.privacy') }}</a>
+            <div class="flex items-center justify-between text-gray-600">
+              <p v-html="$t('app.copyright')"/>
+              <a :href="route('privacy')">{{ $t('nav.privacy') }}</a>
+            </div>
           </div>
         </div>
       </footer>

@@ -51,9 +51,7 @@
 
     <div class="container footer">
       <div class="footer-text">
-        Ontstaan uit de passie voor programmeren van
-        <a href="https://mghollander.nl" target="_blank">Marc</a>
-        .
+        {!! __("app.copyright") !!}
       </div>
       <div class="footer-links"><a href="{{ route("privacy") }}">Privacy</a></div>
     </div>

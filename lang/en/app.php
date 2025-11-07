@@ -20,4 +20,5 @@ return [
         'switch_language' => 'Switch language',
     ],
 
+    'copyright' => 'Born from the passion for programming of <a href="https://mghollander.nl" target="_blank">Marc</a>.',
 ];
