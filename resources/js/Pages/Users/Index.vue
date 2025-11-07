@@ -8,7 +8,7 @@ import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import Pagination from "@/Components/Pagination.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
-import { trans } from "laravel-vue-i18n/*";
+import { trans } from 'laravel-vue-i18n';
 
 let props = defineProps({
   users: Object,
