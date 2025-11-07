@@ -167,15 +167,6 @@ import { trans } from 'laravel-vue-i18n';
 </template>
 ```
 
-## Next Steps
-
-1. **Build assets**: Run `./vendor/bin/sail npm run build` or `./vendor/bin/sail npm run dev`
-2. **Create translation files**: Add more translation keys as needed
-3. **Update Vue components**: Replace hardcoded Dutch text with translation functions
-4. **Update Blade views**: Replace hardcoded text with `__()` or `@lang()` helpers
-5. **Implement locale switching**: Add a language switcher component
-6. **Set default locale**: Configure in `config/app.php`
-
 ## Configuration
 
 ### Default Locale
@@ -202,6 +193,103 @@ Consider adding a config for available locales:
 4. **Stay consistent**: Use the same key format across files
 5. **Add context**: Use descriptive key names like `recipes.form.title` vs just `title`
 
+## Domain-Based Locale Switching
+
+The application supports automatic locale switching based on the domain name. This allows different language versions to be served from different domains.
+
+### How It Works
+
+The locale is determined by the domain mapping configured in `config/app.php`:
+
+```php
+'locale_domains' => [
+    'savedflavors.local.nl' => 'nl',
+    'savedflavors.local.com' => 'en',
+    'savedflavors.nl' => 'nl',
+    'savedflavors.com' => 'en',
+],
+```
+
+The `LocaleMiddleware` checks the request's host against this mapping and automatically sets the appropriate locale for each request.
+
+### Priority Order
+
+The locale detection follows this priority:
+
+1. **Cookie**: `preferred_locale` cookie (set by user preference)
+2. **Domain**: Domain mapping from `locale_domains` config
+3. **Fallback**: Default locale from `config('app.locale')`
+
+### Testing on Localhost
+
+To test domain-based locale switching on localhost, you need to set up multiple domains pointing to your local development server.
+
+1. **Edit your hosts file** (`/etc/hosts` on macOS/Linux, `C:\Windows\System32\drivers\etc\hosts` on Windows):
+
+```bash
+# Add these lines to your hosts file
+127.0.0.1    savedflavors.local.nl
+127.0.0.1    savedflavors.local.com
+```
+
+2. **Test the domains**:
+   - Visit `http://savedflavors.local.nl:81` → Dutch locale
+   - Visit `http://savedflavors.local.com:81` → English locale
+
+### Manual Locale Switching
+
+You can also manually switch locales using the `LocaleController` or by setting cookies:
+
+```php
+// In a controller or route
+app()->setLocale('nl');
+
+// Or via POST request to /locale
+POST /locale
+Content-Type: application/json
+{"locale": "nl"}
+```
+
+### Debugging Locale Issues
+
+To debug locale detection:
+
+1. **Check current locale** in any controller or view:
+```php
+dd(app()->getLocale()); // Current locale
+dd(config('app.available_locales')); // Available locales
+dd(request()->getHost()); // Current host
+```
+
+2. **Check middleware execution** by adding logging to `LocaleMiddleware.php`:
+```php
+public function handle(Request $request, Closure $next): Response
+{
+    $locale = $this->determineLocale($request);
+    Log::info('Detected locale', ['locale' => $locale, 'host' => $request->getHost()]);
+    // ... rest of code
+}
+```
+
+3. **Clear caches** after configuration changes:
+```bash
+./vendor/bin/sail artisan cache:clear
+./vendor/bin/sail artisan config:clear
+```
+
+### Production Considerations
+
+- Ensure your production domains are properly configured in the `locale_domains` array
+- Consider using environment variables for domain configuration:
+```php
+'locale_domains' => [
+    env('DOMAIN_NL', 'savedflavors.nl') => 'nl',
+    env('DOMAIN_EN', 'savedflavors.com') => 'en',
+],
+```
+- Set up proper SSL certificates for all domains
+- Configure your CDN (if used) to handle multiple domains correctly
+
 ## Troubleshooting
 
 ### Translations Not Showing
@@ -215,8 +303,27 @@ Consider adding a config for available locales:
 
 During development with `npm run dev`, translation changes are automatically picked up!
 
+### Translations Not Working
+
+1. **Check domain configuration**: Ensure the domain is correctly mapped in `locale_domains`
+2. **Verify middleware registration**: Confirm `LocaleMiddleware` is registered in `app/Http/Kernel.php`
+3. **Clear caches**: Run `./vendor/bin/sail artisan cache:clear`
+4. **Check translation files**: Ensure files exist in `lang/{locale}/` directories
+
+### Domain Not Recognized
+
+1. **Check hosts file**: Verify local domains are properly configured
+2. **Restart services**: Restart your web server or Docker containers
+3. **Check DNS**: For production domains, ensure DNS is properly configured
+4. **Browser cache**: Clear browser cache and cookies
+
+### Cookie-Based Switching Not Working
+
+1. **Check cookie settings**: Ensure cookies are enabled in browser
+2. **Verify cookie domain**: Cookies may not work across different domains
+3. **Check HTTPS**: Some browsers restrict cookies on HTTP localhost
+
 ## Resources
 
-- [laravel-vue-i18n Documentation](https://github.com/xiCO2k/laravel-vue-i18n)
 - [Laravel Localization](https://laravel.com/docs/11.x/localization)
-- [Vue I18n Concepts](https://vue-i18n.intlify.dev/)
+- [laravel-vue-i18n Documentation](https://github.com/xiCO2k/laravel-vue-i18n)
