@@ -24,10 +24,10 @@
                     <div class="recipe-meta-icon">
                         <x-icon.cutlery />
                     </div>
-                    {{ __('recipes.show.servings') }}
+                    {{ __('recipes.show.servings_title') }}
                 </dt>
                 <dd x-text="servingsText">
-                    {{ $recipe["servings"] }} {{ $recipe["servings"] === 1 ? __('recipes.show.serving') : __('recipes.show.servings') }}
+                    {{ $recipe["servings"] }} {{ trans_choice('recipes.show.servings', $recipe["servings"]) }}
                 </dd>
             </dl>
 
@@ -37,7 +37,7 @@
                         <div class="recipe-meta-icon">
                             <x-icon.knife-thin />
                         </div>
-                        {{ __('recipes.show.preparation') }}
+                        {!! __('recipes.show.preparation') !!}
                     </dt>
                     <dd>{{ $recipe["preparation_minutes"] }} {{ $recipe["preparation_minutes"] === 1 ? __('recipes.show.minute') : __('recipes.show.minutes') }}</dd>
                 </dl>
@@ -49,7 +49,7 @@
                         <div class="recipe-meta-icon">
                             <x-icon.cooking-pot />
                         </div>
-                        {{ __('recipes.show.cooking') }}
+                        {!! __('recipes.show.cooking') !!}
                     </dt>
                     <dd>{{ $recipe["cooking_minutes"] }} {{ $recipe["cooking_minutes"] === 1 ? __('recipes.show.minute') : __('recipes.show.minutes') }}</dd>
                 </dl>

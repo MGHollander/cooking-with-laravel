@@ -13,6 +13,7 @@ return [
     'average' => 'gemiddeld',
     'difficult' => 'moeilijk',
     'show' => [
+        'servings_title' => 'Aantal porties',
         'preparation' => 'Voor&shy;be&shy;rei&shy;ding',
         'cooking' => 'Be&shy;rei&shy;ding',
         'added_by' => 'Toegevoegd door',
@@ -26,8 +27,7 @@ return [
         'preparation_time' => 'Voorbereidingstijd',
         'cooking_time' => 'Bereidingstijd',
         'minutes' => 'minuten',
-        'serving' => 'portie',
-        'servings' => 'porties',
+        'servings' => 'portie|porties',
         'servings_label' => 'Aantal porties',
         'minute' => 'minuut',
         'reset_servings' => 'Terug naar het standaard aantal porties',

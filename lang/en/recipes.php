@@ -13,6 +13,7 @@ return [
     'average' => 'average',
     'difficult' => 'difficult',
     'show' => [
+        'servings_title' => 'Servings',
         'preparation' => 'Pre&shy;pa&shy;ra&shy;tion',
         'cooking' => 'Cook&shy;ing',
         'added_by' => 'Added by',
@@ -26,8 +27,7 @@ return [
         'preparation_time' => 'Preparation time',
         'cooking_time' => 'Cooking time',
         'minutes' => 'minutes',
-        'serving' => 'serving',
-        'servings' => 'servings',
+        'servings' => 'serving|servings',
         'minute' => 'minute',
         'reset_servings' => 'Back to the default number of servings',
         'increase_servings' => 'Increase number of servings',

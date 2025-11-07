@@ -16,7 +16,7 @@
         </button>
 
         <p x-text="servingsText">
-            {{ $recipe["servings"] }} {{ $recipe["servings"] === 1 ? __('recipes.show.serving') : __('recipes.show.servings') }}
+            {{ $recipe["servings"] }} {{ trans_choice('recipes.show.servings', $recipe["servings"]) }}
         </p>
 
         <button
@@ -62,12 +62,11 @@
                                 class="recipe-ingredient"
                                 :class="{ 'striked' : strikedIngredientsList.has(ingredient) }"
                             >
-
                                 <template x-if="ingredient.amount">
-                                    <span x-text="Math.round(ingredient.amount * 100) / 100 + '&nbsp;'"></span>
+                                    <span x-text="Math.round(ingredient.amount * 100) / 100"></span>
                                 </template>
                                 <template x-if="ingredient.unit">
-                                    <span x-text="ingredient.unit + '&nbsp;'"></span>
+                                    <span x-text="ingredient.unit"></span>
                                 </template>
                                 <template x-if="ingredient.name_plural && ingredient.amount > 1">
                                     <span x-text="ingredient.name_plural"></span>
