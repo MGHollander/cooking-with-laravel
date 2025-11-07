@@ -10,13 +10,13 @@
         <div class="navbar-right">
             <x-language-switcher />
             
-            <button class="navbar-search-button" @click="toggleSearch()">
+            <button class="navbar-button navbar-search-button" @click="toggleSearch()">
                 <x-icon.magnify-glass width="24" height="24" />
             </button>
 
             <button
                 aria-label="{{ __('nav.expand_menu') }}"
-                class="navbar-nav-button"
+                class="navbar-button navbar-nav-button"
                 :class="{'navbar-nav-button-active' : openNav}"
                 @click="toggleNav()"
             >
@@ -31,12 +31,12 @@
                 @endguest
 
                 @auth
-                    <button class="navbar-user-button" @click="toggleAddRecipeMenu()">
+                    <button class="navbar-button navbar-user-button" @click="toggleAddRecipeMenu()">
                         <x-icon.plus width="24" height="24" />
                     </button>
 
                     <nav
-                        class="navbar-user-menu"
+                        class="navbar-dropdown-menu"
                         x-cloak
                         x-show="openAddRecipeMenu"
                         x-trap="openAddRecipeMenu"
@@ -47,12 +47,12 @@
                         <x-kocina.nav-list-add-recipe />
                     </nav>
 
-                    <button class="navbar-user-button" @click="toggleUserMenu()">
+                    <button class="navbar-button navbar-user-button" @click="toggleUserMenu()">
                         <x-icon.user width="24" height="24" />
                     </button>
 
                     <nav
-                        class="navbar-user-menu"
+                        class="navbar-dropdown-menu"
                         x-cloak
                         x-show="openUserMenu"
                         x-trap="openUserMenu"
