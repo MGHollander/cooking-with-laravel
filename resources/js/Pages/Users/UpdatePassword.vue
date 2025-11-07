@@ -22,7 +22,7 @@ const submit = () => {
 </script>
 
 <template>
-  <Head :title="title" />
+  <Head :title="$t('users.password.title')" />
 
   <DefaultLayout>
     <template #header>
