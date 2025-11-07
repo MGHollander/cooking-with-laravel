@@ -89,13 +89,8 @@ return [
     'not_found' => [
         'title' => 'Helaas, dit recept bestaat (nog) niet!',
         'description' => 'Gebruik de zoekbalk om je nieuwste favoriete recept te ontdekken.',
-        'found' => 'Met behulp van de woorden uit de link :verb er :count :recipe gevonden :that mogelijk toch interessant :verb2. Hiervoor zijn de volgende woorden gebruikt: :words',
-        'is' => 'is',
-        'zijn' => 'zijn',
-        'dat' => 'dat',
-        'die' => 'die',
-        'recipe' => 'recept',
-        'recipes' => 'recepten',
+        'found' => 'Met behulp van de woorden uit de bezochte pagina is <strong>één recept</strong> gevonden dat mogelijk toch interessant is.|Met behulp van de woorden uit de bezochte pagina zijn er <strong>:count recepten</strong> gevonden die mogelijk toch interessant zijn.',
+        'words_used' => 'Hiervoor is de volgende woord gebruikt: <strong>:words</strong>|Hiervoor zijn de volgende woorden gebruikt: <strong>:words</strong>',
         'hopefully' => 'Hopelijk zit er iets tussen!',
     ],
 ];

@@ -88,13 +88,8 @@ return [
     'not_found' => [
         'title' => 'Unfortunately, this recipe does not exist (yet)!',
         'description' => 'Use the search bar to discover your newest favorite recipe.',
-        'found' => 'Using the words from the link :verb :count :recipe found :that might still be interesting :verb2. The following words were used: :words',
-        'is' => 'is',
-        'zijn' => 'are',
-        'dat' => 'that',
-        'die' => 'that',
-        'recipe' => 'recipe',
-        'recipes' => 'recipes',
+        'found' => 'Using the words from the page you tried to visit, <strong>one recipe</strong> is found that might still be interesting. The following words were used: <strong>:words</strong>|Using the words from the page you tried to visit, <strong>:count recipes</strong> are found that might still be interesting. The following words were used: <strong>:words</strong>',
+        'words_used' => 'The following word is used: <strong>:words</strong>|The following words are used: <strong>:words</strong>',
         'hopefully' => 'Hopefully there\'s something in there!',
     ],
 ];

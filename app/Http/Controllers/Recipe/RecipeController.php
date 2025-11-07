@@ -224,7 +224,7 @@ class RecipeController extends Controller
             'kocina.recipes.not-found',
             [
                 'recipes' => $recipes,
-                'searchKey' => implode(', ', explode(' ', $searchKey)),
+                'searchWords' => explode(' ', $searchKey),
             ],
             Response::HTTP_NOT_FOUND
         );

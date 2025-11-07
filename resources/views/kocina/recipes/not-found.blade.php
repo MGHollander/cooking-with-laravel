@@ -15,14 +15,12 @@
             @if ($total > 0)
                 <div>
                     <p>
-                        {{ __('recipes.not_found.found', [
-                            'verb' => __($oneRecipe ? 'recipes.not_found.is' : 'recipes.not_found.zijn'),
-                            'count' => $total,
-                            'recipe' => __($oneRecipe ? 'recipes.not_found.recipe' : 'recipes.not_found.recipes'),
-                            'that' => __($oneRecipe ? 'recipes.not_found.dat' : 'recipes.not_found.die'),
-                            'verb2' => __($oneRecipe ? 'recipes.not_found.is' : 'recipes.not_found.zijn'),
-                            'words' => $searchKey
-                        ]) }}
+                        {!! trans_choice('recipes.not_found.found', $total, [
+                            'count' => $total
+                        ]) !!}
+                        {!! trans_choice('recipes.not_found.words_used', count($searchWords), [
+                            'words' => implode(', ', $searchWords)
+                        ]) !!}
                     </p>
 
                     <p>{{ __('recipes.not_found.hopefully') }}</p>
