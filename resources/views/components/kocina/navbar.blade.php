@@ -8,6 +8,8 @@
         </div>
 
         <div class="navbar-right">
+            <x-language-switcher />
+            
             <button class="navbar-search-button" @click="toggleSearch()">
                 <x-icon.magnify-glass width="24" height="24" />
             </button>

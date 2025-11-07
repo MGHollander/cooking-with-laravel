@@ -59,5 +59,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/gebruikers/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/gebruikers/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
+Route::post('/locale', [App\Http\Controllers\LocaleController::class, 'update'])->name('locale.update');
+
+require __DIR__.'/auth.php';
 
 require __DIR__.'/auth.php';
