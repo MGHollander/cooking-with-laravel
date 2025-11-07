@@ -3,10 +3,9 @@
     @if ($recipes->total() > 0)
       <div class="hero hero-plates-mirrored">
         <div class="hero-overlay"></div>
-        <h1 class="hero-title">Ontdek mijn favoriete gerechten</h1>
+        <h1 class="hero-title">{{ __('recipes.index.hero_title') }}</h1>
         <p class="hero-text">
-          Mijn culinaire schatkamer, waar smaak en passie samenkomen! Hier vind je een zorgvuldig samengestelde
-          collectie van mijn meest geliefde recepten, stuk voor stuk pareltjes die ik met veel plezier met je deel.
+          {{ __('recipes.index.hero_text') }}
         </p>
       </div>
 
@@ -26,10 +25,10 @@
         <x-kocina.pagination :paginator="$recipes" />
       @endif
     @else
-      <p>Er zijn nog geen recepten toegevoegd.</p>
+      <p>{{ __('recipes.no_recipes') }}</p>
 
       @auth
-        <a href="{{ route("recipes.create") }}" class="button button-primary">Voeg je eerste recept toe</a>
+        <a href="{{ route("recipes.create") }}" class="button button-primary">{{ __('recipes.add_first') }}</a>
       @endauth
     @endif
   </div>

@@ -2,7 +2,7 @@
 import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Head, router, useForm } from "@inertiajs/vue3";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { Cropper } from "vue-advanced-cropper";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
@@ -14,6 +14,8 @@ import ValidationErrors from "@/Components/ValidationErrors.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 import "vue-advanced-cropper/dist/style.css";
 import FlashMessage from "@/Components/FlashMessage.vue";
+import { trans } from 'laravel-vue-i18n';
+
 
 const props = defineProps({ recipe: Object, config: Object });
 const edit = route().current("recipes.edit") ?? false;
@@ -39,7 +41,7 @@ const form = useForm({
   no_index: edit ? Boolean(props.recipe.no_index) : false,
 });
 
-const title = edit ? `Wijzig recept "${form.title}"` : "Voeg een nieuw recept toe";
+const title = computed(() => edit ? trans('recipes.form.edit_title', { title: form.title }) : trans('recipes.form.create_title'));
 
 const file = ref(null);
 const image = ref({ src: props.recipe?.media?.original_url ?? null, type: null });
@@ -77,7 +79,7 @@ function loadImage(event) {
     resetErrors();
 
     if (files[0].size > props.config.max_file_size) {
-      form.errors.media = `De afbeelding is te groot. De maximale grootte is ${props.config.max_file_size / 1024 / 1024} MB. Verklein de afbeelding en probeer het opnieuw.`;
+      form.errors.media = trans('recipes.form.image_too_large', { size: (props.config.max_file_size / 1024 / 1024) });
       return;
     }
 
@@ -89,7 +91,10 @@ function loadImage(event) {
         img.width < props.config.image_dimensions.advised_minimum.width ||
         img.height < props.config.image_dimensions.advised_minimum.height
       ) {
-        imageSizeWarning.value = `De afbeelding is kleiner dan ${props.config.image_dimensions.advised_minimum.width}x${props.config.image_dimensions.advised_minimum.height} pixels. Als je deze gebruikt, dan wordt deze vergroot. Dit gaat ten koste van de kwaliteit.`;
+        imageSizeWarning.value = trans('recipes.form.image_too_small', {
+          width: props.config.image_dimensions.advised_minimum.width,
+          height: props.config.image_dimensions.advised_minimum.height
+        });
       }
     };
     img.src = URL.createObjectURL(form.media);
@@ -142,7 +147,7 @@ function getStencilSize({ boundaries }) {
 }
 
 function confirmDeletion() {
-  if (confirm("Weet je zeker dat je dit recept wilt verwijderen?")) {
+  if (confirm(trans('recipes.form.confirm_delete'))) {
     router.delete(route("recipes.destroy", props.recipe.id), {
       method: "delete",
     });
@@ -181,7 +186,7 @@ onMounted(() => {
 
   <DefaultLayout>
     <template #header>
-      {{ title }} <a v-if="edit" :href="route('recipes.show', props.recipe.slug)" class="ml-4 text-sm">Bekijk het recept</a>
+      {{ title }} <a v-if="edit" :href="route('recipes.show', props.recipe.slug)" class="ml-4 text-sm">{{ $t('recipes.form.view_recipe') }}</a>
     </template>
 
     <form class="mx-auto mb-12 max-w-3xl space-y-8" @submit.prevent="save">
@@ -190,7 +195,7 @@ onMounted(() => {
           <ValidationErrors class="col-span-12 -mx-4 -mt-5 p-4 sm:-mx-6 sm:-mt-6 sm:rounded-t" />
 
           <div class="col-span-12 space-y-1">
-            <Label for="title" value="Titel" />
+            <Label for="title" :value="$t('recipes.form.title')" />
             <Input v-model="form.title" autocomplete="title" class="block w-full" required type="text" />
             <InputError :message="form.errors.title" />
           </div>
@@ -201,11 +206,11 @@ onMounted(() => {
           </div>
 
           <div class="col-span-12 space-y-1">
-            <Label for="image" value="Afbeelding (optioneel)" />
+            <Label for="image" :value="$t('recipes.form.image')" />
 
             <div v-if="image.src" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <strong class="text-sm">Overzicht pagina's</strong>
+                <strong class="text-sm">{{ $t('recipes.form.card_page') }}</strong>
                 <cropper
                   ref="cropperCard"
                   class="vue-advanced-cropper h-[16rem] max-w-full"
@@ -226,7 +231,7 @@ onMounted(() => {
                 />
               </div>
               <div>
-                <strong class="text-sm">Recept pagina</strong>
+                <strong class="text-sm">{{ $t('recipes.form.recipe_page') }}</strong>
                 <cropper
                   ref="cropperShow"
                   class="vue-advanced-cropper h-[16rem] max-w-full"
@@ -250,10 +255,10 @@ onMounted(() => {
 
             <input ref="file" type="file" class="hidden" :accept="config.supported_mime_types" @change="loadImage($event)" />
             <template v-if="image.src">
-              <Button class="mr-1 text-xs" button-style="secondary" @click="file.click()">Vervang afbeelding</Button>
-              <Button class="text-xs" button-style="danger" @click="destroyMedia">Verwijder afbeelding</Button>
+              <Button class="mr-1 text-xs" button-style="secondary" @click="file.click()">{{ $t('recipes.form.replace_image') }}</Button>
+              <Button class="text-xs" button-style="danger" @click="destroyMedia">{{ $t('recipes.form.remove_image') }}</Button>
             </template>
-            <Button v-else class="text-xs" @click="file.click()">Upload afbeelding</Button>
+            <Button v-else class="text-xs" @click="file.click()">{{ $t('recipes.form.upload_image') }}</Button>
 
             <progress v-if="form.progress" :value="form.progress.percentage" max="100">
               {{ form.progress.percentage }}%
@@ -270,10 +275,10 @@ onMounted(() => {
           />
 
           <div class="col-span-12 space-y-1">
-            <Label for="summary" value="Samenvatting (optioneel)" />
+            <Label for="summary" :value="$t('recipes.form.summary')" />
             <TipTapEditor
               v-model="form.summary"
-              placeholder="Voer een korte samenvatting van het recept in..."
+              :placeholder="$t('recipes.form.summary_placeholder')"
               :rows="4"
               :toolbar="['bold', 'italic', 'underline']"
             />
@@ -281,10 +286,10 @@ onMounted(() => {
           </div>
 
           <div class="col-span-12 space-y-1">
-            <Label for="tags" value="Tags (optioneel)" />
+            <Label for="tags" :value="$t('recipes.form.tags')" />
             <Input v-model="form.tags" class="block w-full" type="text" />
             <p class="text-xs text-gray-500">
-              Komma gescheiden lijst met tags. Bijvoorbeeld: "vegan, glutenvrij, lactosevrij"
+              {{ $t('recipes.form.tags_help') }}
             </p>
             <InputError :message="form.errors.tags" />
           </div>
@@ -294,56 +299,53 @@ onMounted(() => {
       <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded-md sm:p-6">
         <div class="grid grid-cols-12 gap-6">
           <div class="col-span-12 space-y-1 self-end sm:col-span-4">
-            <Label for="servings" value="Aantal porties" />
+            <Label for="servings" :value="$t('recipes.form.servings')" />
             <Input v-model="form.servings" class="block w-full" min="1" required type="number" />
             <InputError :message="form.errors.servings" />
           </div>
 
           <div class="col-span-12 space-y-1 self-end sm:col-span-4">
-            <Label for="preparation_minutes" value="Voorbereidingstijd in minuten (optioneel)" />
+            <Label for="preparation_minutes" :value="$t('recipes.form.preparation_time')" />
             <Input v-model="form.preparation_minutes" class="block w-full" min="1" type="number" />
             <InputError :message="form.errors.preparation_minutes" />
           </div>
 
           <div class="col-span-12 space-y-1 self-end sm:col-span-4">
-            <Label for="cooking_minutes" value="Bereidingstijd in minuten (optioneel)" />
+            <Label for="cooking_minutes" :value="$t('recipes.form.cooking_time')" />
             <Input v-model="form.cooking_minutes" class="block w-full" min="1" type="number" />
             <InputError :message="form.errors.cooking_minutes" />
           </div>
 
           <div class="col-span-12 space-y-1 sm:col-span-12">
-            <Label for="difficulty" value="Moeilijkheid" />
+            <Label for="difficulty" :value="$t('recipes.form.difficulty')" />
             <select
               v-model="form.difficulty"
               class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             >
-              <option value="easy">Makkelijk</option>
-              <option value="average">Gemiddeld</option>
-              <option value="difficult">Moeilijk</option>
+              <option value="easy">{{ $t('recipes.easy') }}</option>
+              <option value="average">{{ $t('recipes.average') }}</option>
+              <option value="difficult">{{ $t('recipes.difficult') }}</option>
             </select>
             <InputError :message="form.errors.difficulty" />
           </div>
 
           <div class="col-span-12 grid grid-cols-12 gap-6">
             <div class="col-span-12 space-y-1">
-              <Label>Ingredienten</Label>
+              <Label>{{ $t('recipes.form.ingredients') }}</Label>
               <Textarea v-model="form.ingredients" rows="10" class="block w-full" required />
               <InputError :message="form.errors.ingredients" />
-              <p class="!my-3 text-xs text-gray-500">Je kunt de ingredienten verrijken met de volgende opties:</p>
+              <p class="!my-3 text-xs text-gray-500">{{ $t('recipes.form.ingredients_help') }}</p>
               <ul class="list-outside pl-4 text-xs text-gray-500">
                 <li>
-                  Één ingredient per regel. Begin een regel met een # om een titel en een nieuwe sectie te maken. Voeg
-                  een lege regel toe om een nieuwe sectie zonder titel te maken.
+                  {{ $t('recipes.form.ingredients_help_1') }}
                 </li>
                 <li>
-                  Ingredienten worden automatisch gesplitst in hoeveelheid (een getal), eenheid (bijv. gram, eetlepels,
-                  etc.), naam (wortel) en info (in blokjes gesneden).
+                  {{ $t('recipes.form.ingredients_help_2') }}
                 </li>
                 <li>
-                  Je kunt een de meervoud van een ingredient toevoegen door een | achter de naam te zetten en de
-                  meervoudsvorm toe te voegen. Bijvoorbeeld: wortel|wortels.
+                  {{ $t('recipes.form.ingredients_help_3') }}
                 </li>
-                <li>Plaats info tussen haakjes. Bijvoorbeeld: wortel (in blokjes gesneden).</li>
+                <li>{{ $t('recipes.form.ingredients_help_4') }}</li>
               </ul>
             </div>
           </div>
@@ -353,10 +355,10 @@ onMounted(() => {
       <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded-md sm:p-6">
         <div class="grid grid-cols-12 gap-6">
           <div class="col-span-12 space-y-1">
-            <Label for="instructions" value="Instructies" />
+            <Label for="instructions" :value="$t('recipes.form.instructions')" />
             <TipTapEditor
               v-model="form.instructions"
-              placeholder="Voer de bereidingsinstructies in..."
+              :placeholder="$t('recipes.form.instructions_placeholder')"
               :rows="10"
               :toolbar="['orderedList', 'bulletList', '|', 'bold', 'italic', 'underline', '|', 'heading']"
             />
@@ -364,13 +366,13 @@ onMounted(() => {
           </div>
 
           <div class="col-span-12 space-y-1">
-            <Label for="source_label" value="Bron naam (optioneel)" />
+            <Label for="source_label" :value="$t('recipes.form.source_name')" />
             <Input v-model="form.source_label" class="block w-full" type="text" />
             <InputError :message="form.errors.source_label" />
           </div>
 
           <div class="col-span-12 space-y-1">
-            <Label for="source_link" value="Bron link (optioneel)" />
+            <Label for="source_link" :value="$t('recipes.form.source_link')" />
             <div class="flex items-stretch">
               <Input v-model="form.source_link" class="block w-full" type="text" />
               <Button
@@ -392,7 +394,7 @@ onMounted(() => {
           <div class="col-span-12 space-y-1">
             <label class="flex items-center">
               <input v-model="form.no_index" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
-              <span class="ml-2 text-sm text-gray-600">Zoekmachines mogen dit recept niet indexeren</span>
+              <span class="ml-2 text-sm text-gray-600">{{ $t('recipes.form.no_index') }}</span>
             </label>
             <InputError :message="form.errors.no_index" />
           </div>
@@ -401,7 +403,7 @@ onMounted(() => {
 
       <div class="fixed bottom-0 left-0 w-full border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
         <div class="mx-auto flex max-w-3xl justify-between sm:px-6">
-          <Button :disabled="form.processing" class="text-xs" type="submit">Opslaan</Button>
+          <Button :disabled="form.processing" class="text-xs" type="submit">{{ $t('recipes.form.save') }}</Button>
           <Button
             v-if="edit"
             :disabled="form.processing"
@@ -409,7 +411,7 @@ onMounted(() => {
             class="text-xs"
             @click="confirmDeletion"
           >
-            Verwijder
+            {{ $t('recipes.form.delete') }}
           </Button>
         </div>
       </div>

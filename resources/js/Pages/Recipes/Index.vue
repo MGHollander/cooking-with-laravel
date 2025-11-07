@@ -20,7 +20,7 @@ const form = useForm({
     <div class="space-y-6 px-4 sm:space-y-12 sm:px-0">
       <SearchBlock />
 
-      <h1 class="sr-only">Recepten</h1>
+      <h1 class="sr-only">{{ $t('recipes.index.title') }}</h1>
 
       <div class="grid grid-cols-12 place-items-stretch gap-4 sm:gap-6">
         <RecipeCard

@@ -9,6 +9,7 @@ import Button from "@/Components/Button.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
+import { trans } from "laravel-vue-i18n/*";
 
 const props = defineProps({
   recipe: Object,
@@ -17,7 +18,7 @@ const props = defineProps({
 const localRecipe = ref(props.recipe);
 const defaultServings = localRecipe.value.servings;
 const servings = ref(localRecipe.value.servings);
-const servingsLabel = computed(() => (localRecipe.value.servings === 1 ? "portie" : "porties"));
+const servingsLabel = computed(() => (localRecipe.value.servings === 1 ? trans('recipes.show.serving') : trans('recipes.show.servings')));
 
 function updateServings(amount) {
   for (let listKey in localRecipe.value.ingredients) {
@@ -31,7 +32,7 @@ function updateServings(amount) {
 }
 
 function confirmDeletion() {
-  if (confirm("Weet je zeker dat je dit recept wilt verwijderen?")) {
+  if (confirm(trans('recipes.show.confirm_delete'))) {
     router.delete(route("recipes.destroy", localRecipe.value.id), {
       method: "delete",
     });
@@ -41,7 +42,7 @@ function confirmDeletion() {
 const wakeLock = reactive(useWakeLock());
 const wakeLockButtonIcon = computed(() => (wakeLock.isActive ? faMoon : faSun));
 const wakeLockButtonTitle = computed(() =>
-  wakeLock.isActive ? "Scherm automatisch dimmer volgens systeem instellingen" : "Scherm niet automatisch dimmen"
+  wakeLock.isActive ? trans('recipes.show.screen_auto_dim') : trans('recipes.show.screen_no_dim')
 );
 
 function toggleWakeLock() {
@@ -69,7 +70,7 @@ const toggleStrike = (ingredient) => {
             <Button
               v-if="wakeLock.isSupported"
               button-style="ghost"
-              aria-label="Uitklapmenu voor acties op recept"
+              :aria-label="$t('recipes.show.actions_menu')"
               class="w-10 !p-2.5"
               :title="wakeLockButtonTitle"
               @click="toggleWakeLock"
@@ -78,14 +79,14 @@ const toggleStrike = (ingredient) => {
             </Button>
             <Dropdown v-if="$page.props.auth.user" align="right" width="48">
               <template #trigger>
-                <Button button-style="ghost" aria-label="Uitklapmenu voor acties op recept" class="w-10 !p-2.5">
+                <Button button-style="ghost" :aria-label="$t('recipes.show.actions_menu')" class="w-10 !p-2.5">
                   <FontAwesomeIcon :icon="faEllipsisV" class="mx-auto" />
                 </Button>
               </template>
 
               <template #content>
-                <DropdownLink :href="route('recipes.edit', localRecipe.id)">Recept bewerken</DropdownLink>
-                <DropdownLink href="#" @click="confirmDeletion">Verwijder</DropdownLink>
+                <DropdownLink :href="route('recipes.edit', localRecipe.id)">{{ $t('recipes.show.edit_recipe') }}</DropdownLink>
+                <DropdownLink href="#" @click="confirmDeletion">{{ $t('recipes.show.delete') }}</DropdownLink>
               </template>
             </Dropdown>
           </div>
@@ -130,7 +131,7 @@ const toggleStrike = (ingredient) => {
                   />
                 </svg>
               </div>
-              <strong>Aantal porties</strong><br />
+              <strong>{{ $t('recipes.show.servings_label') }}</strong><br />
               {{ servings }} {{ servingsLabel }}
             </div>
 
@@ -138,12 +139,12 @@ const toggleStrike = (ingredient) => {
               <div class="mx-auto w-16 fill-orange-600">
                 <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
                   <path
-                    d="M299.29 118.57c-120.29 0-217.86 97.61-217.86 217.86a215.64 215.64 0 0 0 48.81 137.22 13.8 13.8 0 0 0 19.76 2.12c5.66-5 7.07-14.15 2.12-19.81a187.92 187.92 0 0 1-20.51-31.83l45.27-18.39a14.12 14.12 0 1 0-10.61-26.17l-46 18.39c-5-14.15-8.49-29-9.2-44.56h48.1a14.15 14.15 0 0 0 0-28.29h-48.74a165.28 165.28 0 0 1 8.49-46l43.85 18.39c2.12.71 3.54 1.41 5.66 1.41a14 14 0 0 0 12.73-8.49 14.36 14.36 0 0 0-7.78-18.39l-43.85-18.39A204.84 204.84 0 0 1 155 214.77l32.54 32.54a13.68 13.68 0 0 0 19.81 0 13.68 13.68 0 0 0 0-19.81l-33.24-33.24A211.56 211.56 0 0 1 213 167.38l17.68 42.44c2.12 5.66 7.78 8.49 13.44 8.49 2.12 0 3.54 0 5.66-1.41a15.46 15.46 0 0 0 3.54-2.12c-1.41 12-2.83 30.42-2.83 58 0 33.24.71 74.27 3.54 86.29a49.32 49.32 0 0 0 48.1 38.2 54.6 54.6 0 0 0 10.61-1.41c26.88-5.66 43.85-31.83 38.2-58-2.12-12-18.39-49.51-31.83-79.22-12.73-28.29-21.22-45.27-27.59-55.17 2.12 2.12 5.66 2.83 8.49 2.83a14.19 14.19 0 0 0 14.15-14.15v-44.58a202.27 202.27 0 0 1 46.68 9.2l-17.68 42.44a14.36 14.36 0 0 0 7.78 18.39c2.12.71 3.54 1.41 5.66 1.41a14 14 0 0 0 12.73-8.49L387 168.08a182.4 182.4 0 0 1 38.2 26.17L392 227.5a13.68 13.68 0 0 0 0 19.81 13.68 13.68 0 0 0 19.81 0l32.54-32.54c9.9 12 19.1 25.46 25.46 39.61l-43.85 18.39a14.36 14.36 0 0 0-7.78 18.39c2.12 5.66 7.78 8.49 13.44 8.49 2.12 0 3.54 0 5.66-1.41l43.85-17.68a233 233 0 0 1 8.49 45.27h-48.1a14.15 14.15 0 0 0 0 28.29h48.1a199.17 199.17 0 0 1-9.9 45.27l-45.27-19.1a14.12 14.12 0 0 0-10.61 26.17l44.56 18.39a207.78 207.78 0 0 1-21.93 33.24 13.8 13.8 0 0 0 2.12 19.81c2.83 2.12 5.66 3.54 9.2 3.54a12.73 12.73 0 0 0 10.61-5 217.33 217.33 0 0 0 50.22-139.34c-.76-120.92-99.08-218.53-219.33-218.53zm24 226.35a20.66 20.66 0 0 1-16.27 24c-11.32 2.12-22.63-5-24.76-15.56-2.12-12-3.54-71.44-2.12-110.34 16.32 35.41 40.37 90.58 43.2 101.9zM271.71 188.6h-2.83c-5 .71-8.49 2.83-11.32 9.9l-17.68-42.44a196.33 196.33 0 0 1 46-9.2v46c0 1.41 0 2.83.71 3.54-7.1-7.8-10.59-7.8-14.88-7.8z"
+                    d="M299.29 118.57c-120.29 0-217.86 97.61-217.86 217.86a215.64 215.64 0 0 0 48.81 137.22 13.8 13.8 0 0 0 19.76 2.12c5.66-5 7.07-14.15 2.12-19.81a187.92 187.92 0 0 1-20.51-31.83l45.27-18.39a14.12 14.12 0 1 0-10.61-26.17l-46 18.39c-5-14.15-8.49-29-9.2-44.56h48.1a14.15 14.15 0 0 0 0-28.29h-48.74a165.28 165.28 0 0 1 8.49-46l43.85 18.39c2.12.71 3.54 1.41 5.66 1.41a14 14 0 0 0 12.73-8.49L387 168.08a182.4 182.4 0 0 1 38.2 26.17L392 227.5a13.68 13.68 0 0 0 0 19.81 13.68 13.68 0 0 0 19.81 0l32.54-32.54c9.9 12 19.1 25.46 25.46 39.61l-43.85 18.39a14.36 14.36 0 0 0-7.78 18.39c2.12 5.66 7.78 8.49 13.44 8.49 2.12 0 3.54 0 5.66-1.41l43.85-17.68a233 233 0 0 1 8.49 45.27h-48.1a14.15 14.15 0 0 0 0 28.29h48.1a199.17 199.17 0 0 1-9.9 45.27l-45.27-19.1a14.12 14.12 0 0 0-10.61 26.17l44.56 18.39a207.78 207.78 0 0 1-21.93 33.24 13.8 13.8 0 0 0 2.12 19.81c2.83 2.12 5.66 3.54 9.20 3.54a12.73 12.73 0 0 0 10.61-5 217.33 217.33 0 0 0 50.22-139.34c-.76-120.92-99.08-218.53-219.33-218.53zm24 226.35a20.66 20.66 0 0 1-16.27 24c-11.32 2.12-22.63-5-24.76-15.56-2.12-12-3.54-71.44-2.12-110.34 16.32 35.41 40.37 90.58 43.2 101.9zM271.71 188.6h-2.83c-5 .71-8.49 2.83-11.32 9.9l-17.68-42.44a196.33 196.33 0 0 1 46-9.2v46c0 1.41 0 2.83.71 3.54-7.1-7.8-10.59-7.8-14.88-7.8z"
                   />
                   <circle cx="300.24" cy="339.59" r="9.2" transform="rotate(-11.9 300.247 339.58)" />
                 </svg>
               </div>
-              <strong>Moeilijkheid</strong><br />
+              <strong>{{ $t('recipes.show.difficulty') }}</strong><br />
               {{ localRecipe.difficulty }}
             </div>
 
@@ -156,8 +157,8 @@ const toggleStrike = (ingredient) => {
                   <circle cx="483.4" cy="135.26" r="9.46" />
                 </svg>
               </div>
-              <strong>Voorbereidingstijd</strong><br />
-              {{ localRecipe.preparation_minutes }} minuten
+              <strong>{{ $t('recipes.show.preparation_time') }}</strong><br />
+              {{ localRecipe.preparation_minutes }} {{ $t('recipes.show.minutes') }}
             </div>
 
             <div v-if="localRecipe.cooking_minutes">
@@ -180,8 +181,8 @@ const toggleStrike = (ingredient) => {
                 </svg>
               </div>
 
-              <strong>Bereidingstijd</strong><br />
-              {{ localRecipe.cooking_minutes }} minuten
+              <strong>{{ $t('recipes.show.cooking_time') }}</strong><br />
+              {{ localRecipe.cooking_minutes }} {{ $t('recipes.show.minutes') }}
             </div>
           </div>
         </div>
@@ -190,7 +191,7 @@ const toggleStrike = (ingredient) => {
       <div class="m-6 space-y-6 md:space-y-10 lg:m-10">
         <div class="space-y-6 md:flex md:items-start md:space-x-8 md:space-y-0">
           <div class="-mx-6 bg-gray-100 p-6 sm:mx-0 sm:rounded-lg md:w-1/3">
-            <h2 class="mb-2 text-xl font-bold md:text-2xl">Ingrediënten</h2>
+            <h2 class="mb-2 text-xl font-bold md:text-2xl">{{ $t('recipes.show.ingredients') }}</h2>
 
             <div class="-mx-2 mb-4 flex items-center justify-between rounded bg-gray-200 p-2">
               <div>{{ servings }} {{ servingsLabel }}</div>
@@ -198,7 +199,7 @@ const toggleStrike = (ingredient) => {
                 <button
                   v-if="servings !== defaultServings"
                   class="w-8 rounded text-xs text-gray-600 transition-all hover:bg-gray-500 hover:text-white"
-                  aria-label="Terug naar het standaard aantal porties"
+                  :aria-label="$t('recipes.show.reset_servings')"
                   @click="updateServings(defaultServings)"
                 >
                   <FontAwesomeIcon :icon="faUndo" />
@@ -206,7 +207,7 @@ const toggleStrike = (ingredient) => {
 
                 <button
                   class="w-8 rounded border-2 border-gray-500 text-lg font-bold text-gray-600 transition-all hover:bg-gray-500 hover:text-white"
-                  aria-label="Verhoog aantal porties"
+                  :aria-label="$t('recipes.show.increase_servings')"
                   @click="updateServings(parseInt(servings) + 1)"
                 >
                   +
@@ -215,7 +216,7 @@ const toggleStrike = (ingredient) => {
                 <button
                   :disabled="servings === 1"
                   class="w-8 rounded border-2 border-gray-500 text-lg font-bold text-gray-600 hover:bg-gray-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-gray-600"
-                  aria-label="Verminder aantal porties"
+                  :aria-label="$t('recipes.show.decrease_servings')"
                   @click="updateServings(parseInt(servings) - 1)"
                 >
                   -
@@ -266,12 +267,12 @@ const toggleStrike = (ingredient) => {
           </div>
 
           <div class="space-y-4 sm:px-6 md:w-2/3 md:px-0">
-            <h2 class="mb-4 text-xl font-bold md:mt-6 md:text-2xl">Instructies</h2>
+            <h2 class="mb-4 text-xl font-bold md:mt-6 md:text-2xl">{{ $t('recipes.show.instructions') }}</h2>
 
             <div class="recipe-instructions" v-html="localRecipe.instructions" />
 
             <p v-if="localRecipe.source_label || localRecipe.source_link">
-              <strong>Bron: </strong>
+              <strong>{{ $t('recipes.show.source') }} </strong>
               <template v-if="localRecipe.source_link">
                 <a :href="localRecipe.source_link" target="_blank">
                   {{ localRecipe.source_label ?? localRecipe.source_link }}

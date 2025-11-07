@@ -1,35 +1,39 @@
 <script setup>
 import { Head } from "@inertiajs/vue3";
+import { computed } from "vue";
 import Pagination from "@/Components/Pagination.vue";
 import RecipeCard from "@/Components/RecipeCard.vue";
 import SearchBlock from "@/Components/SearchBlock.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 
-defineProps({
+const props = defineProps({
   recipes: Object,
   q: String,
 });
+
+const recipeWord = computed(() =>
+  props.recipes.total === 1 ? $t('recipes.not_found.recipe') : $t('recipes.not_found.recipes')
+);
 </script>
 
 <template>
-  <Head title="Pagina niet gevonden" />
+  <Head :title="$t('recipes.not_found.title')" />
 
   <DefaultLayout>
     <div class="px-4 sm:px-0">
-      <h1 class="mb-4 text-center text-2xl font-bold">Helaas, dit recept bestaat (nog) niet!</h1>
+      <h1 class="mb-4 text-center text-2xl font-bold">{{ $t('recipes.not_found.title') }}</h1>
 
       <template v-if="recipes.total === 0">
-        <p class="text-center">Je kan het onderstaande formulier gebruiken om door alle recepten te zoeken.</p>
+        <p class="text-center">{{ $t('recipes.not_found.description') }}</p>
         <SearchBlock size="small" class="mt-6 sm:mt-12" />
       </template>
 
       <template v-else>
         <p class="text-center">
-          Met behulp van de woorden uit de link heb ik <strong>{{ recipes.total }} recepten</strong> gevonden die
-          mogelijk toch interessant zijn. Hiervoor heb ik de volgende woorden gebruikt: <strong>{{ q }}</strong>
+          {{ $t('recipes.not_found.found', { count: recipes.total, recipe: recipeWord, words: q }) }}
         </p>
 
-        <p class="text-center">Hopelijk zit er iets tussen!</p>
+        <p class="text-center">{{ $t('recipes.not_found.hopefully') }}</p>
 
         <div class="mt-6 grid grid-cols-12 place-items-stretch gap-4 sm:mt-12 sm:gap-6">
           <RecipeCard v-for="recipe in recipes.data" :key="recipe.id" :recipe="recipe" />

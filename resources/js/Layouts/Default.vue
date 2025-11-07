@@ -56,7 +56,7 @@ const toggleNav = (nav) => {
                 <Dropdown align="left" width="48">
                   <template #trigger>
                     <span class="inline-flex rounded-md">
-                      <Button button-style="ghost" aria-label="Uitklapmenu om recepten toe te voegen" class="!p-2.5">
+                      <Button button-style="ghost" :aria-label="$t('nav.add_menu')" class="!p-2.5">
                         <svg class="h-5 w-5" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                           <path
                             stroke-linecap="round"
@@ -71,11 +71,11 @@ const toggleNav = (nav) => {
 
                   <template #content>
                     <DropdownLink :href="route('recipes.create')" :active="route().current('recipes.create')">
-                      Voeg een recept toe
+                      {{ $t('nav.add_recipe') }}
                     </DropdownLink>
 
                     <DropdownLink :href="route('import.index')" :active="route().current('import.index')">
-                      Importeer een recept
+                      {{ $t('nav.import_recipe') }}
                     </DropdownLink>
                   </template>
                 </Dropdown>
@@ -83,7 +83,7 @@ const toggleNav = (nav) => {
                 <Dropdown align="right" width="48">
                   <template #trigger>
                     <span class="inline-flex rounded-md">
-                      <Button button-style="ghost" aria-label="Open het gebruikersmenu" class="!p-2.5 text-sm">
+                      <Button button-style="ghost" :aria-label="$t('nav.user_menu')" class="!p-2.5 text-sm">
                         {{ $page.props.auth.user.name }}
 
                         <FontAwesomeIcon :icon="faChevronDown" class="-mt-0.5 ml-2 h-3" />
@@ -96,18 +96,18 @@ const toggleNav = (nav) => {
                       :href="route('users.edit', $page.props.auth.user.id)"
                       :active="route().current('users.edit', { id: $page.props.auth.user.id })"
                     >
-                      Bewerk je profiel
+                      {{ $t('nav.edit_profile') }}
                     </DropdownLink>
 
                     <DropdownLink :href="route('users.password.edit')" :active="route().current('users.password.edit')">
-                      Wijzig je wachtwoord
+                      {{ $t('nav.change_password') }}
                     </DropdownLink>
 
                     <DropdownLink :href="route('users.index')" :active="route().current('users.index')">
-                      Beheer gebruikers
+                      {{ $t('nav.manage_users') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('logout')" method="post" as="button"> Uitloggen</DropdownLink>
+                    <DropdownLink :href="route('logout')" method="post" as="button">{{ $t('nav.logout') }}</DropdownLink>
                   </template>
                 </Dropdown>
               </div>
@@ -115,14 +115,14 @@ const toggleNav = (nav) => {
 
             <!-- Menu for guests -->
             <div v-else class="flex space-x-1">
-              <NavLink :href="route('login')" :active="route().current('login')"> Inloggen</NavLink>
+              <NavLink :href="route('login')" :active="route().current('login')">{{ $t('nav.login') }}</NavLink>
             </div>
 
             <!-- Responsive Menu -->
             <div v-if="$page.props.auth.user" class="-mr-2 flex items-center space-x-1 sm:hidden">
               <button
                 class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500"
-                aria-label="Voeg een recept toe"
+                :aria-label="$t('nav.add_recipe_mobile')"
                 @click="toggleNav('create')"
               >
                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -132,7 +132,7 @@ const toggleNav = (nav) => {
 
               <button
                 class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500"
-                aria-label="Gebruikersmenu"
+                :aria-label="$t('nav.user_menu_mobile')"
                 @click="toggleNav('user')"
               >
                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -174,11 +174,11 @@ const toggleNav = (nav) => {
           <div v-if="showNav === 'create'" class="border-t border-gray-200 py-1">
             <div class="space-y-1">
               <ResponsiveNavLink :href="route('recipes.create')" :active="route().current('recipes.create')">
-                Recept toevoegen
+                {{ $t('nav.add_recipe') }}
               </ResponsiveNavLink>
 
               <ResponsiveNavLink :href="route('import.index')" :active="route().current('import.index')">
-                Recept importeren
+                {{ $t('nav.import_recipe') }}
               </ResponsiveNavLink>
             </div>
           </div>
@@ -195,19 +195,19 @@ const toggleNav = (nav) => {
                 :href="route('users.edit', $page.props.auth.user.id)"
                 :active="route().current('users.edit', { id: $page.props.auth.user.id })"
               >
-                Bewerk je profiel
+                {{ $t('nav.edit_profile') }}
               </ResponsiveNavLink>
 
               <ResponsiveNavLink :href="route('users.password.edit')" :active="route().current('users.password.edit')">
-                Wijzig je wachtwoord
+                {{ $t('nav.change_password') }}
               </ResponsiveNavLink>
 
               <ResponsiveNavLink :href="route('users.index')" :active="route().current('users.index')">
-                Beheer gebruikers
+                {{ $t('nav.manage_users') }}
               </ResponsiveNavLink>
 
               <ResponsiveNavLink :href="route('logout')" method="post" as="button" class="w-full text-left">
-                Uitloggen
+                {{ $t('nav.logout') }}
               </ResponsiveNavLink>
             </div>
           </div>
@@ -253,7 +253,7 @@ const toggleNav = (nav) => {
       <footer>
         <div class="px-4 pb-4">
           <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <a :href="route('privacy')" class="text-gray-900 hover:text-gray-500">Privacy</a>
+            <a :href="route('privacy')" class="text-gray-900 hover:text-gray-500">{{ $t('nav.privacy') }}</a>
           </div>
         </div>
       </footer>

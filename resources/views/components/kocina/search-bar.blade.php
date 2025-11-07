@@ -13,7 +13,7 @@
             name="q"
             x-model="searchKey"
             x-ref="search"
-            placeholder="Zoek een recept, ingredient, thema of keuken"
+            placeholder="{{ __('search.placeholder') }}"
             class="search-bar-field"
         />
 
@@ -24,12 +24,12 @@
             x-show="searchKey?.length > 0"
             x-transition
         >
-            <span class="sr-only">Leeg het zoekveld</span>
+            <span class="sr-only">{{ __('search.clear') }}</span>
             <x-icon.cross width="20" />
         </button>
 
         <button type="submit" class="search-bar-submit-button">
-            <span class="sr-only">Zoeken</span>
+            <span class="sr-only">{{ __('search.search') }}</span>
             <x-icon.magnify-glass width="20" />
         </button>
 

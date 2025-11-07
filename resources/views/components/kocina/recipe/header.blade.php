@@ -24,10 +24,10 @@
                     <div class="recipe-meta-icon">
                         <x-icon.cutlery />
                     </div>
-                    Aantal porties
+                    {{ __('recipes.show.servings') }}
                 </dt>
                 <dd x-text="servingsText">
-                    {{ $recipe["servings"] }} {{ $recipe["servings"] === 1 ? "portie" : "porties" }}
+                    {{ $recipe["servings"] }} {{ $recipe["servings"] === 1 ? __('recipes.show.serving') : __('recipes.show.servings') }}
                 </dd>
             </dl>
 
@@ -37,9 +37,9 @@
                         <div class="recipe-meta-icon">
                             <x-icon.knife-thin />
                         </div>
-                        Voor&shy;be&shy;rei&shy;ding
+                        {{ __('recipes.show.preparation') }}
                     </dt>
-                    <dd>{{ $recipe["preparation_minutes"] }} {{ $recipe["preparation_minutes"] === 1 ? "minuut" : "minuten" }}</dd>
+                    <dd>{{ $recipe["preparation_minutes"] }} {{ $recipe["preparation_minutes"] === 1 ? __('recipes.show.minute') : __('recipes.show.minutes') }}</dd>
                 </dl>
             @endif
 
@@ -49,21 +49,21 @@
                         <div class="recipe-meta-icon">
                             <x-icon.cooking-pot />
                         </div>
-                        Be&shy;rei&shy;ding
+                        {{ __('recipes.show.cooking') }}
                     </dt>
-                    <dd>{{ $recipe["cooking_minutes"] }} {{ $recipe["cooking_minutes"] === 1 ? "minuut" : "minuten" }}</dd>
+                    <dd>{{ $recipe["cooking_minutes"] }} {{ $recipe["cooking_minutes"] === 1 ? __('recipes.show.minute') : __('recipes.show.minutes') }}</dd>
                 </dl>
             @endif
         </div>
 
         <div class="recipe-author">
-            Toegevoegd door {{ $recipe['author'] }}
+            {{ __('recipes.show.added_by') }} {{ $recipe['author'] }}
         </div>
 
         @if ($recipe['user_id'] === auth()->id())
             <div class="recipe-management">
                 <a href="{{ route('recipes.edit', $recipe['id']) }}" class="button button-primary button-small">
-                    Bewerk recept
+                    {{ __('recipes.show.edit') }}
                 </a>
             </div>
         @endif
