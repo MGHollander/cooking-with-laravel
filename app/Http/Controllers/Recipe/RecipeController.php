@@ -34,6 +34,7 @@ class RecipeController extends Controller
     {
         return view('kocina.recipes.index', [
             'recipes' => Recipe::query()
+                ->with('translations')
                 ->whereHas('author')
                 ->orderBy('id', 'desc')
                 ->paginate(12)
@@ -90,7 +91,10 @@ class RecipeController extends Controller
     // TODO Are these return types correct? Should the doc blocks exisit at all or is it overkill with typing?
     public function show(Request $request, string $slug): JsonResponse|View|Response
     {
-        $recipe = Recipe::where('slug', $slug)->whereHas('author')->first();
+        $recipe = Recipe::with('translations')
+            ->where('slug', $slug)
+            ->whereHas('author')
+            ->first();
 
         if (! $recipe) {
             return $this->notFound($slug);
@@ -136,6 +140,8 @@ class RecipeController extends Controller
      */
     public function edit(Recipe $recipe)
     {
+        $recipe->load('translations');
+
         return Inertia::render('Recipes/Form', [
             'recipe' => [
                 'id' => $recipe->id,
@@ -192,6 +198,8 @@ class RecipeController extends Controller
      */
     public function destroy(Recipe $recipe)
     {
+        $recipe->load('translations');
+
         $userId = auth()->id();
         $recipeId = $recipe->id;
         
@@ -199,7 +207,7 @@ class RecipeController extends Controller
         
         Log::info("Recipe {$recipeId} deleted by user {$userId}");
 
-        Session::flash('success', "Het recept “<i>{$recipe->title}</i>” is succesvol verwijderd! 🧑‍🍳");
+        Session::flash('success', "Het recept \"<i>{$recipe->title}</i>\" is succesvol verwijderd! 🧑‍🍳");
 
         return Inertia::location(route('home'));
     }
@@ -207,7 +215,7 @@ class RecipeController extends Controller
     private function notFound($slug): \Illuminate\Http\Response
     {
         $searchKey = Str::replace('-', ' ', $slug);
-        $recipes = Search::add(Recipe::class, ['title', 'ingredients', 'instructions', 'tags.name'])
+        $recipes = Search::add(Recipe::with('translations'), ['title', 'ingredients', 'instructions', 'tags.name'])
             ->paginate(12)
             ->beginWithWildcard()
             ->search($searchKey)

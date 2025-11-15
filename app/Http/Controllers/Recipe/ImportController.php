@@ -304,6 +304,8 @@ class ImportController extends Controller
             }
         }
 
+        $recipe->load('translations');
+
         if ($request->get('return_to_import_page')) {
             return redirect()->route('import.index')->with('success', 'Het recept "<a href="'.route('recipes.show', $recipe->slug).'"><i>'.$recipe->title.'</i></a>" is succesvol geïmporteerd! 🎉');
         }
