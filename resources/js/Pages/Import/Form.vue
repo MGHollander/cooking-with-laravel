@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
-import { Head, router, useForm } from "@inertiajs/vue3";
+import { Head, router, useForm, usePage } from "@inertiajs/vue3";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
@@ -26,12 +26,14 @@ const props = defineProps({
 const isLoading = ref(true);
 const errorMessage = ref("");
 const images = ref([]);
+const page = usePage();
 
 const cropperCard = ref(null);
 const cropperShow = ref(null);
 const image = ref(null);
 
 const form = useForm({
+  locale: page.props.locale || 'nl',
   title: "",
   external_image: "",
   media_dimensions: null,
@@ -89,6 +91,7 @@ onMounted(() => {
       .then((response) => {
         const recipe = response.data.recipe;
         
+        form.locale = response.data.locale || page.props.locale || 'nl';
         form.title = recipe.title;
         form.external_image = recipe?.images?.length > 0 ? recipe.images[0] : "";
         form.summary = recipe.summary;
@@ -163,6 +166,20 @@ onMounted(() => {
       </div>
       <div v-else-if="errorMessage" class="text-red-500 p-4">{{ errorMessage }}</div>
       <form v-else class="mx-auto mb-12 max-w-3xl space-y-8" @submit.prevent="submitForm">
+        <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6">
+          <div class="space-y-1">
+            <Label for="locale" :value="$t('recipes.form.language')" />
+            <select
+              v-model="form.locale"
+              class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            >
+              <option value="en">🇬🇧 English</option>
+              <option value="nl">🇳🇱 Nederlands</option>
+            </select>
+            <InputError :message="form.errors.locale" />
+          </div>
+        </div>
+
         <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6">
           <div class="grid grid-cols-12 gap-6">
             <ValidationErrors class="col-span-12 -mx-4 -mt-5 p-4 sm:-mx-6 sm:-mt-6 sm:rounded-t" />

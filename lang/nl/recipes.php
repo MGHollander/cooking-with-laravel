@@ -46,6 +46,8 @@ return [
         'edit_title' => 'Wijzig recept ":title"',
         'create_title' => 'Voeg een nieuw recept toe',
         'view_recipe' => 'Bekijk het recept',
+        'language' => 'Taal',
+        'language_locked' => 'Taal kan niet worden gewijzigd na het aanmaken. Gebruik de vertaalfunctie om vertalingen toe te voegen (binnenkort beschikbaar).',
         'title' => 'Titel',
         'image' => 'Afbeelding (optioneel)',
         'replace_image' => 'Vervang afbeelding',

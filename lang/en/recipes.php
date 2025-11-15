@@ -45,6 +45,8 @@ return [
         'edit_title' => 'Edit recipe ":title"',
         'create_title' => 'Add a new recipe',
         'view_recipe' => 'View the recipe',
+        'language' => 'Language',
+        'language_locked' => 'Language cannot be changed after creation. To add translations, use the translation feature (coming soon).',
         'title' => 'Title',
         'image' => 'Image (optional)',
         'card_page' => 'Card pages',

@@ -1,7 +1,7 @@
 <script setup>
 import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Head, router, useForm } from "@inertiajs/vue3";
+import { Head, router, useForm, usePage } from "@inertiajs/vue3";
 import { computed, onMounted, ref } from "vue";
 import { Cropper } from "vue-advanced-cropper";
 import Button from "@/Components/Button.vue";
@@ -19,11 +19,13 @@ import { trans } from 'laravel-vue-i18n';
 
 const props = defineProps({ recipe: Object, config: Object });
 const edit = route().current("recipes.edit") ?? false;
+const page = usePage();
 
 const form = useForm({
   // Fix multipart limitations @see https://inertiajs.com/file-uploads#multipart-limitations
   // NOTE: The form is also submitted using the post method instead of the patch method.
   _method: edit ? "PATCH" : "POST",
+  locale: edit ? props.recipe.locale : (page.props.locale || 'en'),
   title: edit ? props.recipe.title : "",
   media: null,
   media_dimensions: null,
@@ -42,6 +44,10 @@ const form = useForm({
 });
 
 const title = computed(() => edit ? trans('recipes.form.edit_title', { title: form.title }) : trans('recipes.form.create_title'));
+
+const localeLabel = computed(() => {
+  return form.locale === 'en' ? 'English' : 'Nederlands';
+});
 
 const file = ref(null);
 const image = ref({ src: props.recipe?.media?.original_url ?? null, type: null });
@@ -190,6 +196,24 @@ onMounted(() => {
     </template>
 
     <form class="mx-auto mb-12 max-w-3xl space-y-8" @submit.prevent="save">
+      <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6">
+        <div class="space-y-1">
+          <Label for="locale" :value="$t('recipes.form.language')" />
+          <select
+            v-model="form.locale"
+            :disabled="edit"
+            class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <option value="en">🇬🇧 English</option>
+            <option value="nl">🇳🇱 Nederlands</option>
+          </select>
+          <p v-if="edit" class="text-xs text-gray-500">
+            {{ $t('recipes.form.language_locked') }}
+          </p>
+          <InputError :message="form.errors.locale" />
+        </div>
+      </div>
+
       <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6 sm:pb-8">
         <div class="grid grid-cols-12 gap-6">
           <ValidationErrors class="col-span-12 -mx-4 -mt-5 p-4 sm:-mx-6 sm:-mt-6 sm:rounded-t" />
