@@ -797,53 +797,6 @@ public function store(RecipeRequest $request)
 
 **Note**: Add `use Illuminate\Support\Facades\DB;` at the top of the file if not already present.
 
-#### 5.7.3 Update Import Form Component
-
-**File**: `resources/js/Pages/Import/Form.vue`
-
-Add locale field to the form (set from API response, not user-selectable):
-
-```vue
-<script setup>
-// ... existing imports ...
-
-const form = useForm({
-  locale: '', // Add this field
-  title: "",
-  external_image: "",
-  // ... rest of existing fields ...
-});
-
-// ... existing code ...
-
-onMounted(() => {
-  if (isLoading.value) {
-    axios
-      .post(route("import.import-recipe"), {
-        url: props.url,
-        parser: props.parser,
-        force_import: props.force_import,
-      })
-      .then((response) => {
-        const recipe = response.data.recipe;
-        
-        form.locale = response.data.locale || 'nl'; // Add this line - use app locale from response
-        form.title = recipe.title;
-        // ... rest of existing assignments ...
-      })
-      .catch((error) => {
-        router.get(route("import.index"));
-      });
-  }
-});
-</script>
-
-<template>
-  <!-- No locale selector needed in template - it's set automatically from app locale -->
-  <!-- ... rest of existing template ... -->
-</template>
-```
-
 ---
 
 ## Phase 6: Frontend Forms
@@ -1049,6 +1002,53 @@ const localeLabel = computed(() => {
     'language_locked' => 'Taal kan niet worden gewijzigd na het aanmaken. Gebruik de vertaalfunctie om vertalingen toe te voegen (binnenkort beschikbaar).',
     // ... other strings
 ],
+```
+
+#### 6.3 Update Import Form Component
+
+**File**: `resources/js/Pages/Import/Form.vue`
+
+Add locale field to the form (set from API response, not user-selectable):
+
+```vue
+<script setup>
+// ... existing imports ...
+
+const form = useForm({
+  locale: '', // Add this field
+  title: "",
+  external_image: "",
+  // ... rest of existing fields ...
+});
+
+// ... existing code ...
+
+onMounted(() => {
+  if (isLoading.value) {
+    axios
+      .post(route("import.import-recipe"), {
+        url: props.url,
+        parser: props.parser,
+        force_import: props.force_import,
+      })
+      .then((response) => {
+        const recipe = response.data.recipe;
+        
+        form.locale = response.data.locale || 'nl'; // Add this line - use app locale from response
+        form.title = recipe.title;
+        // ... rest of existing assignments ...
+      })
+      .catch((error) => {
+        router.get(route("import.index"));
+      });
+  }
+});
+</script>
+
+<template>
+  <!-- No locale selector needed in template - it's set automatically from app locale -->
+  <!-- ... rest of existing template ... -->
+</template>
 ```
 
 ---
