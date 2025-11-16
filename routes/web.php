@@ -37,7 +37,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/recepten/importeren/proxy-image', [ImportController::class, 'proxyImage'])->name('import.proxy-image');
 });
 
-Route::get('/recepten/{slug}', [RecipeController::class, 'show'])->name('recipes.show');
+Route::get('/recipes/{slug}', [RecipeController::class, 'show'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('recipes.show');
+
+Route::get('/recepten/{slug}', [RecipeController::class, 'show'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('recipes.show');
 
 Route::get('/over-mij', function () {
     return view('kocina.about-me');

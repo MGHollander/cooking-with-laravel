@@ -156,8 +156,11 @@ class RecipeController extends Controller
             ],
             'open_graph' => [
                 'title' => $translation->title,
+                'description' => $translation->summary ? strip_tags($translation->summary) : null,
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
                 'url' => URL::current(),
+                'type' => 'article',
+                'locale' => $translation->locale === 'nl' ? 'nl_NL' : 'en_US',
             ],
         ]);
     }

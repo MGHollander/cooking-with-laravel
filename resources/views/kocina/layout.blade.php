@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace("_", "-", app()->getLocale()) }}">
+<html lang="{{ str_replace("_", "-", $locale ?? app()->getLocale()) }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,6 +8,14 @@
 
     @if (!empty($meta))
       {{ $meta }}
+    @endif
+
+    @if (isset($open_graph) && is_array($open_graph))
+      @foreach ($open_graph as $key => $value)
+        @if ($value !== null)
+          <meta property="og:{{ $key }}" content="{{ $value }}" />
+        @endif
+      @endforeach
     @endif
 
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
