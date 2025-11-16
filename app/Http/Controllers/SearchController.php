@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Recipe;
+use App\Models\RecipeTranslation;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use ProtoneMedia\LaravelCrossEloquentSearch\Search;
@@ -15,18 +15,27 @@ class SearchController extends Controller
     public function index(Request $request): View
     {
         $searchKey = $request->get('q', '');
-        $recipes = Search::add(Recipe::with(['author', 'translations'])->withActiveAuthor(), ['title', 'ingredients', 'instructions', 'tags.name'])
+        $recipes = Search::new()
+            ->add(
+                RecipeTranslation::with('recipe.author', 'recipe.media')
+                    ->whereHas('recipe', fn ($query) => $query->whereHas('author')),
+                ['title', 'ingredients', 'instructions']
+            )
             ->paginate(12)
             ->beginWithWildcard()
             ->search(strtolower($searchKey))
             ->withQueryString()
-            ->through(fn ($recipe) => [
-                'id' => $recipe->id,
-                'title' => $recipe->title,
-                'slug' => $recipe->slug,
-                'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
-                'no_index' => $recipe->no_index,
-            ]);
+            ->map(function ($translation) {
+                $recipe = $translation->recipe;
+                return [
+                    'id' => $recipe->id,
+                    'title' => $translation->title,
+                    'slug' => $translation->slug,
+                    'locale' => $translation->locale,
+                    'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
+                    'no_index' => $recipe->no_index,
+                ];
+            });
 
         return view('kocina.search.index', [
             'recipes' => $recipes,
