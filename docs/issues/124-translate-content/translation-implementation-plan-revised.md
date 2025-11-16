@@ -1322,7 +1322,8 @@ class RecipeTranslationTest extends TestCase
 - [ ] Slug is unique across all languages
 - [ ] Search finds recipes in both languages
 - [ ] Tags work correctly
-- [ ] Recipe import creates translation using app locale
+- [ ] Recipe import creates recipe in Dutch
+- [ ] Recipe import creates recipe in English
 - [ ] Imported recipe uses correct locale from app context
 - [ ] Imported recipe slug is generated correctly
 - [ ] SEO meta tags show correct language
