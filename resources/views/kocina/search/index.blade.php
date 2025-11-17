@@ -17,7 +17,7 @@
                         {{ __('recipes.search.subtitle_all', ['count' => $recipes->total()]) }}
                     @endif
                 @else
-                    {{ __('recipes.search.no_results', ['query' => request('q'), 'browse_link' => '<a href="' . route('search') . '">' . __('recipes.search.browse') . '</a>']) }}
+                    {!! __('recipes.search.no_results', ['query' => request('q'), 'browse_link' => '<a href="' . route('search') . '">' . __('recipes.search.browse') . '</a>']) !!}
                 @endif
             </div>
 
