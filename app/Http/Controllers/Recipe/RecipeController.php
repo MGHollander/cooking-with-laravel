@@ -96,7 +96,7 @@ class RecipeController extends Controller
             $recipe->translations()->create([
                 'locale' => $attributes['locale'],
                 'title' => $attributes['title'],
-                'summary' => $attributes['summary'],
+                'summary' => $attributes['summary'] ?? null,
                 'ingredients' => $attributes['ingredients'],
                 'instructions' => $attributes['instructions'],
             ]);
@@ -227,7 +227,7 @@ class RecipeController extends Controller
             if ($existingTranslation) {
                 $existingTranslation->update([
                     'title' => $attributes['title'],
-                    'summary' => $attributes['summary'],
+                    'summary' => $attributes['summary'] ?? null,
                     'ingredients' => $attributes['ingredients'],
                     'instructions' => $attributes['instructions'],
                 ]);
@@ -235,7 +235,7 @@ class RecipeController extends Controller
                 $recipe->translations()->create([
                     'locale' => $attributes['locale'],
                     'title' => $attributes['title'],
-                    'summary' => $attributes['summary'],
+                    'summary' => $attributes['summary'] ?? null,
                     'ingredients' => $attributes['ingredients'],
                     'instructions' => $attributes['instructions'],
                 ]);
