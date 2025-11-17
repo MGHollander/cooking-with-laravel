@@ -11,6 +11,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Tags\HasTags;
+use Spatie\Tags\Tag;
 
 class Recipe extends Model implements HasMedia, TranslatableContract
 {
@@ -91,5 +92,21 @@ class Recipe extends Model implements HasMedia, TranslatableContract
     public function scopeWithActiveAuthor($query)
     {
         return $query->whereHas('author');
+    }
+
+    public function syncTagsInLocale(array $tagNames, string $locale): void
+    {
+        $tags = collect($tagNames)->map(function (string $tagName) use ($locale) {
+            $tag = Tag::findOrCreate($tagName, null, $locale);
+            
+            if (!$tag->hasTranslation('name', $locale)) {
+                $tag->setTranslation('name', $locale, $tagName);
+                $tag->save();
+            }
+            
+            return $tag;
+        });
+
+        $this->syncTags($tags);
     }
 }

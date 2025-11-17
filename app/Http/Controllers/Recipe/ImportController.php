@@ -293,7 +293,7 @@ class ImportController extends Controller
             
             if (!empty($attributes['tags'])) {
                 $tags = array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags']))));
-                $recipe->syncTags($tags);
+                $recipe->syncTagsInLocale($tags, $locale);
             }
             
             if ($externalImage = $request->get('external_image')) {

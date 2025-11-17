@@ -103,7 +103,7 @@ class RecipeController extends Controller
             
             if (!empty($attributes['tags'])) {
                 $tags = array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags']))));
-                $recipe->syncTags($tags);
+                $recipe->syncTagsInLocale($tags, $attributes['locale']);
             }
             
             $this->saveMedia($request, $recipe);
@@ -142,7 +142,7 @@ class RecipeController extends Controller
                 'slug' => $translation->slug,
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
                 'summary' => strip_tags($translation->summary, '<strong><em><u>'),
-                'tags' => $recipe->tags->pluck('name'),
+                'tags' => $recipe->tags->map(fn ($tag) => $tag->getTranslation('name', $translation->locale))->filter(),
                 'servings' => $recipe->servings,
                 'preparation_minutes' => $recipe->preparation_minutes,
                 'cooking_minutes' => $recipe->cooking_minutes,
@@ -184,7 +184,7 @@ class RecipeController extends Controller
                 'summary' => $translation->summary ? strip_tags($translation->summary, '<strong><em><u>') : '',
                 'ingredients' => $translation->ingredients,
                 'instructions' => strip_tags($translation->instructions, '<strong><em><u><h3><ol><ul><li>'),
-                'tags' => $recipe->tags->pluck('name')->implode(', '),
+                'tags' => $recipe->tags->map(fn ($tag) => $tag->getTranslation('name', $translation->locale))->filter()->implode(', '),
                 'media' => $recipe->getFirstMedia('recipe_image'),
                 'servings' => $recipe->servings,
                 'preparation_minutes' => $recipe->preparation_minutes,
@@ -243,7 +243,7 @@ class RecipeController extends Controller
             
             if (!empty($attributes['tags'])) {
                 $tags = array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags']))));
-                $recipe->syncTags($tags);
+                $recipe->syncTagsInLocale($tags, $attributes['locale']);
             } else {
                 $recipe->detachTags($recipe->tags);
             }
@@ -413,7 +413,10 @@ class RecipeController extends Controller
         }
 
         if ($recipe->tags->count() > 0) {
-            JsonLd::addValue('keywords', implode(',', $recipe->tags->pluck('name')->toArray()));
+            $keywords = $recipe->tags->map(fn ($tag) => $tag->getTranslation('name', $translation->locale))->filter()->toArray();
+            if (!empty($keywords)) {
+                JsonLd::addValue('keywords', implode(',', $keywords));
+            }
         }
     }
 
