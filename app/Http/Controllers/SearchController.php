@@ -18,14 +18,17 @@ class SearchController extends Controller
         $recipes = Search::new()
             ->add(
                 RecipeTranslation::with('recipe.author', 'recipe.media')
-                    ->whereHas('recipe', fn ($query) => $query->whereHas('author')),
+                    ->whereHas('recipe', fn ($query) => $query->whereHas('author'))
+                    ->join('recipes', 'recipe_translations.recipe_id', '=', 'recipes.id')
+                    ->orderBy('recipes.created_at', 'desc')
+                    ->select('recipe_translations.*'),
                 ['title', 'ingredients', 'instructions']
             )
             ->paginate(12)
             ->beginWithWildcard()
             ->search(strtolower($searchKey))
             ->withQueryString()
-            ->map(function ($translation) {
+            ->through(function ($translation) {
                 $recipe = $translation->recipe;
                 return [
                     'id' => $recipe->id,
