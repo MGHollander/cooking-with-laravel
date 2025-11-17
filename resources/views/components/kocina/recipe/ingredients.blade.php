@@ -3,7 +3,7 @@
 ])
 
 <div {{ $attributes->class(['recipe-ingredients-container']) }}>
-    <h2>{{ __('recipes.show.ingredients') }}</h2>
+    <h2>{!! __('recipes.show.ingredients') !!}</h2>
 
     <div class="recipe-ingredients-controls">
         <button

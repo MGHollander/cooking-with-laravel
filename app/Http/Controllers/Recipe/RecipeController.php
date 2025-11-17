@@ -222,15 +222,24 @@ class RecipeController extends Controller
                 'no_index' => $attributes['no_index'] ?? false,
             ]);
             
-            $recipe->translations()->updateOrCreate(
-                ['locale' => $attributes['locale']],
-                [
+            $existingTranslation = $recipe->translations()->where('locale', $attributes['locale'])->first();
+            
+            if ($existingTranslation) {
+                $existingTranslation->update([
                     'title' => $attributes['title'],
                     'summary' => $attributes['summary'],
                     'ingredients' => $attributes['ingredients'],
                     'instructions' => $attributes['instructions'],
-                ]
-            );
+                ]);
+            } else {
+                $recipe->translations()->create([
+                    'locale' => $attributes['locale'],
+                    'title' => $attributes['title'],
+                    'summary' => $attributes['summary'],
+                    'ingredients' => $attributes['ingredients'],
+                    'instructions' => $attributes['instructions'],
+                ]);
+            }
             
             if (!empty($attributes['tags'])) {
                 $tags = array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags']))));

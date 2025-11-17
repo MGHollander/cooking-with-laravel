@@ -16,6 +16,10 @@ class Recipe extends Model implements HasMedia, TranslatableContract
 {
     use HasFactory, HasTags, InteractsWithMedia, SoftDeletes, Translatable;
 
+    public $translationModel = RecipeTranslation::class;
+    protected $translationForeignKey = 'recipe_id';
+    protected $localeKey = 'locale';
+
     public array $translatedAttributes = [
         'slug',
         'title',
@@ -51,7 +55,7 @@ class Recipe extends Model implements HasMedia, TranslatableContract
     }
 
     public function getSlugForLocale(?string $locale = null): ?string
-    {
+    {    
         $locale = $locale ?? $this->primaryLocale();
         return $this->translate($locale)?->slug;
     }
