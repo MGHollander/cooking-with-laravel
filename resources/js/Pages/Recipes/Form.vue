@@ -195,7 +195,7 @@ onMounted(() => {
       {{ title }} <a v-if="edit" :href="route('recipes.show', props.recipe.slug)" class="ml-4 text-sm">{{ $t('recipes.form.view_recipe') }}</a>
     </template>
 
-    <form class="mx-auto mb-12 max-w-3xl space-y-8" @submit.prevent="save">
+    <form class="mx-auto max-w-3xl space-y-8" @submit.prevent="save">
       <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6">
         <div class="space-y-1">
           <Label for="locale" :value="$t('recipes.form.language')" />
@@ -414,7 +414,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="fixed bottom-0 left-0 w-full border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
+      <div class="sticky bottom-0 w-screen ml-[50%] -translate-x-1/2 border-y border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
         <div class="mx-auto flex max-w-3xl justify-between sm:px-6">
           <Button :disabled="form.processing" class="text-xs" type="submit">{{ $t('recipes.form.save') }}</Button>
           <Button

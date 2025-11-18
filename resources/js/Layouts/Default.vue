@@ -289,7 +289,7 @@ const toggleNav = (nav) => {
 
       <!-- Page Content -->
       <main>
-        <div class="py-6 sm:py-12">
+        <div class="pt-6 pb-20 sm:pt-12">
           <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <slot />
           </div>

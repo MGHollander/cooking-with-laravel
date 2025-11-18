@@ -165,7 +165,7 @@ onMounted(() => {
         <p class="font-bold">{{ $t('import.form.loading') }}</p>
       </div>
       <div v-else-if="errorMessage" class="text-red-500 p-4">{{ errorMessage }}</div>
-      <form v-else class="mx-auto mb-12 max-w-3xl space-y-8" @submit.prevent="submitForm">
+      <form v-else class="mx-auto max-w-3xl space-y-8" @submit.prevent="submitForm">
         <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6">
           <div class="space-y-1">
             <Label for="locale" :value="$t('recipes.form.language')" />
@@ -385,28 +385,27 @@ onMounted(() => {
               <InputError :message="form.errors.no_index" />
             </div>
           </div>
+        </div>
+        <div class="sticky bottom-0 w-screen ml-[50%] -translate-x-1/2 border-y border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
+          <div class="mx-auto flex max-w-3xl space-x-2 sm:px-6">
+            <Button
+              :disabled="form.processing"
+              class="text-xs"
+              type="submit"
+              @click="form.return_to_import_page = false"
+            >
+              {{ $t('import.form.save') }}
+            </Button>
 
-          <div class="fixed bottom-0 left-0 w-full border-t border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
-            <div class="mx-auto flex max-w-3xl space-x-2 sm:px-6">
-              <Button
-                :disabled="form.processing"
-                class="text-xs"
-                type="submit"
-                @click="form.return_to_import_page = false"
-              >
-                {{ $t('import.form.save') }}
-              </Button>
-
-              <Button
-                :disabled="form.processing"
-                class="text-xs"
-                type="submit"
-                button-style="secondary"
-                @click="form.return_to_import_page = true"
-              >
-                {{ $t('import.form.save_and_new') }}
-              </Button>
-            </div>
+            <Button
+              :disabled="form.processing"
+              class="text-xs"
+              type="submit"
+              button-style="secondary"
+              @click="form.return_to_import_page = true"
+            >
+              {{ $t('import.form.save_and_new') }}
+            </Button>
           </div>
         </div>
       </form>
