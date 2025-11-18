@@ -1315,19 +1315,19 @@ class RecipeTranslationTest extends TestCase
 
 ### 10.2 Testing Checklist
 
-- [ ] Create recipe in English - verifies EN creation
-- [ ] Create recipe in Dutch - verifies NL creation
-- [ ] Edit recipe - updates in same language
-- [ ] View recipe by slug - displays correctly
-- [ ] Slug is unique across all languages
-- [ ] Search finds recipes in both languages
-- [ ] Tags work correctly
-- [ ] Recipe import creates recipe in Dutch
-- [ ] Recipe import creates recipe in English
-- [ ] Imported recipe uses correct locale from app context
-- [ ] Imported recipe slug is generated correctly
-- [ ] SEO meta tags show correct language
-- [ ] JSON-LD structured data includes inLanguage
+- [x] Create recipe in English - verifies EN creation
+- [x] Create recipe in Dutch - verifies NL creation
+- [x] Edit recipe - updates in same language
+- [x] View recipe by slug - displays correctly
+- [x] Slug is unique across all languages
+- [x] Search finds recipes in both languages
+- [x] Tags work correctly
+- [x] Recipe import creates recipe in Dutch
+- [x] Recipe import creates recipe in English
+- [x] Imported recipe uses correct locale from app context
+- [x] Imported recipe slug is generated correctly
+- [x] SEO meta tags show correct language
+- [x] JSON-LD structured data includes inLanguage
 
 ---
 
