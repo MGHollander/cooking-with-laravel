@@ -192,7 +192,7 @@ onMounted(() => {
 
   <DefaultLayout>
     <template #header>
-      {{ title }} <a v-if="edit" :href="route('recipes.show', props.recipe.slug)" class="ml-4 text-sm">{{ $t('recipes.form.view_recipe') }}</a>
+      {{ title }} <a v-if="edit" :href="props.recipe.locale === 'en' ? route('recipes.show.en', props.recipe.slug) : route('recipes.show.nl', props.recipe.slug)" class="ml-4 text-sm">{{ $t('recipes.form.view_recipe') }}</a>
     </template>
 
     <form class="mx-auto max-w-3xl space-y-8" @submit.prevent="save">

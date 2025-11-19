@@ -53,10 +53,13 @@ class ImportController extends Controller
         $userImport = $this->importLogService->getUserImportForUrl($user, $cleanUrl);
 
         if (! $forceImport && $userImport && $userImport->recipe) {
-            $recipeUrl = route('recipes.show', $userImport->recipe->slug);
+            $recipe = $userImport->recipe;
+            $locale = $recipe->primaryLocale();
+            $slug = $recipe->getSlugForLocale($locale);
+            $recipeUrl = route_recipe_show($slug, $locale);
 
             return back()
-                ->with('warning', "Je hebt dit recept al geïmporteerd: <a href=\"{$recipeUrl}\">{$userImport->recipe->title}</a>")
+                ->with('warning', "Je hebt dit recept al geïmporteerd: <a href=\"{$recipeUrl}\">{$recipe->getTitleForLocale($locale)}</a>")
                 ->with('import_url', $url);
         }
 
@@ -332,13 +335,13 @@ class ImportController extends Controller
         
         if ($request->get('return_to_import_page')) {
             $slug = $recipe->getSlugForLocale($locale);
-            return redirect()->route('import.index')->with('success', 'Het recept "<a href="'.route('recipes.show', $slug).'"><i>'.$recipe->getTitleForLocale($locale).'</i></a>" is succesvol geïmporteerd! 🎉');
+            return redirect()->route('import.index')->with('success', 'Het recept "<a href="'.route_recipe_show($slug, $locale).'"><i>'.$recipe->getTitleForLocale($locale).'</i></a>" is succesvol geïmporteerd! 🎉');
         }
         
         Session::flash('success', 'Het recept is succesvol geïmporteerd! 🎉');
         
         $slug = $recipe->getSlugForLocale($locale);
-        return Inertia::location(route('recipes.show', $slug));
+        return Inertia::location(route_recipe_show($slug, $locale));
     }
 
     // TODO dry this code. Is pretty much the same as in app/Http/Controllers/Recipe/RecipeController.php@saveMedia

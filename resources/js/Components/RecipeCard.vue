@@ -6,7 +6,7 @@ defineProps({
 });
 </script>
 <template>
-  <Link :key="recipe.id" :href="route('recipes.show', recipe.slug)" class="recipe-card md:col-span-4">
+  <Link :key="recipe.id" :href="recipe.locale === 'en' ? route('recipes.show.en', recipe.slug) : route('recipes.show.nl', recipe.slug)" class="recipe-card md:col-span-4">
     <div v-if="recipe.image" class="recipe-card-image">
       <img :src="recipe.image" :alt="$t('recipes.card_image_alt', { title: recipe.title })" />
     </div>

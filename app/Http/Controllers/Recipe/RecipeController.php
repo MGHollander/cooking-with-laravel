@@ -258,7 +258,7 @@ class RecipeController extends Controller
         Session::flash('success', 'Het recept is succesvol gewijzigd!  🧑‍🍳');
         
         $slug = $recipe->getSlugForLocale($attributes['locale']);
-        return Inertia::location(route('recipes.show', $slug));
+        return Inertia::location(route_recipe_show($slug, $attributes['locale']));
     }
 
     /**

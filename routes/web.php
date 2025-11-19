@@ -39,11 +39,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('/recipes/{slug}', [RecipeController::class, 'show'])
     ->where('slug', '[a-z0-9-]+')
-    ->name('recipes.show');
+    ->name('recipes.show.en');
 
 Route::get('/recepten/{slug}', [RecipeController::class, 'show'])
     ->where('slug', '[a-z0-9-]+')
-    ->name('recipes.show');
+    ->name('recipes.show.nl');
 
 Route::get('/over-mij', function () {
     return view('kocina.about-me');
