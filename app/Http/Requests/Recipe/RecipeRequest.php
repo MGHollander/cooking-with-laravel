@@ -16,7 +16,7 @@ class RecipeRequest extends FormRequest
     public function rules()
     {
         return [
-            'locale' => 'required|in:en,nl',
+            'locale' => ['required', 'string', 'size:2', 'regex:/^[a-z]{2}$/'],
             'title' => 'required|string|max:255',
             'summary' => 'nullable|string',
             'ingredients' => 'required|string',

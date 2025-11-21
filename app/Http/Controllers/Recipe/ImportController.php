@@ -10,6 +10,7 @@ use App\Http\Traits\FillableAttributes;
 use App\Models\ImportLog;
 use App\Models\Recipe;
 use App\Services\ImportLogService;
+use App\Services\LanguageDetectionService;
 use App\Services\RecipeParsing\Data\ParsedRecipeData;
 use App\Services\RecipeParsing\Services\RecipeParsingService;
 use App\Support\FileHelper;
@@ -27,7 +28,8 @@ class ImportController extends Controller
 
     public function __construct(
         private readonly RecipeParsingService $recipeParsingService,
-        private readonly ImportLogService $importLogService
+        private readonly ImportLogService $importLogService,
+        private readonly LanguageDetectionService $languageDetectionService
     ) {}
 
     public function index(Request $request)
@@ -72,6 +74,7 @@ class ImportController extends Controller
                 'image_dimensions' => config('media-library.image_dimensions.recipe'),
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
+            'languages' => \App\Support\LanguageHelper::getAllLanguages(),
         ]);
     }
 
@@ -104,12 +107,15 @@ class ImportController extends Controller
                 $recipeArray = $parsedData->toArray();
                 $recipeArray['images'] = $validImages;
 
+                $locale = $this->detectLanguageFromParsedData($parsedData) ?? app()->getLocale();
+
                 $recipe = new ImportResource($recipeArray);
 
                 return [
                     'recipe' => $recipe,
                     'import_log_id' => $importLog->id,
-                    'locale' => app()->getLocale(),
+                    'locale' => $locale,
+                    'languages' => \App\Support\LanguageHelper::getAllLanguages(),
                     'config' => [
                         'image_dimensions' => config('media-library.image_dimensions.recipe'),
                         'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
@@ -158,6 +164,8 @@ class ImportController extends Controller
 
             $validImages = $this->filterValidImages($parsedResult->recipe->images);
 
+            $locale = $this->detectLanguageFromParsedData($parsedResult->recipe) ?? app()->getLocale();
+
             $recipeArray = $parsedResult->recipe->toArray();
             $recipeArray['images'] = $validImages;
 
@@ -165,7 +173,8 @@ class ImportController extends Controller
 
             return [
                 'recipe' => $recipe,
-                'locale' => app()->getLocale(),
+                'locale' => $locale,
+                'languages' => \App\Support\LanguageHelper::getAllLanguages(),
             ];
         } catch (\Exception $e) {
             Log::error('Failed to import recipe', [
@@ -342,6 +351,33 @@ class ImportController extends Controller
         
         $slug = $recipe->getSlugForLocale($locale);
         return Inertia::location(route_recipe_show($slug, $locale));
+    }
+
+    private function detectLanguageFromParsedData(ParsedRecipeData $parsedData): ?string
+    {
+        $ingredients = !empty($parsedData->ingredients) 
+            ? implode("\n", $parsedData->ingredients) 
+            : null;
+        
+        $instructions = !empty($parsedData->steps) 
+            ? implode(' ', $parsedData->steps) 
+            : null;
+        
+        $detected = $this->languageDetectionService->detectLanguage(
+            $parsedData->title,
+            $parsedData->description,
+            $ingredients,
+            $instructions
+        );
+        
+        if ($detected) {
+            Log::debug('Language auto-detected for imported recipe', [
+                'detected_language' => $detected,
+                'title' => $parsedData->title,
+            ]);
+        }
+        
+        return $detected;
     }
 
     // TODO dry this code. Is pretty much the same as in app/Http/Controllers/Recipe/RecipeController.php@saveMedia

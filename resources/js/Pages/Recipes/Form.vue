@@ -17,7 +17,7 @@ import FlashMessage from "@/Components/FlashMessage.vue";
 import { trans } from 'laravel-vue-i18n';
 
 
-const props = defineProps({ recipe: Object, config: Object });
+const props = defineProps({ recipe: Object, config: Object, languages: Object });
 const edit = route().current("recipes.edit") ?? false;
 const page = usePage();
 
@@ -46,7 +46,20 @@ const form = useForm({
 const title = computed(() => edit ? trans('recipes.form.edit_title', { title: form.title }) : trans('recipes.form.create_title'));
 
 const localeLabel = computed(() => {
-  return form.locale === 'en' ? 'English' : 'Nederlands';
+  return props.languages?.[form.locale] || form.locale;
+});
+
+const sortedLanguages = computed(() => {
+  if (!props.languages) return [];
+  
+  const popular = ['en', 'nl'];
+  const popularLanguages = popular.map(code => ({ code, name: props.languages[code] })).filter(l => l.name);
+  const otherLanguages = Object.entries(props.languages)
+    .filter(([code]) => !popular.includes(code))
+    .map(([code, name]) => ({ code, name }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  
+  return [...popularLanguages, ...otherLanguages];
 });
 
 const file = ref(null);
@@ -192,7 +205,7 @@ onMounted(() => {
 
   <DefaultLayout>
     <template #header>
-      {{ title }} <a v-if="edit" :href="props.recipe.locale === 'en' ? route('recipes.show.en', props.recipe.slug) : route('recipes.show.nl', props.recipe.slug)" class="ml-4 text-sm">{{ $t('recipes.form.view_recipe') }}</a>
+      {{ title }} <a v-if="edit" :href="edit ? (props.recipe.locale === 'nl' ? route('recipes.show.nl', props.recipe.slug) : route('recipes.show.en', props.recipe.slug)) : ''" class="ml-4 text-sm">{{ $t('recipes.form.view_recipe') }}</a>
     </template>
 
     <form class="mx-auto max-w-3xl space-y-8" @submit.prevent="save">
@@ -204,8 +217,9 @@ onMounted(() => {
             :disabled="edit"
             class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <option value="en">🇬🇧 English</option>
-            <option value="nl">🇳🇱 Nederlands</option>
+            <option v-for="lang in sortedLanguages" :key="lang.code" :value="lang.code">
+              {{ lang.name }}
+            </option>
           </select>
           <p v-if="edit" class="text-xs text-gray-500">
             {{ $t('recipes.form.language_locked') }}

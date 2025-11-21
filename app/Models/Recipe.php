@@ -109,4 +109,29 @@ class Recipe extends Model implements HasMedia, TranslatableContract
 
         $this->syncTags($tags);
     }
+
+    public function getAllTranslations(): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->translations;
+    }
+
+    public function hasTranslation(?string $locale = null): bool
+    {
+        if ($locale === null) {
+            $locale = app()->getLocale();
+        }
+        
+        return $this->translations()->where('locale', $locale)->exists();
+    }
+
+    public function getAlternateUrls(): array
+    {
+        $urls = [];
+        
+        foreach ($this->translations as $translation) {
+            $urls[$translation->locale] = route_recipe_show($translation->slug, $translation->locale);
+        }
+        
+        return $urls;
+    }
 }

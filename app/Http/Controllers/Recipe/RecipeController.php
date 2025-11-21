@@ -68,6 +68,7 @@ class RecipeController extends Controller
                 'image_dimensions' => config('media-library.image_dimensions.recipe'),
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
+            'languages' => \App\Support\LanguageHelper::getAllLanguages(),
         ]);
     }
 
@@ -129,8 +130,13 @@ class RecipeController extends Controller
         }
         
         $recipe = $translation->recipe;
+        $recipe->load('translations');
         
         $this->setJsonLdData($recipe, $translation);
+
+        $alternateUrls = $recipe->getAlternateUrls();
+        $canonicalUrl = route_recipe_show($translation->slug, $translation->locale);
+        $ogLocale = $this->formatOpenGraphLocale($translation->locale);
 
         return view('kocina.recipes.show', [
             'recipe' => [
@@ -160,8 +166,10 @@ class RecipeController extends Controller
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
                 'url' => URL::current(),
                 'type' => 'article',
-                'locale' => $translation->locale === 'nl' ? 'nl_NL' : 'en_US',
+                'locale' => $ogLocale,
             ],
+            'alternate_urls' => $alternateUrls,
+            'canonical_url' => $canonicalUrl,
         ]);
     }
 
@@ -199,6 +207,7 @@ class RecipeController extends Controller
                 'image_dimensions' => config('media-library.image_dimensions.recipe'),
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
+            'languages' => \App\Support\LanguageHelper::getAllLanguages(),
         ]);
     }
 
@@ -434,5 +443,23 @@ class RecipeController extends Controller
         }
 
         return 'PT'.$isoHours.$isoMinutes;
+    }
+
+    private function formatOpenGraphLocale(string $locale): string
+    {
+        $localeMap = [
+            'nl' => 'nl_NL',
+            'en' => 'en_US',
+            'de' => 'de_DE',
+            'fr' => 'fr_FR',
+            'es' => 'es_ES',
+            'it' => 'it_IT',
+            'pt' => 'pt_PT',
+            'ru' => 'ru_RU',
+            'ja' => 'ja_JP',
+            'zh' => 'zh_CN',
+        ];
+
+        return $localeMap[$locale] ?? $locale.'_'.strtoupper($locale);
     }
 }
