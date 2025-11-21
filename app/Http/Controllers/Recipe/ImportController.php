@@ -74,7 +74,7 @@ class ImportController extends Controller
                 'image_dimensions' => config('media-library.image_dimensions.recipe'),
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
-            'languages' => \App\Support\LanguageHelper::getAllLanguages(),
+            'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
         ]);
     }
 
@@ -115,7 +115,7 @@ class ImportController extends Controller
                     'recipe' => $recipe,
                     'import_log_id' => $importLog->id,
                     'locale' => $locale,
-                    'languages' => \App\Support\LanguageHelper::getAllLanguages(),
+                    'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
                     'config' => [
                         'image_dimensions' => config('media-library.image_dimensions.recipe'),
                         'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
@@ -174,7 +174,7 @@ class ImportController extends Controller
             return [
                 'recipe' => $recipe,
                 'locale' => $locale,
-                'languages' => \App\Support\LanguageHelper::getAllLanguages(),
+                'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
             ];
         } catch (\Exception $e) {
             Log::error('Failed to import recipe', [

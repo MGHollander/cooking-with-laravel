@@ -68,7 +68,7 @@ class RecipeController extends Controller
                 'image_dimensions' => config('media-library.image_dimensions.recipe'),
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
-            'languages' => \App\Support\LanguageHelper::getAllLanguages(),
+            'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
         ]);
     }
 
@@ -207,7 +207,7 @@ class RecipeController extends Controller
                 'image_dimensions' => config('media-library.image_dimensions.recipe'),
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
-            'languages' => \App\Support\LanguageHelper::getAllLanguages(),
+            'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
         ]);
     }
 
