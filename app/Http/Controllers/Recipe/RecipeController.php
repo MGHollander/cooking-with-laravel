@@ -231,18 +231,34 @@ class RecipeController extends Controller
                 'no_index' => $attributes['no_index'] ?? false,
             ]);
             
-            $existingTranslation = $recipe->translations()->where('locale', $attributes['locale'])->first();
+            $currentTranslation = $recipe->primaryTranslation();
+            $translationForNewLocale = $recipe->translations()->where('locale', $attributes['locale'])->first();
             
-            if ($existingTranslation) {
-                $existingTranslation->update([
+            if (!$currentTranslation) {
+                $recipe->translations()->create([
+                    'locale' => $attributes['locale'],
+                    'title' => $attributes['title'],
+                    'summary' => $attributes['summary'] ?? null,
+                    'ingredients' => $attributes['ingredients'],
+                    'instructions' => $attributes['instructions'],
+                ]);
+            } elseif ($translationForNewLocale && $translationForNewLocale->id !== $currentTranslation->id) {
+                $translationForNewLocale->update([
+                    'title' => $attributes['title'],
+                    'summary' => $attributes['summary'] ?? null,
+                    'ingredients' => $attributes['ingredients'],
+                    'instructions' => $attributes['instructions'],
+                ]);
+            } elseif ($currentTranslation->locale !== $attributes['locale']) {
+                $currentTranslation->update([
+                    'locale' => $attributes['locale'],
                     'title' => $attributes['title'],
                     'summary' => $attributes['summary'] ?? null,
                     'ingredients' => $attributes['ingredients'],
                     'instructions' => $attributes['instructions'],
                 ]);
             } else {
-                $recipe->translations()->create([
-                    'locale' => $attributes['locale'],
+                $currentTranslation->update([
                     'title' => $attributes['title'],
                     'summary' => $attributes['summary'] ?? null,
                     'ingredients' => $attributes['ingredients'],

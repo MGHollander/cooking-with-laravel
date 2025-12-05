@@ -67,6 +67,7 @@ const image = ref({ src: props.recipe?.media?.original_url ?? null, type: null }
 const cropperCard = ref(null);
 const cropperShow = ref(null);
 const imageSizeWarning = ref("");
+const localeEnabled = ref(!edit);
 
 const save = () => {
   form.media_dimensions = {
@@ -212,18 +213,25 @@ onMounted(() => {
       <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6">
         <div class="space-y-1">
           <Label for="locale" :value="$t('recipes.form.language')" />
-          <select
-            v-model="form.locale"
-            :disabled="edit"
-            class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <option v-for="lang in sortedLanguages" :key="lang.code" :value="lang.code">
-              {{ lang.name }}
-            </option>
-          </select>
-          <p v-if="edit" class="text-xs text-gray-500">
-            {{ $t('recipes.form.language_locked') }}
-          </p>
+          <div class="flex gap-2">
+            <select
+              v-model="form.locale"
+              :disabled="!localeEnabled"
+              class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <option v-for="lang in sortedLanguages" :key="lang.code" :value="lang.code">
+                {{ lang.name }}
+              </option>
+            </select>
+            <Button
+              v-if="edit && !localeEnabled"
+              button-style="ghost"
+              class="whitespace-nowrap text-sm"
+              @click="localeEnabled = true"
+            >
+              {{ $t('recipes.form.enable_locale') }}
+            </Button>
+          </div>
           <InputError :message="form.errors.locale" />
         </div>
       </div>
