@@ -12,9 +12,9 @@
     @endif
 
     <div class="recipe-header-body">
-        <h1 class="recipe-title">{{ $recipe["title"] }}</h1>
+        <h1 class="recipe-title" lang="{{ $recipe["locale"] }}">{{ $recipe["title"] }}</h1>
 
-        <div class="recipe-summary">
+        <div class="recipe-summary" lang="{{ $recipe["locale"] }}">
             {!! $recipe["summary"] !!}
         </div>
 

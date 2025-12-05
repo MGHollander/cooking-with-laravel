@@ -20,7 +20,7 @@
     </div>
 
     {{-- @formatter:off --}}
-    <{{ $title_tag }} class="recipe-card-title">{{ $recipe["title"] }}</{{ $title_tag }}>
+    <{{ $title_tag }} class="recipe-card-title" lang="{{ $recipe["locale"] ?? "nl" }}">{{ $recipe["title"] }}</{{ $title_tag }}>
     {{-- @formatter:on --}}
   </a>
 

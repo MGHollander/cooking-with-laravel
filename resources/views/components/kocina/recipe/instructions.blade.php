@@ -5,7 +5,7 @@
 <div {{ $attributes->class(['recipe-instructions-container space-y-4 sm:px-6 md:w-2/3 md:px-0']) }}>
     <h2 class="mb-4 text-xl font-bold md:mt-6 md:text-2xl">{{ __('recipes.show.instructions') }}</h2>
 
-    <div x-ref="instructions" class="recipe-instructions" style="--step-text: '{{ __('recipes.show.step') }}'">
+    <div x-ref="instructions" class="recipe-instructions" lang="{{ $recipe["locale"] }}" style="--step-text: '{{ __('recipes.show.step') }}'">
         {!! $recipe["instructions"] !!}
     </div>
 

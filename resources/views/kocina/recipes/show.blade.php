@@ -1,4 +1,4 @@
-<x-kocina.layout :locale="$recipe['locale']">
+<x-kocina.layout>
     <x-slot name="title">
         {{ $recipe["title"] }}
     </x-slot>

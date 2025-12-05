@@ -50,7 +50,7 @@
         </button>
 
         <template x-for="list in ingredientLists">
-            <div class="recipe-ingredients">
+            <div class="recipe-ingredients" lang="{{ $recipe["locale"] }}">
                 <template x-if="list.title">
                     <h3 x-text="list.title"></h3>
                 </template>
