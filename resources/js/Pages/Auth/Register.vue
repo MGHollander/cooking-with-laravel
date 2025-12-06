@@ -23,13 +23,13 @@ const submit = () => {
 
 <template>
   <GuestLayout>
-    <Head title="Registreren" />
+    <Head :title="$t('auth.register')" />
 
     <ValidationErrors class="-mx-6 -mt-4 mb-4 px-6 py-4" />
 
     <form @submit.prevent="submit">
       <div>
-        <Label for="name" value="Naam" />
+        <Label for="name" :value="$t('auth.name')" />
         <Input
           id="name"
           v-model="form.name"
@@ -42,7 +42,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4">
-        <Label for="email" value="E-mailadres" />
+        <Label for="email" :value="$t('auth.email')" />
         <Input
           id="email"
           v-model="form.email"
@@ -54,7 +54,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4">
-        <Label for="password" value="Wachtwoord" />
+        <Label for="password" :value="$t('auth.password')" />
         <Input
           id="password"
           v-model="form.password"
@@ -66,7 +66,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4">
-        <Label for="password_confirmation" value="Bevestig je wachtwoord" />
+        <Label for="password_confirmation" :value="$t('auth.confirm_password')" />
         <Input
           id="password_confirmation"
           v-model="form.password_confirmation"
@@ -75,16 +75,15 @@ const submit = () => {
           required
           autocomplete="new-password"
         />
-        />
       </div>
 
       <div class="mt-4 flex items-center justify-end">
         <Link :href="route('login')" class="text-sm text-gray-600 underline hover:text-gray-900">
-          Ben je al geregistreerd? Log dan in.
+          {{ $t('auth.already_registered') }}
         </Link>
 
         <Button type="submit" class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-          Registreren
+          {{ $t('auth.register') }}
         </Button>
       </div>
     </form>

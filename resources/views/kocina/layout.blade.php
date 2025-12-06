@@ -10,6 +10,14 @@
       {{ $meta }}
     @endif
 
+    @if (isset($open_graph) && is_array($open_graph))
+      @foreach ($open_graph as $key => $value)
+        @if ($value !== null)
+          <meta property="og:{{ $key }}" content="{{ $value }}" />
+        @endif
+      @endforeach
+    @endif
+
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap" />
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Leckerli+One&display=swap" />
@@ -51,9 +59,7 @@
 
     <div class="container footer">
       <div class="footer-text">
-        Ontstaan uit de passie voor programmeren van
-        <a href="https://mghollander.nl" target="_blank">Marc</a>
-        .
+        {!! __("app.copyright") !!}
       </div>
       <div class="footer-links"><a href="{{ route("privacy") }}">Privacy</a></div>
     </div>

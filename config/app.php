@@ -96,6 +96,14 @@ return [
     */
 
     'fallback_locale' => 'en',
+    'available_locales' => ['en', 'nl'],
+
+    'locale_domains' => [
+        'savedflavors.local.nl' => 'nl',
+        'savedflavors.local.com' => 'en',
+        'savedflavors.nl' => 'nl',
+        'savedflavors.com' => 'en',
+    ],
 
     /*
     |--------------------------------------------------------------------------

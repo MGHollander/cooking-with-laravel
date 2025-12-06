@@ -46,7 +46,7 @@ class ImportLogService
     public function getImportLogsForUser(User $user, int $limit = 50): \Illuminate\Database\Eloquent\Collection
     {
         return ImportLog::where('user_id', $user->id)
-            ->with(['recipe'])
+            ->with(['recipe.translations'])
             ->latest()
             ->limit($limit)
             ->get();
@@ -133,7 +133,7 @@ class ImportLogService
 
         return ImportLog::where('user_id', $user->id)
             ->where('url', $cleanUrl)
-            ->with(['recipe'])
+            ->with(['recipe.translations'])
             ->latest()
             ->first();
     }

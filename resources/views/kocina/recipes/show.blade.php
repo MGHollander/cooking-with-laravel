@@ -7,6 +7,16 @@
         @if($recipe["no_index"])
             <meta name="robots" content="noindex" />
         @endif
+        
+        <link rel="canonical" href="{{ $canonical_url }}" />
+        
+        @foreach($alternate_urls ?? [] as $altLocale => $altUrl)
+            <link rel="alternate" hreflang="{{ $altLocale }}" href="{{ $altUrl }}" />
+        @endforeach
+        
+        @if(isset($alternate_urls) && !empty($alternate_urls))
+            <link rel="alternate" hreflang="x-default" href="{{ $canonical_url }}" />
+        @endif
     </x-slot>
 
     <div
