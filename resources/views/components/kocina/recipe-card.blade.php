@@ -4,7 +4,7 @@
 ])
 
 <div class="recipe-card">
-  <a href="{{ route("recipes.show", ["slug" => $recipe["slug"]]) }}" class="recipe-card-link"{!! isset($recipe["no_index"]) && $recipe["no_index"] ? ' rel="nofollow"' : '' !!}>
+  <a href="{{ route_recipe_show($recipe["slug"], $recipe["locale"] ?? "nl") }}" class="recipe-card-link"{!! isset($recipe["no_index"]) && $recipe["no_index"] ? ' rel="nofollow"' : '' !!}>
     <div class="recipe-card-media">
       @if ($recipe["image"])
         <img
@@ -20,7 +20,7 @@
     </div>
 
     {{-- @formatter:off --}}
-    <{{ $title_tag }} class="recipe-card-title">{{ $recipe["title"] }}</{{ $title_tag }}>
+    <{{ $title_tag }} class="recipe-card-title" lang="{{ $recipe["locale"] ?? "nl" }}">{{ $recipe["title"] }}</{{ $title_tag }}>
     {{-- @formatter:on --}}
   </a>
 
