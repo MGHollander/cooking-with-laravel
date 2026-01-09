@@ -15,18 +15,29 @@ class SearchController extends Controller
     public function index(Request $request): View
     {
         $searchKey = $request->get('q', '');
-        $recipes = Search::add(Recipe::with('author')->withActiveAuthor(), ['title', 'ingredients', 'instructions', 'tags.name'])
+        
+        $recipes = Search::new()
+            ->add(
+                Recipe::with('author', 'media', 'tags', 'translations')
+                    ->whereHas('author'),
+                ['translations.title', 'translations.ingredients', 'translations.instructions', 'tags.name']
+            )
             ->paginate(12)
             ->beginWithWildcard()
             ->search(strtolower($searchKey))
             ->withQueryString()
-            ->through(fn ($recipe) => [
-                'id' => $recipe->id,
-                'title' => $recipe->title,
-                'slug' => $recipe->slug,
-                'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
-                'no_index' => $recipe->no_index,
-            ]);
+            ->through(function ($recipe) {
+                $translation = $recipe->primaryTranslation();
+                
+                return [
+                    'id' => $recipe->id,
+                    'title' => $translation?->title ?? 'Untitled',
+                    'slug' => $translation?->slug ?? '',
+                    'locale' => $translation?->locale ?? config('app.fallback_locale'),
+                    'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
+                    'no_index' => $recipe->no_index,
+                ];
+            });
 
         return view('kocina.search.index', [
             'recipes' => $recipes,

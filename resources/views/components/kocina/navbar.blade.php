@@ -8,13 +8,15 @@
         </div>
 
         <div class="navbar-right">
-            <button class="navbar-search-button" @click="toggleSearch()">
+            <x-language-switcher />
+            
+            <button class="navbar-button navbar-search-button" @click="toggleSearch()">
                 <x-icon.magnify-glass width="24" height="24" />
             </button>
 
             <button
-                aria-label="Menu uitklappen"
-                class="navbar-nav-button"
+                aria-label="{{ __('nav.expand_menu') }}"
+                class="navbar-button navbar-nav-button"
                 :class="{'navbar-nav-button-active' : openNav}"
                 @click="toggleNav()"
             >
@@ -25,16 +27,16 @@
 
             <div class="navbar-user-button-group">
                 @guest
-                    <a href="{{ route('login') }}" class="button button-primary">Inloggen</a>
+                    <a href="{{ route('login') }}" class="button button-primary">{{ __('nav.login') }}</a>
                 @endguest
 
                 @auth
-                    <button class="navbar-user-button" @click="toggleAddRecipeMenu()">
+                    <button class="navbar-button navbar-user-button" @click="toggleAddRecipeMenu()">
                         <x-icon.plus width="24" height="24" />
                     </button>
 
                     <nav
-                        class="navbar-user-menu"
+                        class="navbar-dropdown-menu"
                         x-cloak
                         x-show="openAddRecipeMenu"
                         x-trap="openAddRecipeMenu"
@@ -45,12 +47,12 @@
                         <x-kocina.nav-list-add-recipe />
                     </nav>
 
-                    <button class="navbar-user-button" @click="toggleUserMenu()">
+                    <button class="navbar-button navbar-user-button" @click="toggleUserMenu()">
                         <x-icon.user width="24" height="24" />
                     </button>
 
                     <nav
-                        class="navbar-user-menu"
+                        class="navbar-dropdown-menu"
                         x-cloak
                         x-show="openUserMenu"
                         x-trap="openUserMenu"
@@ -79,7 +81,7 @@
                     class="navbar-search-bar-close-button"
                     @click="openSearch = false"
                 >
-                    <span class="sr-only">Zoekveld sluiten</span>
+                    <span class="sr-only">{{ __('search.close') }}</span>
                     <x-icon.cross width="24" height="24" />
                 </button>
             </x-kocina.search-bar>
@@ -106,7 +108,7 @@
 
         <div class="navbar-menu-offcanvas-user">
             @guest
-                <a href="{{ route('login') }}" class="button button-primary">Inloggen</a>
+                <a href="{{ route('login') }}" class="button button-primary">{{ __('nav.login') }}</a>
             @endguest
 
             @auth
@@ -116,7 +118,7 @@
         </div>
 
         <button class="navbar-menu-offcanvas-button" @click="toggleNav">
-            <span class="sr-only">Menu inklappen</span>
+            <span class="sr-only">{{ __('nav.collapse_menu') }}</span>
         </button>
     </nav>
 </div>

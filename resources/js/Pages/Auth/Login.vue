@@ -27,7 +27,7 @@ const submit = () => {
 
 <template>
   <GuestLayout>
-    <Head title="Inloggen" />
+    <Head :title="$t('auth.login')" />
 
     <ValidationErrors class="-mx-6 -mt-4 mb-4 px-6 py-4" />
 
@@ -37,7 +37,7 @@ const submit = () => {
 
     <form @submit.prevent="submit">
       <div>
-        <Label for="email" value="E-mailadres" />
+        <Label for="email" :value="$t('auth.email')" />
         <Input
           id="email"
           v-model="form.email"
@@ -50,7 +50,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4">
-        <Label for="password" value="Wachtwoord" />
+        <Label for="password" :value="$t('auth.password')" />
         <Input
           id="password"
           v-model="form.password"
@@ -64,7 +64,7 @@ const submit = () => {
       <div class="mt-4 block">
         <label class="flex items-center">
           <Checkbox v-model:checked="form.remember" name="remember" />
-          <span class="ml-2 text-sm text-gray-600">Onthoud mij</span>
+          <span class="ml-2 text-sm text-gray-600">{{ $t('auth.remember_me') }}</span>
         </label>
       </div>
 
@@ -74,11 +74,11 @@ const submit = () => {
           :href="route('password.request')"
           class="text-sm text-gray-600 underline hover:text-gray-900"
         >
-          Wachtwoord vergeten?
+          {{ $t('auth.forgot_password') }}
         </Link>
 
         <Button type="submit" class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-          Log in
+          {{ $t('auth.login') }}
         </Button>
       </div>
     </form>

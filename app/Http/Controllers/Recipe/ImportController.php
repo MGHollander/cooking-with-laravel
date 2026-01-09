@@ -10,12 +10,14 @@ use App\Http\Traits\FillableAttributes;
 use App\Models\ImportLog;
 use App\Models\Recipe;
 use App\Services\ImportLogService;
+use App\Services\LanguageDetectionService;
 use App\Services\RecipeParsing\Data\ParsedRecipeData;
 use App\Services\RecipeParsing\Services\RecipeParsingService;
 use App\Support\FileHelper;
 use App\Support\ImageTypeHelper;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
@@ -26,7 +28,8 @@ class ImportController extends Controller
 
     public function __construct(
         private readonly RecipeParsingService $recipeParsingService,
-        private readonly ImportLogService $importLogService
+        private readonly ImportLogService $importLogService,
+        private readonly LanguageDetectionService $languageDetectionService
     ) {}
 
     public function index(Request $request)
@@ -52,10 +55,13 @@ class ImportController extends Controller
         $userImport = $this->importLogService->getUserImportForUrl($user, $cleanUrl);
 
         if (! $forceImport && $userImport && $userImport->recipe) {
-            $recipeUrl = route('recipes.show', $userImport->recipe->slug);
+            $recipe = $userImport->recipe;
+            $locale = $recipe->primaryLocale();
+            $slug = $recipe->getSlugForLocale($locale);
+            $recipeUrl = route_recipe_show($slug, $locale);
 
             return back()
-                ->with('warning', "Je hebt dit recept al geïmporteerd: <a href=\"{$recipeUrl}\">{$userImport->recipe->title}</a>")
+                ->with('warning', "Je hebt dit recept al geïmporteerd: <a href=\"{$recipeUrl}\">{$recipe->getTitleForLocale($locale)}</a>")
                 ->with('import_url', $url);
         }
 
@@ -68,6 +74,7 @@ class ImportController extends Controller
                 'image_dimensions' => config('media-library.image_dimensions.recipe'),
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
+            'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
         ]);
     }
 
@@ -100,11 +107,15 @@ class ImportController extends Controller
                 $recipeArray = $parsedData->toArray();
                 $recipeArray['images'] = $validImages;
 
+                $locale = $this->detectLanguageFromParsedData($parsedData) ?? app()->getLocale();
+
                 $recipe = new ImportResource($recipeArray);
 
                 return [
                     'recipe' => $recipe,
                     'import_log_id' => $importLog->id,
+                    'locale' => $locale,
+                    'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
                     'config' => [
                         'image_dimensions' => config('media-library.image_dimensions.recipe'),
                         'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
@@ -153,6 +164,8 @@ class ImportController extends Controller
 
             $validImages = $this->filterValidImages($parsedResult->recipe->images);
 
+            $locale = $this->detectLanguageFromParsedData($parsedResult->recipe) ?? app()->getLocale();
+
             $recipeArray = $parsedResult->recipe->toArray();
             $recipeArray['images'] = $validImages;
 
@@ -160,6 +173,8 @@ class ImportController extends Controller
 
             return [
                 'recipe' => $recipe,
+                'locale' => $locale,
+                'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
             ];
         } catch (\Exception $e) {
             Log::error('Failed to import recipe', [
@@ -265,52 +280,104 @@ class ImportController extends Controller
     {
         $attributes = $request->validated();
         $attributes['user_id'] = $request->user()->id;
-        // TODO Make a mutator for this.
-        // Convert tags to lowercase and trim whitespace.
-        $attributes['tags'] = ! empty($attributes['tags']) ? array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags'])))) : [];
-
-        $recipe = (new Recipe)->create($this->fillableAttributes(new Recipe, $attributes));
-
-        if ($externalImage = $request->get('external_image')) {
-            $mediaDimensions = $request->get('media_dimensions', []);
-            $manipulations = $this->buildManipulations($mediaDimensions);
-
-            try {
-                $recipe->addMediaFromUrl($externalImage)
-                    ->withManipulations($manipulations)
-                    ->toMediaCollection('recipe_image');
-            } catch (\Exception $e) {
-                Log::error('Failed to save the recipe image from url', [
-                    'recipe_id' => $recipe->id,
-                    'error' => $e->getMessage(),
-                ]);
+        
+        $locale = $attributes['locale'] ?? app()->getLocale();
+        
+        DB::transaction(function () use ($attributes, $request, $locale, &$recipe) {
+            $recipe = Recipe::create([
+                'user_id' => $attributes['user_id'],
+                'servings' => $attributes['servings'],
+                'preparation_minutes' => $attributes['preparation_minutes'] ?? null,
+                'cooking_minutes' => $attributes['cooking_minutes'] ?? null,
+                'difficulty' => $attributes['difficulty'],
+                'source_label' => $attributes['source_label'] ?? null,
+                'source_link' => $attributes['source_link'] ?? null,
+                'no_index' => $attributes['no_index'] ?? true,
+            ]);
+            
+            $recipe->translations()->create([
+                'locale' => $locale,
+                'title' => $attributes['title'],
+                'summary' => $attributes['summary'] ?? null,
+                'ingredients' => $attributes['ingredients'],
+                'instructions' => $attributes['instructions'],
+            ]);
+            
+            if (!empty($attributes['tags'])) {
+                $tags = array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags']))));
+                $recipe->syncTagsInLocale($tags, $locale);
             }
-        }
-
-        // Update import log with created recipe if this was imported from a URL
-        if ($importLogId = $request->get('import_log_id')) {
-            try {
-                $importLog = ImportLog::find($importLogId);
-                if ($importLog) {
-                    $this->importLogService->updateImportLogWithRecipe($importLog, $recipe);
+            
+            if ($externalImage = $request->get('external_image')) {
+                $mediaDimensions = $request->get('media_dimensions', []);
+                $manipulations = $this->buildManipulations($mediaDimensions);
+                
+                try {
+                    $recipe->addMediaFromUrl($externalImage)
+                        ->withManipulations($manipulations)
+                        ->toMediaCollection('recipe_image');
+                } catch (\Exception $e) {
+                    Log::error('Failed to save the recipe image from url', [
+                        'recipe_id' => $recipe->id,
+                        'error' => $e->getMessage(),
+                    ]);
                 }
-            } catch (\Exception $e) {
-                // Don't fail the recipe creation if import log update fails
-                Log::warning('Failed to update import log with recipe', [
-                    'recipe_id' => $recipe->id,
-                    'import_log_id' => $importLogId,
-                    'error' => $e->getMessage(),
-                ]);
             }
-        }
-
+            
+            // Update import log with created recipe if this was imported from a URL
+            if ($importLogId = $request->get('import_log_id')) {
+                try {
+                    $importLog = ImportLog::find($importLogId);
+                    if ($importLog) {
+                        $this->importLogService->updateImportLogWithRecipe($importLog, $recipe);
+                    }
+                } catch (\Exception $e) {
+                    // Don't fail the recipe creation if import log update fails
+                    Log::warning('Failed to update import log with recipe', [
+                        'recipe_id' => $recipe->id,
+                        'import_log_id' => $importLogId,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
+        });
+        
         if ($request->get('return_to_import_page')) {
-            return redirect()->route('import.index')->with('success', 'Het recept "<a href="'.route('recipes.show', $recipe->slug).'"><i>'.$recipe->title.'</i></a>" is succesvol geïmporteerd! 🎉');
+            $slug = $recipe->getSlugForLocale($locale);
+            return redirect()->route('import.index')->with('success', 'Het recept "<a href="'.route_recipe_show($slug, $locale).'"><i>'.$recipe->getTitleForLocale($locale).'</i></a>" is succesvol geïmporteerd! 🎉');
         }
-
+        
         Session::flash('success', 'Het recept is succesvol geïmporteerd! 🎉');
+        
+        $slug = $recipe->getSlugForLocale($locale);
+        return Inertia::location(route_recipe_show($slug, $locale));
+    }
 
-        return Inertia::location(route('recipes.show', $recipe->slug));
+    private function detectLanguageFromParsedData(ParsedRecipeData $parsedData): ?string
+    {
+        $ingredients = !empty($parsedData->ingredients) 
+            ? implode("\n", $parsedData->ingredients) 
+            : null;
+        
+        $instructions = !empty($parsedData->steps) 
+            ? implode(' ', $parsedData->steps) 
+            : null;
+        
+        $detected = $this->languageDetectionService->detectLanguage(
+            $parsedData->title,
+            $parsedData->description,
+            $ingredients,
+            $instructions
+        );
+        
+        if ($detected) {
+            Log::debug('Language auto-detected for imported recipe', [
+                'detected_language' => $detected,
+                'title' => $parsedData->title,
+            ]);
+        }
+        
+        return $detected;
     }
 
     // TODO dry this code. Is pretty much the same as in app/Http/Controllers/Recipe/RecipeController.php@saveMedia

@@ -63,5 +63,6 @@ Run `vendor/bin/dep deploy` to deploy changes.
   - [cottonbro studio](https://www.pexels.com/@cottonbro/)
 - Icons are made possible by:
   - <https://www.svgrepo.com/collection/phosphor-thin-icons>
+  - <https://www.svgrepo.com/collection/decathlon-payment-vectors/>
   - <https://www.iconbolt.com/iconsets/voyage-icons/meal>
 - Favicons are made possible by <https://realfavicongenerator.net/>

@@ -46,8 +46,10 @@ class ImportControllerDuplicateDetectionTest extends TestCase
 
         $flashMessage = session('info');
         $this->assertStringContainsString('Je hebt dit recept al geïmporteerd', $flashMessage);
-        $this->assertStringContainsString($recipe->title, $flashMessage);
-        $this->assertStringContainsString(route('recipes.show', $recipe->slug), $flashMessage);
+        $this->assertStringContainsString($recipe->getTitleForLocale($recipe->primaryLocale()), $flashMessage);
+        $locale = $recipe->primaryLocale();
+        $slug = $recipe->getSlugForLocale($locale);
+        $this->assertStringContainsString(route_recipe_show($slug, $locale), $flashMessage);
     }
 
     public function test_create_shows_form_with_existing_data_when_other_user_imported_recipe(): void

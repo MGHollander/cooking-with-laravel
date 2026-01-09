@@ -4,7 +4,7 @@
 
 <template x-if="isWakeLockAvailable">
     <div {{ $attributes->class(['recipe-cooking-setting']) }}>
-        <label><input type="checkbox" @click="toggleWakeLock" /> Kookstand</label>
-        <p>Als je de kookstand inschakelt, dan gaat je scherm niet in slaapstand tijdens het koken.</p>
+        <label><input type="checkbox" @click="toggleWakeLock" /> {{ __('recipes.show.cooking_mode') }}</label>
+        <p>{{ __('recipes.show.cooking_mode_description') }}</p>
     </div>
 </template>

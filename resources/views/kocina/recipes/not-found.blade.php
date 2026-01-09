@@ -1,9 +1,9 @@
 <x-kocina.layout>
     <div class="container page">
         <div class="search">
-            <h1 class="search-title">Helaas, dit recept bestaat (nog) niet!</h1>
+            <h1 class="search-title">{{ __('recipes.not_found.title') }}</h1>
 
-            <p>Gebruik de zoekbalk om je nieuwste favoriete recept te ontdekken.</p>
+            <p>{{ __('recipes.not_found.description') }}</p>
 
             <x-kocina.search-bar class="search-bar" />
 
@@ -15,14 +15,16 @@
             @if ($total > 0)
                 <div>
                     <p>
-                        Met behulp van de woorden uit de link {{ $oneRecipe ? 'is' : 'zijn' }} er
-                        <strong>{{ $total }} {{ $oneRecipe ? 'recept' : 'recepten' }}</strong> gevonden
-                        {{ $oneRecipe ? 'dat' : 'die' }} mogelijk toch interessant {{ $oneRecipe ? 'is' : 'zijn' }}.
-                        Hiervoor zijn de volgende woorden gebruikt: <strong>{{ $searchKey }}</strong>
+                        {!! trans_choice('recipes.not_found.found', $total, [
+                            'count' => $total
+                        ]) !!}
+                        {!! trans_choice('recipes.not_found.words_used', count($searchWords), [
+                            'words' => implode(', ', $searchWords)
+                        ]) !!}
                     </p>
 
-                    <p>Hopelijk zit er iets tussen!</p>
-                </div>
+                    <p>{{ __('recipes.not_found.hopefully') }}</p>
+                 </div>
 
                 <div class="recipes-grid">
                     @foreach ($recipes->items() as $recipe)

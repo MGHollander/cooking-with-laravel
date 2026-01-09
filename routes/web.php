@@ -37,7 +37,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/recepten/importeren/proxy-image', [ImportController::class, 'proxyImage'])->name('import.proxy-image');
 });
 
-Route::get('/recepten/{slug}', [RecipeController::class, 'show'])->name('recipes.show');
+Route::get('/recipes/{slug}', [RecipeController::class, 'show'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('recipes.show.en');
+
+Route::get('/recepten/{slug}', [RecipeController::class, 'show'])
+    ->where('slug', '[a-z0-9-]+')
+    ->name('recipes.show.nl');
 
 Route::get('/over-mij', function () {
     return view('kocina.about-me');
@@ -59,5 +65,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/gebruikers/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/gebruikers/{user}', [UserController::class, 'destroy'])->name('users.destroy');
 });
+Route::post('/locale', [App\Http\Controllers\LocaleController::class, 'update'])->name('locale.update');
 
 require __DIR__.'/auth.php';

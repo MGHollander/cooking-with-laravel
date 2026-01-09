@@ -20,7 +20,7 @@ return [
         'string' => 'Het :attribute moet tussen :min en :max tekens zijn.',
     ],
     'boolean' => 'Het veld :attribute moet waar of onwaar zijn.',
-    'confirmed' => 'De :attribute-bevestiging komt niet overeen.',
+    'confirmed' => 'De :attribute bevestiging komt niet overeen.',
     'current_password' => 'Het wachtwoord is onjuist.',
     'date' => 'De :attribute is geen geldige datum.',
     'date_equals' => 'De :attribute moet een datum zijn gelijk aan :date.',
@@ -155,6 +155,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'new_password' => 'nieuwe wachtwoord',
+    ],
 
 ];
