@@ -15,7 +15,6 @@ class SearchController extends Controller
     public function index(Request $request): View
     {
         $searchKey = $request->get('q', '');
-        $locale = app()->getLocale();
         
         $recipes = Search::new()
             ->add(
@@ -27,9 +26,8 @@ class SearchController extends Controller
             ->beginWithWildcard()
             ->search(strtolower($searchKey))
             ->withQueryString()
-            ->through(function ($recipe) use ($locale) {
-                $translation = $recipe->translate($locale) 
-                    ?? $recipe->translate(config('app.fallback_locale'));
+            ->through(function ($recipe) {
+                $translation = $recipe->primaryTranslation();
                 
                 return [
                     'id' => $recipe->id,
