@@ -32,7 +32,7 @@ class SearchController extends Controller
                 return [
                     'id' => $recipe->id,
                     'title' => $translation?->title ?? 'Untitled',
-                    'slug' => $translation?->slug ?? '',
+                    'slug' => $recipe->getSlugForLocale($translation->locale),
                     'locale' => $translation?->locale ?? config('app.fallback_locale'),
                     'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
                     'no_index' => $recipe->no_index,

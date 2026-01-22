@@ -6,8 +6,8 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Hidehalo\Nanoid\Client;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -19,7 +19,9 @@ class Recipe extends Model implements HasMedia, TranslatableContract
     use HasFactory, HasTags, InteractsWithMedia, SoftDeletes, Translatable;
 
     public $translationModel = RecipeTranslation::class;
+
     protected $translationForeignKey = 'recipe_id';
+
     protected $localeKey = 'locale';
 
     public array $translatedAttributes = [
@@ -47,7 +49,7 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         parent::boot();
 
         static::creating(function ($recipe) {
-            $client = new Client();
+            $client = new Client;
             $alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
             $recipe->public_id = $client->formattedId($alphabet, 15);
         });
@@ -69,27 +71,30 @@ class Recipe extends Model implements HasMedia, TranslatableContract
     }
 
     public function getSlugForLocale(?string $locale = null): ?string
-    {    
+    {
         $locale = $locale ?? $this->primaryLocale();
-        if (!$this->relationLoaded('translations')) {
+        if (! $this->relationLoaded('translations')) {
             $this->load('translations');
         }
         $slug = $this->translate($locale)?->slug;
-        return $slug ? $slug . '-' . $this->public_id : null;
+
+        return $slug ? $slug.'-'.$this->public_id : null;
     }
 
     public function getSlugAttribute(): ?string
     {
-        if (!$this->relationLoaded('translations')) {
+        if (! $this->relationLoaded('translations')) {
             $this->load('translations');
         }
         $slug = $this->translate()?->slug;
-        return $slug ? $slug . '-' . $this->public_id : null;
+
+        return $slug ? $slug.'-'.$this->public_id : null;
     }
 
     public function getTitleForLocale(?string $locale = null): string
     {
         $locale = $locale ?? $this->primaryLocale();
+
         return $this->translate($locale)?->title ?? 'Untitled Recipe';
     }
 
@@ -124,12 +129,12 @@ class Recipe extends Model implements HasMedia, TranslatableContract
     {
         $tags = collect($tagNames)->map(function (string $tagName) use ($locale) {
             $tag = Tag::findOrCreate($tagName, null, $locale);
-            
-            if (!$tag->hasTranslation('name', $locale)) {
+
+            if (! $tag->hasTranslation('name', $locale)) {
                 $tag->setTranslation('name', $locale, $tagName);
                 $tag->save();
             }
-            
+
             return $tag;
         });
 
@@ -146,18 +151,17 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         if ($locale === null) {
             $locale = app()->getLocale();
         }
-        
+
         return $this->translations()->where('locale', $locale)->exists();
     }
 
     public function getAlternateUrls(): array
     {
         $urls = [];
-        
         foreach ($this->translations as $translation) {
-            $urls[$translation->locale] = route_recipe_show($translation->slug . '-' . $this->public_id, $translation->locale);
+            $urls[$translation->locale] = route_recipe_show($this->getSlugForLocale($translation->locale), $translation->locale);
         }
-        
+
         return $urls;
     }
 }

@@ -154,6 +154,7 @@ class RecipeController extends Controller
 
             if ($translation && $translation->recipe) {
                 $recipe = $translation->recipe;
+
                 return redirect()->route(
                     $translation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
                     $recipe->getSlugForLocale($translation->locale),
