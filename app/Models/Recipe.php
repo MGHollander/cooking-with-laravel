@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Hidehalo\Nanoid\Client;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
@@ -31,6 +32,7 @@ class Recipe extends Model implements HasMedia, TranslatableContract
 
     protected $fillable = [
         'user_id',
+        'public_id',
         'servings',
         'preparation_minutes',
         'cooking_minutes',
@@ -39,6 +41,17 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         'source_link',
         'no_index',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($recipe) {
+            $client = new Client();
+            $alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
+            $recipe->public_id = $client->formattedId($alphabet, 15);
+        });
+    }
 
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -129,7 +142,7 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         $urls = [];
         
         foreach ($this->translations as $translation) {
-            $urls[$translation->locale] = route_recipe_show($translation->slug, $translation->locale);
+            $urls[$translation->locale] = route_recipe_show($translation->slug . '-' . $this->public_id, $translation->locale);
         }
         
         return $urls;

@@ -16,6 +16,7 @@
     "brick/structured-data": "^0.1",
     "bugsnag/bugsnag-laravel": "^2.0",
     "guzzlehttp/guzzle": "^7.2",
+    "hidehalo/nanoid-php": "^2.0",
     "inertiajs/inertia-laravel": "^2.0",
     "laravel/framework": "^11.0",
     "laravel/sanctum": "^4.0",
