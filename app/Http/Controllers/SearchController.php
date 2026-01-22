@@ -15,7 +15,7 @@ class SearchController extends Controller
     public function index(Request $request): View
     {
         $searchKey = $request->get('q', '');
-        
+
         $recipes = Search::new()
             ->add(
                 Recipe::with('author', 'media', 'tags', 'translations')
@@ -28,7 +28,7 @@ class SearchController extends Controller
             ->withQueryString()
             ->through(function ($recipe) {
                 $translation = $recipe->primaryTranslation();
-                
+
                 return [
                     'id' => $recipe->id,
                     'title' => $translation?->title ?? 'Untitled',

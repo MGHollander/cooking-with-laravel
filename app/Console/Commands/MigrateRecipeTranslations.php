@@ -20,8 +20,9 @@ class MigrateRecipeTranslations extends Command
         $chunk = (int) $this->option('chunk');
         $locale = $this->option('locale');
 
-        if (!in_array($locale, ['en', 'nl'])) {
+        if (! in_array($locale, ['en', 'nl'])) {
             $this->error('Invalid locale. Must be "en" or "nl".');
+
             return 1;
         }
 
@@ -56,7 +57,7 @@ class MigrateRecipeTranslations extends Command
                         $processed++;
                         $this->info("[{$processed}/{$totalRecipes}] Processing recipe #{$recipeData->id}: {$recipeData->title}");
 
-                        if (!$dryRun) {
+                        if (! $dryRun) {
                             DB::table('recipe_translations')->updateOrInsert(
                                 [
                                     'recipe_id' => $recipeData->id,
@@ -74,7 +75,7 @@ class MigrateRecipeTranslations extends Command
 
         $this->info("Migration complete! Processed {$count} recipes.");
 
-        if (!$dryRun) {
+        if (! $dryRun) {
             $this->warn('');
             $this->warn('NEXT STEPS:');
             $this->warn('1. Verify translations in database');
@@ -86,4 +87,3 @@ class MigrateRecipeTranslations extends Command
         return 0;
     }
 }
-

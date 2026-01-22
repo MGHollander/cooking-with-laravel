@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('public_id', 15)->nullable()->after('id');
         });
 
-        $client = new Client();
+        $client = new Client;
         $alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
 
         DB::table('recipes')->orderBy('id')->chunk(100, function ($recipes) use ($client, $alphabet) {

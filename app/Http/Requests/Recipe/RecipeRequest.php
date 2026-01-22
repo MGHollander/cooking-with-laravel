@@ -22,7 +22,7 @@ class RecipeRequest extends FormRequest
             'ingredients' => 'required|string',
             'instructions' => 'required|string',
             'tags' => ['nullable', 'string'],
-            'media' => ['nullable', 'image', 'mimes:' . ImageTypeHelper::getMimes(), 'max:'.(config('media-library.max_file_size', 1024 * 1024 * 4) / 1024)],
+            'media' => ['nullable', 'image', 'mimes:'.ImageTypeHelper::getMimes(), 'max:'.(config('media-library.max_file_size', 1024 * 1024 * 4) / 1024)],
             'external_image' => ['nullable', 'url', new ExternalImage],
             'servings' => ['required', 'integer', 'min:1'],
             'preparation_minutes' => ['nullable', 'integer', 'min:1'],

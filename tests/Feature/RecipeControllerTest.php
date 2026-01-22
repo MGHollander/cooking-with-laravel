@@ -26,7 +26,7 @@ class RecipeControllerTest extends TestCase
             'instructions' => '[]',
         ]);
 
-        $fullSlug = 'my-recipe-' . $recipe->public_id;
+        $fullSlug = 'my-recipe-'.$recipe->public_id;
 
         $response = $this->get(route('recipes.show.en', $fullSlug));
 
