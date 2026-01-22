@@ -89,7 +89,7 @@ return [
         'title' => 'Helaas, dit recept bestaat (nog) niet!',
         'description' => 'Gebruik de zoekbalk om je nieuwste favoriete recept te ontdekken.',
         'found' => 'Met behulp van de woorden uit de bezochte pagina is <strong>één recept</strong> gevonden dat mogelijk toch interessant is.|Met behulp van de woorden uit de bezochte pagina zijn er <strong>:count recepten</strong> gevonden die mogelijk toch interessant zijn.',
-        'words_used' => 'Hiervoor is de volgende woord gebruikt: <strong>:words</strong>|Hiervoor zijn de volgende woorden gebruikt: <strong>:words</strong>',
+        'words_used' => 'Hiervoor is het volgende woord gebruikt: <strong>:words</strong>|Hiervoor zijn de volgende woorden gebruikt: <strong>:words</strong>',
         'hopefully' => 'Hopelijk zit er iets tussen!',
     ],
 ];

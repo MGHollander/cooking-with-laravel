@@ -10,6 +10,7 @@ use App\Http\Resources\StructuredData\Recipe\InstructionsResource as StructuredD
 use App\Http\Traits\FillableAttributes;
 use App\Models\Recipe;
 use App\Models\RecipeTranslation;
+use App\Support\ImageTypeHelper;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +24,6 @@ use Illuminate\View\View;
 use Inertia\Inertia;
 use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 use Symfony\Component\HttpFoundation\Response;
-use App\Support\ImageTypeHelper;
 
 class RecipeController extends Controller
 {
@@ -42,7 +42,7 @@ class RecipeController extends Controller
                 ->paginate(12)
                 ->through(function ($recipe) {
                     $translation = $recipe->primaryTranslation();
-                    
+
                     return [
                         'id' => $recipe->id,
                         'title' => $translation->title,
@@ -81,7 +81,7 @@ class RecipeController extends Controller
     {
         $attributes = $request->validated();
         $attributes['user_id'] = $request->user()->id;
-        
+
         DB::transaction(function () use ($attributes, $request, &$recipe) {
             $recipe = Recipe::create([
                 'user_id' => $attributes['user_id'],
@@ -93,7 +93,7 @@ class RecipeController extends Controller
                 'source_link' => $attributes['source_link'] ?? null,
                 'no_index' => $attributes['no_index'] ?? false,
             ]);
-            
+
             $recipe->translations()->create([
                 'locale' => $attributes['locale'],
                 'title' => $attributes['title'],
@@ -101,17 +101,17 @@ class RecipeController extends Controller
                 'ingredients' => $attributes['ingredients'],
                 'instructions' => $attributes['instructions'],
             ]);
-            
-            if (!empty($attributes['tags'])) {
+
+            if (! empty($attributes['tags'])) {
                 $tags = array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags']))));
                 $recipe->syncTagsInLocale($tags, $attributes['locale']);
             }
-            
+
             $this->saveMedia($request, $recipe);
         });
-        
+
         Session::flash('success', 'Het recept is succesvol toegevoegd! 🧑‍🍳');
-        
+
         return Inertia::location(route('recipes.edit', $recipe->id));
     }
 
@@ -125,13 +125,13 @@ class RecipeController extends Controller
             ->with('recipe.author', 'recipe.tags')
             ->first();
 
-        if (!$translation || !$translation->recipe->author) {
+        if (! $translation || ! $translation->recipe->author) {
             return $this->notFound($slug);
         }
-        
+
         $recipe = $translation->recipe;
         $recipe->load('translations');
-        
+
         $this->setJsonLdData($recipe, $translation);
 
         $alternateUrls = $recipe->getAlternateUrls();
@@ -182,7 +182,7 @@ class RecipeController extends Controller
     {
         $recipe->load('translations', 'tags');
         $translation = $recipe->primaryTranslation();
-        
+
         return Inertia::render('Recipes/Form', [
             'recipe' => [
                 'id' => $recipe->id,
@@ -219,7 +219,7 @@ class RecipeController extends Controller
     public function update(RecipeRequest $request, Recipe $recipe)
     {
         $attributes = $request->validated();
-        
+
         DB::transaction(function () use ($attributes, $request, $recipe) {
             $recipe->update([
                 'servings' => $attributes['servings'],
@@ -230,11 +230,11 @@ class RecipeController extends Controller
                 'source_link' => $attributes['source_link'] ?? null,
                 'no_index' => $attributes['no_index'] ?? false,
             ]);
-            
+
             $currentTranslation = $recipe->primaryTranslation();
             $translationForNewLocale = $recipe->translations()->where('locale', $attributes['locale'])->first();
-            
-            if (!$currentTranslation) {
+
+            if (! $currentTranslation) {
                 $recipe->translations()->create([
                     'locale' => $attributes['locale'],
                     'title' => $attributes['title'],
@@ -265,24 +265,25 @@ class RecipeController extends Controller
                     'instructions' => $attributes['instructions'],
                 ]);
             }
-            
-            if (!empty($attributes['tags'])) {
+
+            if (! empty($attributes['tags'])) {
                 $tags = array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags']))));
                 $recipe->syncTagsInLocale($tags, $attributes['locale']);
             } else {
                 $recipe->detachTags($recipe->tags);
             }
-            
+
             if ($request->get('destroy_media', false)) {
                 $recipe->clearMediaCollection('recipe_image');
             }
-            
+
             $this->saveMedia($request, $recipe);
         });
-        
+
         Session::flash('success', 'Het recept is succesvol gewijzigd!  🧑‍🍳');
-        
+
         $slug = $recipe->getSlugForLocale($attributes['locale']);
+
         return Inertia::location(route_recipe_show($slug, $attributes['locale']));
     }
 
@@ -298,9 +299,9 @@ class RecipeController extends Controller
 
         $userId = auth()->id();
         $recipeId = $recipe->id;
-        
+
         $recipe->deletePreservingMedia();
-        
+
         Log::info("Recipe {$recipeId} deleted by user {$userId}");
 
         Session::flash('success', "Het recept \"<i>{$translation->title}</i>\" is succesvol verwijderd! 🧑‍🍳");
@@ -311,15 +312,18 @@ class RecipeController extends Controller
     private function notFound($slug): \Illuminate\Http\Response
     {
         $searchKey = Str::replace('-', ' ', $slug);
-        $recipes = Search::add(RecipeTranslation::with('recipe.media'), ['title', 'ingredients', 'instructions'])
+        $paginator = Search::add(RecipeTranslation::with('recipe.media'), ['title', 'ingredients', 'instructions'])
             ->add(Recipe::with('translations', 'tags'), ['tags.name'])
             ->paginate(12)
             ->beginWithWildcard()
             ->search($searchKey)
-            ->withQueryString()
-            ->map(function ($result) {
+            ->withQueryString();
+
+        $recipes = $paginator->setCollection(
+            $paginator->getCollection()->map(function ($result) {
                 if ($result instanceof RecipeTranslation) {
                     $recipe = $result->recipe;
+
                     return [
                         'id' => $recipe->id,
                         'title' => $result->title,
@@ -328,8 +332,9 @@ class RecipeController extends Controller
                         'no_index' => $recipe->no_index,
                     ];
                 }
-                
+
                 $translation = $result->primaryTranslation();
+
                 return [
                     'id' => $result->id,
                     'title' => $translation->title,
@@ -337,7 +342,8 @@ class RecipeController extends Controller
                     'image' => $result->getFirstMediaUrl('recipe_image', 'card'),
                     'no_index' => $result->no_index,
                 ];
-            });
+            })
+        );
 
         return response()->view(
             'kocina.recipes.not-found',
@@ -439,7 +445,7 @@ class RecipeController extends Controller
 
         if ($recipe->tags->count() > 0) {
             $keywords = $recipe->tags->map(fn ($tag) => $tag->getTranslation('name', $translation->locale))->filter()->toArray();
-            if (!empty($keywords)) {
+            if (! empty($keywords)) {
                 JsonLd::addValue('keywords', implode(',', $keywords));
             }
         }
