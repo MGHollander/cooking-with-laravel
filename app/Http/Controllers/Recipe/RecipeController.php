@@ -46,7 +46,7 @@ class RecipeController extends Controller
                     return [
                         'id' => $recipe->id,
                         'title' => $translation->title,
-                        'slug' => $translation->slug . '-' . $recipe->public_id,
+                        'slug' => $recipe->getSlugForLocale($translation->locale),
                         'locale' => $translation->locale,
                         'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
                         'no_index' => $recipe->no_index,
@@ -133,7 +133,7 @@ class RecipeController extends Controller
             $translation = $recipe->translations->where('locale', $locale)->first();
 
             if ($translation) {
-                $correctSlug = $translation->slug . '-' . $recipe->public_id;
+                $correctSlug = $recipe->getSlugForLocale($translation->locale);
                 if ($slug !== $correctSlug) {
                     return redirect()->route($routeName, $correctSlug, 301);
                 }
@@ -142,7 +142,7 @@ class RecipeController extends Controller
                 if ($primaryTranslation) {
                     return redirect()->route(
                         $primaryTranslation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
-                        $primaryTranslation->slug . '-' . $recipe->public_id,
+                        $recipe->getSlugForLocale($primaryTranslation->locale),
                         301
                     );
                 }
@@ -156,7 +156,7 @@ class RecipeController extends Controller
                 $recipe = $translation->recipe;
                 return redirect()->route(
                     $translation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
-                    $translation->slug . '-' . $recipe->public_id,
+                    $recipe->getSlugForLocale($translation->locale),
                     301
                 );
             }
@@ -169,7 +169,7 @@ class RecipeController extends Controller
         $this->setJsonLdData($recipe, $translation);
 
         $alternateUrls = $recipe->getAlternateUrls();
-        $canonicalUrl = route_recipe_show($translation->slug . '-' . $recipe->public_id, $translation->locale);
+        $canonicalUrl = route_recipe_show($recipe->getSlugForLocale($translation->locale), $translation->locale);
         $ogLocale = $this->formatOpenGraphLocale($translation->locale);
 
         return view('kocina.recipes.show', [
@@ -179,7 +179,7 @@ class RecipeController extends Controller
                 'user_id' => $recipe->user_id,
                 'locale' => $translation->locale,
                 'title' => $translation->title,
-                'slug' => $translation->slug . '-' . $recipe->public_id,
+                'slug' => $recipe->getSlugForLocale($translation->locale),
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
                 'summary' => strip_tags($translation->summary, '<strong><em><u>'),
                 'tags' => $recipe->tags->map(fn ($tag) => $tag->getTranslation('name', $translation->locale))->filter(),
@@ -318,7 +318,7 @@ class RecipeController extends Controller
 
         $slug = $recipe->getSlugForLocale($attributes['locale']);
 
-        return Inertia::location(route_recipe_show($slug . '-' . $recipe->public_id, $attributes['locale']));
+        return Inertia::location(route_recipe_show($slug, $attributes['locale']));
     }
 
     /**
@@ -361,7 +361,7 @@ class RecipeController extends Controller
                     return [
                         'id' => $recipe->id,
                         'title' => $result->title,
-                        'slug' => $result->slug . '-' . $recipe->public_id,
+                        'slug' => $recipe->getSlugForLocale($result->locale),
                         'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
                         'no_index' => $recipe->no_index,
                     ];
@@ -372,7 +372,7 @@ class RecipeController extends Controller
                 return [
                     'id' => $result->id,
                     'title' => $translation->title,
-                    'slug' => $translation->slug . '-' . $result->public_id,
+                    'slug' => $result->getSlugForLocale($translation->locale),
                     'image' => $result->getFirstMediaUrl('recipe_image', 'card'),
                     'no_index' => $result->no_index,
                 ];
