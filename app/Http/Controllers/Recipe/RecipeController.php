@@ -121,7 +121,8 @@ class RecipeController extends Controller
     // TODO Are these return types correct? Should the doc blocks exisit at all or is it overkill with typing?
     public function show(Request $request, string $slug): JsonResponse|View|Response
     {
-        $publicId = substr($slug, -15);
+        $parts = explode('-', $slug);
+        $publicId = end($parts);
         $recipe = Recipe::where('public_id', $publicId)->with('author', 'tags')->first();
         $translation = null;
         $routeName = $request->route()->getName();
