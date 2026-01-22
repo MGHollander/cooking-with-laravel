@@ -222,7 +222,7 @@ class RecipeController extends Controller
             'recipe' => [
                 'id' => $recipe->id,
                 'locale' => $translation->locale,
-                'slug' => $translation->slug,
+                'slug' => $recipe->getSlugForLocale($translation->locale),
                 'title' => $translation->title,
                 'summary' => $translation->summary ? strip_tags($translation->summary, '<strong><em><u>') : '',
                 'ingredients' => $translation->ingredients,
