@@ -5,6 +5,9 @@
             "args": [
                 "artisan",
                 "boost:mcp"
+            ],
+            "alwaysAllow": [
+                "database-schema"
             ]
         }
     }
