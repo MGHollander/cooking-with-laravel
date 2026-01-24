@@ -346,7 +346,18 @@ class RecipeController extends Controller
 
     private function notFound($slug): \Illuminate\Http\Response
     {
-        $searchKey = Str::replace('-', ' ', $slug);
+        $parts = explode('-', $slug);
+        $potentialPublicId = end($parts);
+        
+        // Check if last part matches public_id format
+        if (strlen($potentialPublicId) === 15 && preg_match('/^[0-9a-z]+$/', $potentialPublicId)) {
+            // Remove public_id from search
+            array_pop($parts);
+            $searchKey = implode(' ', $parts);
+        } else {
+            $searchKey = str_replace('-', ' ', $slug);
+        }
+        
         $paginator = Search::add(RecipeTranslation::with('recipe.media'), ['title', 'ingredients', 'instructions'])
             ->add(Recipe::with('translations', 'tags'), ['tags.name'])
             ->paginate(12)
