@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ImportLog extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
         'url',
@@ -22,6 +23,24 @@ class ImportLog extends Model
     protected $casts = [
         'parsed_data' => 'array',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $importLog) {
+            if (! $importLog->user_uuid && $importLog->user_id) {
+                $importLog->user_uuid = User::query()->whereKey($importLog->user_id)->value('uuid');
+            }
+
+            if (! $importLog->recipe_uuid && $importLog->recipe_id) {
+                $importLog->recipe_uuid = Recipe::query()->whereKey($importLog->recipe_id)->value('uuid');
+            }
+        });
+    }
+
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
 
     public function user(): BelongsTo
     {

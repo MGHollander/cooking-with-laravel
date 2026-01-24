@@ -5,6 +5,7 @@ namespace App\Models;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Hidehalo\Nanoid\Client;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +17,7 @@ use Spatie\Tags\Tag;
 
 class Recipe extends Model implements HasMedia, TranslatableContract
 {
-    use HasFactory, HasTags, InteractsWithMedia, SoftDeletes, Translatable;
+    use HasFactory, HasTags, HasUuids, InteractsWithMedia, SoftDeletes, Translatable;
 
     public $translationModel = RecipeTranslation::class;
 
@@ -53,6 +54,11 @@ class Recipe extends Model implements HasMedia, TranslatableContract
             $alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
             $recipe->public_id = $client->formattedId($alphabet, 15);
         });
+    }
+
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
     }
 
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
