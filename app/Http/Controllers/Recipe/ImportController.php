@@ -280,9 +280,9 @@ class ImportController extends Controller
     {
         $attributes = $request->validated();
         $attributes['user_id'] = $request->user()->id;
-        
+
         $locale = $attributes['locale'] ?? app()->getLocale();
-        
+
         DB::transaction(function () use ($attributes, $request, $locale, &$recipe) {
             $recipe = Recipe::create([
                 'user_id' => $attributes['user_id'],
@@ -294,7 +294,7 @@ class ImportController extends Controller
                 'source_link' => $attributes['source_link'] ?? null,
                 'no_index' => $attributes['no_index'] ?? true,
             ]);
-            
+
             $recipe->translations()->create([
                 'locale' => $locale,
                 'title' => $attributes['title'],
@@ -302,16 +302,16 @@ class ImportController extends Controller
                 'ingredients' => $attributes['ingredients'],
                 'instructions' => $attributes['instructions'],
             ]);
-            
-            if (!empty($attributes['tags'])) {
+
+            if (! empty($attributes['tags'])) {
                 $tags = array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags']))));
                 $recipe->syncTagsInLocale($tags, $locale);
             }
-            
+
             if ($externalImage = $request->get('external_image')) {
                 $mediaDimensions = $request->get('media_dimensions', []);
                 $manipulations = $this->buildManipulations($mediaDimensions);
-                
+
                 try {
                     $recipe->addMediaFromUrl($externalImage)
                         ->withManipulations($manipulations)
@@ -323,7 +323,7 @@ class ImportController extends Controller
                     ]);
                 }
             }
-            
+
             // Update import log with created recipe if this was imported from a URL
             if ($importLogId = $request->get('import_log_id')) {
                 try {
@@ -341,42 +341,44 @@ class ImportController extends Controller
                 }
             }
         });
-        
+
         if ($request->get('return_to_import_page')) {
             $slug = $recipe->getSlugForLocale($locale);
+
             return redirect()->route('import.index')->with('success', 'Het recept "<a href="'.route_recipe_show($slug, $locale).'"><i>'.$recipe->getTitleForLocale($locale).'</i></a>" is succesvol geïmporteerd! 🎉');
         }
-        
+
         Session::flash('success', 'Het recept is succesvol geïmporteerd! 🎉');
-        
+
         $slug = $recipe->getSlugForLocale($locale);
+
         return Inertia::location(route_recipe_show($slug, $locale));
     }
 
     private function detectLanguageFromParsedData(ParsedRecipeData $parsedData): ?string
     {
-        $ingredients = !empty($parsedData->ingredients) 
-            ? implode("\n", $parsedData->ingredients) 
+        $ingredients = ! empty($parsedData->ingredients)
+            ? implode("\n", $parsedData->ingredients)
             : null;
-        
-        $instructions = !empty($parsedData->steps) 
-            ? implode(' ', $parsedData->steps) 
+
+        $instructions = ! empty($parsedData->steps)
+            ? implode(' ', $parsedData->steps)
             : null;
-        
+
         $detected = $this->languageDetectionService->detectLanguage(
             $parsedData->title,
             $parsedData->description,
             $ingredients,
             $instructions
         );
-        
+
         if ($detected) {
             Log::debug('Language auto-detected for imported recipe', [
                 'detected_language' => $detected,
                 'title' => $parsedData->title,
             ]);
         }
-        
+
         return $detected;
     }
 

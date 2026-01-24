@@ -11,7 +11,7 @@ class LocaleController extends Controller
     /**
      * Update the user's preferred locale.
      */
-    public function update(Request $request): RedirectResponse|\Symfony\Component\HttpFoundation\Response 
+    public function update(Request $request): RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $request->validate([
             'locale' => 'required|string|in:en,nl',

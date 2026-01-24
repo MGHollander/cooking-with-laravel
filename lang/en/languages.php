@@ -186,5 +186,3 @@ return [
     'zh' => 'Chinese',
     'zu' => 'Zulu',
 ];
-
-

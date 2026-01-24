@@ -19,7 +19,7 @@ class InstructionsResource extends JsonResource
     {
         $dom = new DOMDocument;
         // Hack to force UTF-8 @see https://www.php.net/manual/en/domdocument.loadhtml.php#95251
-        $dom->loadHTML('<?xml encoding="UTF-8">' . $this->resource);
+        $dom->loadHTML('<?xml encoding="UTF-8">'.$this->resource);
 
         $instructions = [];
         $currentSectionIndex = 0;

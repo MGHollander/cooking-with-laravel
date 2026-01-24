@@ -15,15 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('recipe_id')->constrained()->onDelete('cascade');
             $table->string('locale', 2)->index();
-            
+
             $table->string('slug')->unique();
             $table->string('title');
             $table->text('summary')->nullable();
             $table->text('ingredients');
             $table->text('instructions');
-            
+
             $table->timestamps();
-            
+
             $table->unique(['recipe_id', 'locale']);
         });
     }

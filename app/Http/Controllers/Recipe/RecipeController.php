@@ -10,6 +10,7 @@ use App\Http\Resources\StructuredData\Recipe\InstructionsResource as StructuredD
 use App\Http\Traits\FillableAttributes;
 use App\Models\Recipe;
 use App\Models\RecipeTranslation;
+use App\Support\ImageTypeHelper;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +24,6 @@ use Illuminate\View\View;
 use Inertia\Inertia;
 use ProtoneMedia\LaravelCrossEloquentSearch\Search;
 use Symfony\Component\HttpFoundation\Response;
-use App\Support\ImageTypeHelper;
 
 class RecipeController extends Controller
 {
@@ -42,11 +42,11 @@ class RecipeController extends Controller
                 ->paginate(12)
                 ->through(function ($recipe) {
                     $translation = $recipe->primaryTranslation();
-                    
+
                     return [
                         'id' => $recipe->id,
                         'title' => $translation->title,
-                        'slug' => $translation->slug,
+                        'slug' => $recipe->getSlugForLocale($translation->locale),
                         'locale' => $translation->locale,
                         'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
                         'no_index' => $recipe->no_index,
@@ -81,7 +81,7 @@ class RecipeController extends Controller
     {
         $attributes = $request->validated();
         $attributes['user_id'] = $request->user()->id;
-        
+
         DB::transaction(function () use ($attributes, $request, &$recipe) {
             $recipe = Recipe::create([
                 'user_id' => $attributes['user_id'],
@@ -93,7 +93,7 @@ class RecipeController extends Controller
                 'source_link' => $attributes['source_link'] ?? null,
                 'no_index' => $attributes['no_index'] ?? false,
             ]);
-            
+
             $recipe->translations()->create([
                 'locale' => $attributes['locale'],
                 'title' => $attributes['title'],
@@ -101,17 +101,17 @@ class RecipeController extends Controller
                 'ingredients' => $attributes['ingredients'],
                 'instructions' => $attributes['instructions'],
             ]);
-            
-            if (!empty($attributes['tags'])) {
+
+            if (! empty($attributes['tags'])) {
                 $tags = array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags']))));
                 $recipe->syncTagsInLocale($tags, $attributes['locale']);
             }
-            
+
             $this->saveMedia($request, $recipe);
         });
-        
+
         Session::flash('success', 'Het recept is succesvol toegevoegd! 🧑‍🍳');
-        
+
         return Inertia::location(route('recipes.edit', $recipe->id));
     }
 
@@ -121,21 +121,56 @@ class RecipeController extends Controller
     // TODO Are these return types correct? Should the doc blocks exisit at all or is it overkill with typing?
     public function show(Request $request, string $slug): JsonResponse|View|Response
     {
-        $translation = RecipeTranslation::where('slug', $slug)
-            ->with('recipe.author', 'recipe.tags')
-            ->first();
+        $parts = explode('-', $slug);
+        $publicId = end($parts);
+        $recipe = Recipe::where('public_id', $publicId)->with('author', 'tags')->first();
+        $translation = null;
+        $routeName = $request->route()->getName();
+        $locale = $routeName === 'recipes.show.nl' ? 'nl' : 'en';
 
-        if (!$translation || !$translation->recipe->author) {
+        if ($recipe) {
+            $recipe->load('translations');
+            $translation = $recipe->translations->where('locale', $locale)->first();
+
+            if ($translation) {
+                $correctSlug = $recipe->getSlugForLocale($translation->locale);
+                if ($slug !== $correctSlug) {
+                    return redirect()->route($routeName, $correctSlug, 301);
+                }
+            } else {
+                $primaryTranslation = $recipe->primaryTranslation();
+                if ($primaryTranslation) {
+                    return redirect()->route(
+                        $primaryTranslation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
+                        $recipe->getSlugForLocale($primaryTranslation->locale),
+                        301
+                    );
+                }
+            }
+        } else {
+            $translation = RecipeTranslation::where('slug', $slug)
+                ->with('recipe.author', 'recipe.tags')
+                ->first();
+
+            if ($translation && $translation->recipe) {
+                $recipe = $translation->recipe;
+
+                return redirect()->route(
+                    $translation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
+                    $recipe->getSlugForLocale($translation->locale),
+                    301
+                );
+            }
+        }
+
+        if (! $recipe || ! $recipe->author || ! $translation) {
             return $this->notFound($slug);
         }
-        
-        $recipe = $translation->recipe;
-        $recipe->load('translations');
-        
+
         $this->setJsonLdData($recipe, $translation);
 
         $alternateUrls = $recipe->getAlternateUrls();
-        $canonicalUrl = route_recipe_show($translation->slug, $translation->locale);
+        $canonicalUrl = route_recipe_show($recipe->getSlugForLocale($translation->locale), $translation->locale);
         $ogLocale = $this->formatOpenGraphLocale($translation->locale);
 
         return view('kocina.recipes.show', [
@@ -145,7 +180,7 @@ class RecipeController extends Controller
                 'user_id' => $recipe->user_id,
                 'locale' => $translation->locale,
                 'title' => $translation->title,
-                'slug' => $translation->slug,
+                'slug' => $recipe->getSlugForLocale($translation->locale),
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
                 'summary' => strip_tags($translation->summary, '<strong><em><u>'),
                 'tags' => $recipe->tags->map(fn ($tag) => $tag->getTranslation('name', $translation->locale))->filter(),
@@ -182,12 +217,12 @@ class RecipeController extends Controller
     {
         $recipe->load('translations', 'tags');
         $translation = $recipe->primaryTranslation();
-        
+
         return Inertia::render('Recipes/Form', [
             'recipe' => [
                 'id' => $recipe->id,
                 'locale' => $translation->locale,
-                'slug' => $translation->slug,
+                'slug' => $recipe->getSlugForLocale($translation->locale),
                 'title' => $translation->title,
                 'summary' => $translation->summary ? strip_tags($translation->summary, '<strong><em><u>') : '',
                 'ingredients' => $translation->ingredients,
@@ -219,7 +254,7 @@ class RecipeController extends Controller
     public function update(RecipeRequest $request, Recipe $recipe)
     {
         $attributes = $request->validated();
-        
+
         DB::transaction(function () use ($attributes, $request, $recipe) {
             $recipe->update([
                 'servings' => $attributes['servings'],
@@ -230,11 +265,11 @@ class RecipeController extends Controller
                 'source_link' => $attributes['source_link'] ?? null,
                 'no_index' => $attributes['no_index'] ?? false,
             ]);
-            
+
             $currentTranslation = $recipe->primaryTranslation();
             $translationForNewLocale = $recipe->translations()->where('locale', $attributes['locale'])->first();
-            
-            if (!$currentTranslation) {
+
+            if (! $currentTranslation) {
                 $recipe->translations()->create([
                     'locale' => $attributes['locale'],
                     'title' => $attributes['title'],
@@ -265,24 +300,25 @@ class RecipeController extends Controller
                     'instructions' => $attributes['instructions'],
                 ]);
             }
-            
-            if (!empty($attributes['tags'])) {
+
+            if (! empty($attributes['tags'])) {
                 $tags = array_filter(array_map('strtolower', array_map('trim', explode(',', $attributes['tags']))));
                 $recipe->syncTagsInLocale($tags, $attributes['locale']);
             } else {
                 $recipe->detachTags($recipe->tags);
             }
-            
+
             if ($request->get('destroy_media', false)) {
                 $recipe->clearMediaCollection('recipe_image');
             }
-            
+
             $this->saveMedia($request, $recipe);
         });
-        
+
         Session::flash('success', 'Het recept is succesvol gewijzigd!  🧑‍🍳');
-        
+
         $slug = $recipe->getSlugForLocale($attributes['locale']);
+
         return Inertia::location(route_recipe_show($slug, $attributes['locale']));
     }
 
@@ -298,9 +334,9 @@ class RecipeController extends Controller
 
         $userId = auth()->id();
         $recipeId = $recipe->id;
-        
+
         $recipe->deletePreservingMedia();
-        
+
         Log::info("Recipe {$recipeId} deleted by user {$userId}");
 
         Session::flash('success', "Het recept \"<i>{$translation->title}</i>\" is succesvol verwijderd! 🧑‍🍳");
@@ -310,34 +346,50 @@ class RecipeController extends Controller
 
     private function notFound($slug): \Illuminate\Http\Response
     {
-        $searchKey = Str::replace('-', ' ', $slug);
-        $recipes = Search::add(RecipeTranslation::with('recipe.media'), ['title', 'ingredients', 'instructions'])
+        $parts = explode('-', $slug);
+        $potentialPublicId = end($parts);
+        
+        // Check if last part matches public_id format
+        if (strlen($potentialPublicId) === 15 && preg_match('/^[0-9a-z]+$/', $potentialPublicId)) {
+            // Remove public_id from search
+            array_pop($parts);
+            $searchKey = implode(' ', $parts);
+        } else {
+            $searchKey = str_replace('-', ' ', $slug);
+        }
+        
+        $paginator = Search::add(RecipeTranslation::with('recipe.media'), ['title', 'ingredients', 'instructions'])
             ->add(Recipe::with('translations', 'tags'), ['tags.name'])
             ->paginate(12)
             ->beginWithWildcard()
             ->search($searchKey)
-            ->withQueryString()
-            ->map(function ($result) {
+            ->withQueryString();
+
+        $recipes = $paginator->setCollection(
+            $paginator->getCollection()->map(function ($result) {
                 if ($result instanceof RecipeTranslation) {
                     $recipe = $result->recipe;
+
                     return [
                         'id' => $recipe->id,
                         'title' => $result->title,
-                        'slug' => $result->slug,
+                        'slug' => $recipe->getSlugForLocale($result->locale),
                         'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
                         'no_index' => $recipe->no_index,
                     ];
                 }
-                
+
                 $translation = $result->primaryTranslation();
+
                 return [
                     'id' => $result->id,
                     'title' => $translation->title,
-                    'slug' => $translation->slug,
+                    'slug' => $result->getSlugForLocale($translation->locale),
                     'image' => $result->getFirstMediaUrl('recipe_image', 'card'),
                     'no_index' => $result->no_index,
                 ];
-            });
+            })
+        );
 
         return response()->view(
             'kocina.recipes.not-found',
@@ -439,7 +491,7 @@ class RecipeController extends Controller
 
         if ($recipe->tags->count() > 0) {
             $keywords = $recipe->tags->map(fn ($tag) => $tag->getTranslation('name', $translation->locale))->filter()->toArray();
-            if (!empty($keywords)) {
+            if (! empty($keywords)) {
                 JsonLd::addValue('keywords', implode(',', $keywords));
             }
         }

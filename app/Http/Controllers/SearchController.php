@@ -15,7 +15,7 @@ class SearchController extends Controller
     public function index(Request $request): View
     {
         $searchKey = $request->get('q', '');
-        
+
         $recipes = Search::new()
             ->add(
                 Recipe::with('author', 'media', 'tags', 'translations')
@@ -28,11 +28,11 @@ class SearchController extends Controller
             ->withQueryString()
             ->through(function ($recipe) {
                 $translation = $recipe->primaryTranslation();
-                
+
                 return [
                     'id' => $recipe->id,
                     'title' => $translation?->title ?? 'Untitled',
-                    'slug' => $translation?->slug ?? '',
+                    'slug' => $recipe->getSlugForLocale($translation->locale),
                     'locale' => $translation?->locale ?? config('app.fallback_locale'),
                     'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
                     'no_index' => $recipe->no_index,

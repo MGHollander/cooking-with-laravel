@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Hidehalo\Nanoid\Client;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -18,7 +19,9 @@ class Recipe extends Model implements HasMedia, TranslatableContract
     use HasFactory, HasTags, InteractsWithMedia, SoftDeletes, Translatable;
 
     public $translationModel = RecipeTranslation::class;
+
     protected $translationForeignKey = 'recipe_id';
+
     protected $localeKey = 'locale';
 
     public array $translatedAttributes = [
@@ -31,6 +34,7 @@ class Recipe extends Model implements HasMedia, TranslatableContract
 
     protected $fillable = [
         'user_id',
+        'public_id',
         'servings',
         'preparation_minutes',
         'cooking_minutes',
@@ -39,6 +43,17 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         'source_link',
         'no_index',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($recipe) {
+            $client = new Client;
+            $alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
+            $recipe->public_id = $client->formattedId($alphabet, 15);
+        });
+    }
 
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -56,14 +71,20 @@ class Recipe extends Model implements HasMedia, TranslatableContract
     }
 
     public function getSlugForLocale(?string $locale = null): ?string
-    {    
+    {
         $locale = $locale ?? $this->primaryLocale();
-        return $this->translate($locale)?->slug;
+        if (! $this->relationLoaded('translations')) {
+            $this->load('translations');
+        }
+        $slug = $this->translate($locale)?->slug;
+
+        return $slug ? $slug.'-'.$this->public_id : null;
     }
 
     public function getTitleForLocale(?string $locale = null): string
     {
         $locale = $locale ?? $this->primaryLocale();
+
         return $this->translate($locale)?->title ?? 'Untitled Recipe';
     }
 
@@ -98,12 +119,12 @@ class Recipe extends Model implements HasMedia, TranslatableContract
     {
         $tags = collect($tagNames)->map(function (string $tagName) use ($locale) {
             $tag = Tag::findOrCreate($tagName, null, $locale);
-            
-            if (!$tag->hasTranslation('name', $locale)) {
+
+            if (! $tag->hasTranslation('name', $locale)) {
                 $tag->setTranslation('name', $locale, $tagName);
                 $tag->save();
             }
-            
+
             return $tag;
         });
 
@@ -120,18 +141,17 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         if ($locale === null) {
             $locale = app()->getLocale();
         }
-        
+
         return $this->translations()->where('locale', $locale)->exists();
     }
 
     public function getAlternateUrls(): array
     {
         $urls = [];
-        
         foreach ($this->translations as $translation) {
-            $urls[$translation->locale] = route_recipe_show($translation->slug, $translation->locale);
+            $urls[$translation->locale] = route_recipe_show($this->getSlugForLocale($translation->locale), $translation->locale);
         }
-        
+
         return $urls;
     }
 }
