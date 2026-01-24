@@ -48,7 +48,7 @@ class User extends Authenticatable
     protected static function booted()
     {
         static::deleted(function ($user) {
-            if (!$user->isForceDeleting()) {
+            if (! $user->isForceDeleting()) {
                 DeleteUserWithRecipes::dispatch($user->id);
             }
         });

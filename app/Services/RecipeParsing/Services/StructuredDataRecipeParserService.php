@@ -498,7 +498,7 @@ class StructuredDataRecipeParserService implements RecipeParserInterface
     {
         // First ensure the text is properly UTF-8 encoded
         $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
-        
+
         // Decode HTML entities
         return html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }

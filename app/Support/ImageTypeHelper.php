@@ -30,6 +30,7 @@ class ImageTypeHelper
     public static function getMimes(string $context = 'recipe'): string
     {
         $types = config("media-library.supported_image_types.{$context}", []);
+
         return collect($types)->pluck('extension')->implode(',');
     }
 
@@ -41,6 +42,7 @@ class ImageTypeHelper
     public static function getImageTypeConstants(string $context = 'recipe'): array
     {
         $types = config("media-library.supported_image_types.{$context}", []);
+
         return collect($types)->pluck('imagetype_constant')->values()->toArray();
     }
 
@@ -52,6 +54,7 @@ class ImageTypeHelper
     public static function getMimeTypes(string $context = 'recipe'): string
     {
         $types = config("media-library.supported_image_types.{$context}", []);
+
         return collect($types)->pluck('mime_type')->implode(',');
     }
 
@@ -82,6 +85,7 @@ class ImageTypeHelper
     public static function getExtensions(string $context = 'recipe'): array
     {
         $types = config("media-library.supported_image_types.{$context}", []);
+
         return collect($types)->pluck('extension')->values()->toArray();
     }
 }

@@ -43,7 +43,7 @@ class RecipeSeeder extends Seeder
                         ->toMediaCollection('recipe_image');
                 } catch (\Spatie\MediaLibrary\MediaCollections\Exceptions\UnreachableUrl $e) {
                     // Log the error and continue seeding
-                    
+
                 }
             }
         }

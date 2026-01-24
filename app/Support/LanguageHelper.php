@@ -196,14 +196,14 @@ class LanguageHelper
         $code = strtolower($code);
         $locale = $locale ?? app()->getLocale();
 
-        if (!isset(self::$languages[$code])) {
+        if (! isset(self::$languages[$code])) {
             return ucfirst($code);
         }
 
         $name = __("languages.{$code}", [], $locale) ?: ucfirst($code);
-        $flag = $showFlag ? self::$languages[$code]['flag'] . ' ' : '';
+        $flag = $showFlag ? self::$languages[$code]['flag'].' ' : '';
 
-        return $name . ' ' . $flag;
+        return $name.' '.$flag;
     }
 
     public static function getLanguageNameWithTranslation(string $code, ?string $locale = null, bool $showFlag = false): string
@@ -211,16 +211,16 @@ class LanguageHelper
         $code = strtolower($code);
         $locale = $locale ?? app()->getLocale();
 
-        if (!isset(self::$languages[$code])) {
+        if (! isset(self::$languages[$code])) {
             return ucfirst($code);
         }
 
         $nativeName = self::$languages[$code]['nativeName'];
         $translation = __("languages.{$code}", [], $locale);
-        $flag = $showFlag ? self::$languages[$code]['flag'] . ' ' : '';
+        $flag = $showFlag ? self::$languages[$code]['flag'].' ' : '';
 
         if ($code === $locale) {
-            return $nativeName . ' ' . $flag;
+            return $nativeName.' '.$flag;
         }
 
         return "{$nativeName} {$flag} ({$translation})";
@@ -233,8 +233,8 @@ class LanguageHelper
 
         foreach (self::$languages as $code => $language) {
             $name = __("languages.{$code}", [], $locale) ?: ucfirst($code);
-            $flag = $showFlag ? $language['flag'] . ' ' : '';
-            $languages[$code] = $name . ' ' . $flag;
+            $flag = $showFlag ? $language['flag'].' ' : '';
+            $languages[$code] = $name.' '.$flag;
         }
 
         return $languages;
@@ -248,10 +248,10 @@ class LanguageHelper
         foreach (self::$languages as $code => $language) {
             $nativeName = $language['nativeName'];
             $translation = __("languages.{$code}", [], $locale);
-            $flag = $showFlag ? $language['flag'] . ' ' : '';
+            $flag = $showFlag ? $language['flag'].' ' : '';
 
             if ($code === $locale) {
-                $languages[$code] =  $nativeName . ' ' . $flag;
+                $languages[$code] = $nativeName.' '.$flag;
             } else {
                 $languages[$code] = "{$nativeName} {$flag} ({$translation})";
             }
@@ -265,4 +265,3 @@ class LanguageHelper
         return isset(self::$languages[strtolower($code)]);
     }
 }
-

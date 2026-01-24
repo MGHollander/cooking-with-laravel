@@ -13,7 +13,7 @@ return new class extends Migration
             $table->dropColumn(['slug', 'title', 'summary', 'ingredients', 'instructions']);
         });
     }
- 
+
     public function down(): void
     {
         Schema::table('recipes', function (Blueprint $table) {
