@@ -12,7 +12,6 @@ use App\Models\Recipe;
 use App\Models\RecipeTranslation;
 use App\Support\ImageTypeHelper;
 use Artesaos\SEOTools\Facades\JsonLd;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -118,52 +117,21 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      */
-    // TODO Are these return types correct? Should the doc blocks exisit at all or is it overkill with typing?
-    public function show(Request $request, string $slug): JsonResponse|View|Response
+    public function show(Request $request, string $slug): Response|View|RedirectResponse
     {
-        $parts = explode('-', $slug);
-        $publicId = end($parts);
-        $recipe = Recipe::where('public_id', $publicId)->with('author', 'tags')->first();
-        $translation = null;
-        $routeName = $request->route()->getName();
-        $locale = $routeName === 'recipes.show.nl' ? 'nl' : 'en';
+        [$recipe, $translation] = $this->findRecipeBySlug($slug);
 
-        if ($recipe) {
-            $recipe->load('translations');
-            $translation = $recipe->translations->where('locale', $locale)->first();
+        if ($translation && ! $recipe) {
+            $recipe = $translation->recipe;
 
-            if ($translation) {
-                $correctSlug = $recipe->getSlugForLocale($translation->locale);
-                if ($slug !== $correctSlug) {
-                    return redirect()->route($routeName, $correctSlug, 301);
-                }
-            } else {
-                $primaryTranslation = $recipe->primaryTranslation();
-                if ($primaryTranslation) {
-                    return redirect()->route(
-                        $primaryTranslation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
-                        $recipe->getSlugForLocale($primaryTranslation->locale),
-                        301
-                    );
-                }
-            }
-        } else {
-            $translation = RecipeTranslation::where('slug', $slug)
-                ->with('recipe.author', 'recipe.tags')
-                ->first();
-
-            if ($translation && $translation->recipe) {
-                $recipe = $translation->recipe;
-
-                return redirect()->route(
-                    $translation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
-                    $recipe->getSlugForLocale($translation->locale),
-                    301
-                );
-            }
+            return redirect()->route(
+                $translation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
+                $recipe->getSlugForLocale($translation->locale),
+                301
+            );
         }
 
-        if (! $recipe || ! $recipe->author || ! $translation) {
+        if (! $recipe) {
             return $this->notFound($slug);
         }
 
@@ -206,6 +174,22 @@ class RecipeController extends Controller
             'alternate_urls' => $alternateUrls,
             'canonical_url' => $canonicalUrl,
         ]);
+    }
+
+    private function findRecipeBySlug(string $slug): array
+    {
+        $parts = explode('-', $slug);
+        $publicId = end($parts);
+        $recipe = Recipe::where('public_id', $publicId)->with('author', 'tags')->first();
+        $translation = $recipe?->primaryTranslation() ?? null;
+
+        if (! $recipe) {
+            $translation = RecipeTranslation::where('slug', $slug)
+                ->with('recipe.author', 'recipe.tags')
+                ->first();
+        }
+
+        return [$recipe, $translation];
     }
 
     /**
@@ -348,7 +332,7 @@ class RecipeController extends Controller
     {
         $parts = explode('-', $slug);
         $potentialPublicId = end($parts);
-        
+
         // Check if last part matches public_id format
         if (strlen($potentialPublicId) === 15 && preg_match('/^[0-9a-z]+$/', $potentialPublicId)) {
             // Remove public_id from search
@@ -357,7 +341,7 @@ class RecipeController extends Controller
         } else {
             $searchKey = str_replace('-', ' ', $slug);
         }
-        
+
         $paginator = Search::add(RecipeTranslation::with('recipe.media'), ['title', 'ingredients', 'instructions'])
             ->add(Recipe::with('translations', 'tags'), ['tags.name'])
             ->paginate(12)
