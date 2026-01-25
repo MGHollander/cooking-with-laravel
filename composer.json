@@ -8,7 +8,7 @@
   ],
   "license": "MIT",
   "require": {
-    "php": "^8.2.0",
+    "php": "^8.5",
     "ext-dom": "*",
     "ext-imagick": "*",
     "artesaos/seotools": "^1.3",
