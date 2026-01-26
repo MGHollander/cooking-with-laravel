@@ -2,7 +2,7 @@
     "name": "@mghollander/cooking-with-laravel",
     "private": true,
     "engines": {
-        "node": "24.x"
+        "node": "22.x"
     },
     "scripts": {
         "dev": "vite",
