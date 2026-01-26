@@ -16,12 +16,10 @@ return [
     'failed' => 'These credentials do not match our records.',
     'incorrect_password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'login' => 'Login',
     'register' => 'Register',
     'email' => 'Email',
     'password' => 'Password',
     'remember_me' => 'Remember me',
-    'forgot_password' => 'Forgot your password?',
     'name' => 'Name',
     'confirm_password' => 'Confirm Password',
     'already_registered' => 'Already registered? Sign in here.',
@@ -36,4 +34,13 @@ return [
     'resend_verification_email' => 'Resend verification email',
     'logout' => 'Logout',
 
+    'forgot_password' => [
+        'title' => 'Forgot Password',
+        'description' => 'Forgot your password? No problem. Leave your email address and we will send you a password reset link with which you can create a new password.',
+        'send_password_reset_link' => 'Send password reset link',
+    ],
+    'login' => [
+        'forgot_password' => 'Forgot your password?',
+        'title' => 'Login',
+    ]
 ];
