@@ -27,7 +27,7 @@ const submit = () => {
 
 <template>
   <GuestLayout>
-    <Head :title="$t('auth.login')" />
+    <Head :title="$t('auth.login.title')" />
 
     <ValidationErrors class="-mx-6 -mt-4 mb-4 px-6 py-4" />
 
@@ -74,7 +74,7 @@ const submit = () => {
           :href="route('password.request')"
           class="text-sm text-gray-600 underline hover:text-gray-900"
         >
-          {{ $t('auth.forgot_password') }}
+          {{ $t('auth.login.forgot_password') }}
         </Link>
 
         <Button type="submit" class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">

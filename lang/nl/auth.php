@@ -16,12 +16,10 @@ return [
     'failed' => 'Deze logingegevens komen niet voor in het systeem.',
     'incorrect_password' => 'Het ingevulde wachtwoord is onjuist.',
     'throttle' => 'Te veel mislukte login pogingen. Probeer het over :seconds seconden nog eens.',
-    'login' => 'Inloggen',
     'register' => 'Registreren',
     'email' => 'E-mailadres',
     'password' => 'Wachtwoord',
     'remember_me' => 'Onthoud mij',
-    'forgot_password' => 'Wachtwoord vergeten?',
     'name' => 'Naam',
     'confirm_password' => 'Bevestig je wachtwoord',
     'already_registered' => 'Ben je al geregistreerd? Log dan in.',
@@ -36,4 +34,13 @@ return [
     'resend_verification_email' => 'Verificatie e-mail opnieuw versturen',
     'logout' => 'Uitloggen',
 
+    'forgot_password' => [
+        'title' => 'Wachtwoord vergeten',
+        'description' => 'Wachtwoord vergeten? Geen probleem. Laat je e-mailadres achter en we sturen je een wachtwoord herstel link waarmee je een nieuw wachtwoord kunt aanmaken.',
+        'send_password_reset_link' => 'Wachtwoord herstel link sturen',
+    ],
+    'login' => [
+        'forgot_password' => 'Wachtwoord vergeten?',
+        'title' => 'Inloggen',
+    ]
 ];
