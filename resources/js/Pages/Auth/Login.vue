@@ -78,7 +78,7 @@ const submit = () => {
         </Link>
 
         <Button type="submit" class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-          {{ $t('auth.login') }}
+          {{ $t('auth.login.title') }}
         </Button>
       </div>
     </form>
