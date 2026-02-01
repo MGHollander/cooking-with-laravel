@@ -5,13 +5,16 @@ import Input from "@/Components/Input.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import GuestLayout from "@/Layouts/Guest.vue";
+import { useAttrs } from "vue";
+
+const attrs = useAttrs();
 
 const form = useForm({
   password: "",
 });
 
 const submit = () => {
-  form.post(route("password.confirm"), {
+  form.post(route(`password.confirm.${attrs.locale}`), {
     onFinish: () => form.reset(),
   });
 };

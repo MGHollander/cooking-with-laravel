@@ -3,6 +3,9 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import { computed } from "vue";
 import Button from "@/Components/Button.vue";
 import GuestLayout from "@/Layouts/Guest.vue";
+import { useAttrs } from "vue";
+
+const attrs = useAttrs();
 
 const props = defineProps({
   status: String,
@@ -11,7 +14,7 @@ const props = defineProps({
 const form = useForm();
 
 const submit = () => {
-  form.post(route("verification.send"));
+  form.post(route(`verification.send.${attrs.locale}`));
 };
 
 const verificationLinkSent = computed(() => props.status === "verification-link-sent");
@@ -37,7 +40,7 @@ const verificationLinkSent = computed(() => props.status === "verification-link-
         </Button>
 
         <Link
-          :href="route('logout')"
+          :href="route(`logout.${attrs.locale}`)"
           method="post"
           as="button"
           class="text-sm text-gray-600 underline hover:text-gray-900"

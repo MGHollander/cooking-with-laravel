@@ -6,11 +6,14 @@ import Input from "@/Components/Input.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import GuestLayout from "@/Layouts/Guest.vue";
+import { useAttrs } from "vue";
 
 defineProps({
   canResetPassword: Boolean,
   status: String,
 });
+
+const attrs = useAttrs();
 
 const form = useForm({
   email: "",
@@ -19,7 +22,7 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(route("login"), {
+  form.post(route(`login.${attrs.locale}`), {
     onFinish: () => form.reset("password"),
   });
 };
@@ -71,7 +74,7 @@ const submit = () => {
       <div class="mt-4 flex items-center justify-end">
         <Link
           v-if="canResetPassword"
-          :href="route('password.request')"
+          :href="route(`password.request.${attrs.locale}`)"
           class="text-sm text-gray-600 underline hover:text-gray-900"
         >
           {{ $t('auth.login.forgot_password') }}

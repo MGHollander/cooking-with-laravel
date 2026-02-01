@@ -9,6 +9,9 @@ import DropdownLink from "@/Components/DropdownLink.vue";
 import FlashMessage from "@/Components/FlashMessage.vue";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import { useAttrs } from "vue";
+
+const attrs = useAttrs();
 
 const showNav = ref(null);
 
@@ -130,7 +133,7 @@ const toggleNav = (nav) => {
                       {{ $t('nav.manage_users') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('logout')" method="post" as="button">{{ $t('nav.logout') }}</DropdownLink>
+                    <DropdownLink :href="route(`logout.${$page.props.locale}`)" method="post" as="button">{{ $t('nav.logout') }}</DropdownLink>
                   </template>
                 </Dropdown>
               </div>
@@ -138,7 +141,7 @@ const toggleNav = (nav) => {
 
             <!-- Menu for guests -->
             <div v-else class="flex space-x-1">
-              <NavLink :href="route('login')" :active="route().current('login')">{{ $t('nav.login') }}</NavLink>
+              <NavLink :href="route(`login.${$page.props.locale}`)" :active="route().current('login')">{{ $t('nav.login') }}</NavLink>
             </div>
 
             <!-- Responsive Menu -->
@@ -252,7 +255,7 @@ const toggleNav = (nav) => {
                 {{ $t('nav.manage_users') }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('logout')" method="post" as="button" class="w-full text-left">
+              <ResponsiveNavLink :href="route(`logout.${$page.props.locale}`)" method="post" as="button" class="w-full text-left">
                 {{ $t('nav.logout') }}
               </ResponsiveNavLink>
             </div>

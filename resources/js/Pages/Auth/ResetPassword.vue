@@ -5,6 +5,9 @@ import Input from "@/Components/Input.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import GuestLayout from "@/Layouts/Guest.vue";
+import { useAttrs } from "vue";
+
+const attrs = useAttrs();
 
 const props = defineProps({
   email: String,
@@ -19,7 +22,7 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(route("password.update"), {
+  form.post(route(`password.update.${attrs.locale}`), {
     onFinish: () => form.reset("password", "password_confirmation"),
   });
 };
