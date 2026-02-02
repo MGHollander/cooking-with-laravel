@@ -30,13 +30,13 @@ const submit = () => {
 
 <template>
   <GuestLayout>
-    <Head title="Reset je wachtwoord" />
+    <Head :title="$t('auth.reset_password.title')" />
 
     <ValidationErrors class="-mx-6 -mt-4 mb-4 px-6 py-4" />
 
     <form @submit.prevent="submit">
       <div>
-        <Label for="email" value="E-mailadres" />
+        <Label for="email" :value="$t('auth.reset_password.email')" />
         <Input
           id="email"
           v-model="form.email"
@@ -49,7 +49,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4">
-        <Label for="password" value="Wachtwoord" />
+        <Label for="password" :value="$t('auth.reset_password.password')" />
         <Input
           id="password"
           v-model="form.password"
@@ -61,7 +61,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4">
-        <Label for="password_confirmation" value="Bevestig je wachtwoord" />
+        <Label for="password_confirmation" :value="$t('auth.reset_password.confirm_password')" />
         <Input
           id="password_confirmation"
           v-model="form.password_confirmation"
@@ -74,7 +74,7 @@ const submit = () => {
 
       <div class="mt-4 flex items-center justify-end">
         <Button type="submit" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-          Reset je wachtwoord
+          {{ $t('auth.reset_password.button') }}
         </Button>
       </div>
     </form>

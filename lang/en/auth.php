@@ -23,11 +23,6 @@ return [
     'name' => 'Name',
     'confirm_password' => 'Confirm Password',
     'already_registered' => 'Already registered? Sign in here.',
-    'forgot_password_title' => 'Forgot Password',
-    'forgot_password_description' => 'Forgot your password? No problem. Leave your email address and we will send you a password reset link with which you can create a new password.',
-    'send_password_reset_link' => 'Send password reset link',
-    'reset_password_title' => 'Reset your password',
-    'reset_password' => 'Reset your password',
     'verify_email_title' => 'Email verification',
     'verify_email_description' => 'Before you start, you can verify your email address by clicking the link we just emailed you. If you did not receive the email, we will gladly send you another.',
     'verification_link_sent' => 'A new verification link has been sent to the email address you provided during registration.',
@@ -42,5 +37,12 @@ return [
     'login' => [
         'forgot_password' => 'Forgot your password?',
         'title' => 'Login',
-    ]
+    ],
+    'reset_password' => [
+        'title' => 'Reset your password',
+        'email' => 'Email',
+        'password' => 'Password',
+        'confirm_password' => 'Confirm Password',
+        'button' => 'Reset your password',
+    ],
 ];
