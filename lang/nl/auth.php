@@ -28,6 +28,9 @@ return [
     'verification_link_sent' => 'Er is een nieuwe verificatielink naar het e-mailadres gestuurd dat je hebt opgegeven tijdens het registreren.',
     'resend_verification_email' => 'Verificatie e-mail opnieuw versturen',
     'logout' => 'Uitloggen',
+    'confirm_password_title' => 'Bevestig je wachtwoord',
+    'confirm_password_description' => 'Dit is een beveiligd gedeelte van de website. Bevestig je wachtwoord voordat je doorgaat.',
+    'confirm_password_button' => 'Bevestig',
 
     'forgot_password' => [
         'title' => 'Wachtwoord vergeten',

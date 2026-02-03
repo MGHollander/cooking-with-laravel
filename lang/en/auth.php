@@ -28,6 +28,9 @@ return [
     'verification_link_sent' => 'A new verification link has been sent to the email address you provided during registration.',
     'resend_verification_email' => 'Resend verification email',
     'logout' => 'Logout',
+    'confirm_password_title' => 'Confirm your password',
+    'confirm_password_description' => 'This is a secure area of the application. Please confirm your password before continuing.',
+    'confirm_password_button' => 'Confirm',
 
     'forgot_password' => [
         'title' => 'Forgot Password',

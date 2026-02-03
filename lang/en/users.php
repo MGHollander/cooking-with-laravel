@@ -32,4 +32,11 @@ return [
         'confirm_password' => 'Confirm your new password',
         'save' => 'Save',
     ],
+    'flash' => [
+        'created_warning' => 'User “<i>:name</i>” was successfully added, but we could not send an email with instructions to create a password. The following message was returned: <em>:status</em>',
+        'created_success' => 'User “<i>:name</i>” was successfully added and an email was sent with instructions to create a password.',
+        'updated' => 'User “<i>:name</i>” was successfully updated!',
+        'deleted' => 'User “<i>:name</i>” was successfully deleted!',
+        'password_updated' => 'Your password was successfully updated!',
+    ],
 ];

@@ -109,7 +109,7 @@ class RecipeController extends Controller
             $this->saveMedia($request, $recipe);
         });
 
-        Session::flash('success', 'Het recept is succesvol toegevoegd! 🧑‍🍳');
+        Session::flash('success', __('recipes.flash.created'));
 
         return Inertia::location(route('recipes.edit', $recipe->id));
     }
@@ -299,7 +299,7 @@ class RecipeController extends Controller
             $this->saveMedia($request, $recipe);
         });
 
-        Session::flash('success', 'Het recept is succesvol gewijzigd!  🧑‍🍳');
+        Session::flash('success', __('recipes.flash.updated'));
 
         $slug = $recipe->getSlugForLocale($attributes['locale']);
 
@@ -323,7 +323,7 @@ class RecipeController extends Controller
 
         Log::info("Recipe {$recipeId} deleted by user {$userId}");
 
-        Session::flash('success', "Het recept \"<i>{$translation->title}</i>\" is succesvol verwijderd! 🧑‍🍳");
+        Session::flash('success', __('recipes.flash.deleted', ['title' => $translation->title]));
 
         return Inertia::location(route('home'));
     }

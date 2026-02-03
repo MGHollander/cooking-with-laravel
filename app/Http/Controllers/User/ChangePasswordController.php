@@ -43,7 +43,7 @@ class ChangePasswordController extends Controller
 
         event(new PasswordReset($user));
 
-        Session::flash('success', 'Je wachtwoord is succesvol gewijzigd!');
+        Session::flash('success', __('users.flash.password_updated'));
 
         return Inertia::location(route('users.password.edit.'.app()->getLocale()));
     }
