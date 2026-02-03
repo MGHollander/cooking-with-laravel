@@ -1,6 +1,6 @@
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
-import { Head, router, useForm, usePage } from "@inertiajs/vue3";
+import { computed, onMounted, ref, watch, useAttrs } from "vue";
+import { Head, router, useForm } from "@inertiajs/vue3";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
@@ -27,7 +27,7 @@ const props = defineProps({
 const isLoading = ref(true);
 const errorMessage = ref("");
 const images = ref([]);
-const page = usePage();
+const attrs = useAttrs();
 
 const sortedLanguages = computed(() => {
   if (!props.languages) return [];
@@ -47,7 +47,7 @@ const cropperShow = ref(null);
 const image = ref(null);
 
 const form = useForm({
-  locale: page.props.locale || 'nl',
+  locale: attrs.locale || 'nl',
   title: "",
   external_image: "",
   media_dimensions: null,
@@ -71,7 +71,7 @@ const submitForm = () => {
     card: cropperCard?.value ? cropperCard.value.getResult().coordinates : null,
     show: cropperShow?.value ? cropperShow.value.getResult().coordinates : null,
   };
-  form.post(route("import.store"));
+  form.post(route(`import.store.${attrs.locale}`));
 };
 
 const loadExternalImage = () => {
@@ -81,7 +81,7 @@ const loadExternalImage = () => {
   }
 
   // Use our backend proxy to avoid CORS issues with external images
-  const proxyUrl = route("import.proxy-image", { url: form.external_image });
+  const proxyUrl = route(`import.proxy-image.${attrs.locale}`, { url: form.external_image });
   image.value = proxyUrl;
 };
 
@@ -97,7 +97,7 @@ watch(() => form.external_image, loadExternalImage);
 onMounted(() => {
   if (isLoading.value) {
     axios
-      .post(route("import.import-recipe"), {
+      .post(route(`import.import-recipe.${attrs.locale}`), {
         url: props.url,
         parser: props.parser,
         force_import: props.force_import,
@@ -105,7 +105,7 @@ onMounted(() => {
       .then((response) => {
         const recipe = response.data.recipe;
         
-        form.locale = response.data.locale || page.props.locale || 'nl';
+        form.locale = response.data.locale || attrs.locale || 'nl';
         form.title = recipe.title;
         form.external_image = recipe?.images?.length > 0 ? recipe.images[0] : "";
         form.summary = recipe.summary;
@@ -126,7 +126,7 @@ onMounted(() => {
         }
       })
       .catch((error) => {
-        router.get(route("import.index"));
+        router.get(route(`import.index.${attrs.locale}`));
       });
   }
 });

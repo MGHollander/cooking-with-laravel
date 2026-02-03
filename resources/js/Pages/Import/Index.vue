@@ -1,11 +1,13 @@
 <script setup>
 import { Head, useForm } from "@inertiajs/vue3";
-import { computed, ref } from "vue";
+import { computed, ref, useAttrs } from "vue";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
+
+const attrs = useAttrs();
 
 const props = defineProps({
   url: String,
@@ -21,7 +23,7 @@ const form = useForm({
   force_import: props.forceImport ?? false,
 });
 
-let showHelp = ref(false);
+const showHelp = ref(false);
 </script>
 
 <template>
@@ -33,7 +35,7 @@ let showHelp = ref(false);
     </template>
 
     <div class="mx-auto max-w-3xl space-y-8">
-      <form class="mb-12 space-y-8" @submit.prevent="form.get(route('import.create'))">
+      <form class="mb-12 space-y-8" @submit.prevent="form.get(route(`import.create.${attrs.locale}`))">
         <div class="bg-white shadow sm:rounded-md">
           <div class="grid grid-cols-12 gap-6 px-4 py-5 sm:p-6">
             <div class="col-span-12 space-y-1">

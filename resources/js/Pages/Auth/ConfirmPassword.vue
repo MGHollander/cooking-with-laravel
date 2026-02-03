@@ -5,13 +5,16 @@ import Input from "@/Components/Input.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import GuestLayout from "@/Layouts/Guest.vue";
+import { useAttrs } from "vue";
+
+const attrs = useAttrs();
 
 const form = useForm({
   password: "",
 });
 
 const submit = () => {
-  form.post(route("password.confirm"), {
+  form.post(route(`password.confirm.${attrs.locale}`), {
     onFinish: () => form.reset(),
   });
 };
@@ -19,17 +22,17 @@ const submit = () => {
 
 <template>
   <GuestLayout>
-    <Head title="Bevestig je wachtwoord" />
+    <Head :title="$t('auth.confirm_password_title')" />
 
     <div class="mb-4 text-sm text-gray-600">
-      Dit is een beveiligd gedeelte van de website. Bevestig je wachtwoord voordat je doorgaat.
+      {{ $t('auth.confirm_password_description') }}
     </div>
 
     <ValidationErrors class="-mx-6 mb-4 px-6 py-4" />
 
     <form @submit.prevent="submit">
       <div>
-        <Label for="password" value="Password" />
+        <Label for="password" :value="$t('auth.password')" />
         <Input
           id="password"
           v-model="form.password"
@@ -43,7 +46,7 @@ const submit = () => {
 
       <div class="mt-4 flex justify-end">
         <Button type="submit" class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-          Bevestig
+          {{ $t('auth.confirm_password_button') }}
         </Button>
       </div>
     </form>

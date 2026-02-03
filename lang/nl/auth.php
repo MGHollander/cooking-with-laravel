@@ -23,16 +23,14 @@ return [
     'name' => 'Naam',
     'confirm_password' => 'Bevestig je wachtwoord',
     'already_registered' => 'Ben je al geregistreerd? Log dan in.',
-    'forgot_password_title' => 'Wachtwoord vergeten',
-    'forgot_password_description' => 'Wachtwoord vergeten? Geen probleem. Laat je e-mailadres achter en we sturen je een wachtwoord herstel link waarmee je een nieuw wachtwoord kunt aanmaken.',
-    'send_password_reset_link' => 'Wachtwoord herstel link sturen',
-    'reset_password_title' => 'Reset je wachtwoord',
-    'reset_password' => 'Reset je wachtwoord',
     'verify_email_title' => 'E-mail verificatie',
     'verify_email_description' => 'Voordat je begint, kun je je e-mailadres verifiëren door op de link te klikken die we je zojuist hebben gemaild. Als je de e-mail niet hebt ontvangen, sturen we je graag een andere.',
     'verification_link_sent' => 'Er is een nieuwe verificatielink naar het e-mailadres gestuurd dat je hebt opgegeven tijdens het registreren.',
     'resend_verification_email' => 'Verificatie e-mail opnieuw versturen',
     'logout' => 'Uitloggen',
+    'confirm_password_title' => 'Bevestig je wachtwoord',
+    'confirm_password_description' => 'Dit is een beveiligd gedeelte van de website. Bevestig je wachtwoord voordat je doorgaat.',
+    'confirm_password_button' => 'Bevestig',
 
     'forgot_password' => [
         'title' => 'Wachtwoord vergeten',
@@ -42,5 +40,13 @@ return [
     'login' => [
         'forgot_password' => 'Wachtwoord vergeten?',
         'title' => 'Inloggen',
-    ]
+    ],
+
+    'reset_password' => [
+        'title' => 'Reset je wachtwoord',
+        'email' => 'E-mailadres',
+        'password' => 'Wachtwoord',
+        'confirm_password' => 'Bevestig je wachtwoord',
+        'button' => 'Reset je wachtwoord',
+    ],
 ];

@@ -50,6 +50,7 @@ const toggleNav = (nav) => {
               -->
             </div>
 
+
             <!-- Menu for users -->
             <div v-if="$page.props.auth.user" class="hidden sm:ml-6 sm:flex sm:items-center">
               <div class="relative ml-3 flex items-center space-x-1">
@@ -93,11 +94,11 @@ const toggleNav = (nav) => {
                   </template>
 
                   <template #content>
-                    <DropdownLink :href="route('recipes.create')" :active="route().current('recipes.create')">
+                    <DropdownLink :href="route(`recipes.create.${$page.props.locale}`)" :active="route().current(`recipes.create.${$page.props.locale}`)">
                       {{ $t('nav.add_recipe') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('import.index')" :active="route().current('import.index')">
+                    <DropdownLink :href="route(`import.index.${$page.props.locale}`)" :active="route().current(`import.index.${$page.props.locale}`)">
                       {{ $t('nav.import_recipe') }}
                     </DropdownLink>
                   </template>
@@ -116,21 +117,27 @@ const toggleNav = (nav) => {
 
                   <template #content>
                     <DropdownLink
-                      :href="route('users.edit', $page.props.auth.user.id)"
-                      :active="route().current('users.edit', { id: $page.props.auth.user.id })"
+                      :href="route(`users.edit.${$page.props.locale}`, $page.props.auth.user.id)"
+                      :active="route().current(`users.edit.${$page.props.locale}`, { id: $page.props.auth.user.id })"
                     >
                       {{ $t('nav.edit_profile') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('users.password.edit')" :active="route().current('users.password.edit')">
+                    <DropdownLink
+                      :href="route(`users.password.edit.${$page.props.locale}`)"
+                      :active="route().current(`users.password.edit.${$page.props.locale}`)"
+                    >
                       {{ $t('nav.change_password') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('users.index')" :active="route().current('users.index')">
+                    <DropdownLink
+                      :href="route(`users.index.${$page.props.locale}`)"
+                      :active="route().current(`users.index.${$page.props.locale}`)"
+                    >
                       {{ $t('nav.manage_users') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('logout')" method="post" as="button">{{ $t('nav.logout') }}</DropdownLink>
+                    <DropdownLink :href="route(`logout.${$page.props.locale}`)" method="post" as="button">{{ $t('nav.logout') }}</DropdownLink>
                   </template>
                 </Dropdown>
               </div>
@@ -138,7 +145,7 @@ const toggleNav = (nav) => {
 
             <!-- Menu for guests -->
             <div v-else class="flex space-x-1">
-              <NavLink :href="route('login')" :active="route().current('login')">{{ $t('nav.login') }}</NavLink>
+              <NavLink :href="route(`login.${$page.props.locale}`)" :active="route().current(`login.${$page.props.locale}`)">{{ $t('nav.login') }}</NavLink>
             </div>
 
             <!-- Responsive Menu -->
@@ -219,11 +226,11 @@ const toggleNav = (nav) => {
           <!-- Responsive Create Menu -->
           <div v-if="showNav === 'create'" class="border-t border-gray-200 py-1">
             <div class="space-y-1">
-              <ResponsiveNavLink :href="route('recipes.create')" :active="route().current('recipes.create')">
+              <ResponsiveNavLink :href="route(`recipes.create.${$page.props.locale}`)" :active="route().current(`recipes.create.${$page.props.locale}`)">
                 {{ $t('nav.add_recipe') }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('import.index')" :active="route().current('import.index')">
+              <ResponsiveNavLink :href="route(`import.index.${$page.props.locale}`)" :active="route().current(`import.index.${$page.props.locale}`)">
                 {{ $t('nav.import_recipe') }}
               </ResponsiveNavLink>
             </div>
@@ -238,21 +245,27 @@ const toggleNav = (nav) => {
 
             <div class="space-y-1 border-t border-gray-200 py-1">
               <ResponsiveNavLink
-                :href="route('users.edit', $page.props.auth.user.id)"
-                :active="route().current('users.edit', { id: $page.props.auth.user.id })"
+                :href="route(`users.edit.${$page.props.locale}`, $page.props.auth.user.id)"
+                :active="route().current(`users.edit.${$page.props.locale}`, { id: $page.props.auth.user.id })"
               >
                 {{ $t('nav.edit_profile') }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('users.password.edit')" :active="route().current('users.password.edit')">
+              <ResponsiveNavLink
+                :href="route(`users.password.edit.${$page.props.locale}`)"
+                :active="route().current(`users.password.edit.${$page.props.locale}`)"
+              >
                 {{ $t('nav.change_password') }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('users.index')" :active="route().current('users.index')">
+              <ResponsiveNavLink
+                :href="route(`users.index.${$page.props.locale}`)"
+                :active="route().current(`users.index.${$page.props.locale}`)"
+              >
                 {{ $t('nav.manage_users') }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('logout')" method="post" as="button" class="w-full text-left">
+              <ResponsiveNavLink :href="route(`logout.${$page.props.locale}`)" method="post" as="button" class="w-full text-left">
                 {{ $t('nav.logout') }}
               </ResponsiveNavLink>
             </div>
@@ -301,7 +314,7 @@ const toggleNav = (nav) => {
           <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="flex items-center justify-between text-gray-600">
               <p v-html="$t('app.copyright')"/>
-              <a :href="route('privacy')">{{ $t('nav.privacy') }}</a>
+              <a :href="route(`privacy.${$page.props.locale}`)">{{ $t('nav.privacy') }}</a>
             </div>
           </div>
         </div>

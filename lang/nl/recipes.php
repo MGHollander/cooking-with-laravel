@@ -92,4 +92,9 @@ return [
         'words_used' => 'Hiervoor is het volgende woord gebruikt: <strong>:words</strong>|Hiervoor zijn de volgende woorden gebruikt: <strong>:words</strong>',
         'hopefully' => 'Hopelijk zit er iets tussen!',
     ],
+    'flash' => [
+        'created' => 'Het recept is succesvol toegevoegd! 🧑‍🍳',
+        'updated' => 'Het recept is succesvol gewijzigd! 🧑‍🍳',
+        'deleted' => 'Het recept "<i>:title</i>" is succesvol verwijderd! 🧑‍🍳',
+    ],
 ];
