@@ -54,17 +54,34 @@ Route::get('/privacy', function () {
 Route::get('/zoeken', [SearchController::class, 'index'])->name('search');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/gebruikers/wachtwoord-wijzigen', [ChangePasswordController::class, 'edit'])->name('users.password.edit');
-    Route::post('/gebruikers/wachtwoord-wijzigen', [ChangePasswordController::class, 'update'])->name('users.password.update');
+    Route::get('/gebruikers/wachtwoord-wijzigen', [ChangePasswordController::class, 'edit'])->name('users.password.edit.nl');
+    Route::get('/users/change-password', [ChangePasswordController::class, 'edit'])->name('users.password.edit.en');
 
-    Route::get('/gebruikers', [UserController::class, 'index'])->name('users.index');
-    Route::get('/gebruikers/toevoegen', [UserController::class, 'create'])->name('users.create');
-    Route::get('/gebruikers/{user}', [UserController::class, 'show'])->name('users.show');
-    Route::post('/gebruikers', [UserController::class, 'store'])->name('users.store');
-    Route::get('/gebruikers/{user}/bewerken', [UserController::class, 'edit'])->name('users.edit');
-    Route::patch('/gebruikers/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/gebruikers/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/gebruikers/wachtwoord-wijzigen', [ChangePasswordController::class, 'update'])->name('users.password.update.nl');
+    Route::post('/users/change-password', [ChangePasswordController::class, 'update'])->name('users.password.update.en');
+
+    Route::get('/gebruikers', [UserController::class, 'index'])->name('users.index.nl');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index.en');
+
+    Route::get('/gebruikers/toevoegen', [UserController::class, 'create'])->name('users.create.nl');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create.en');
+
+    Route::get('/gebruikers/{user}', [UserController::class, 'show'])->name('users.show.nl');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show.en');
+
+    Route::post('/gebruikers', [UserController::class, 'store'])->name('users.store.nl');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store.en');
+
+    Route::get('/gebruikers/{user}/bewerken', [UserController::class, 'edit'])->name('users.edit.nl');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit.en');
+
+    Route::patch('/gebruikers/{user}', [UserController::class, 'update'])->name('users.update.nl');
+    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update.en');
+
+    Route::delete('/gebruikers/{user}', [UserController::class, 'destroy'])->name('users.destroy.nl');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy.en');
 });
+
 Route::post('/locale', [App\Http\Controllers\LocaleController::class, 'update'])->name('locale.update');
 
 require __DIR__.'/auth.php';

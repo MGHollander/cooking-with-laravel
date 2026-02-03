@@ -45,6 +45,6 @@ class ChangePasswordController extends Controller
 
         Session::flash('success', 'Je wachtwoord is succesvol gewijzigd!');
 
-        return Inertia::location(route('users.password.edit'));
+        return Inertia::location(route('users.password.edit.'.app()->getLocale()));
     }
 }

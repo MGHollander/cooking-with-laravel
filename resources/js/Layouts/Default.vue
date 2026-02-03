@@ -54,7 +54,7 @@ const toggleNav = (nav) => {
             </div>
 
             <!-- Menu for users -->
-            <div v-if="$page.props.auth.user" class="hidden sm:ml-6 sm:flex sm:items-center">
+            <div v-if="attrs.auth.user" class="hidden sm:ml-6 sm:flex sm:items-center">
               <div class="relative ml-3 flex items-center space-x-1">
 
                 <Dropdown align="left" width="48">
@@ -67,12 +67,12 @@ const toggleNav = (nav) => {
                   </template>
 
                   <template #content>
-                    <DropdownLink :href="route('locale.update')" method="post" :data="{locale: 'en'}" :active="$page.props.locale === 'en'" class="flex items-center gap-1" as="button">
+                    <DropdownLink :href="route('locale.update')" method="post" :data="{locale: 'en'}" :active="attrs.locale === 'en'" class="flex items-center gap-1" as="button">
                       <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_503_2952)"><rect width="28" height="20" rx="2" fill="white"/><mask id="mask0_503_2952" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="20"><rect width="28" height="20" rx="2" fill="white"/></mask><g mask="url(#mask0_503_2952)"><rect width="28" height="20" fill="#0A17A7"/><path fill-rule="evenodd" clip-rule="evenodd" d="M-1.28244 -1.91644L10.6667 6.14335V-1.33333H17.3334V6.14335L29.2825 -1.91644L30.7737 0.294324L21.3263 6.66667H28V13.3333H21.3263L30.7737 19.7057L29.2825 21.9165L17.3334 13.8567V21.3333H10.6667V13.8567L-1.28244 21.9165L-2.77362 19.7057L6.67377 13.3333H2.95639e-05V6.66667H6.67377L-2.77362 0.294324L-1.28244 -1.91644Z" fill="white"/><path d="M18.668 6.33219L31.3333 -2" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M20.0128 13.6975L31.3666 21.3503" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M8.00555 6.31046L-3.83746 -1.67099" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M9.29006 13.6049L-3.83746 22.3105" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 12H12V20H16V12H28V8H16V0H12V8H0V12Z" fill="#E6273E"/></g></g><defs><clipPath id="clip0_503_2952"><rect width="28" height="20" rx="2" fill="white"/></clipPath></defs></svg>
                       {{ $t('app.languages.en') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('locale.update')" method="post" :data="{locale: 'nl'}" :active="$page.props.locale === 'nl'" class="flex items-center gap-1" as="button">
+                    <DropdownLink :href="route('locale.update')" method="post" :data="{locale: 'nl'}" :active="attrs.locale === 'nl'" class="flex items-center gap-1" as="button">
                       <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_503_2742)"><rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="#F5F5F5" stroke-width="0.5"/><mask id="mask0_503_2742" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="20"><rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="white" stroke-width="0.5"/></mask><g mask="url(#mask0_503_2742)"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 6.66667H28V0H0V6.66667Z" fill="#CA2B39"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 20H28V13.3333H0V20Z" fill="#2C56A2"/></g></g><defs><clipPath id="clip0_503_2742"><rect width="28" height="20" rx="2" fill="white"/></clipPath></defs></svg>
                       {{ $t('app.languages.nl') }}
                     </DropdownLink>
@@ -110,7 +110,7 @@ const toggleNav = (nav) => {
                   <template #trigger>
                     <span class="inline-flex rounded-md">
                       <Button button-style="ghost" :aria-label="$t('nav.user_menu')" class="!p-2.5 text-sm">
-                        {{ $page.props.auth.user.name }}
+                        {{ attrs.auth.user.name }}
 
                         <FontAwesomeIcon :icon="faChevronDown" class="-mt-0.5 ml-2 h-3" />
                       </Button>
@@ -119,21 +119,27 @@ const toggleNav = (nav) => {
 
                   <template #content>
                     <DropdownLink
-                      :href="route('users.edit', $page.props.auth.user.id)"
-                      :active="route().current('users.edit', { id: $page.props.auth.user.id })"
+                      :href="route(`users.edit.${attrs.locale}`, attrs.auth.user.id)"
+                      :active="route().current(`users.edit.${attrs.locale}`, { id: attrs.auth.user.id })"
                     >
                       {{ $t('nav.edit_profile') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('users.password.edit')" :active="route().current('users.password.edit')">
+                    <DropdownLink
+                      :href="route(`users.password.edit.${attrs.locale}`)"
+                      :active="route().current(`users.password.edit.${attrs.locale}`)"
+                    >
                       {{ $t('nav.change_password') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('users.index')" :active="route().current('users.index')">
+                    <DropdownLink
+                      :href="route(`users.index.${attrs.locale}`)"
+                      :active="route().current(`users.index.${attrs.locale}`)"
+                    >
                       {{ $t('nav.manage_users') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route(`logout.${$page.props.locale}`)" method="post" as="button">{{ $t('nav.logout') }}</DropdownLink>
+                    <DropdownLink :href="route(`logout.${attrs.locale}`)" method="post" as="button">{{ $t('nav.logout') }}</DropdownLink>
                   </template>
                 </Dropdown>
               </div>
@@ -141,11 +147,11 @@ const toggleNav = (nav) => {
 
             <!-- Menu for guests -->
             <div v-else class="flex space-x-1">
-              <NavLink :href="route(`login.${$page.props.locale}`)" :active="route().current('login')">{{ $t('nav.login') }}</NavLink>
+              <NavLink :href="route(`login.${attrs.locale}`)" :active="route().current('login')">{{ $t('nav.login') }}</NavLink>
             </div>
 
             <!-- Responsive Menu -->
-            <div v-if="$page.props.auth.user" class="-mr-2 flex items-center space-x-1 sm:hidden">
+            <div v-if="attrs.auth.user" class="-mr-2 flex items-center space-x-1 sm:hidden">
               <button
                 class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500"
                 :aria-label="$t('app.languages.switch_language')"
@@ -191,7 +197,7 @@ const toggleNav = (nav) => {
         </div>
 
         <!-- Responsive Menus -->
-        <div v-if="$page.props.auth.user" class="sm:hidden">
+        <div v-if="attrs.auth.user" class="sm:hidden">
           <!--
             <div class="pt-2 pb-3 space-y-1">
                 <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
@@ -207,12 +213,12 @@ const toggleNav = (nav) => {
           <!-- Responsive Language Menu -->
           <div v-if="showNav === 'language'" class="border-t border-gray-200 py-1">
             <div class="space-y-1">
-              <ResponsiveNavLink :href="route('locale.update')" method="post" :data="{locale: 'en'}" :active="$page.props.locale === 'en'" as="button" class="flex items-center gap-1 w-full">
+              <ResponsiveNavLink :href="route('locale.update')" method="post" :data="{locale: 'en'}" :active="attrs.locale === 'en'" as="button" class="flex items-center gap-1 w-full">
                 <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_503_2952)"><rect width="28" height="20" rx="2" fill="white"/><mask id="mask0_503_2952" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="20"><rect width="28" height="20" rx="2" fill="white"/></mask><g mask="url(#mask0_503_2952)"><rect width="28" height="20" fill="#0A17A7"/><path fill-rule="evenodd" clip-rule="evenodd" d="M-1.28244 -1.91644L10.6667 6.14335V-1.33333H17.3334V6.14335L29.2825 -1.91644L30.7737 0.294324L21.3263 6.66667H28V13.3333H21.3263L30.7737 19.7057L29.2825 21.9165L17.3334 13.8567V21.3333H10.6667V13.8567L-1.28244 21.9165L-2.77362 19.7057L6.67377 13.3333H2.95639e-05V6.66667H6.67377L-2.77362 0.294324L-1.28244 -1.91644Z" fill="white"/><path d="M18.668 6.33219L31.3333 -2" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M20.0128 13.6975L31.3666 21.3503" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M8.00555 6.31046L-3.83746 -1.67099" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M9.29006 13.6049L-3.83746 22.3105" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 12H12V20H16V12H28V8H16V0H12V8H0V12Z" fill="#E6273E"/></g></g><defs><clipPath id="clip0_503_2952"><rect width="28" height="20" rx="2" fill="white"/></clipPath></defs></svg>
                 {{ $t('app.languages.en') }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('locale.update')" method="post" :data="{locale: 'nl'}" :active="$page.props.locale === 'nl'" as="button" class="flex items-center gap-1 w-full">
+              <ResponsiveNavLink :href="route('locale.update')" method="post" :data="{locale: 'nl'}" :active="attrs.locale === 'nl'" as="button" class="flex items-center gap-1 w-full">
                 <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_503_2742)"><rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="#F5F5F5" stroke-width="0.5"/><mask id="mask0_503_2742" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="20"><rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="white" stroke-width="0.5"/></mask><g mask="url(#mask0_503_2742)"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 6.66667H28V0H0V6.66667Z" fill="#CA2B39"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 20H28V13.3333H0V20Z" fill="#2C56A2"/></g></g><defs><clipPath id="clip0_503_2742"><rect width="28" height="20" rx="2" fill="white"/></clipPath></defs></svg>
                 {{ $t('app.languages.nl') }}
               </ResponsiveNavLink>
@@ -235,27 +241,33 @@ const toggleNav = (nav) => {
           <!-- Responsive User Menu -->
           <div v-if="showNav === 'user'">
             <div class="border-t border-gray-200 p-4">
-              <div class="text-base font-medium text-gray-800">{{ $page.props.auth.user.name }}</div>
-              <div class="text-sm font-medium text-gray-500">{{ $page.props.auth.user.email }}</div>
+              <div class="text-base font-medium text-gray-800">{{ attrs.auth.user.name }}</div>
+              <div class="text-sm font-medium text-gray-500">{{ attrs.auth.user.email }}</div>
             </div>
 
             <div class="space-y-1 border-t border-gray-200 py-1">
               <ResponsiveNavLink
-                :href="route('users.edit', $page.props.auth.user.id)"
-                :active="route().current('users.edit', { id: $page.props.auth.user.id })"
+                :href="route(`users.edit.${attrs.locale}`, attrs.auth.user.id)"
+                :active="route().current(`users.edit.${attrs.locale}`, { id: attrs.auth.user.id })"
               >
                 {{ $t('nav.edit_profile') }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('users.password.edit')" :active="route().current('users.password.edit')">
+              <ResponsiveNavLink
+                :href="route(`users.password.edit.${attrs.locale}`)"
+                :active="route().current(`users.password.edit.${attrs.locale}`)"
+              >
                 {{ $t('nav.change_password') }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('users.index')" :active="route().current('users.index')">
+              <ResponsiveNavLink
+                :href="route(`users.index.${attrs.locale}`)"
+                :active="route().current(`users.index.${attrs.locale}`)"
+              >
                 {{ $t('nav.manage_users') }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route(`logout.${$page.props.locale}`)" method="post" as="button" class="w-full text-left">
+              <ResponsiveNavLink :href="route(`logout.${attrs.locale}`)" method="post" as="button" class="w-full text-left">
                 {{ $t('nav.logout') }}
               </ResponsiveNavLink>
             </div>
@@ -273,21 +285,21 @@ const toggleNav = (nav) => {
       </header>
 
       <FlashMessage
-        v-if="$page.props.flash.error"
+        v-if="attrs.flash.error"
         type="error"
-        :message="$page.props.flash.error"
+        :message="attrs.flash.error"
       />
 
       <FlashMessage
-        v-if="$page.props.flash.success"
+        v-if="attrs.flash.success"
         type="success"
-        :message="$page.props.flash.success"
+        :message="attrs.flash.success"
       />
 
       <FlashMessage
-        v-if="$page.props.flash.warning"
+        v-if="attrs.flash.warning"
         type="warning"
-        :message="$page.props.flash.warning"
+        :message="attrs.flash.warning"
       />
 
       <!-- Page Content -->

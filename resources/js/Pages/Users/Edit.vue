@@ -22,7 +22,7 @@ let form = useForm({
 });
 
 let submit = () => {
-  form.patch(route("users.update", props.id));
+  form.patch(route(`users.update.${attrs.locale}`, props.id));
 };
 
 const title = computed(() =>
@@ -33,7 +33,7 @@ const title = computed(() =>
 
 function confirmDeletion() {
   if (confirm(trans('users.edit.confirm_delete'))) {
-    router.delete(route("users.destroy", props.id), {
+    router.delete(route(`users.destroy.${attrs.locale}`, props.id), {
       method: "delete",
     });
   }

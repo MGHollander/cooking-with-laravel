@@ -72,7 +72,7 @@ class UserController extends Controller
             }
         );
 
-        $redirect = redirect()->route('users.index');
+        $redirect = redirect()->route('users.index.'.app()->getLocale());
 
         if ($status !== Password::RESET_LINK_SENT) {
             return $redirect->with('warning', "De gebruiker “<i>{$user->name}</i>” is succesvol toegevoegd, maar er kon geen email gestuurd worden met instructies om een wachtwoord aan te maken. De volgende melding is terug gegeven: <em>".trans($status).'</em>');
@@ -109,7 +109,7 @@ class UserController extends Controller
 
         $user->update($attributes);
 
-        return redirect()->route('users.edit', $user)->with('success', "De gebruiker “<i>{$user->name}</i>” is succesvol aangepast!");
+        return redirect()->route('users.edit.'.app()->getLocale(), $user)->with('success', "De gebruiker “<i>{$user->name}</i>” is succesvol aangepast!");
     }
 
     /**
@@ -124,6 +124,6 @@ class UserController extends Controller
 
         Log::info("User {$deletedUserId} deleted by user {$userId}");
 
-        return redirect()->route('users.index')->with('success', "De gebruiker “<i>{$user->name}</i>” is succesvol verwijderd!");
+        return redirect()->route('users.index.'.app()->getLocale())->with('success', "De gebruiker “<i>{$user->name}</i>” is succesvol verwijderd!");
     }
 }

@@ -2,6 +2,7 @@
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { Head, router } from "@inertiajs/vue3";
+import { useAttrs } from "vue";
 import debounce from "lodash/debounce";
 import { ref, watch } from "vue";
 import Button from "@/Components/Button.vue";
@@ -9,6 +10,8 @@ import Input from "@/Components/Input.vue";
 import Pagination from "@/Components/Pagination.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 import { trans } from 'laravel-vue-i18n';
+
+const attrs = useAttrs();
 
 let props = defineProps({
   users: Object,
@@ -21,7 +24,7 @@ watch(
   search,
   debounce((value) => {
     router.get(
-      route("users"),
+      route(`users.index.${attrs.locale}`),
       { search: value },
       {
         preserveState: true,
@@ -33,7 +36,7 @@ watch(
 
 function confirmDeletion(user_id) {
   if (confirm(trans('users.index.confirm_delete'))) {
-    router.delete(route("users.destroy", user_id), {
+    router.delete(route(`users.destroy.${attrs.locale}`, user_id), {
       method: "delete",
     });
   }
@@ -48,7 +51,7 @@ function confirmDeletion(user_id) {
 
     <div class="mb-4 flex items-center justify-between px-2 sm:px-0">
       <Button
-        :href="route('users.create')"
+        :href="route(`users.create.${attrs.locale}`)"
         class="bg-indigo-600 px-2 text-sm no-underline hover:bg-indigo-800 hover:text-white"
       >
         {{ $t('users.index.add_user') }}
@@ -69,7 +72,7 @@ function confirmDeletion(user_id) {
 
               <td class="space-x-2 whitespace-nowrap px-4 py-5 text-right text-sm font-medium sm:px-6">
                 <Button
-                  :href="route('users.edit', user.id)"
+                  :href="route(`users.edit.${attrs.locale}`, user.id)"
                   class="text-indigo-600 no-underline hover:text-indigo-900 hover:underline"
                   :aria-label="$t('users.index.edit')"
                 >
