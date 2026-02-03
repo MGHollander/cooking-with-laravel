@@ -348,7 +348,7 @@ class ImportController extends Controller
         if ($request->get('return_to_import_page')) {
             $slug = $recipe->getSlugForLocale($locale);
 
-            return redirect()->route('import.index')->with('success', __('import.flash.imported_with_link', [
+            return redirect()->route('import.index.'.app()->getLocale())->with('success', __('import.flash.imported_with_link', [
                 'url' => route_recipe_show($slug, $locale),
                 'title' => $recipe->getTitleForLocale($locale),
             ]));

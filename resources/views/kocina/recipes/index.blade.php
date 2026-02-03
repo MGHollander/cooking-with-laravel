@@ -28,7 +28,7 @@
       <p>{{ __('recipes.no_recipes') }}</p>
 
       @auth
-        <a href="{{ route("recipes.create") }}" class="button button-primary">{{ __('recipes.add_first') }}</a>
+        <a href="{{ route('recipes.create.' . app()->getLocale()) }}" class="button button-primary">{{ __('recipes.add_first') }}</a>
       @endauth
     @endif
   </div>

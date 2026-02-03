@@ -1,8 +1,8 @@
 <script setup>
 import { faExternalLink } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { Head, router, useForm, usePage } from "@inertiajs/vue3";
-import { computed, onMounted, ref } from "vue";
+import { Head, router, useForm } from "@inertiajs/vue3";
+import { computed, onMounted, ref, useAttrs } from "vue";
 import { Cropper } from "vue-advanced-cropper";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
@@ -18,14 +18,14 @@ import { trans } from 'laravel-vue-i18n';
 
 
 const props = defineProps({ recipe: Object, config: Object, languages: Object });
-const edit = route().current("recipes.edit") ?? false;
-const page = usePage();
+const attrs = useAttrs();
+const edit = route().current(`recipes.edit.${attrs.locale}`) ?? false;
 
 const form = useForm({
   // Fix multipart limitations @see https://inertiajs.com/file-uploads#multipart-limitations
   // NOTE: The form is also submitted using the post method instead of the patch method.
   _method: edit ? "PATCH" : "POST",
-  locale: edit ? props.recipe.locale : (page.props.locale || 'en'),
+  locale: edit ? props.recipe.locale : (attrs.locale || 'en'),
   title: edit ? props.recipe.title : "",
   media: null,
   media_dimensions: null,
@@ -44,10 +44,6 @@ const form = useForm({
 });
 
 const title = computed(() => edit ? trans('recipes.form.edit_title', { title: form.title }) : trans('recipes.form.create_title'));
-
-const localeLabel = computed(() => {
-  return props.languages?.[form.locale] || form.locale;
-});
 
 const sortedLanguages = computed(() => {
   if (!props.languages) return [];
@@ -75,7 +71,7 @@ const save = () => {
     show: cropperShow?.value ? cropperShow.value.getResult().coordinates : null,
   };
 
-  form.post(edit ? route("recipes.update", props.recipe.id) : route("recipes.store"));
+  form.post(edit ? route(`recipes.update.${attrs.locale}`, props.recipe.id) : route(`recipes.store.${attrs.locale}`));
 };
 
 function resetErrors() {
@@ -168,7 +164,7 @@ function getStencilSize({ boundaries }) {
 
 function confirmDeletion() {
   if (confirm(trans('recipes.form.confirm_delete'))) {
-    router.delete(route("recipes.destroy", props.recipe.id), {
+    router.delete(route(`recipes.destroy.${attrs.locale}`, props.recipe.id), {
       method: "delete",
     });
   }

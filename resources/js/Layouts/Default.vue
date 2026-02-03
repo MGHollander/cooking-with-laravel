@@ -94,11 +94,11 @@ const toggleNav = (nav) => {
                   </template>
 
                   <template #content>
-                    <DropdownLink :href="route('recipes.create')" :active="route().current('recipes.create')">
+                    <DropdownLink :href="route(`recipes.create.${$page.props.locale}`)" :active="route().current(`recipes.create.${$page.props.locale}`)">
                       {{ $t('nav.add_recipe') }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('import.index')" :active="route().current('import.index')">
+                    <DropdownLink :href="route(`import.index.${$page.props.locale}`)" :active="route().current(`import.index.${$page.props.locale}`)">
                       {{ $t('nav.import_recipe') }}
                     </DropdownLink>
                   </template>
@@ -145,7 +145,7 @@ const toggleNav = (nav) => {
 
             <!-- Menu for guests -->
             <div v-else class="flex space-x-1">
-              <NavLink :href="route(`login.${$page.props.locale}`)" :active="route().current('login')">{{ $t('nav.login') }}</NavLink>
+              <NavLink :href="route(`login.${$page.props.locale}`)" :active="route().current(`login.${$page.props.locale}`)">{{ $t('nav.login') }}</NavLink>
             </div>
 
             <!-- Responsive Menu -->
@@ -226,11 +226,11 @@ const toggleNav = (nav) => {
           <!-- Responsive Create Menu -->
           <div v-if="showNav === 'create'" class="border-t border-gray-200 py-1">
             <div class="space-y-1">
-              <ResponsiveNavLink :href="route('recipes.create')" :active="route().current('recipes.create')">
+              <ResponsiveNavLink :href="route(`recipes.create.${$page.props.locale}`)" :active="route().current(`recipes.create.${$page.props.locale}`)">
                 {{ $t('nav.add_recipe') }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('import.index')" :active="route().current('import.index')">
+              <ResponsiveNavLink :href="route(`import.index.${$page.props.locale}`)" :active="route().current(`import.index.${$page.props.locale}`)">
                 {{ $t('nav.import_recipe') }}
               </ResponsiveNavLink>
             </div>
@@ -314,7 +314,7 @@ const toggleNav = (nav) => {
           <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="flex items-center justify-between text-gray-600">
               <p v-html="$t('app.copyright')"/>
-              <a :href="route('privacy')">{{ $t('nav.privacy') }}</a>
+              <a :href="route(`privacy.${$page.props.locale}`)">{{ $t('nav.privacy') }}</a>
             </div>
           </div>
         </div>

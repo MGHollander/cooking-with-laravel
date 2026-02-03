@@ -25,7 +25,7 @@
   </a>
 
   @auth
-    <a href="{{ route("recipes.edit", $recipe["id"]) }}" class="recipe-card-edit">
+    <a href="{{ route('recipes.edit.' . app()->getLocale(), $recipe['id']) }}" class="recipe-card-edit">
       <x-icon.pen />
     </a>
   @endauth

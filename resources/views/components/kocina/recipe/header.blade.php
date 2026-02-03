@@ -62,7 +62,7 @@
 
         @if ($recipe['user_id'] === auth()->id())
             <div class="recipe-management">
-                <a href="{{ route('recipes.edit', $recipe['id']) }}" class="button button-primary button-small">
+                <a href="{{ route('recipes.edit.' . app()->getLocale(), $recipe['id']) }}" class="button button-primary button-small">
                     {{ __('recipes.show.edit') }}
                 </a>
             </div>

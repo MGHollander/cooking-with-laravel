@@ -1,7 +1,7 @@
 @props(['searchKey' => ''])
 
 <div {{ $attributes->merge(['class' => 'search-bar']) }} x-data="{ searchKey: '{{ $searchKey }}' }">
-    <form action="{{ route('search') }}" class="search-bar-form">
+    <form action="{{ route('search.' . app()->getLocale()) }}" class="search-bar-form">
         {{--
           TODO Very low prio. See if I can fix the bug with the clear button.
             When you search from the bar and navigate back from the search page,

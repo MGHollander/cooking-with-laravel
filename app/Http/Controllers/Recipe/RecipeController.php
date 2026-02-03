@@ -111,7 +111,7 @@ class RecipeController extends Controller
 
         Session::flash('success', __('recipes.flash.created'));
 
-        return Inertia::location(route('recipes.edit', $recipe->id));
+        return Inertia::location(route('recipes.edit.'.app()->getLocale(), $recipe->id));
     }
 
     /**
