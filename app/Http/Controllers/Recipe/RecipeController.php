@@ -45,6 +45,7 @@ class RecipeController extends Controller
                     return [
                         'id' => $recipe->id,
                         'title' => $translation->title,
+                        'public_id' => $recipe->public_id,
                         'slug' => $recipe->getSlugForLocale($translation->locale),
                         'locale' => $translation->locale,
                         'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
@@ -117,38 +118,47 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, string $slug): Response|View|RedirectResponse
+    public function show(Request $request, string $publicId, ?string $slug = null): Response|View|RedirectResponse
     {
-        [$recipe, $translation] = $this->findRecipeBySlug($slug);
-
-        if ($translation && ! $recipe) {
-            $recipe = $translation->recipe;
-
-            return redirect()->route(
-                $translation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
-                $recipe->getSlugForLocale($translation->locale),
-                301
-            );
-        }
+        $recipe = Recipe::where('public_id', $publicId)
+            ->with('author', 'tags', 'translations')
+            ->first();
 
         if (! $recipe) {
-            return $this->notFound($slug);
+            return $this->notFound($slug ?? $publicId);
+        }
+
+        $translation = $recipe->primaryTranslation();
+
+        if (! $translation) {
+            return $this->notFound($slug ?? $publicId);
+        }
+
+        $canonicalSlug = $translation->slug;
+
+        if ($slug !== $canonicalSlug) {
+            return redirect()->route(
+                $translation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
+                [$publicId, $canonicalSlug],
+                301
+            );
         }
 
         $this->setJsonLdData($recipe, $translation);
 
         $alternateUrls = $recipe->getAlternateUrls();
-        $canonicalUrl = route_recipe_show($recipe->getSlugForLocale($translation->locale), $translation->locale);
+        $canonicalUrl = route_recipe_show($recipe->public_id, $canonicalSlug, $translation->locale);
         $ogLocale = $this->formatOpenGraphLocale($translation->locale);
 
         return view('kocina.recipes.show', [
             'recipe' => [
                 'id' => $recipe->id,
+                'public_id' => $recipe->public_id,
                 'author' => $recipe->author->name,
                 'user_id' => $recipe->user_id,
                 'locale' => $translation->locale,
                 'title' => $translation->title,
-                'slug' => $recipe->getSlugForLocale($translation->locale),
+                'slug' => $canonicalSlug,
                 'image' => $recipe->getFirstMediaUrl('recipe_image', 'show'),
                 'summary' => strip_tags($translation->summary, '<strong><em><u>'),
                 'tags' => $recipe->tags->map(fn ($tag) => $tag->getTranslation('name', $translation->locale))->filter(),
@@ -176,20 +186,27 @@ class RecipeController extends Controller
         ]);
     }
 
-    private function findRecipeBySlug(string $slug): array
+    /**
+     * Handle legacy URL format and redirect to new format.
+     * Supports old URLs without public_id (e.g., /recipes/chicken-pizza)
+     */
+    public function showLegacy(Request $request, string $slug): Response|RedirectResponse
     {
-        $parts = explode('-', $slug);
-        $publicId = end($parts);
-        $recipe = Recipe::where('public_id', $publicId)->with('author', 'tags')->first();
-        $translation = $recipe?->primaryTranslation() ?? null;
+        $translation = RecipeTranslation::where('slug', $slug)
+            ->with('recipe.author', 'recipe.tags', 'recipe.translations')
+            ->first();
 
-        if (! $recipe) {
-            $translation = RecipeTranslation::where('slug', $slug)
-                ->with('recipe.author', 'recipe.tags')
-                ->first();
+        if ($translation && $translation->recipe) {
+            $recipe = $translation->recipe;
+
+            return redirect()->route(
+                $translation->locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en',
+                [$recipe->public_id, $translation->slug],
+                301
+            );
         }
 
-        return [$recipe, $translation];
+        return $this->notFound($slug);
     }
 
     /**
@@ -205,6 +222,7 @@ class RecipeController extends Controller
         return Inertia::render('Recipes/Form', [
             'recipe' => [
                 'id' => $recipe->id,
+                'public_id' => $recipe->public_id,
                 'locale' => $translation->locale,
                 'slug' => $recipe->getSlugForLocale($translation->locale),
                 'title' => $translation->title,
@@ -303,7 +321,7 @@ class RecipeController extends Controller
 
         $slug = $recipe->getSlugForLocale($attributes['locale']);
 
-        return Inertia::location(route_recipe_show($slug, $attributes['locale']));
+        return Inertia::location(route_recipe_show($recipe->public_id, $slug, $attributes['locale']));
     }
 
     /**
@@ -330,17 +348,7 @@ class RecipeController extends Controller
 
     private function notFound($slug): \Illuminate\Http\Response
     {
-        $parts = explode('-', $slug);
-        $potentialPublicId = end($parts);
-
-        // Check if last part matches public_id format
-        if (strlen($potentialPublicId) === 15 && preg_match('/^[0-9a-z]+$/', $potentialPublicId)) {
-            // Remove public_id from search
-            array_pop($parts);
-            $searchKey = implode(' ', $parts);
-        } else {
-            $searchKey = str_replace('-', ' ', $slug);
-        }
+        $searchKey = str_replace('-', ' ', $slug);
 
         $paginator = Search::add(RecipeTranslation::with('recipe.media'), ['title', 'ingredients', 'instructions'])
             ->add(Recipe::with('translations', 'tags'), ['tags.name'])
@@ -357,6 +365,7 @@ class RecipeController extends Controller
                     return [
                         'id' => $recipe->id,
                         'title' => $result->title,
+                        'public_id' => $recipe->public_id,
                         'slug' => $recipe->getSlugForLocale($result->locale),
                         'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
                         'no_index' => $recipe->no_index,
@@ -368,6 +377,7 @@ class RecipeController extends Controller
                 return [
                     'id' => $result->id,
                     'title' => $translation->title,
+                    'public_id' => $result->public_id,
                     'slug' => $result->getSlugForLocale($translation->locale),
                     'image' => $result->getFirstMediaUrl('recipe_image', 'card'),
                     'no_index' => $result->no_index,

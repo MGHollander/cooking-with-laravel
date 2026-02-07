@@ -33,6 +33,6 @@ class RecipeSlugTest extends TestCase
         // Refresh to load translations
         $recipe->refresh();
 
-        $this->assertEquals('my-recipe-'.$recipe->public_id, $recipe->slug);
+        $this->assertEquals('my-recipe', $recipe->getSlugForLocale('en'));
     }
 }

@@ -106,7 +106,7 @@ class SoftDeleteTest extends TestCase
 
         $locale = $recipe->primaryLocale();
         $slug = $recipe->getSlugForLocale($locale);
-        $response = $this->get(route_recipe_show($slug, $locale));
+        $response = $this->get(route_recipe_show($recipe->public_id, $slug, $locale));
 
         $response->assertStatus(404);
     }

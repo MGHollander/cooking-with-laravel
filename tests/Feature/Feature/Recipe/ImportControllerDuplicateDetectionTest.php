@@ -49,7 +49,7 @@ class ImportControllerDuplicateDetectionTest extends TestCase
         $this->assertStringContainsString($recipe->getTitleForLocale($recipe->primaryLocale()), $flashMessage);
         $locale = $recipe->primaryLocale();
         $slug = $recipe->getSlugForLocale($locale);
-        $this->assertStringContainsString(route_recipe_show($slug, $locale), $flashMessage);
+        $this->assertStringContainsString(route_recipe_show($recipe->public_id, $slug, $locale), $flashMessage);
     }
 
     public function test_create_shows_form_with_existing_data_when_other_user_imported_recipe(): void

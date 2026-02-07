@@ -58,7 +58,7 @@ class ImportController extends Controller
             $recipe = $userImport->recipe;
             $locale = $recipe->primaryLocale();
             $slug = $recipe->getSlugForLocale($locale);
-            $recipeUrl = route_recipe_show($slug, $locale);
+            $recipeUrl = route_recipe_show($recipe->public_id, $slug, $locale);
 
             return back()
                 ->with('warning', __('import.flash.already_imported', [
@@ -349,7 +349,7 @@ class ImportController extends Controller
             $slug = $recipe->getSlugForLocale($locale);
 
             return redirect()->route('import.index.'.app()->getLocale())->with('success', __('import.flash.imported_with_link', [
-                'url' => route_recipe_show($slug, $locale),
+                'url' => route_recipe_show($recipe->public_id, $slug, $locale),
                 'title' => $recipe->getTitleForLocale($locale),
             ]));
         }
@@ -358,7 +358,7 @@ class ImportController extends Controller
 
         $slug = $recipe->getSlugForLocale($locale);
 
-        return Inertia::location(route_recipe_show($slug, $locale));
+        return Inertia::location(route_recipe_show($recipe->public_id, $slug, $locale));
     }
 
     private function detectLanguageFromParsedData(ParsedRecipeData $parsedData): ?string
