@@ -76,9 +76,8 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         if (! $this->relationLoaded('translations')) {
             $this->load('translations');
         }
-        $slug = $this->translate($locale)?->slug;
 
-        return $slug ? $slug.'-'.$this->public_id : null;
+        return $this->translate($locale)?->slug;
     }
 
     public function getTitleForLocale(?string $locale = null): string
@@ -149,7 +148,11 @@ class Recipe extends Model implements HasMedia, TranslatableContract
     {
         $urls = [];
         foreach ($this->translations as $translation) {
-            $urls[$translation->locale] = route_recipe_show($this->getSlugForLocale($translation->locale), $translation->locale);
+            $urls[$translation->locale] = route_recipe_show(
+                $this->public_id,
+                $translation->slug,
+                $translation->locale
+            );
         }
 
         return $urls;
