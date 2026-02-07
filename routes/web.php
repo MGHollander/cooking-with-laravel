@@ -51,11 +51,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/recepten/{public_id}/{slug?}', [RecipeController::class, 'show'])
-    ->where('public_id', '[a-z0-9]+')
+    ->where('public_id', '[a-z0-9-]+')
     ->where('slug', '[a-z0-9-]+')
     ->name('recipes.show.nl');
 Route::get('/recipes/{public_id}/{slug?}', [RecipeController::class, 'show'])
-    ->where('public_id', '[a-z0-9]+')
+    ->where('public_id', '[a-z0-9-]+')
     ->where('slug', '[a-z0-9-]+')
     ->name('recipes.show.en');
 
