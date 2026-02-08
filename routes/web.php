@@ -50,21 +50,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/recipes/import/proxy-image', [ImportController::class, 'proxyImage'])->name('import.proxy-image.en');
 });
 
+Route::get('/recepten/{slug}', [RecipeController::class, 'showLegacy'])
+    ->where('slug', '[a-z]+-[a-z0-9-]+') // Legacy slugs have format "word-word-word"
+    ->name('recipes.show.legacy.nl');
+Route::get('/recipes/{slug}', [RecipeController::class, 'showLegacy'])
+    ->where('slug', '[a-z]+-[a-z0-9-]+')
+    ->name('recipes.show.legacy.en');
+
 Route::get('/recepten/{public_id}/{slug?}', [RecipeController::class, 'show'])
-    ->where('public_id', '[a-z0-9-]+')
+    ->where('public_id', '[a-z0-9]+')
     ->where('slug', '[a-z0-9-]+')
     ->name('recipes.show.nl');
 Route::get('/recipes/{public_id}/{slug?}', [RecipeController::class, 'show'])
-    ->where('public_id', '[a-z0-9-]+')
+    ->where('public_id', '[a-z0-9]+')
     ->where('slug', '[a-z0-9-]+')
     ->name('recipes.show.en');
-
-Route::get('/recepten/{slug}', [RecipeController::class, 'showLegacy'])
-    ->where('slug', '[a-z0-9-]+')
-    ->name('recipes.show.legacy.nl');
-Route::get('/recipes/{slug}', [RecipeController::class, 'showLegacy'])
-    ->where('slug', '[a-z0-9-]+')
-    ->name('recipes.show.legacy.en');
 
 Route::get('/over-mij', function () {
     return view('kocina.about-me');
