@@ -362,6 +362,10 @@ class RecipeController extends Controller
                 if ($result instanceof RecipeTranslation) {
                     $recipe = $result->recipe;
 
+                    if (! $recipe) {
+                        return null;
+                    }
+
                     return [
                         'id' => $recipe->id,
                         'title' => $result->title,
@@ -374,6 +378,10 @@ class RecipeController extends Controller
 
                 $translation = $result->primaryTranslation();
 
+                if (! $translation) {
+                    return null;
+                }
+
                 return [
                     'id' => $result->id,
                     'public_id' => $result->public_id,
@@ -382,7 +390,7 @@ class RecipeController extends Controller
                     'image' => $result->getFirstMediaUrl('recipe_image', 'card'),
                     'no_index' => $result->no_index,
                 ];
-            })
+            })->filter()
         );
 
         return response()->view(
