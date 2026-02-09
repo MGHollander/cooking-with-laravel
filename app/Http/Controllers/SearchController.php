@@ -31,6 +31,7 @@ class SearchController extends Controller
 
                 return [
                     'id' => $recipe->id,
+                    'public_id' => $recipe->public_id,
                     'title' => $translation?->title ?? 'Untitled',
                     'slug' => $recipe->getSlugForLocale($translation->locale),
                     'locale' => $translation?->locale ?? config('app.fallback_locale'),

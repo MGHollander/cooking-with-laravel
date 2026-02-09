@@ -376,8 +376,8 @@ class RecipeController extends Controller
 
                 return [
                     'id' => $result->id,
-                    'title' => $translation->title,
                     'public_id' => $result->public_id,
+                    'title' => $translation->title,
                     'slug' => $result->getSlugForLocale($translation->locale),
                     'image' => $result->getFirstMediaUrl('recipe_image', 'card'),
                     'no_index' => $result->no_index,
