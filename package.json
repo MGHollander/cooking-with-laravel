@@ -14,7 +14,7 @@
         "@tailwindcss/forms": "^0.5.2",
         "@vitejs/plugin-vue": "^6.0.3",
         "autoprefixer": "^10.4.23",
-        "axios": "^1.8.2",
+        "axios": "^1.13.5",
         "eslint": "^9.30.0",
         "eslint-config-prettier": "^10.1.5",
         "eslint-plugin-import": "^2.31.0",
