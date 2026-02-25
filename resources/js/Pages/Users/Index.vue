@@ -8,7 +8,7 @@ import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import Pagination from "@/Components/Pagination.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
-import { trans } from 'laravel-vue-i18n';
+import { trans } from "laravel-vue-i18n";
 
 let props = defineProps({
   users: Object,
@@ -26,14 +26,14 @@ watch(
       {
         preserveState: true,
         replace: true,
-      }
+      },
     );
-  }, 300)
+  }, 300),
 );
 
-function confirmDeletion(user_id) {
-  if (confirm(trans('users.index.confirm_delete'))) {
-    router.delete(route("users.destroy", user_id), {
+function confirmDeletion(id) {
+  if (confirm(trans("users.index.confirm_delete"))) {
+    router.delete(route("users.destroy", id), {
       method: "delete",
     });
   }
@@ -44,14 +44,14 @@ function confirmDeletion(user_id) {
   <Head :title="$t('users.index.title')" />
 
   <DefaultLayout>
-    <template #header>{{ $t('users.index.title') }}</template>
+    <template #header>{{ $t("users.index.title") }}</template>
 
     <div class="mb-4 flex items-center justify-between px-2 sm:px-0">
       <Button
         :href="route('users.create')"
         class="bg-indigo-600 px-2 text-sm no-underline hover:bg-indigo-800 hover:text-white"
       >
-        {{ $t('users.index.add_user') }}
+        {{ $t("users.index.add_user") }}
       </Button>
 
       <Input v-model="search" :placeholder="$t('users.index.search')" class="w-full p-2 sm:w-60" />
@@ -84,7 +84,7 @@ function confirmDeletion(user_id) {
           </table>
 
           <p v-else class="px-4 py-5 sm:px-6">
-            {{ $t('users.index.no_users_found', { search: filters.search }) }}
+            {{ $t("users.index.no_users_found", { search: filters.search }) }}
           </p>
         </div>
       </div>

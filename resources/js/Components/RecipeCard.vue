@@ -7,14 +7,14 @@ const props = defineProps({
 });
 
 const recipeUrl = computed(() => {
-  if (props.recipe.locale === 'nl') {
-    return route('recipes.show.nl', props.recipe.slug);
+  if (props.recipe.locale === "nl") {
+    return route("recipes.show.nl", props.recipe.slug);
   }
-  return route('recipes.show.en', props.recipe.slug);
+  return route("recipes.show.en", props.recipe.slug);
 });
 </script>
 <template>
-  <Link :key="recipe.id" :href="recipeUrl" class="recipe-card md:col-span-4">
+  <Link :key="recipe.id || recipe.uuid" :href="recipeUrl" class="recipe-card md:col-span-4">
     <div v-if="recipe.image" class="recipe-card-image">
       <img :src="recipe.image" :alt="$t('recipes.card_image_alt', { title: recipe.title })" />
     </div>

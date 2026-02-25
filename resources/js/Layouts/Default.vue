@@ -1,7 +1,7 @@
 <script setup>
-import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {ref} from "vue";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { ref } from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Button from "@/Components/Button.vue";
 import Dropdown from "@/Components/Dropdown.vue";
@@ -53,25 +53,155 @@ const toggleNav = (nav) => {
             <!-- Menu for users -->
             <div v-if="$page.props.auth.user" class="hidden sm:ml-6 sm:flex sm:items-center">
               <div class="relative ml-3 flex items-center space-x-1">
-
                 <Dropdown align="left" width="48">
                   <template #trigger>
                     <span class="inline-flex rounded-md">
                       <Button button-style="ghost" :aria-label="$t('app.languages.switch_language')" class="!p-2.5">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="5.12"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M222.35693,161.11682a99.99106,99.99106,0,0,0-.02246-66.2959,3.99577,3.99577,0,0,0-.16308-.46191A100.00019,100.00019,0,0,0,33.83105,94.3512a4.01515,4.01515,0,0,0-.17773.50415,99.99136,99.99136,0,0,0,.03125,66.37927,4.14511,4.14511,0,0,0,.13965.3949,100,100,0,0,0,188.34228.02624A3.96321,3.96321,0,0,0,222.35693,161.11682ZM128,216.03064c-14.43311-13.53882-25.105-31.73706-30.93994-52.03027h61.87988C153.105,184.29358,142.43311,202.49182,128,216.03064ZM95.02979,156.00037a130.90714,130.90714,0,0,1-.00049-56h65.9414a130.90714,130.90714,0,0,1-.00049,56ZM36,128.00037a91.65778,91.65778,0,0,1,4.36182-28H86.76123a143.33386,143.33386,0,0,0,.00049,56H40.36182A91.65787,91.65787,0,0,1,36,128.00037Zm92-88.03028c14.43506,13.53858,25.10693,31.73633,30.94092,52.03028H97.05908C102.89307,71.70642,113.56494,53.50867,128,39.97009Zm41.23877,60.03028h46.39941a92.05165,92.05165,0,0,1,0,56h-46.3999a143.33386,143.33386,0,0,0,.00049-56Zm43.42187-8H167.36426c-5.70655-21.50928-16.53174-40.7439-31.61377-55.67041A92.20548,92.20548,0,0,1,212.66064,92.00037ZM120.24951,36.33c-15.082,14.92651-25.90722,34.16113-31.61377,55.67041H43.33936A92.20548,92.20548,0,0,1,120.24951,36.33ZM43.33936,164.00037H88.63574c5.707,21.50879,16.53174,40.74353,31.61377,55.67041A92.20529,92.20529,0,0,1,43.33936,164.00037Zm92.41113,55.67041c15.082-14.92688,25.90674-34.16162,31.61377-55.67041h45.29638A92.20529,92.20529,0,0,1,135.75049,219.67078Z"></path> </g></svg>                      
+                        <svg
+                          class="h-5 w-5"
+                          fill="currentColor"
+                          viewBox="0 0 256 256"
+                          xmlns="http://www.w3.org/2000/svg"
+                          stroke="currentColor"
+                          stroke-width="5.12"
+                        >
+                          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                          <g id="SVGRepo_iconCarrier">
+                            <path
+                              d="M222.35693,161.11682a99.99106,99.99106,0,0,0-.02246-66.2959,3.99577,3.99577,0,0,0-.16308-.46191A100.00019,100.00019,0,0,0,33.83105,94.3512a4.01515,4.01515,0,0,0-.17773.50415,99.99136,99.99136,0,0,0,.03125,66.37927,4.14511,4.14511,0,0,0,.13965.3949,100,100,0,0,0,188.34228.02624A3.96321,3.96321,0,0,0,222.35693,161.11682ZM128,216.03064c-14.43311-13.53882-25.105-31.73706-30.93994-52.03027h61.87988C153.105,184.29358,142.43311,202.49182,128,216.03064ZM95.02979,156.00037a130.90714,130.90714,0,0,1-.00049-56h65.9414a130.90714,130.90714,0,0,1-.00049,56ZM36,128.00037a91.65778,91.65778,0,0,1,4.36182-28H86.76123a143.33386,143.33386,0,0,0,.00049,56H40.36182A91.65787,91.65787,0,0,1,36,128.00037Zm92-88.03028c14.43506,13.53858,25.10693,31.73633,30.94092,52.03028H97.05908C102.89307,71.70642,113.56494,53.50867,128,39.97009Zm41.23877,60.03028h46.39941a92.05165,92.05165,0,0,1,0,56h-46.3999a143.33386,143.33386,0,0,0,.00049-56Zm43.42187-8H167.36426c-5.70655-21.50928-16.53174-40.7439-31.61377-55.67041A92.20548,92.20548,0,0,1,212.66064,92.00037ZM120.24951,36.33c-15.082,14.92651-25.90722,34.16113-31.61377,55.67041H43.33936A92.20548,92.20548,0,0,1,120.24951,36.33ZM43.33936,164.00037H88.63574c5.707,21.50879,16.53174,40.74353,31.61377,55.67041A92.20529,92.20529,0,0,1,43.33936,164.00037Zm92.41113,55.67041c15.082-14.92688,25.90674-34.16162,31.61377-55.67041h45.29638A92.20529,92.20529,0,0,1,135.75049,219.67078Z"
+                            ></path>
+                          </g>
+                        </svg>
                       </Button>
                     </span>
                   </template>
 
                   <template #content>
-                    <DropdownLink :href="route('locale.update')" method="post" :data="{locale: 'en'}" :active="$page.props.locale === 'en'" class="flex items-center gap-1" as="button">
-                      <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_503_2952)"><rect width="28" height="20" rx="2" fill="white"/><mask id="mask0_503_2952" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="20"><rect width="28" height="20" rx="2" fill="white"/></mask><g mask="url(#mask0_503_2952)"><rect width="28" height="20" fill="#0A17A7"/><path fill-rule="evenodd" clip-rule="evenodd" d="M-1.28244 -1.91644L10.6667 6.14335V-1.33333H17.3334V6.14335L29.2825 -1.91644L30.7737 0.294324L21.3263 6.66667H28V13.3333H21.3263L30.7737 19.7057L29.2825 21.9165L17.3334 13.8567V21.3333H10.6667V13.8567L-1.28244 21.9165L-2.77362 19.7057L6.67377 13.3333H2.95639e-05V6.66667H6.67377L-2.77362 0.294324L-1.28244 -1.91644Z" fill="white"/><path d="M18.668 6.33219L31.3333 -2" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M20.0128 13.6975L31.3666 21.3503" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M8.00555 6.31046L-3.83746 -1.67099" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M9.29006 13.6049L-3.83746 22.3105" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 12H12V20H16V12H28V8H16V0H12V8H0V12Z" fill="#E6273E"/></g></g><defs><clipPath id="clip0_503_2952"><rect width="28" height="20" rx="2" fill="white"/></clipPath></defs></svg>
-                      {{ $t('app.languages.en') }}
+                    <DropdownLink
+                      :href="route('locale.update')"
+                      method="post"
+                      :data="{ locale: 'en' }"
+                      :active="$page.props.locale === 'en'"
+                      class="flex items-center gap-1"
+                      as="button"
+                    >
+                      <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_503_2952)">
+                          <rect width="28" height="20" rx="2" fill="white" />
+                          <mask
+                            id="mask0_503_2952"
+                            style="mask-type: alpha"
+                            maskUnits="userSpaceOnUse"
+                            x="0"
+                            y="0"
+                            width="28"
+                            height="20"
+                          >
+                            <rect width="28" height="20" rx="2" fill="white" />
+                          </mask>
+                          <g mask="url(#mask0_503_2952)">
+                            <rect width="28" height="20" fill="#0A17A7" />
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M-1.28244 -1.91644L10.6667 6.14335V-1.33333H17.3334V6.14335L29.2825 -1.91644L30.7737 0.294324L21.3263 6.66667H28V13.3333H21.3263L30.7737 19.7057L29.2825 21.9165L17.3334 13.8567V21.3333H10.6667V13.8567L-1.28244 21.9165L-2.77362 19.7057L6.67377 13.3333H2.95639e-05V6.66667H6.67377L-2.77362 0.294324L-1.28244 -1.91644Z"
+                              fill="white"
+                            />
+                            <path
+                              d="M18.668 6.33219L31.3333 -2"
+                              stroke="#DB1F35"
+                              stroke-width="0.666667"
+                              stroke-linecap="round"
+                            />
+                            <path
+                              d="M20.0128 13.6975L31.3666 21.3503"
+                              stroke="#DB1F35"
+                              stroke-width="0.666667"
+                              stroke-linecap="round"
+                            />
+                            <path
+                              d="M8.00555 6.31046L-3.83746 -1.67099"
+                              stroke="#DB1F35"
+                              stroke-width="0.666667"
+                              stroke-linecap="round"
+                            />
+                            <path
+                              d="M9.29006 13.6049L-3.83746 22.3105"
+                              stroke="#DB1F35"
+                              stroke-width="0.666667"
+                              stroke-linecap="round"
+                            />
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M0 12H12V20H16V12H28V8H16V0H12V8H0V12Z"
+                              fill="#E6273E"
+                            />
+                          </g>
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_503_2952"><rect width="28" height="20" rx="2" fill="white" /></clipPath>
+                        </defs>
+                      </svg>
+                      {{ $t("app.languages.en") }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('locale.update')" method="post" :data="{locale: 'nl'}" :active="$page.props.locale === 'nl'" class="flex items-center gap-1" as="button">
-                      <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_503_2742)"><rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="#F5F5F5" stroke-width="0.5"/><mask id="mask0_503_2742" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="20"><rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="white" stroke-width="0.5"/></mask><g mask="url(#mask0_503_2742)"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 6.66667H28V0H0V6.66667Z" fill="#CA2B39"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 20H28V13.3333H0V20Z" fill="#2C56A2"/></g></g><defs><clipPath id="clip0_503_2742"><rect width="28" height="20" rx="2" fill="white"/></clipPath></defs></svg>
-                      {{ $t('app.languages.nl') }}
+                    <DropdownLink
+                      :href="route('locale.update')"
+                      method="post"
+                      :data="{ locale: 'nl' }"
+                      :active="$page.props.locale === 'nl'"
+                      class="flex items-center gap-1"
+                      as="button"
+                    >
+                      <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_503_2742)">
+                          <rect
+                            x="0.25"
+                            y="0.25"
+                            width="27.5"
+                            height="19.5"
+                            rx="1.75"
+                            fill="white"
+                            stroke="#F5F5F5"
+                            stroke-width="0.5"
+                          />
+                          <mask
+                            id="mask0_503_2742"
+                            style="mask-type: alpha"
+                            maskUnits="userSpaceOnUse"
+                            x="0"
+                            y="0"
+                            width="28"
+                            height="20"
+                          >
+                            <rect
+                              x="0.25"
+                              y="0.25"
+                              width="27.5"
+                              height="19.5"
+                              rx="1.75"
+                              fill="white"
+                              stroke="white"
+                              stroke-width="0.5"
+                            />
+                          </mask>
+                          <g mask="url(#mask0_503_2742)">
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M0 6.66667H28V0H0V6.66667Z"
+                              fill="#CA2B39"
+                            />
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M0 20H28V13.3333H0V20Z" fill="#2C56A2" />
+                          </g>
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_503_2742"><rect width="28" height="20" rx="2" fill="white" /></clipPath>
+                        </defs>
+                      </svg>
+                      {{ $t("app.languages.nl") }}
                     </DropdownLink>
                   </template>
                 </Dropdown>
@@ -94,11 +224,11 @@ const toggleNav = (nav) => {
 
                   <template #content>
                     <DropdownLink :href="route('recipes.create')" :active="route().current('recipes.create')">
-                      {{ $t('nav.add_recipe') }}
+                      {{ $t("nav.add_recipe") }}
                     </DropdownLink>
 
                     <DropdownLink :href="route('import.index')" :active="route().current('import.index')">
-                      {{ $t('nav.import_recipe') }}
+                      {{ $t("nav.import_recipe") }}
                     </DropdownLink>
                   </template>
                 </Dropdown>
@@ -116,21 +246,23 @@ const toggleNav = (nav) => {
 
                   <template #content>
                     <DropdownLink
-                      :href="route('users.edit', $page.props.auth.user.id)"
-                      :active="route().current('users.edit', { id: $page.props.auth.user.id })"
+                      :href="route('users.edit', $page.props.auth.user.uuid)"
+                      :active="route().current('users.edit', { user: $page.props.auth.user.uuid })"
                     >
-                      {{ $t('nav.edit_profile') }}
+                      {{ $t("nav.edit_profile") }}
                     </DropdownLink>
 
                     <DropdownLink :href="route('users.password.edit')" :active="route().current('users.password.edit')">
-                      {{ $t('nav.change_password') }}
+                      {{ $t("nav.change_password") }}
                     </DropdownLink>
 
                     <DropdownLink :href="route('users.index')" :active="route().current('users.index')">
-                      {{ $t('nav.manage_users') }}
+                      {{ $t("nav.manage_users") }}
                     </DropdownLink>
 
-                    <DropdownLink :href="route('logout')" method="post" as="button">{{ $t('nav.logout') }}</DropdownLink>
+                    <DropdownLink :href="route('logout')" method="post" as="button">{{
+                      $t("nav.logout")
+                    }}</DropdownLink>
                   </template>
                 </Dropdown>
               </div>
@@ -138,7 +270,7 @@ const toggleNav = (nav) => {
 
             <!-- Menu for guests -->
             <div v-else class="flex space-x-1">
-              <NavLink :href="route('login')" :active="route().current('login')">{{ $t('nav.login') }}</NavLink>
+              <NavLink :href="route('login')" :active="route().current('login')">{{ $t("nav.login") }}</NavLink>
             </div>
 
             <!-- Responsive Menu -->
@@ -148,7 +280,22 @@ const toggleNav = (nav) => {
                 :aria-label="$t('app.languages.switch_language')"
                 @click="toggleNav('language')"
               >
-                  <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="5.12"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M222.35693,161.11682a99.99106,99.99106,0,0,0-.02246-66.2959,3.99577,3.99577,0,0,0-.16308-.46191A100.00019,100.00019,0,0,0,33.83105,94.3512a4.01515,4.01515,0,0,0-.17773.50415,99.99136,99.99136,0,0,0,.03125,66.37927,4.14511,4.14511,0,0,0,.13965.3949,100,100,0,0,0,188.34228.02624A3.96321,3.96321,0,0,0,222.35693,161.11682ZM128,216.03064c-14.43311-13.53882-25.105-31.73706-30.93994-52.03027h61.87988C153.105,184.29358,142.43311,202.49182,128,216.03064ZM95.02979,156.00037a130.90714,130.90714,0,0,1-.00049-56h65.9414a130.90714,130.90714,0,0,1-.00049,56ZM36,128.00037a91.65778,91.65778,0,0,1,4.36182-28H86.76123a143.33386,143.33386,0,0,0,.00049,56H40.36182A91.65787,91.65787,0,0,1,36,128.00037Zm92-88.03028c14.43506,13.53858,25.10693,31.73633,30.94092,52.03028H97.05908C102.89307,71.70642,113.56494,53.50867,128,39.97009Zm41.23877,60.03028h46.39941a92.05165,92.05165,0,0,1,0,56h-46.3999a143.33386,143.33386,0,0,0,.00049-56Zm43.42187-8H167.36426c-5.70655-21.50928-16.53174-40.7439-31.61377-55.67041A92.20548,92.20548,0,0,1,212.66064,92.00037ZM120.24951,36.33c-15.082,14.92651-25.90722,34.16113-31.61377,55.67041H43.33936A92.20548,92.20548,0,0,1,120.24951,36.33ZM43.33936,164.00037H88.63574c5.707,21.50879,16.53174,40.74353,31.61377,55.67041A92.20529,92.20529,0,0,1,43.33936,164.00037Zm92.41113,55.67041c15.082-14.92688,25.90674-34.16162,31.61377-55.67041h45.29638A92.20529,92.20529,0,0,1,135.75049,219.67078Z"></path> </g></svg>                      
+                <svg
+                  class="h-6 w-6"
+                  fill="currentColor"
+                  viewBox="0 0 256 256"
+                  xmlns="http://www.w3.org/2000/svg"
+                  stroke="currentColor"
+                  stroke-width="5.12"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M222.35693,161.11682a99.99106,99.99106,0,0,0-.02246-66.2959,3.99577,3.99577,0,0,0-.16308-.46191A100.00019,100.00019,0,0,0,33.83105,94.3512a4.01515,4.01515,0,0,0-.17773.50415,99.99136,99.99136,0,0,0,.03125,66.37927,4.14511,4.14511,0,0,0,.13965.3949,100,100,0,0,0,188.34228.02624A3.96321,3.96321,0,0,0,222.35693,161.11682ZM128,216.03064c-14.43311-13.53882-25.105-31.73706-30.93994-52.03027h61.87988C153.105,184.29358,142.43311,202.49182,128,216.03064ZM95.02979,156.00037a130.90714,130.90714,0,0,1-.00049-56h65.9414a130.90714,130.90714,0,0,1-.00049,56ZM36,128.00037a91.65778,91.65778,0,0,1,4.36182-28H86.76123a143.33386,143.33386,0,0,0,.00049,56H40.36182A91.65787,91.65787,0,0,1,36,128.00037Zm92-88.03028c14.43506,13.53858,25.10693,31.73633,30.94092,52.03028H97.05908C102.89307,71.70642,113.56494,53.50867,128,39.97009Zm41.23877,60.03028h46.39941a92.05165,92.05165,0,0,1,0,56h-46.3999a143.33386,143.33386,0,0,0,.00049-56Zm43.42187-8H167.36426c-5.70655-21.50928-16.53174-40.7439-31.61377-55.67041A92.20548,92.20548,0,0,1,212.66064,92.00037ZM120.24951,36.33c-15.082,14.92651-25.90722,34.16113-31.61377,55.67041H43.33936A92.20548,92.20548,0,0,1,120.24951,36.33ZM43.33936,164.00037H88.63574c5.707,21.50879,16.53174,40.74353,31.61377,55.67041A92.20529,92.20529,0,0,1,43.33936,164.00037Zm92.41113,55.67041c15.082-14.92688,25.90674-34.16162,31.61377-55.67041h45.29638A92.20529,92.20529,0,0,1,135.75049,219.67078Z"
+                    ></path>
+                  </g>
+                </svg>
               </button>
 
               <button
@@ -204,14 +351,125 @@ const toggleNav = (nav) => {
           <!-- Responsive Language Menu -->
           <div v-if="showNav === 'language'" class="border-t border-gray-200 py-1">
             <div class="space-y-1">
-              <ResponsiveNavLink :href="route('locale.update')" method="post" :data="{locale: 'en'}" :active="$page.props.locale === 'en'" as="button" class="flex items-center gap-1 w-full">
-                <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_503_2952)"><rect width="28" height="20" rx="2" fill="white"/><mask id="mask0_503_2952" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="20"><rect width="28" height="20" rx="2" fill="white"/></mask><g mask="url(#mask0_503_2952)"><rect width="28" height="20" fill="#0A17A7"/><path fill-rule="evenodd" clip-rule="evenodd" d="M-1.28244 -1.91644L10.6667 6.14335V-1.33333H17.3334V6.14335L29.2825 -1.91644L30.7737 0.294324L21.3263 6.66667H28V13.3333H21.3263L30.7737 19.7057L29.2825 21.9165L17.3334 13.8567V21.3333H10.6667V13.8567L-1.28244 21.9165L-2.77362 19.7057L6.67377 13.3333H2.95639e-05V6.66667H6.67377L-2.77362 0.294324L-1.28244 -1.91644Z" fill="white"/><path d="M18.668 6.33219L31.3333 -2" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M20.0128 13.6975L31.3666 21.3503" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M8.00555 6.31046L-3.83746 -1.67099" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path d="M9.29006 13.6049L-3.83746 22.3105" stroke="#DB1F35" stroke-width="0.666667" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 12H12V20H16V12H28V8H16V0H12V8H0V12Z" fill="#E6273E"/></g></g><defs><clipPath id="clip0_503_2952"><rect width="28" height="20" rx="2" fill="white"/></clipPath></defs></svg>
-                {{ $t('app.languages.en') }}
+              <ResponsiveNavLink
+                :href="route('locale.update')"
+                method="post"
+                :data="{ locale: 'en' }"
+                :active="$page.props.locale === 'en'"
+                as="button"
+                class="flex items-center gap-1 w-full"
+              >
+                <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_503_2952)">
+                    <rect width="28" height="20" rx="2" fill="white" />
+                    <mask
+                      id="mask0_503_2952"
+                      style="mask-type: alpha"
+                      maskUnits="userSpaceOnUse"
+                      x="0"
+                      y="0"
+                      width="28"
+                      height="20"
+                    >
+                      <rect width="28" height="20" rx="2" fill="white" />
+                    </mask>
+                    <g mask="url(#mask0_503_2952)">
+                      <rect width="28" height="20" fill="#0A17A7" />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M-1.28244 -1.91644L10.6667 6.14335V-1.33333H17.3334V6.14335L29.2825 -1.91644L30.7737 0.294324L21.3263 6.66667H28V13.3333H21.3263L30.7737 19.7057L29.2825 21.9165L17.3334 13.8567V21.3333H10.6667V13.8567L-1.28244 21.9165L-2.77362 19.7057L6.67377 13.3333H2.95639e-05V6.66667H6.67377L-2.77362 0.294324L-1.28244 -1.91644Z"
+                        fill="white"
+                      />
+                      <path
+                        d="M18.668 6.33219L31.3333 -2"
+                        stroke="#DB1F35"
+                        stroke-width="0.666667"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M20.0128 13.6975L31.3666 21.3503"
+                        stroke="#DB1F35"
+                        stroke-width="0.666667"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M8.00555 6.31046L-3.83746 -1.67099"
+                        stroke="#DB1F35"
+                        stroke-width="0.666667"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M9.29006 13.6049L-3.83746 22.3105"
+                        stroke="#DB1F35"
+                        stroke-width="0.666667"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M0 12H12V20H16V12H28V8H16V0H12V8H0V12Z"
+                        fill="#E6273E"
+                      />
+                    </g>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_503_2952"><rect width="28" height="20" rx="2" fill="white" /></clipPath>
+                  </defs>
+                </svg>
+                {{ $t("app.languages.en") }}
               </ResponsiveNavLink>
 
-              <ResponsiveNavLink :href="route('locale.update')" method="post" :data="{locale: 'nl'}" :active="$page.props.locale === 'nl'" as="button" class="flex items-center gap-1 w-full">
-                <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_503_2742)"><rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="#F5F5F5" stroke-width="0.5"/><mask id="mask0_503_2742" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="20"><rect x="0.25" y="0.25" width="27.5" height="19.5" rx="1.75" fill="white" stroke="white" stroke-width="0.5"/></mask><g mask="url(#mask0_503_2742)"><path fill-rule="evenodd" clip-rule="evenodd" d="M0 6.66667H28V0H0V6.66667Z" fill="#CA2B39"/><path fill-rule="evenodd" clip-rule="evenodd" d="M0 20H28V13.3333H0V20Z" fill="#2C56A2"/></g></g><defs><clipPath id="clip0_503_2742"><rect width="28" height="20" rx="2" fill="white"/></clipPath></defs></svg>
-                {{ $t('app.languages.nl') }}
+              <ResponsiveNavLink
+                :href="route('locale.update')"
+                method="post"
+                :data="{ locale: 'nl' }"
+                :active="$page.props.locale === 'nl'"
+                as="button"
+                class="flex items-center gap-1 w-full"
+              >
+                <svg class="h-4 w-4 mr-2" viewBox="0 -4 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_503_2742)">
+                    <rect
+                      x="0.25"
+                      y="0.25"
+                      width="27.5"
+                      height="19.5"
+                      rx="1.75"
+                      fill="white"
+                      stroke="#F5F5F5"
+                      stroke-width="0.5"
+                    />
+                    <mask
+                      id="mask0_503_2742"
+                      style="mask-type: alpha"
+                      maskUnits="userSpaceOnUse"
+                      x="0"
+                      y="0"
+                      width="28"
+                      height="20"
+                    >
+                      <rect
+                        x="0.25"
+                        y="0.25"
+                        width="27.5"
+                        height="19.5"
+                        rx="1.75"
+                        fill="white"
+                        stroke="white"
+                        stroke-width="0.5"
+                      />
+                    </mask>
+                    <g mask="url(#mask0_503_2742)">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M0 6.66667H28V0H0V6.66667Z" fill="#CA2B39" />
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M0 20H28V13.3333H0V20Z" fill="#2C56A2" />
+                    </g>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_503_2742"><rect width="28" height="20" rx="2" fill="white" /></clipPath>
+                  </defs>
+                </svg>
+                {{ $t("app.languages.nl") }}
               </ResponsiveNavLink>
             </div>
           </div>
@@ -220,11 +478,11 @@ const toggleNav = (nav) => {
           <div v-if="showNav === 'create'" class="border-t border-gray-200 py-1">
             <div class="space-y-1">
               <ResponsiveNavLink :href="route('recipes.create')" :active="route().current('recipes.create')">
-                {{ $t('nav.add_recipe') }}
+                {{ $t("nav.add_recipe") }}
               </ResponsiveNavLink>
 
               <ResponsiveNavLink :href="route('import.index')" :active="route().current('import.index')">
-                {{ $t('nav.import_recipe') }}
+                {{ $t("nav.import_recipe") }}
               </ResponsiveNavLink>
             </div>
           </div>
@@ -238,22 +496,22 @@ const toggleNav = (nav) => {
 
             <div class="space-y-1 border-t border-gray-200 py-1">
               <ResponsiveNavLink
-                :href="route('users.edit', $page.props.auth.user.id)"
-                :active="route().current('users.edit', { id: $page.props.auth.user.id })"
+                :href="route('users.edit', $page.props.auth.user.uuid)"
+                :active="route().current('users.edit', { user: $page.props.auth.user.uuid })"
               >
-                {{ $t('nav.edit_profile') }}
+                {{ $t("nav.edit_profile") }}
               </ResponsiveNavLink>
 
               <ResponsiveNavLink :href="route('users.password.edit')" :active="route().current('users.password.edit')">
-                {{ $t('nav.change_password') }}
+                {{ $t("nav.change_password") }}
               </ResponsiveNavLink>
 
               <ResponsiveNavLink :href="route('users.index')" :active="route().current('users.index')">
-                {{ $t('nav.manage_users') }}
+                {{ $t("nav.manage_users") }}
               </ResponsiveNavLink>
 
               <ResponsiveNavLink :href="route('logout')" method="post" as="button" class="w-full text-left">
-                {{ $t('nav.logout') }}
+                {{ $t("nav.logout") }}
               </ResponsiveNavLink>
             </div>
           </div>
@@ -269,23 +527,11 @@ const toggleNav = (nav) => {
         </div>
       </header>
 
-      <FlashMessage
-        v-if="$page.props.flash.error"
-        type="error"
-        :message="$page.props.flash.error"
-      />
+      <FlashMessage v-if="$page.props.flash.error" type="error" :message="$page.props.flash.error" />
 
-      <FlashMessage
-        v-if="$page.props.flash.success"
-        type="success"
-        :message="$page.props.flash.success"
-      />
+      <FlashMessage v-if="$page.props.flash.success" type="success" :message="$page.props.flash.success" />
 
-      <FlashMessage
-        v-if="$page.props.flash.warning"
-        type="warning"
-        :message="$page.props.flash.warning"
-      />
+      <FlashMessage v-if="$page.props.flash.warning" type="warning" :message="$page.props.flash.warning" />
 
       <!-- Page Content -->
       <main>
@@ -300,8 +546,8 @@ const toggleNav = (nav) => {
         <div class="px-4 pb-4">
           <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="flex items-center justify-between text-gray-600">
-              <p v-html="$t('app.copyright')"/>
-              <a :href="route('privacy')">{{ $t('nav.privacy') }}</a>
+              <p v-html="$t('app.copyright')" />
+              <a :href="route('privacy')">{{ $t("nav.privacy") }}</a>
             </div>
           </div>
         </div>

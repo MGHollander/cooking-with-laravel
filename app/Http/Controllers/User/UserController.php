@@ -13,15 +13,14 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Inertia\Response
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         return Inertia::render('Users/Index', [
             'users' => User::query()
@@ -31,7 +30,7 @@ class UserController extends Controller
                 ->paginate(10)
                 ->withQueryString()
                 ->through(fn ($user) => [
-                    'id' => $user->id,
+                    'id' => $user->uuid,
                     'name' => $user->name,
                     'email' => $user->email,
                 ]),
@@ -41,20 +40,16 @@ class UserController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Inertia\Response
      */
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Users/Create');
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $attributes = $request->validate([
             'name' => 'required',
@@ -83,13 +78,11 @@ class UserController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @return \Inertia\Response
      */
-    public function edit(User $user)
+    public function edit(User $user): Response
     {
         return Inertia::render('Users/Edit', [
-            'id' => $user->id,
+            'id' => $user->uuid,
             'name' => $user->name,
             'email' => $user->email,
         ]);
@@ -97,14 +90,12 @@ class UserController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user): RedirectResponse
     {
         $attributes = $request->validate([
             'name' => 'required',
-            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
+            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->uuid, 'uuid')],
         ]);
 
         $user->update($attributes);
@@ -118,11 +109,11 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         $userId = auth()->id();
-        $deletedUserId = $user->id;
+        $deletedUserUuid = $user->uuid;
 
         $user->delete();
 
-        Log::info("User {$deletedUserId} deleted by user {$userId}");
+        Log::info("User {$deletedUserUuid} deleted by user {$userId}");
 
         return redirect()->route('users.index')->with('success', "De gebruiker “<i>{$user->name}</i>” is succesvol verwijderd!");
     }

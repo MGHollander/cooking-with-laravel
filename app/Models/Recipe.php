@@ -57,6 +57,11 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         });
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
     public function uniqueIds(): array
     {
         return ['uuid'];
@@ -85,7 +90,7 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         }
         $slug = $this->translate($locale)?->slug;
 
-        return $slug ? $slug.'-'.$this->public_id : null;
+        return $slug ? $slug.'-'.$this->uuid : null;
     }
 
     public function getTitleForLocale(?string $locale = null): string
