@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Traits\HasFlexibleIdLookup;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Hidehalo\Nanoid\Client;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasVersion7Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,7 +18,7 @@ use Spatie\Tags\Tag;
 
 class Recipe extends Model implements HasMedia, TranslatableContract
 {
-    use HasFactory, HasTags, HasUuids, InteractsWithMedia, SoftDeletes, Translatable;
+    use HasFactory, HasFlexibleIdLookup, HasTags, HasVersion7Uuids, InteractsWithMedia, SoftDeletes, Translatable;
 
     public $translationModel = RecipeTranslation::class;
 

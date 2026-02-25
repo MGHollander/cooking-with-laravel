@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -11,14 +12,25 @@ return new class extends Migration
     public function up(): void
     {
         // Backfill UUIDs for existing records
-        DB::table('users')->whereNull('uuid')->update(['uuid' => DB::raw('UUID()')]);
-        DB::table('recipes')->whereNull('uuid')->update(['uuid' => DB::raw('UUID()')]);
-        DB::table('recipe_translations')->whereNull('uuid')->update(['uuid' => DB::raw('UUID()')]);
-        DB::table('import_logs')->whereNull('uuid')->update(['uuid' => DB::raw('UUID()')]);
+        $this->backfillUuidV7('users');
+        $this->backfillUuidV7('recipes');
+        $this->backfillUuidV7('recipe_translations');
+        $this->backfillUuidV7('import_logs');
 
         // Update foreign key UUID columns
         DB::table('recipe_translations')->update(['recipe_uuid' => DB::raw('(SELECT uuid FROM recipes WHERE recipes.id = recipe_translations.recipe_id)')]);
         DB::table('import_logs')->update(['user_uuid' => DB::raw('(SELECT uuid FROM users WHERE users.id = import_logs.user_id)'), 'recipe_uuid' => DB::raw('(SELECT uuid FROM recipes WHERE recipes.id = import_logs.recipe_id)')]);
+    }
+
+    protected function backfillUuidV7(string $table): void
+    {
+        DB::table($table)->whereNull('uuid')->orderBy('id')->chunk(100, function ($records) use ($table) {
+            foreach ($records as $record) {
+                DB::table($table)->where('id', $record->id)->update([
+                    'uuid' => (string) Str::uuid7(),
+                ]);
+            }
+        });
     }
 
     /**

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\HasFlexibleIdLookup;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasVersion7Uuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Spatie\Sluggable\HasSlug;
@@ -11,7 +12,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class RecipeTranslation extends Model
 {
-    use HasSlug, HasUuids;
+    use HasFlexibleIdLookup, HasSlug, HasVersion7Uuids;
 
     protected $fillable = [
         'locale',
