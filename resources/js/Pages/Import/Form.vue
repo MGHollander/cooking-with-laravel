@@ -45,6 +45,11 @@ const sortedLanguages = computed(() => {
 const cropperCard = ref(null);
 const cropperShow = ref(null);
 const image = ref(null);
+const imageDimensions = ref({});
+
+const onImageLoad = (event, img) => {
+  imageDimensions.value[img] = `${event.target.naturalWidth}x${event.target.naturalHeight}`;
+};
 
 const form = useForm({
   locale: attrs.locale || 'nl',
@@ -207,11 +212,11 @@ onMounted(() => {
 
             <div v-if="images.length > 0" class="col-span-12 space-y-1">
               <Label for="image" :value="$t('recipes.form.image')" />
-              <div class="flex gap-2 mb-4">
+              <div class="flex gap-2 mb-4 overflow-x-auto">
                 <label
                   v-for="(img, index) in images"
                   :key="index"
-                  class="relative cursor-pointer rounded-md border-2 border-transparent p-0.5 hover:border-indigo-300 has-[:checked]:border-2 has-[:checked]:border-indigo-500"
+                  class="relative cursor-pointer rounded-md border-2 border-transparent p-0.5 hover:border-indigo-300 has-[:checked]:border-2 has-[:checked]:border-indigo-500 shrink-0"
                   :for="'image-' + index"
                 >
                   <input
@@ -222,7 +227,15 @@ onMounted(() => {
                     :id="'image-' + index"
                     :checked="form.external_image === img"
                   />
-                  <img :src="img" :alt="'Image ' + (index + 1)" class="max-h-32 max-w-full rounded-md" />
+                  <img
+                    :src="img"
+                    :alt="'Image ' + (index + 1)"
+                    class="max-h-32 max-w-full rounded-md"
+                    @load="onImageLoad($event, img)"
+                  />
+                  <div v-if="imageDimensions[img]" class="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-1 rounded">
+                    {{ imageDimensions[img] }}
+                  </div>
                 </label>
               </div>
               <label class="flex items-center gap-2">
