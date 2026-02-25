@@ -84,9 +84,7 @@ This approach is safer than directly replacing primary keys and minimizes disrup
 
 2. **Recipe**
    - Add `uuid` column, generate **UUIDv7**
-   - Decide whether to keep or replace the existing `public_id` with UUID
-   - Option 1: Replace `public_id` with UUID format
-   - Option 2: Keep both initially for backward compatibility
+   - Keep existing `public_id` for the slug and use UUID for internal references
    - Update references in RecipeTranslation, ImportLog, Media
 
 3. **RecipeTranslation**

@@ -121,16 +121,10 @@ class RecipeController extends Controller
      */
     public function show(Request $request, string $slug): JsonResponse|View|Response
     {
-        $idPart = null;
-        if (preg_match('/-([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/', $slug, $matches)) {
-            $idPart = $matches[1];
-        } else {
-            $parts = explode('-', $slug);
-            $idPart = end($parts);
-        }
+        $parts = explode('-', $slug);
+        $idPart = end($parts);
 
-        $recipe = Recipe::where('uuid', $idPart)
-            ->orWhere('public_id', $idPart)
+        $recipe = Recipe::where('public_id', $idPart)
             ->with('author', 'tags')
             ->first();
 
@@ -356,22 +350,17 @@ class RecipeController extends Controller
 
     private function notFound($slug): \Illuminate\Http\Response
     {
-        $idPart = null;
-        if (preg_match('/-([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/', $slug, $matches)) {
-            $idPart = $matches[1];
-            $searchKey = str_replace('-'.$idPart, '', $slug);
-        } else {
-            $parts = explode('-', $slug);
-            $idPart = end($parts);
-            if (strlen($idPart) === 15 && preg_match('/^[0-9a-z]+$/', $idPart)) {
-                array_pop($parts);
-                $searchKey = implode(' ', $parts);
-            } else {
-                $searchKey = str_replace('-', ' ', $slug);
-            }
-        }
+        $parts = explode('-', $slug);
+        $potentialId = end($parts);
 
-        $searchKey = str_replace('-', ' ', $searchKey);
+        // Check if last part matches public_id (15 chars) format
+        if (strlen($potentialId) === 15 && preg_match('/^[0-9a-z-]+$/', $potentialId)) {
+            // Remove ID from search
+            array_pop($parts);
+            $searchKey = implode(' ', $parts);
+        } else {
+            $searchKey = str_replace('-', ' ', $slug);
+        }
 
         $paginator = Search::add(RecipeTranslation::with('recipe.media'), ['title', 'ingredients', 'instructions'])
             ->add(Recipe::with('translations', 'tags'), ['tags.name'])

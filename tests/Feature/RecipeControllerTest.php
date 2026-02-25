@@ -26,18 +26,12 @@ class RecipeControllerTest extends TestCase
             'instructions' => '[]',
         ]);
 
-        $fullSlug = 'my-recipe-'.$recipe->uuid;
+        $fullSlug = 'my-recipe-'.$recipe->public_id;
 
         $response = $this->get(route('recipes.show.en', $fullSlug));
 
         $response->assertStatus(200);
         $response->assertSee('My Recipe');
-
-        // Test backward compatibility with public_id
-        $oldSlug = 'my-recipe-'.$recipe->public_id;
-        $response = $this->get(route('recipes.show.en', $oldSlug));
-        $response->assertStatus(301);
-        $response->assertRedirect(route('recipes.show.en', $fullSlug));
     }
 
     public function test_recipe_index_page_loads()

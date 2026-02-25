@@ -90,7 +90,7 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         }
         $slug = $this->translate($locale)?->slug;
 
-        return $slug ? $slug.'-'.$this->uuid : null;
+        return $slug ? $slug.'-'.$this->public_id : null;
     }
 
     public function getTitleForLocale(?string $locale = null): string
