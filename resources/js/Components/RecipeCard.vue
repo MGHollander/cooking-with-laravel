@@ -7,10 +7,10 @@ const props = defineProps({
 });
 
 const recipeUrl = computed(() => {
-  if (props.recipe.locale === 'nl') {
-    return route('recipes.show.nl', props.recipe.slug);
-  }
-  return route('recipes.show.en', props.recipe.slug);
+  return route(props.recipe.locale === "nl" ? "recipes.show.nl" : "recipes.show.en", {
+    public_id: props.recipe.public_id,
+    slug: props.recipe.slug,
+  });
 });
 </script>
 <template>

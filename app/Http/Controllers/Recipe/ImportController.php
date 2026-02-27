@@ -116,7 +116,7 @@ class ImportController extends Controller
 
                 return [
                     'recipe' => $recipe,
-                    'import_log_id' => $importLog->id,
+                    'import_log_id' => $importLog->uuid,
                     'locale' => $locale,
                     'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
                     'config' => [
@@ -176,6 +176,7 @@ class ImportController extends Controller
 
             return [
                 'recipe' => $recipe,
+                'import_log_id' => $importLog->uuid,
                 'locale' => $locale,
                 'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
             ];
@@ -330,7 +331,7 @@ class ImportController extends Controller
             // Update import log with created recipe if this was imported from a URL
             if ($importLogId = $request->get('import_log_id')) {
                 try {
-                    $importLog = ImportLog::find($importLogId);
+                    $importLog = ImportLog::findByUuidOrId($importLogId);
                     if ($importLog) {
                         $this->importLogService->updateImportLogWithRecipe($importLog, $recipe);
                     }

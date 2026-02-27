@@ -18,16 +18,16 @@ class DeleteUserWithRecipes implements ShouldBeUnique, ShouldQueue
 
     public int $backoff = 60;
 
-    public function __construct(public int $userId) {}
+    public function __construct(public int|string $userId) {}
 
-    public function uniqueId(): int
+    public function uniqueId(): int|string
     {
         return $this->userId;
     }
 
     public function handle(): void
     {
-        $user = User::withTrashed()->find($this->userId);
+        $user = User::withTrashed()->whereUuidOrId($this->userId)->first();
 
         if (! $user) {
             Log::warning("DeleteUserWithRecipes: User {$this->userId} not found");

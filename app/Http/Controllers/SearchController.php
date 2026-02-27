@@ -30,7 +30,7 @@ class SearchController extends Controller
                 $translation = $recipe->primaryTranslation();
 
                 return [
-                    'id' => $recipe->id,
+                    'id' => $recipe->uuid,
                     'public_id' => $recipe->public_id,
                     'title' => $translation?->title ?? 'Untitled',
                     'slug' => $recipe->getSlugForLocale($translation->locale),

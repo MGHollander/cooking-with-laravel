@@ -6,10 +6,10 @@ import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
-import { trans } from 'laravel-vue-i18n';
+import { trans } from "laravel-vue-i18n";
 
 let props = defineProps({
-  id: Number,
+  id: String,
   name: String,
   email: String,
 });
@@ -26,13 +26,11 @@ let submit = () => {
 };
 
 const title = computed(() =>
-  props.id === attrs.auth.user.id
-    ? trans('users.edit.title_self')
-    : trans('users.edit.title', { name: props.name })
+  props.id === attrs.auth.user.id ? trans("users.edit.title_self") : trans("users.edit.title", { name: props.name }),
 );
 
 function confirmDeletion() {
-  if (confirm(trans('users.edit.confirm_delete'))) {
+  if (confirm(trans("users.edit.confirm_delete"))) {
     router.delete(route(`users.destroy.${attrs.locale}`, props.id), {
       method: "delete",
     });
@@ -68,10 +66,10 @@ function confirmDeletion() {
       <div
         class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-3 text-right shadow sm:rounded-bl-md sm:rounded-br-md sm:px-6"
       >
-        <Button class="text-xs" type="submit" :disabled="form.processing">{{ $t('users.edit.save') }}</Button>
+        <Button class="text-xs" type="submit" :disabled="form.processing">{{ $t("users.edit.save") }}</Button>
 
         <Button class="text-xs" button-style="danger" :disabled="form.processing" @click="confirmDeletion()">
-          {{ $t('users.edit.delete') }}
+          {{ $t("users.edit.delete") }}
         </Button>
       </div>
     </form>
