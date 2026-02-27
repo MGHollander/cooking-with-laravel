@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuidOrId;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Hidehalo\Nanoid\Client;
+use Illuminate\Database\Eloquent\Concerns\HasVersion7Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,7 +18,17 @@ use Spatie\Tags\Tag;
 
 class Recipe extends Model implements HasMedia, TranslatableContract
 {
-    use HasFactory, HasTags, InteractsWithMedia, SoftDeletes, Translatable;
+    use HasFactory, HasTags, HasUuidOrId, HasVersion7Uuids, InteractsWithMedia, SoftDeletes, Translatable;
+
+    /**
+     * Get the columns that should receive a unique identifier.
+     *
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
 
     public $translationModel = RecipeTranslation::class;
 

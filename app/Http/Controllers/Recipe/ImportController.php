@@ -330,7 +330,7 @@ class ImportController extends Controller
             // Update import log with created recipe if this was imported from a URL
             if ($importLogId = $request->get('import_log_id')) {
                 try {
-                    $importLog = ImportLog::find($importLogId);
+                    $importLog = ImportLog::findByUuidOrId($importLogId);
                     if ($importLog) {
                         $this->importLogService->updateImportLogWithRecipe($importLog, $recipe);
                     }
