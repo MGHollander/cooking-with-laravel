@@ -23,6 +23,7 @@ class ImportLogFactory extends Factory
             'source' => $this->faker->randomElement(['structured-data', 'firecrawl', 'open-ai', 'local']),
             'user_id' => User::factory(),
             'recipe_id' => null, // Default to null, can be overridden
+            'credits_used' => 0,
             'parsed_data' => [
                 'title' => $this->faker->sentence(3),
                 'description' => $this->faker->paragraph(),

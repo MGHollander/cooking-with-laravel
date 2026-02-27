@@ -14,16 +14,6 @@ class RecipeTranslation extends Model
 {
     use HasSlug, HasUuidOrId, HasUuids;
 
-    /**
-     * Get the columns that should receive a unique identifier.
-     *
-     * @return array<int, string>
-     */
-    public function uniqueIds(): array
-    {
-        return ['uuid'];
-    }
-
     protected $fillable = [
         'locale',
         'slug',

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('import_logs', function (Blueprint $table) {
-            $table->unsignedMediumInteger('credits_used')->after('parsed_data');
+            $table->unsignedMediumInteger('credits_used')->default(0)->after('parsed_data');
         });
     }
 

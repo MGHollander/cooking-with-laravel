@@ -18,7 +18,7 @@ class RecipeFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence,
-            'user_id' => 1,
+            'user_id' => \App\Models\User::factory(),
             'servings' => $this->faker->numberBetween(1, 10),
             'difficulty' => $this->faker->randomElement(['easy', 'medium', 'hard']),
             'ingredients' => $this->faker->paragraph,

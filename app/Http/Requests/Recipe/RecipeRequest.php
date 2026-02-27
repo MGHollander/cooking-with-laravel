@@ -30,7 +30,7 @@ class RecipeRequest extends FormRequest
             'difficulty' => 'required|in:easy,average,difficult',
             'source_label' => 'nullable|string',
             'source_link' => ['nullable', 'url'],
-            'import_log_id' => ['nullable', 'string', 'exists:import_logs,uuid'],
+            'import_log_id' => ['nullable', 'string', 'exists:import_logs,id'],
             'return_to_import_page' => ['nullable', 'boolean'],
             'no_index' => ['nullable', 'boolean'],
         ];

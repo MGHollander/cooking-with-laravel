@@ -43,7 +43,7 @@ class RecipeController extends Controller
                     $translation = $recipe->primaryTranslation();
 
                     return [
-                        'id' => $recipe->uuid,
+                        'id' => $recipe->id,
                         'title' => $translation?->title ?? 'Untitled',
                         'public_id' => $recipe->public_id,
                         'slug' => $recipe->getSlugForLocale($translation?->locale),
@@ -113,7 +113,7 @@ class RecipeController extends Controller
 
         Session::flash('success', __('recipes.flash.created'));
 
-        return Inertia::location(route('recipes.edit.'.app()->getLocale(), $recipe->uuid));
+        return Inertia::location(route('recipes.edit.'.app()->getLocale(), $recipe->id));
     }
 
     /**
@@ -163,7 +163,7 @@ class RecipeController extends Controller
 
         return view('kocina.recipes.show', [
             'recipe' => [
-                'id' => $recipe->uuid,
+                'id' => $recipe->id,
                 'public_id' => $recipe->public_id,
                 'author' => $recipe->author->name,
                 'user_id' => $recipe->user_id,
@@ -232,7 +232,7 @@ class RecipeController extends Controller
 
         return Inertia::render('Recipes/Form', [
             'recipe' => [
-                'id' => $recipe->uuid,
+                'id' => $recipe->id,
                 'public_id' => $recipe->public_id,
                 'locale' => $translation->locale,
                 'slug' => $recipe->getSlugForLocale($translation->locale),
@@ -346,11 +346,11 @@ class RecipeController extends Controller
         $translation = $recipe->primaryTranslation();
 
         $userId = auth()->id();
-        $recipeUuid = $recipe->uuid;
+        $recipeId = $recipe->id;
 
         $recipe->deletePreservingMedia();
 
-        Log::info("Recipe {$recipeUuid} deleted by user {$userId}");
+        Log::info("Recipe {$recipeId} deleted by user {$userId}");
 
         Session::flash('success', __('recipes.flash.deleted', ['title' => $translation?->title ?? 'Untitled']));
 
@@ -387,7 +387,7 @@ class RecipeController extends Controller
                 }
 
                 return [
-                    'id' => $recipe->uuid,
+                    'id' => $recipe->id,
                     'title' => $result->title,
                     'public_id' => $recipe->public_id,
                     'slug' => $recipe->getSlugForLocale($result->locale),
@@ -403,7 +403,7 @@ class RecipeController extends Controller
             }
 
             return [
-                'id' => $result->uuid,
+                'id' => $result->id,
                 'public_id' => $result->public_id,
                 'title' => $translation->title,
                 'slug' => $result->getSlugForLocale($translation->locale),

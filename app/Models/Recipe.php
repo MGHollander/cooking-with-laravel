@@ -20,16 +20,6 @@ class Recipe extends Model implements HasMedia, TranslatableContract
 {
     use HasFactory, HasTags, HasUuidOrId, HasUuids, InteractsWithMedia, SoftDeletes, Translatable;
 
-    /**
-     * Get the columns that should receive a unique identifier.
-     *
-     * @return array<int, string>
-     */
-    public function uniqueIds(): array
-    {
-        return ['uuid'];
-    }
-
     public $translationModel = RecipeTranslation::class;
 
     protected $translationForeignKey = 'recipe_id';

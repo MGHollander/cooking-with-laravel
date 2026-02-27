@@ -116,7 +116,7 @@ class ImportController extends Controller
 
                 return [
                     'recipe' => $recipe,
-                    'import_log_id' => $importLog->uuid,
+                    'import_log_id' => $importLog->id,
                     'locale' => $locale,
                     'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
                     'config' => [
@@ -176,7 +176,7 @@ class ImportController extends Controller
 
             return [
                 'recipe' => $recipe,
-                'import_log_id' => $importLog->uuid,
+                'import_log_id' => $importLog->id,
                 'locale' => $locale,
                 'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
             ];
