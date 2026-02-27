@@ -26,12 +26,53 @@ class RecipeControllerTest extends TestCase
             'instructions' => '[]',
         ]);
 
-        $fullSlug = 'my-recipe-'.$recipe->public_id;
-
-        $response = $this->get(route('recipes.show.en', $fullSlug));
+        $response = $this->get(route('recipes.show.en', [$recipe->public_id, 'my-recipe']));
 
         $response->assertStatus(200);
         $response->assertSee('My Recipe');
+    }
+
+    public function test_legacy_recipe_url_without_public_id_redirects()
+    {
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create(['user_id' => $user->id]);
+
+        $recipe->translations()->create([
+            'locale' => 'en',
+            'title' => 'My Recipe',
+            'slug' => 'my-recipe',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        $response = $this->get(route('recipes.show.legacy.en', 'my-recipe'));
+
+        $response->assertRedirect(route('recipes.show.en', [$recipe->public_id, 'my-recipe']));
+        $response->assertStatus(301);
+    }
+
+    public function test_self_healing_url_redirects_to_correct_slug()
+    {
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create(['user_id' => $user->id]);
+
+        $recipe->translations()->create([
+            'locale' => 'en',
+            'title' => 'My Recipe',
+            'slug' => 'my-recipe',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        // Access with wrong slug
+        $response = $this->get(route('recipes.show.en', [$recipe->public_id, 'wrong-slug']));
+        $response->assertRedirect(route('recipes.show.en', [$recipe->public_id, 'my-recipe']));
+        $response->assertStatus(301);
+
+        // Access with no slug (self-healing)
+        $response = $this->get(route('recipes.show.en', [$recipe->public_id]));
+        $response->assertRedirect(route('recipes.show.en', [$recipe->public_id, 'my-recipe']));
+        $response->assertStatus(301);
     }
 
     public function test_recipe_index_page_loads()

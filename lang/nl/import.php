@@ -23,4 +23,13 @@ return [
         'save' => 'Opslaan',
         'save_and_new' => 'Opslaan en nieuw recept importeren',
     ],
+    'flash' => [
+        'already_imported' => 'Je hebt dit recept al geïmporteerd: <a href=":url">:title</a>',
+        'imported_with_link' => 'Het recept "<a href=":url"><i>:title</i></a>" is succesvol geïmporteerd! 🎉',
+        'imported' => 'Het recept is succesvol geïmporteerd! 🎉',
+    ],
+    'errors' => [
+        'no_recipe_found' => 'Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.',
+        'url_required' => 'URL-parameter is verplicht',
+    ],
 ];

@@ -70,7 +70,6 @@ class Kernel extends HttpKernel
 
     protected function bootstrappers()
     {
-        // TODO #191 Replace after update to Laravel 12
         return array_merge(
             [\Bugsnag\BugsnagLaravel\OomBootstrapper::class],
             parent::bootstrappers(),

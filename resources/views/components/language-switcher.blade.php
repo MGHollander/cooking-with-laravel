@@ -29,7 +29,7 @@
                     <form :action="'{{ route('locale.update') }}'" method="POST">
                         @csrf
                         <input type="hidden" name="locale" x-bind:value="locale">
-                        <button type="submit" class="navbar-language-menu-item">
+                        <button type="submit" class="navbar-language-menu-item" :class="locale === '{{ app()->getLocale() }}' && 'navbar-language-menu-item-active'">
                             <template x-if="locale === 'en'">
                                 <x-icon.flag-gb width="20" height="20" />
                             </template>

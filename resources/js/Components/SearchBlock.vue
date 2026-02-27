@@ -1,7 +1,9 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 
-let props = defineProps({
+const page = usePage();
+
+const props = defineProps({
   q: String,
   size: String,
 });
@@ -21,7 +23,7 @@ const form = useForm({
     <form
       class="relative flex w-full"
       :class="{ 'p-4 sm:px-16 sm:py-8 md:px-32': size === 'small', 'px-4 py-8 sm:p-16 md:p-32': !size }"
-      @submit.prevent="form.get(route('search'))"
+      @submit.prevent="form.get(route(`search.${page.props.locale}`))"
     >
       <input
         v-model="form.q"

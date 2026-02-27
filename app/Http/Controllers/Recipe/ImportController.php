@@ -58,10 +58,13 @@ class ImportController extends Controller
             $recipe = $userImport->recipe;
             $locale = $recipe->primaryLocale();
             $slug = $recipe->getSlugForLocale($locale);
-            $recipeUrl = route_recipe_show($slug, $locale);
+            $recipeUrl = route_recipe_show($recipe->public_id, $slug, $locale);
 
             return back()
-                ->with('warning', "Je hebt dit recept al geïmporteerd: <a href=\"{$recipeUrl}\">{$recipe->getTitleForLocale($locale)}</a>")
+                ->with('warning', __('import.flash.already_imported', [
+                    'url' => $recipeUrl,
+                    'title' => $recipe->getTitleForLocale($locale),
+                ]))
                 ->with('import_url', $url);
         }
 
@@ -152,7 +155,7 @@ class ImportController extends Controller
             }
 
             if (! $parsedResult || ! $parsedResult->isValid()) {
-                throw new \Exception('Helaas, het is niet gelukt om een recept te vinden op deze pagina. Je kan een andere methode proberen. Als dat niet werkt, dan moet je het recept handmatig invoeren.');
+                throw new \Exception(__('import.errors.no_recipe_found'));
             }
 
             $importLog = $this->importLogService->logSuccessfulImport(
@@ -216,7 +219,7 @@ class ImportController extends Controller
         $url = $request->get('url');
 
         if (! $url) {
-            return response()->json(['error' => 'URL parameter is required'], 400);
+            return response()->json(['error' => __('import.errors.url_required')], 400);
         }
 
         try {
@@ -345,14 +348,17 @@ class ImportController extends Controller
         if ($request->get('return_to_import_page')) {
             $slug = $recipe->getSlugForLocale($locale);
 
-            return redirect()->route('import.index')->with('success', 'Het recept "<a href="'.route_recipe_show($slug, $locale).'"><i>'.$recipe->getTitleForLocale($locale).'</i></a>" is succesvol geïmporteerd! 🎉');
+            return redirect()->route('import.index.'.app()->getLocale())->with('success', __('import.flash.imported_with_link', [
+                'url' => route_recipe_show($recipe->public_id, $slug, $locale),
+                'title' => $recipe->getTitleForLocale($locale),
+            ]));
         }
 
-        Session::flash('success', 'Het recept is succesvol geïmporteerd! 🎉');
+        Session::flash('success', __('import.flash.imported'));
 
         $slug = $recipe->getSlugForLocale($locale);
 
-        return Inertia::location(route_recipe_show($slug, $locale));
+        return Inertia::location(route_recipe_show($recipe->public_id, $slug, $locale));
     }
 
     private function detectLanguageFromParsedData(ParsedRecipeData $parsedData): ?string

@@ -4,7 +4,7 @@
 ])
 
 <div class="recipe-card">
-  <a href="{{ route_recipe_show($recipe["slug"], $recipe["locale"] ?? "nl") }}" class="recipe-card-link"{!! isset($recipe["no_index"]) && $recipe["no_index"] ? ' rel="nofollow"' : '' !!}>
+  <a href="{{ route_recipe_show($recipe["public_id"] ?? '', $recipe["slug"], $recipe["locale"] ?? "nl") }}" class="recipe-card-link"{!! isset($recipe["no_index"]) && $recipe["no_index"] ? ' rel="nofollow"' : '' !!}>
     <div class="recipe-card-media">
       @if ($recipe["image"])
         <img
@@ -25,10 +25,8 @@
   </a>
 
   @auth
-    @if (isset($recipe['id']) && $recipe['id'])
-      <a href="{{ route("recipes.edit", ["recipe" => $recipe['id']]) }}" class="recipe-card-edit">
-        <x-icon.pen />
-      </a>
-    @endif
+    <a href="{{ route("recipes.edit." . app()->getLocale(), ["recipe" => $recipe['id']]) }}" class="recipe-card-edit">
+      <x-icon.pen />
+    </a>
   @endauth
 </div>

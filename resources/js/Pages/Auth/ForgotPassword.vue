@@ -5,6 +5,9 @@ import Input from "@/Components/Input.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import GuestLayout from "@/Layouts/Guest.vue";
+import { useAttrs } from "vue";
+
+const attrs = useAttrs();
 
 defineProps({
   status: String,
@@ -15,17 +18,16 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(route("password.email"));
+  form.post(route(`password.email.${attrs.locale}`));
 };
 </script>
 
 <template>
   <GuestLayout>
-    <Head title="Forgot Password" />
+    <Head :title="$t('auth.forgot_password.title')" />
 
     <div class="mb-4 text-sm text-gray-600">
-      Wachtwoord vergeten? Geen probleem. Laat je e-mailadres achter en we sturen je een wachtwoord herstel link waarmee
-      je een nieuw wachtwoord kunt aanmaken.
+      {{ $t('auth.forgot_password.description') }}
     </div>
 
     <ValidationErrors class="-mx-6 mb-4 px-6 py-4" />
@@ -36,7 +38,7 @@ const submit = () => {
 
     <form @submit.prevent="submit">
       <div>
-        <Label for="email" value="Email" />
+        <Label for="email" :value="$t('auth.email')" />
         <Input
           id="email"
           v-model="form.email"
@@ -50,7 +52,7 @@ const submit = () => {
 
       <div class="mt-4 flex items-center justify-end">
         <Button type="submit" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-          Wachtwoord herstel link sturen
+          {{ $t('auth.forgot_password.send_password_reset_link') }}
         </Button>
       </div>
     </form>

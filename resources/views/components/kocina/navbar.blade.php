@@ -1,7 +1,7 @@
 <div id="navbar" class="navbar" x-data="navbar" x-bind="events" :class="{ 'navbar-search-open' : openSearch }">
     <div class="container navbar-container">
         <div class="navbar-left">
-            <a href="{{ route('home') }}" class="navbar-title">{{ env('APP_NAME') }}</a>
+            <a href="{{ route('home') }}" class="navbar-title">{{ config('app.name') }}</a>
             <nav class="navbar-menu-list">
                 <x-kocina.nav-list />
             </nav>
@@ -27,7 +27,7 @@
 
             <div class="navbar-user-button-group">
                 @guest
-                    <a href="{{ route('login') }}" class="button button-primary">{{ __('nav.login') }}</a>
+                    <a href="{{ route('login.' . app()->getLocale()) }}" class="button button-primary">{{ __('nav.login') }}</a>
                 @endguest
 
                 @auth
@@ -108,7 +108,7 @@
 
         <div class="navbar-menu-offcanvas-user">
             @guest
-                <a href="{{ route('login') }}" class="button button-primary">{{ __('nav.login') }}</a>
+                <a href="{{ route('login.' . app()->getLocale()) }}" class="button button-primary">{{ __('nav.login') }}</a>
             @endguest
 
             @auth

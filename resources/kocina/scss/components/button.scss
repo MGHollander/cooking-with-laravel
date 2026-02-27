@@ -7,11 +7,12 @@
   color: var(--button-default-text-color);
   font-size: 0.9rem;
 
-  &:hover:not(:disabled) {
-    background-color: var(--button-default-bg-color-hover);
-    transform: scale(1.1);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background-color: var(--button-default-bg-color-hover);
+      transform: scale(1.1);
+    }
   }
-
   &:active:not(:disabled) {
     transform: scale(1);
   }
@@ -21,9 +22,11 @@
   background-color: var(--button-primary-bg-color);
   color: var(--button-primary-text-color);
 
-  &:hover:not(:disabled) {
-    background-color: var(--button-primary-bg-color-hover);
-    color: var(--button-primary-text-color);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background-color: var(--button-primary-bg-color-hover);
+      color: var(--button-primary-text-color);
+    }
   }
 }
 
@@ -42,10 +45,12 @@
     opacity: 0.7;
   }
 
-  &:hover:not(:disabled) {
-    background-color: var(--button-outline-text-color);
-    border-color: var(--button-outline-text-color);
-    color: var(--button-outline-text-color-active);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background-color: var(--button-outline-text-color);
+      border-color: var(--button-outline-text-color);
+      color: var(--button-outline-text-color-active);
+    }
   }
 
   &:has(:checked) {
@@ -53,8 +58,10 @@
     background-color: var(--button-outline-text-color);
     border-color: var(--button-outline-text-color);
 
-    &:hover {
-      opacity: 0.8;
+    @media (hover: hover) {
+      &:hover {
+        opacity: 0.8;
+      }
     }
   }
 }

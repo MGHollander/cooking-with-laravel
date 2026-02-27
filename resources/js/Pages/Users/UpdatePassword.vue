@@ -1,11 +1,13 @@
 <script setup>
 import { Head, useForm } from "@inertiajs/vue3";
-import { computed } from "vue";
+import { useAttrs } from "vue";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
+
+const attrs = useAttrs();
 
 const form = useForm({
   current_password: "",
@@ -14,7 +16,7 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(route("users.password.update"), {
+  form.post(route(`users.password.update.${attrs.locale}`), {
     onFinish: () => form.reset(),
   });
 };

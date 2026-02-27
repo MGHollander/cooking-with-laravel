@@ -23,4 +23,13 @@ return [
         'save' => 'Save',
         'save_and_new' => 'Save and import new recipe',
     ],
+    'flash' => [
+        'already_imported' => 'You have already imported this recipe: <a href=":url">:title</a>',
+        'imported_with_link' => 'The recipe "<a href=":url"><i>:title</i></a>" was successfully imported! 🎉',
+        'imported' => 'The recipe was successfully imported! 🎉',
+    ],
+    'errors' => [
+        'no_recipe_found' => 'Unfortunately, we could not find a recipe on this page. You can try another method. If that doesn\'t work, you will need to enter the recipe manually.',
+        'url_required' => 'URL parameter is required',
+    ],
 ];

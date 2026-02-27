@@ -6,11 +6,14 @@ import Input from "@/Components/Input.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import GuestLayout from "@/Layouts/Guest.vue";
+import { useAttrs } from "vue";
 
 defineProps({
   canResetPassword: Boolean,
   status: String,
 });
+
+const attrs = useAttrs();
 
 const form = useForm({
   email: "",
@@ -19,7 +22,7 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(route("login"), {
+  form.post(route(`login.${attrs.locale}`), {
     onFinish: () => form.reset("password"),
   });
 };
@@ -27,7 +30,7 @@ const submit = () => {
 
 <template>
   <GuestLayout>
-    <Head :title="$t('auth.login')" />
+    <Head :title="$t('auth.login.title')" />
 
     <ValidationErrors class="-mx-6 -mt-4 mb-4 px-6 py-4" />
 
@@ -71,14 +74,14 @@ const submit = () => {
       <div class="mt-4 flex items-center justify-end">
         <Link
           v-if="canResetPassword"
-          :href="route('password.request')"
+          :href="route(`password.request.${attrs.locale}`)"
           class="text-sm text-gray-600 underline hover:text-gray-900"
         >
-          {{ $t('auth.forgot_password') }}
+          {{ $t('auth.login.forgot_password') }}
         </Link>
 
         <Button type="submit" class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-          {{ $t('auth.login') }}
+          {{ $t('auth.login.title') }}
         </Button>
       </div>
     </form>

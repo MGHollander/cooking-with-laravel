@@ -91,4 +91,9 @@ return [
         'words_used' => 'The following word is used: <strong>:words</strong>|The following words are used: <strong>:words</strong>',
         'hopefully' => 'Hopefully there\'s something in there!',
     ],
+    'flash' => [
+        'created' => 'The recipe was successfully added! 🧑‍🍳',
+        'updated' => 'The recipe was successfully updated! 🧑‍🍳',
+        'deleted' => 'The recipe "<i>:title</i>" was successfully deleted! 🧑‍🍳',
+    ],
 ];

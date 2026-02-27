@@ -31,7 +31,6 @@ class Kernel extends ConsoleKernel
 
     protected function bootstrappers()
     {
-        // TODO #191 Replace after update to Laravel 12
         return array_merge(
             [\Bugsnag\BugsnagLaravel\OomBootstrapper::class],
             parent::bootstrappers(),

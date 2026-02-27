@@ -5,6 +5,9 @@ import Input from "@/Components/Input.vue";
 import Label from "@/Components/Label.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import GuestLayout from "@/Layouts/Guest.vue";
+import { useAttrs } from "vue";
+
+const attrs = useAttrs();
 
 const form = useForm({
   name: "",
@@ -15,7 +18,7 @@ const form = useForm({
 });
 
 const submit = () => {
-  form.post(route("register"), {
+  form.post(route(`register.${attrs.locale}`), {
     onFinish: () => form.reset("password", "password_confirmation"),
   });
 };
@@ -78,7 +81,7 @@ const submit = () => {
       </div>
 
       <div class="mt-4 flex items-center justify-end">
-        <Link :href="route('login')" class="text-sm text-gray-600 underline hover:text-gray-900">
+        <Link :href="route(`login.${attrs.locale}`)" class="text-sm text-gray-600 underline hover:text-gray-900">
           {{ $t('auth.already_registered') }}
         </Link>
 

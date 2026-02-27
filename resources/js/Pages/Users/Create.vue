@@ -1,10 +1,13 @@
 <script setup>
 import { Head, useForm } from "@inertiajs/vue3";
+import { useAttrs } from "vue";
 import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
+
+const attrs = useAttrs();
 
 let form = useForm({
   name: "",
@@ -13,7 +16,7 @@ let form = useForm({
 });
 
 let submit = () => {
-  form.post(route("users.store"));
+  form.post(route(`users.store.${attrs.locale}`));
 };
 </script>
 
