@@ -15,7 +15,7 @@ class ImportControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get(route('import.index'));
+        $response = $this->actingAs($user)->get(route('import.index.en'));
 
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page->component('Import/Index')
@@ -28,7 +28,7 @@ class ImportControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->get(route('import.index'));
+        $response = $this->actingAs($user)->get(route('import.index.en'));
 
         $response->assertStatus(200);
 

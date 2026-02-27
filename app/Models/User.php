@@ -17,16 +17,6 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, HasUuidOrId, HasUuids, Notifiable, SoftDeletes;
 
     /**
-     * Get the columns that should receive a unique identifier.
-     *
-     * @return array<int, string>
-     */
-    public function uniqueIds(): array
-    {
-        return ['uuid'];
-    }
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>

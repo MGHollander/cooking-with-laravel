@@ -44,7 +44,7 @@ class ImportLogServiceTest extends TestCase
             url: $url
         );
 
-        $importLog = $this->service->logSuccessfulImport($url, $source, $user, $parsedData);
+        $importLog = $this->service->logSuccessfulImport($url, $source, $user, new \App\Services\RecipeParsing\Data\ParserResult($parsedData));
 
         $this->assertInstanceOf(ImportLog::class, $importLog);
         $this->assertEquals(FileHelper::cleanUrl($url), $importLog->url);
@@ -83,7 +83,7 @@ class ImportLogServiceTest extends TestCase
             url: $url
         );
 
-        $importLog = $this->service->logSuccessfulImport($url, $source, $user, $parsedData, $recipe);
+        $importLog = $this->service->logSuccessfulImport($url, $source, $user, new \App\Services\RecipeParsing\Data\ParserResult($parsedData), $recipe);
 
         $this->assertInstanceOf(ImportLog::class, $importLog);
         $this->assertEquals(FileHelper::cleanUrl($url), $importLog->url);
@@ -211,6 +211,14 @@ class ImportLogServiceTest extends TestCase
         ]);
 
         $lastImport = $this->service->getLastImportForUrl($url);
+
+        if ($lastImport->id !== $newerLog->id) {
+            dump([
+                'olderLog' => ['id' => $olderLog->id, 'created_at' => $olderLog->created_at->toDateTimeString()],
+                'newerLog' => ['id' => $newerLog->id, 'created_at' => $newerLog->created_at->toDateTimeString()],
+                'lastImport' => ['id' => $lastImport->id, 'created_at' => $lastImport->created_at->toDateTimeString()],
+            ]);
+        }
 
         $this->assertNotNull($lastImport);
         $this->assertEquals($newerLog->id, $lastImport->id);

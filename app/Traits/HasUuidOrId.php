@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Str;
 
 trait HasUuidOrId
 {
@@ -12,10 +11,6 @@ trait HasUuidOrId
      */
     public function scopeWhereUuidOrId(Builder $query, string|int $value): Builder
     {
-        if (Str::isUuid((string) $value)) {
-            return $query->where($this->getTable().'.uuid', $value);
-        }
-
         return $query->where($this->getTable().'.id', $value);
     }
 

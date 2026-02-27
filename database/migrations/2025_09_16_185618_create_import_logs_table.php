@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Recipe;
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('url');
             $table->enum('source', ['structured-data', 'firecrawl', 'open-ai']);
-            $table->foreignIdFor(User::class)->constrained();
-            $table->foreignIdFor(Recipe::class)->constrained();
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('recipe_id')->constrained();
             $table->json('parsed_data');
             $table->timestamps();
 

@@ -31,12 +31,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/recipes/create', [RecipeController::class, 'create'])->name('recipes.create.en');
     Route::post('/recepten', [RecipeController::class, 'store'])->name('recipes.store.nl');
     Route::post('/recipes', [RecipeController::class, 'store'])->name('recipes.store.en');
-    Route::get('/recepten/{recipe:uuid}/bewerken', [RecipeController::class, 'edit'])->name('recipes.edit.nl');
-    Route::get('/recipes/{recipe:uuid}/edit', [RecipeController::class, 'edit'])->name('recipes.edit.en');
-    Route::patch('/recepten/{recipe:uuid}', [RecipeController::class, 'update'])->name('recipes.update.nl');
-    Route::patch('/recipes/{recipe:uuid}', [RecipeController::class, 'update'])->name('recipes.update.en');
-    Route::delete('/recepten/{recipe:uuid}', [RecipeController::class, 'destroy'])->name('recipes.destroy.nl');
-    Route::delete('/recipes/{recipe:uuid}', [RecipeController::class, 'destroy'])->name('recipes.destroy.en');
+    Route::get('/recepten/{recipe}/bewerken', [RecipeController::class, 'edit'])->name('recipes.edit.nl');
+    Route::get('/recipes/{recipe}/edit', [RecipeController::class, 'edit'])->name('recipes.edit.en');
+    Route::patch('/recepten/{recipe}', [RecipeController::class, 'update'])->name('recipes.update.nl');
+    Route::patch('/recipes/{recipe}', [RecipeController::class, 'update'])->name('recipes.update.en');
+    Route::delete('/recepten/{recipe}', [RecipeController::class, 'destroy'])->name('recipes.destroy.nl');
+    Route::delete('/recipes/{recipe}', [RecipeController::class, 'destroy'])->name('recipes.destroy.en');
 
     Route::get('/recepten/importeren', [ImportController::class, 'index'])->name('import.index.nl');
     Route::get('/recipes/import', [ImportController::class, 'index'])->name('import.index.en');
@@ -96,21 +96,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/gebruikers/toevoegen', [UserController::class, 'create'])->name('users.create.nl');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create.en');
 
-    Route::get('/gebruikers/{user:uuid}', [UserController::class, 'show'])->name('users.show.nl');
-    // For now, let's stick with user:uuid for show as well
-    Route::get('/users/{user:uuid}', [UserController::class, 'show'])->name('users.show.en');
+    Route::get('/gebruikers/{user}', [UserController::class, 'show'])->name('users.show.nl');
+    // For now, let's stick with user for show as well
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show.en');
 
     Route::post('/gebruikers', [UserController::class, 'store'])->name('users.store.nl');
     Route::post('/users', [UserController::class, 'store'])->name('users.store.en');
 
-    Route::get('/gebruikers/{user:uuid}/bewerken', [UserController::class, 'edit'])->name('users.edit.nl');
-    Route::get('/users/{user:uuid}/edit', [UserController::class, 'edit'])->name('users.edit.en');
+    Route::get('/gebruikers/{user}/bewerken', [UserController::class, 'edit'])->name('users.edit.nl');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit.en');
 
-    Route::patch('/gebruikers/{user:uuid}', [UserController::class, 'update'])->name('users.update.nl');
-    Route::patch('/users/{user:uuid}', [UserController::class, 'update'])->name('users.update.en');
+    Route::patch('/gebruikers/{user}', [UserController::class, 'update'])->name('users.update.nl');
+    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update.en');
 
-    Route::delete('/gebruikers/{user:uuid}', [UserController::class, 'destroy'])->name('users.destroy.nl');
-    Route::delete('/users/{user:uuid}', [UserController::class, 'destroy'])->name('users.destroy.en');
+    Route::delete('/gebruikers/{user}', [UserController::class, 'destroy'])->name('users.destroy.nl');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy.en');
 });
 
 Route::post('/locale', [App\Http\Controllers\LocaleController::class, 'update'])->name('locale.update');
