@@ -31,7 +31,7 @@ class UserController extends Controller
                 ->paginate(10)
                 ->withQueryString()
                 ->through(fn ($user) => [
-                    'id' => $user->id,
+                    'id' => $user->uuid,
                     'name' => $user->name,
                     'email' => $user->email,
                 ]),
@@ -92,7 +92,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         return Inertia::render('Users/Edit', [
-            'id' => $user->id,
+            'id' => $user->uuid,
             'name' => $user->name,
             'email' => $user->email,
         ]);
@@ -112,7 +112,7 @@ class UserController extends Controller
 
         $user->update($attributes);
 
-        return redirect()->route('users.edit.'.app()->getLocale(), $user)->with('success', __('users.flash.updated', [
+        return redirect()->route('users.edit.'.app()->getLocale(), $user->uuid)->with('success', __('users.flash.updated', [
             'name' => $user->name,
         ]));
     }
@@ -123,11 +123,11 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         $userId = auth()->id();
-        $deletedUserId = $user->id;
+        $deletedUserUuid = $user->uuid;
 
         $user->delete();
 
-        Log::info("User {$deletedUserId} deleted by user {$userId}");
+        Log::info("User {$deletedUserUuid} deleted by user {$userId}");
 
         return redirect()->route('users.index.'.app()->getLocale())->with('success', __('users.flash.deleted', [
             'name' => $user->name,

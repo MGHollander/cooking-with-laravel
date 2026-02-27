@@ -19,7 +19,7 @@ const props = defineProps({
   parser: String,
   force_import: Boolean,
   recipe: Object,
-  import_log_id: Number,
+  import_log_id: String,
   config: Object,
   languages: Object,
 });
@@ -31,14 +31,14 @@ const attrs = useAttrs();
 
 const sortedLanguages = computed(() => {
   if (!props.languages) return [];
-  
-  const popular = ['en', 'nl'];
-  const popularLanguages = popular.map(code => ({ code, name: props.languages[code] })).filter(l => l.name);
+
+  const popular = ["en", "nl"];
+  const popularLanguages = popular.map((code) => ({ code, name: props.languages[code] })).filter((l) => l.name);
   const otherLanguages = Object.entries(props.languages)
     .filter(([code]) => !popular.includes(code))
     .map(([code, name]) => ({ code, name }))
     .sort((a, b) => a.name.localeCompare(b.name));
-  
+
   return [...popularLanguages, ...otherLanguages];
 });
 
@@ -52,7 +52,7 @@ const onImageLoad = (event, img) => {
 };
 
 const form = useForm({
-  locale: attrs.locale || 'nl',
+  locale: attrs.locale || "nl",
   title: "",
   external_image: "",
   media_dimensions: null,
@@ -109,8 +109,8 @@ onMounted(() => {
       })
       .then((response) => {
         const recipe = response.data.recipe;
-        
-        form.locale = response.data.locale || attrs.locale || 'nl';
+
+        form.locale = response.data.locale || attrs.locale || "nl";
         form.title = recipe.title;
         form.external_image = recipe?.images?.length > 0 ? recipe.images[0] : "";
         form.summary = recipe.summary;
@@ -123,6 +123,7 @@ onMounted(() => {
         form.instructions = recipe.instructions;
         form.source_label = recipe.source_label;
         form.source_link = recipe.source_link;
+        form.import_log_id = response.data.import_log_id;
 
         isLoading.value = false;
 
@@ -142,7 +143,7 @@ onMounted(() => {
 
   <DefaultLayout>
     <template #header>
-      {{ $t('import.form.title') }}
+      {{ $t("import.form.title") }}
     </template>
     <Transition mode="out-in">
       <div v-if="isLoading" class="flex flex-col justify-center items-center h-64">
@@ -181,7 +182,7 @@ onMounted(() => {
             ></animate>
           </circle>
         </svg>
-        <p class="font-bold">{{ $t('import.form.loading') }}</p>
+        <p class="font-bold">{{ $t("import.form.loading") }}</p>
       </div>
       <div v-else-if="errorMessage" class="text-red-500 p-4">{{ errorMessage }}</div>
       <form v-else class="mx-auto max-w-3xl space-y-8" @submit.prevent="submitForm">
@@ -233,19 +234,22 @@ onMounted(() => {
                     class="max-h-32 max-w-full rounded-md"
                     @load="onImageLoad($event, img)"
                   />
-                  <div v-if="imageDimensions[img]" class="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-1 rounded">
+                  <div
+                    v-if="imageDimensions[img]"
+                    class="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white text-xs px-1 rounded"
+                  >
                     {{ imageDimensions[img] }}
                   </div>
                 </label>
               </div>
               <label class="flex items-center gap-2">
                 <input type="radio" v-model="form.external_image" value="" />
-                <span>{{ $t('import.form.import_without_image') }}</span>
+                <span>{{ $t("import.form.import_without_image") }}</span>
               </label>
 
               <div v-if="image" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <strong class="text-sm">{{ $t('recipes.form.card_page') }}</strong>
+                  <strong class="text-sm">{{ $t("recipes.form.card_page") }}</strong>
                   <cropper
                     ref="cropperCard"
                     class="vue-advanced-cropper h-[16rem] max-w-full"
@@ -267,7 +271,7 @@ onMounted(() => {
                   />
                 </div>
                 <div>
-                  <strong class="text-sm">{{ $t('recipes.form.recipe_page') }}</strong>
+                  <strong class="text-sm">{{ $t("recipes.form.recipe_page") }}</strong>
                   <cropper
                     ref="cropperShow"
                     class="vue-advanced-cropper h-[16rem] max-w-full"
@@ -297,7 +301,7 @@ onMounted(() => {
               <Label for="image" :value="$t('recipes.form.image')" />
               <div class="rounded-md bg-yellow-50 p-4 border border-yellow-200">
                 <p class="text-sm text-yellow-800">
-                  {{ $t('import.form.no_images_found') }}
+                  {{ $t("import.form.no_images_found") }}
                 </p>
               </div>
             </div>
@@ -317,7 +321,7 @@ onMounted(() => {
               <Label for="tags" :value="$t('recipes.form.tags')" />
               <Input v-model="form.tags" class="block w-full" type="text" />
               <p class="text-xs text-gray-500">
-                {{ $t('recipes.form.tags_help') }}
+                {{ $t("recipes.form.tags_help") }}
               </p>
               <InputError :message="form.errors.tags" />
             </div>
@@ -338,9 +342,9 @@ onMounted(() => {
                 v-model="form.difficulty"
                 class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               >
-                <option value="easy">{{ $t('recipes.easy') }}</option>
-                <option value="average">{{ $t('recipes.average') }}</option>
-                <option value="difficult">{{ $t('recipes.difficult') }}</option>
+                <option value="easy">{{ $t("recipes.easy") }}</option>
+                <option value="average">{{ $t("recipes.average") }}</option>
+                <option value="difficult">{{ $t("recipes.difficult") }}</option>
               </select>
               <InputError :message="form.errors.difficulty" />
             </div>
@@ -359,10 +363,10 @@ onMounted(() => {
 
             <div class="col-span-12 grid grid-cols-12 gap-6">
               <div class="col-span-12 space-y-1">
-                <Label>{{ $t('recipes.form.ingredients') }}</Label>
+                <Label>{{ $t("recipes.form.ingredients") }}</Label>
                 <Textarea v-model="form.ingredients" rows="10" class="block w-full" required />
                 <InputError :message="form.errors.ingredients" />
-                <p class="!my-3 text-xs text-gray-500">{{ $t('recipes.form.ingredients_help') }}</p>
+                <p class="!my-3 text-xs text-gray-500">{{ $t("recipes.form.ingredients_help") }}</p>
                 <ul class="list-outside pl-4 text-xs text-gray-500" v-html="$t('recipes.form.ingredients_help_text')" />
               </div>
             </div>
@@ -407,14 +411,20 @@ onMounted(() => {
 
             <div class="col-span-12 space-y-1">
               <label class="flex items-center">
-                <input v-model="form.no_index" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
-                <span class="ml-2 text-sm text-gray-600">{{ $t('recipes.form.no_index') }}</span>
+                <input
+                  v-model="form.no_index"
+                  type="checkbox"
+                  class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                />
+                <span class="ml-2 text-sm text-gray-600">{{ $t("recipes.form.no_index") }}</span>
               </label>
               <InputError :message="form.errors.no_index" />
             </div>
           </div>
         </div>
-        <div class="sticky bottom-0 w-screen ml-[50%] -translate-x-1/2 border-y border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
+        <div
+          class="sticky bottom-0 w-screen ml-[50%] -translate-x-1/2 border-y border-gray-200 bg-gray-50 px-4 py-3 sm:px-6"
+        >
           <div class="mx-auto flex max-w-3xl space-x-2 sm:px-6">
             <Button
               :disabled="form.processing"
@@ -422,7 +432,7 @@ onMounted(() => {
               type="submit"
               @click="form.return_to_import_page = false"
             >
-              {{ $t('import.form.save') }}
+              {{ $t("import.form.save") }}
             </Button>
 
             <Button
@@ -432,7 +442,7 @@ onMounted(() => {
               button-style="secondary"
               @click="form.return_to_import_page = true"
             >
-              {{ $t('import.form.save_and_new') }}
+              {{ $t("import.form.save_and_new") }}
             </Button>
           </div>
         </div>

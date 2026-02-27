@@ -352,7 +352,7 @@ class RecipeController extends Controller
 
         Log::info("Recipe {$recipeUuid} deleted by user {$userId}");
 
-        Session::flash('success', __('recipes.flash.deleted', ['title' => $translation->title]));
+        Session::flash('success', __('recipes.flash.deleted', ['title' => $translation?->title ?? 'Untitled']));
 
         return Inertia::location(route('home'));
     }
