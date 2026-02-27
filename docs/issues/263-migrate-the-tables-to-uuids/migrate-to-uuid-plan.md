@@ -12,7 +12,7 @@ Your application currently uses:
 
 ## 2. Implementation Approach
 
-I recommend using **Laravel's built-in HasVersion7Uuids trait** for all primary models as it's:
+I recommend using **Laravel's built-in HasUuids trait** for all primary models as it's:
 
 - Officially supported by Laravel 11
 - **Time-ordered**: Provides better database performance (index locality) than standard UUIDv4
@@ -43,7 +43,7 @@ This approach is safer than directly replacing primary keys and minimizes disrup
    - Generate **UUIDv7** for existing records
 
 2. **Update models to generate UUIDs**
-   - Add **HasVersion7Uuids** trait to models
+   - Add **HasUuids** trait to models
    - Update model configuration to generate UUIDs
    - Ensure models can find records by UUID
 
