@@ -121,10 +121,7 @@ class RecipeController extends Controller
      */
     public function show(Request $request, string $publicId, ?string $slug = null): Response|View|RedirectResponse
     {
-        $parts = explode('-', $slug);
-        $idPart = end($parts);
-
-        $recipe = Recipe::where('public_id', $idPart)
+        $recipe = Recipe::where('public_id', $publicId)
             ->with('author', 'tags', 'translations')
             ->first();
 
@@ -133,15 +130,16 @@ class RecipeController extends Controller
         $locale = $routeName === 'recipes.show.nl' ? 'nl' : 'en';
 
         if ($recipe) {
-            $recipe->load('translations');
             $translation = $recipe->translations->where('locale', $locale)->first();
         }
-        
+
         if (! $recipe) {
             return $this->notFound($slug ?? $publicId);
         }
 
-        $translation = $recipe->primaryTranslation();
+        if (! $translation) {
+            $translation = $recipe->primaryTranslation();
+        }
 
         if (! $translation) {
             return $this->notFound($slug ?? $publicId);
@@ -384,9 +382,9 @@ class RecipeController extends Controller
             if ($result instanceof RecipeTranslation) {
                 $recipe = $result->recipe;
 
-                    if (! $recipe) {
-                        return null;
-                    }
+                if (! $recipe) {
+                    return null;
+                }
 
                 return [
                     'id' => $recipe->uuid,
@@ -400,13 +398,13 @@ class RecipeController extends Controller
 
             $translation = $result->primaryTranslation();
 
-                if (! $translation) {
-                    return null;
-                }
+            if (! $translation) {
+                return null;
+            }
 
             return [
                 'id' => $result->uuid,
-                    'public_id' => $result->public_id,
+                'public_id' => $result->public_id,
                 'title' => $translation->title,
                 'slug' => $result->getSlugForLocale($translation->locale),
                 'image' => $result->getFirstMediaUrl('recipe_image', 'card'),

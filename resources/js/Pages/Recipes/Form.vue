@@ -14,8 +14,7 @@ import ValidationErrors from "@/Components/ValidationErrors.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 import "vue-advanced-cropper/dist/style.css";
 import FlashMessage from "@/Components/FlashMessage.vue";
-import { trans } from 'laravel-vue-i18n';
-
+import { trans } from "laravel-vue-i18n";
 
 const props = defineProps({ recipe: Object, config: Object, languages: Object });
 const attrs = useAttrs();
@@ -25,7 +24,7 @@ const form = useForm({
   // Fix multipart limitations @see https://inertiajs.com/file-uploads#multipart-limitations
   // NOTE: The form is also submitted using the post method instead of the patch method.
   _method: edit ? "PATCH" : "POST",
-  locale: edit ? props.recipe.locale : (attrs.locale || 'en'),
+  locale: edit ? props.recipe.locale : attrs.locale || "en",
   title: edit ? props.recipe.title : "",
   media: null,
   media_dimensions: null,
@@ -43,18 +42,20 @@ const form = useForm({
   no_index: edit ? Boolean(props.recipe.no_index) : false,
 });
 
-const title = computed(() => edit ? trans('recipes.form.edit_title', { title: form.title }) : trans('recipes.form.create_title'));
+const title = computed(() =>
+  edit ? trans("recipes.form.edit_title", { title: form.title }) : trans("recipes.form.create_title"),
+);
 
 const sortedLanguages = computed(() => {
   if (!props.languages) return [];
-  
-  const popular = ['en', 'nl'];
-  const popularLanguages = popular.map(code => ({ code, name: props.languages[code] })).filter(l => l.name);
+
+  const popular = ["en", "nl"];
+  const popularLanguages = popular.map((code) => ({ code, name: props.languages[code] })).filter((l) => l.name);
   const otherLanguages = Object.entries(props.languages)
     .filter(([code]) => !popular.includes(code))
     .map(([code, name]) => ({ code, name }))
     .sort((a, b) => a.name.localeCompare(b.name));
-  
+
   return [...popularLanguages, ...otherLanguages];
 });
 
@@ -95,7 +96,7 @@ function loadImage(event) {
     resetErrors();
 
     if (files[0].size > props.config.max_file_size) {
-      form.errors.media = trans('recipes.form.image_too_large', { size: (props.config.max_file_size / 1024 / 1024) });
+      form.errors.media = trans("recipes.form.image_too_large", { size: props.config.max_file_size / 1024 / 1024 });
       return;
     }
 
@@ -107,9 +108,9 @@ function loadImage(event) {
         img.width < props.config.image_dimensions.advised_minimum.width ||
         img.height < props.config.image_dimensions.advised_minimum.height
       ) {
-        imageSizeWarning.value = trans('recipes.form.image_too_small', {
+        imageSizeWarning.value = trans("recipes.form.image_too_small", {
           width: props.config.image_dimensions.advised_minimum.width,
-          height: props.config.image_dimensions.advised_minimum.height
+          height: props.config.image_dimensions.advised_minimum.height,
         });
       }
     };
@@ -163,7 +164,7 @@ function getStencilSize({ boundaries }) {
 }
 
 function confirmDeletion() {
-  if (confirm(trans('recipes.form.confirm_delete'))) {
+  if (confirm(trans("recipes.form.confirm_delete"))) {
     router.delete(route(`recipes.destroy.${attrs.locale}`, props.recipe.id), {
       method: "delete",
     });
@@ -202,7 +203,20 @@ onMounted(() => {
 
   <DefaultLayout>
     <template #header>
-      {{ title }} <a v-if="edit" :href="edit ? (props.recipe.locale === 'nl' ? route('recipes.show.nl', props.recipe.slug) : route('recipes.show.en', props.recipe.slug)) : ''" class="ml-4 text-sm">{{ $t('recipes.form.view_recipe') }}</a>
+      {{ title }}
+      <a
+        v-if="edit"
+        :href="
+          edit
+            ? route(props.recipe.locale === 'nl' ? 'recipes.show.nl' : 'recipes.show.en', {
+                public_id: props.recipe.public_id,
+                slug: props.recipe.slug,
+              })
+            : ''
+        "
+        class="ml-4 text-sm"
+        >{{ $t("recipes.form.view_recipe") }}</a
+      >
     </template>
 
     <form class="mx-auto max-w-3xl space-y-8" @submit.prevent="save">
@@ -225,7 +239,7 @@ onMounted(() => {
               class="whitespace-nowrap text-sm"
               @click="localeEnabled = true"
             >
-              {{ $t('recipes.form.enable_locale') }}
+              {{ $t("recipes.form.enable_locale") }}
             </Button>
           </div>
           <InputError :message="form.errors.locale" />
@@ -252,7 +266,7 @@ onMounted(() => {
 
             <div v-if="image.src" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <strong class="text-sm">{{ $t('recipes.form.card_page') }}</strong>
+                <strong class="text-sm">{{ $t("recipes.form.card_page") }}</strong>
                 <cropper
                   ref="cropperCard"
                   class="vue-advanced-cropper h-[16rem] max-w-full"
@@ -273,7 +287,7 @@ onMounted(() => {
                 />
               </div>
               <div>
-                <strong class="text-sm">{{ $t('recipes.form.recipe_page') }}</strong>
+                <strong class="text-sm">{{ $t("recipes.form.recipe_page") }}</strong>
                 <cropper
                   ref="cropperShow"
                   class="vue-advanced-cropper h-[16rem] max-w-full"
@@ -295,12 +309,22 @@ onMounted(() => {
               </div>
             </div>
 
-            <input ref="file" type="file" class="hidden" :accept="config.supported_mime_types" @change="loadImage($event)" />
+            <input
+              ref="file"
+              type="file"
+              class="hidden"
+              :accept="config.supported_mime_types"
+              @change="loadImage($event)"
+            />
             <template v-if="image.src">
-              <Button class="mr-1 text-xs" button-style="secondary" @click="file.click()">{{ $t('recipes.form.replace_image') }}</Button>
-              <Button class="text-xs" button-style="danger" @click="destroyMedia">{{ $t('recipes.form.remove_image') }}</Button>
+              <Button class="mr-1 text-xs" button-style="secondary" @click="file.click()">{{
+                $t("recipes.form.replace_image")
+              }}</Button>
+              <Button class="text-xs" button-style="danger" @click="destroyMedia">{{
+                $t("recipes.form.remove_image")
+              }}</Button>
             </template>
-            <Button v-else class="text-xs" @click="file.click()">{{ $t('recipes.form.upload_image') }}</Button>
+            <Button v-else class="text-xs" @click="file.click()">{{ $t("recipes.form.upload_image") }}</Button>
 
             <progress v-if="form.progress" :value="form.progress.percentage" max="100">
               {{ form.progress.percentage }}%
@@ -331,7 +355,7 @@ onMounted(() => {
             <Label for="tags" :value="$t('recipes.form.tags')" />
             <Input v-model="form.tags" class="block w-full" type="text" />
             <p class="text-xs text-gray-500">
-              {{ $t('recipes.form.tags_help') }}
+              {{ $t("recipes.form.tags_help") }}
             </p>
             <InputError :message="form.errors.tags" />
           </div>
@@ -364,19 +388,19 @@ onMounted(() => {
               v-model="form.difficulty"
               class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             >
-              <option value="easy">{{ $t('recipes.easy') }}</option>
-              <option value="average">{{ $t('recipes.average') }}</option>
-              <option value="difficult">{{ $t('recipes.difficult') }}</option>
+              <option value="easy">{{ $t("recipes.easy") }}</option>
+              <option value="average">{{ $t("recipes.average") }}</option>
+              <option value="difficult">{{ $t("recipes.difficult") }}</option>
             </select>
             <InputError :message="form.errors.difficulty" />
           </div>
 
           <div class="col-span-12 grid grid-cols-12 gap-6">
             <div class="col-span-12 space-y-1">
-              <Label>{{ $t('recipes.form.ingredients') }}</Label>
+              <Label>{{ $t("recipes.form.ingredients") }}</Label>
               <Textarea v-model="form.ingredients" rows="10" class="block w-full" required />
               <InputError :message="form.errors.ingredients" />
-              <p class="!my-3 text-xs text-gray-500">{{ $t('recipes.form.ingredients_help') }}</p>
+              <p class="!my-3 text-xs text-gray-500">{{ $t("recipes.form.ingredients_help") }}</p>
               <ul class="list-outside pl-4 text-xs text-gray-500" v-html="$t('recipes.form.ingredients_help_text')" />
             </div>
           </div>
@@ -424,17 +448,23 @@ onMounted(() => {
 
           <div class="col-span-12 space-y-1">
             <label class="flex items-center">
-              <input v-model="form.no_index" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" />
-              <span class="ml-2 text-sm text-gray-600">{{ $t('recipes.form.no_index') }}</span>
+              <input
+                v-model="form.no_index"
+                type="checkbox"
+                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+              />
+              <span class="ml-2 text-sm text-gray-600">{{ $t("recipes.form.no_index") }}</span>
             </label>
             <InputError :message="form.errors.no_index" />
           </div>
         </div>
       </div>
 
-      <div class="sticky bottom-0 w-screen ml-[50%] -translate-x-1/2 border-y border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
+      <div
+        class="sticky bottom-0 w-screen ml-[50%] -translate-x-1/2 border-y border-gray-200 bg-gray-50 px-4 py-3 sm:px-6"
+      >
         <div class="mx-auto flex max-w-3xl justify-between sm:px-6">
-          <Button :disabled="form.processing" class="text-xs" type="submit">{{ $t('recipes.form.save') }}</Button>
+          <Button :disabled="form.processing" class="text-xs" type="submit">{{ $t("recipes.form.save") }}</Button>
           <Button
             v-if="edit"
             :disabled="form.processing"
@@ -442,7 +472,7 @@ onMounted(() => {
             class="text-xs"
             @click="confirmDeletion"
           >
-            {{ $t('recipes.form.delete') }}
+            {{ $t("recipes.form.delete") }}
           </Button>
         </div>
       </div>
