@@ -25,8 +25,10 @@
   </a>
 
   @auth
-    <a href="{{ route("recipes.edit", $recipe["id"]) }}" class="recipe-card-edit">
-      <x-icon.pen />
-    </a>
+    @if (isset($recipe['id']) && $recipe['id'])
+      <a href="{{ route("recipes.edit", ["recipe" => $recipe['id']]) }}" class="recipe-card-edit">
+        <x-icon.pen />
+      </a>
+    @endif
   @endauth
 </div>

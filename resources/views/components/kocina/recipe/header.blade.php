@@ -60,9 +60,9 @@
             {{ __('recipes.show.added_by') }} {{ $recipe['author'] }}
         </div>
 
-        @if ($recipe['user_id'] === auth()->id())
+        @if ($recipe['user_id'] === auth()->id() && isset($recipe['id']) && $recipe['id'])
             <div class="recipe-management">
-                <a href="{{ route('recipes.edit', $recipe['id']) }}" class="button button-primary button-small">
+                <a href="{{ route('recipes.edit', ['recipe' => $recipe['id']]) }}" class="button button-primary button-small">
                     {{ __('recipes.show.edit') }}
                 </a>
             </div>

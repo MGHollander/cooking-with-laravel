@@ -54,4 +54,26 @@ class RecipeControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('My Recipe');
     }
+
+    public function test_recipe_index_shows_edit_link_to_authenticated_user()
+    {
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $recipe->translations()->create([
+            'locale' => 'en',
+            'title' => 'My Recipe',
+            'slug' => 'my-recipe',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('home'));
+
+        $response->assertStatus(200);
+        $response->assertSee('My Recipe');
+        $response->assertSee(route('recipes.edit', $recipe->uuid));
+    }
 }

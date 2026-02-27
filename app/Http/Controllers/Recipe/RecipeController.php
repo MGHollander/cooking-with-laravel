@@ -45,9 +45,9 @@ class RecipeController extends Controller
 
                     return [
                         'id' => $recipe->uuid,
-                        'title' => $translation->title,
-                        'slug' => $recipe->getSlugForLocale($translation->locale),
-                        'locale' => $translation->locale,
+                        'title' => $translation?->title ?? 'Untitled',
+                        'slug' => $recipe->getSlugForLocale($translation?->locale),
+                        'locale' => $translation?->locale ?? config('app.fallback_locale'),
                         'image' => $recipe->getFirstMediaUrl('recipe_image', 'card'),
                         'no_index' => $recipe->no_index,
                     ];
@@ -362,8 +362,8 @@ class RecipeController extends Controller
             $searchKey = str_replace('-', ' ', $slug);
         }
 
-        $paginator = Search::add(RecipeTranslation::with('recipe.media'), ['title', 'ingredients', 'instructions'])
-            ->add(Recipe::with('translations', 'tags'), ['tags.name'])
+        $paginator = Search::add(RecipeTranslation::whereHas('recipe')->with('recipe.media'), ['title', 'ingredients', 'instructions'])
+            ->add(Recipe::whereHas('author')->with('translations', 'tags'), ['tags.name'])
             ->paginate(12)
             ->beginWithWildcard()
             ->search($searchKey)
