@@ -5,7 +5,9 @@ This plan outlines the manual verification steps required to ensure the system i
 ## 1. Recipe Discovery & Viewing
 
 - [ ] Home Page: Verify recipes are displayed and clicking a card leads to the correct recipe page.
+  - [ ] Navigation: Verify pagination works and links to other pages are correct.
 - [ ] Search: Perform a search and verify that results are displayed and links work.
+  - [ ] Navigation: Verify pagination works and links to other pages are correct.
 - [ ] Direct URL: Verify that a recipe URL with a public_id (e.g., /recipes/my-cake-abc123def456789) still works.
 - [ ] Internal Links: Check that alternate language links (language switcher) on the recipe page work correctly.
 
@@ -23,14 +25,10 @@ This plan outlines the manual verification steps required to ensure the system i
 - [ ] Delete User: Delete a user and verify that the related data (recipes) is handled according to the existing logic.
 - [ ] Profile Access: Access your own profile via the top-right menu and verify the link uses a UUID.
 
-## 4. System Integrity
-
-- [ ] New Record Generation: Create a new User and Recipe via the UI or Tinker, and verify they automatically receive a UUIDv7.
-- [ ] Foreign Key Consistency: Verify that new recipes have the correct user_uuid (pointing to the author's UUID) in the database.
-
-## 5. Backward Compatibility
+## 4. Backward Compatibility
 
 - [ ] Old Slugs: Test a few existing production URLs (if available) to ensure the public_id parsing still works perfectly.
+- [ ] Old Slugs: Test a few slugs without a public_id (e.g., /recipes/my-cake) to ensure they are redirected to the correct public_id based URL.
 
 ---
 
