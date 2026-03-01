@@ -36,10 +36,10 @@ class UserCreated extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $url = url(route('password.reset', [
+        $url = route('password.reset.'.app()->getLocale(), [
             'token' => $this->token,
             'email' => $notifiable->getEmailForPasswordReset(),
-        ], false));
+        ]);
 
         return (new MailMessage)
             ->subject(Lang::get('Your account on :app', ['app' => config('app.name')]))
