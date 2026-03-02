@@ -26,10 +26,6 @@ class LanguageDetectionService
             $textParts[] = $summary;
         }
 
-        if ($ingredients) {
-            $textParts[] = strip_tags($ingredients);
-        }
-
         if ($instructions) {
             $textParts[] = strip_tags($instructions);
         }

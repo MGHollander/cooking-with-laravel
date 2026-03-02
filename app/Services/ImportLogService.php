@@ -121,6 +121,7 @@ class ImportLogService
             'user_id' => $user->id,
             'recipe_id' => $recipe?->id,
             'parsed_data' => $parsedData,
+            'credits_used' => 0,
         ]);
     }
 
