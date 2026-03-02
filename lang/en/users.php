@@ -38,5 +38,6 @@ return [
         'updated' => 'User “<i>:name</i>” was successfully updated!',
         'deleted' => 'User “<i>:name</i>” was successfully deleted!',
         'password_updated' => 'Your password was successfully updated!',
+        'cannot_delete_self' => 'You cannot delete your own account.',
     ],
 ];
