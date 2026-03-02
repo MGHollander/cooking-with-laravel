@@ -122,6 +122,10 @@ class UserController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
+        if ($user->id === auth()->id()) {
+            return redirect()->route('users.index.'.app()->getLocale())->with('error', __('users.flash.cannot_delete_self'));
+        }
+
         $userId = auth()->id();
         $deletedUserId = $user->id;
 
