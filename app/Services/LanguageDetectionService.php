@@ -26,10 +26,6 @@ class LanguageDetectionService
             $textParts[] = $summary;
         }
 
-        if ($ingredients) {
-            $textParts[] = strip_tags($ingredients);
-        }
-
         if ($instructions) {
             $textParts[] = strip_tags($instructions);
         }
@@ -54,8 +50,9 @@ class LanguageDetectionService
             $topLanguage = array_key_first($detected);
 
             Log::debug('Language detection result', [
-                'detected' => $topLanguage,
+                'top_language' => $topLanguage,
                 'confidence' => $detected[$topLanguage] ?? null,
+                'detected' => $detected,
                 'text_length' => strlen($combinedText),
             ]);
 

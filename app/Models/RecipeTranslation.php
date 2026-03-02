@@ -34,7 +34,8 @@ class RecipeTranslation extends Model
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug')
             ->usingLanguage($this->locale)
-            ->doNotGenerateSlugsOnUpdate();
+            ->doNotGenerateSlugsOnUpdate()
+            ->allowDuplicateSlugs();
     }
 
     protected function slug(): Attribute

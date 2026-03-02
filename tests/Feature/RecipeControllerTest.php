@@ -95,4 +95,45 @@ class RecipeControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('My Recipe');
     }
+
+    public function test_edit_recipe_page_loads_for_authenticated_user()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable $user */
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $recipe->translations()->create([
+            'locale' => 'en',
+            'title' => 'My Recipe',
+            'slug' => 'my-recipe',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('recipes.edit.en', $recipe));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Recipes/Form')
+            ->has('recipe', fn ($page) => $page
+                ->where('id', $recipe->id)
+                ->where('title', 'My Recipe')
+                ->etc()
+            )
+        );
+    }
+
+    public function test_edit_recipe_page_redirects_unauthenticated_user_to_login()
+    {
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->get(route('recipes.edit.nl', $recipe));
+
+        $response->assertRedirect(route('login.nl'));
+    }
 }
