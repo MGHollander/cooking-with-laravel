@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RecipeVisibility;
 use App\Traits\HasUuidOrId;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -46,6 +47,13 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         'no_index',
         'visibility',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'visibility' => RecipeVisibility::class,
+        ];
+    }
 
     protected static function boot()
     {

@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('recipes', function (Blueprint $table) {
-            $table->enum('visibility', ['private', 'direct_link', 'public'])->default('private')->after('no_index');
+            $table->string('visibility', 20)->default('private')->after('no_index');
         });
     }
 

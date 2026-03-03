@@ -281,7 +281,7 @@ class RecipeController extends Controller
                 'source_label' => $attributes['source_label'] ?? null,
                 'source_link' => $attributes['source_link'] ?? null,
                 'no_index' => $attributes['no_index'] ?? false,
-                'visibility' => $attributes['visibility'] ?? 'private',
+                'visibility' => $attributes['visibility'] ?? $recipe->visibility,
             ]);
 
             if (! $currentTranslation) {

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\RecipeVisibility;
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -148,7 +149,7 @@ class RecipeControllerTest extends TestCase
             'difficulty' => 'easy',
             'ingredients' => '[]',
             'instructions' => '[]',
-            'visibility' => 'private',
+            'visibility' => RecipeVisibility::Private->value,
         ]);
 
         $response->assertRedirect();
@@ -170,14 +171,14 @@ class RecipeControllerTest extends TestCase
             'difficulty' => 'easy',
             'ingredients' => '[]',
             'instructions' => '[]',
-            'visibility' => 'public',
+            'visibility' => RecipeVisibility::Public->value,
         ]);
 
         $response->assertRedirect();
 
         $this->assertDatabaseHas('recipes', [
             'user_id' => $user->id,
-            'visibility' => 'public',
+            'visibility' => RecipeVisibility::Public->value,
         ]);
     }
 
@@ -225,14 +226,14 @@ class RecipeControllerTest extends TestCase
             'difficulty' => 'easy',
             'ingredients' => '[]',
             'instructions' => '[]',
-            'visibility' => 'public',
+            'visibility' => RecipeVisibility::Public->value,
         ]);
 
         $response->assertRedirect();
 
         $this->assertDatabaseHas('recipes', [
             'id' => $recipe->id,
-            'visibility' => 'public',
+            'visibility' => RecipeVisibility::Public->value,
         ]);
     }
 
@@ -259,14 +260,14 @@ class RecipeControllerTest extends TestCase
             'difficulty' => 'easy',
             'ingredients' => '[]',
             'instructions' => '[]',
-            'visibility' => 'direct_link',
+            'visibility' => RecipeVisibility::DirectLink->value,
         ]);
 
         $response->assertRedirect();
 
         $this->assertDatabaseHas('recipes', [
             'id' => $recipe->id,
-            'visibility' => 'direct_link',
+            'visibility' => RecipeVisibility::DirectLink->value,
         ]);
     }
 }

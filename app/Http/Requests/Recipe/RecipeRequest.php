@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Recipe;
 
+use App\Enums\RecipeVisibility;
 use App\Rules\ExternalImage;
 use App\Support\ImageTypeHelper;
 use Illuminate\Foundation\Http\FormRequest;
@@ -33,7 +34,7 @@ class RecipeRequest extends FormRequest
             'import_log_id' => ['nullable', 'string', 'exists:import_logs,id'],
             'return_to_import_page' => ['nullable', 'boolean'],
             'no_index' => ['nullable', 'boolean'],
-            'visibility' => ['nullable', 'in:private,direct_link,public'],
+            'visibility' => ['nullable', 'in:'.implode(',', array_column(RecipeVisibility::cases(), 'value'))],
         ];
     }
 }
