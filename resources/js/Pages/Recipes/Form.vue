@@ -40,6 +40,7 @@ const form = useForm({
   source_label: edit ? props.recipe.source_label : "",
   source_link: edit ? props.recipe.source_link : "",
   no_index: edit ? Boolean(props.recipe.no_index) : false,
+  visibility: edit ? props.recipe.visibility : "private",
 });
 
 const title = computed(() =>
@@ -456,6 +457,19 @@ onMounted(() => {
               <span class="ml-2 text-sm text-gray-600">{{ $t("recipes.form.no_index") }}</span>
             </label>
             <InputError :message="form.errors.no_index" />
+          </div>
+
+          <div class="col-span-12 space-y-1">
+            <Label for="visibility" :value="$t('recipes.form.visibility')" />
+            <select
+              v-model="form.visibility"
+              class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            >
+              <option value="private">{{ $t("recipes.visibility.private") }}</option>
+              <option value="direct_link">{{ $t("recipes.visibility.direct_link") }}</option>
+              <option value="public">{{ $t("recipes.visibility.public") }}</option>
+            </select>
+            <InputError :message="form.errors.visibility" />
           </div>
         </div>
       </div>

@@ -297,6 +297,7 @@ class ImportController extends Controller
                 'source_label' => $attributes['source_label'] ?? null,
                 'source_link' => $attributes['source_link'] ?? null,
                 'no_index' => $attributes['no_index'] ?? true,
+                'visibility' => $attributes['visibility'] ?? 'private',
             ]);
 
             $recipe->translations()->create([

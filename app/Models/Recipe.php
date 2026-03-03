@@ -44,6 +44,7 @@ class Recipe extends Model implements HasMedia, TranslatableContract
         'source_label',
         'source_link',
         'no_index',
+        'visibility',
     ];
 
     protected static function boot()

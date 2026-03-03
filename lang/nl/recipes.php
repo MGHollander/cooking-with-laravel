@@ -12,6 +12,11 @@ return [
     'easy' => 'makkelijk',
     'average' => 'gemiddeld',
     'difficult' => 'moeilijk',
+    'visibility' => [
+        'private' => 'Privé',
+        'direct_link' => 'Alleen directe link',
+        'public' => 'Openbaar',
+    ],
     'show' => [
         'servings_title' => 'Aantal porties',
         'preparation' => 'Voor&shy;be&shy;rei&shy;ding',
@@ -71,6 +76,7 @@ return [
         'source_name' => 'Bron naam (optioneel)',
         'source_link' => 'Bron link (optioneel)',
         'no_index' => 'Zoekmachines mogen dit recept niet indexeren',
+        'visibility' => 'Zichtbaarheid',
         'save' => 'Opslaan',
         'delete' => 'Verwijder',
         'image_too_large' => 'De afbeelding is te groot. De maximale grootte is :size MB. Verklein de afbeelding en probeer het opnieuw.',

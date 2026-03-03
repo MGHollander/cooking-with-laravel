@@ -33,6 +33,7 @@ class RecipeRequest extends FormRequest
             'import_log_id' => ['nullable', 'string', 'exists:import_logs,id'],
             'return_to_import_page' => ['nullable', 'boolean'],
             'no_index' => ['nullable', 'boolean'],
+            'visibility' => ['nullable', 'in:private,direct_link,public'],
         ];
     }
 }
