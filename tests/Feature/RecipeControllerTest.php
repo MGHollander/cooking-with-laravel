@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\RecipeVisibility;
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -94,5 +95,179 @@ class RecipeControllerTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('My Recipe');
+    }
+
+    public function test_edit_recipe_page_loads_for_authenticated_user()
+    {
+        /** @var \Illuminate\Contracts\Auth\Authenticatable $user */
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $recipe->translations()->create([
+            'locale' => 'en',
+            'title' => 'My Recipe',
+            'slug' => 'my-recipe',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('recipes.edit.en', $recipe));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page->component('Recipes/Form')
+            ->has('recipe', fn ($page) => $page
+                ->where('id', $recipe->id)
+                ->where('title', 'My Recipe')
+                ->etc()
+            )
+        );
+    }
+
+    public function test_edit_recipe_page_redirects_unauthenticated_user_to_login()
+    {
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->get(route('recipes.edit.nl', $recipe));
+
+        $response->assertRedirect(route('login.nl'));
+    }
+
+    public function test_recipe_can_be_created_with_visibility_private()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('recipes.store.en'), [
+            'locale' => 'en',
+            'title' => 'Test Recipe',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+            'visibility' => RecipeVisibility::Private->value,
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'user_id' => $user->id,
+            'visibility' => 'private',
+        ]);
+    }
+
+    public function test_recipe_can_be_created_with_visibility_public()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('recipes.store.en'), [
+            'locale' => 'en',
+            'title' => 'Test Recipe Public',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+            'visibility' => RecipeVisibility::Public->value,
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'user_id' => $user->id,
+            'visibility' => RecipeVisibility::Public->value,
+        ]);
+    }
+
+    public function test_recipe_defaults_to_private_visibility()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('recipes.store.en'), [
+            'locale' => 'en',
+            'title' => 'Test Recipe Default',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'user_id' => $user->id,
+            'visibility' => 'private',
+        ]);
+    }
+
+    public function test_recipe_visibility_can_be_updated()
+    {
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create([
+            'user_id' => $user->id,
+            'visibility' => 'private',
+        ]);
+
+        $recipe->translations()->create([
+            'locale' => 'en',
+            'title' => 'My Recipe',
+            'slug' => 'my-recipe',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        $response = $this->actingAs($user)->patch(route('recipes.update.en', $recipe), [
+            'locale' => 'en',
+            'title' => 'Updated Recipe',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+            'visibility' => RecipeVisibility::Public->value,
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'id' => $recipe->id,
+            'visibility' => RecipeVisibility::Public->value,
+        ]);
+    }
+
+    public function test_recipe_visibility_can_be_set_to_direct_link()
+    {
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create([
+            'user_id' => $user->id,
+            'visibility' => 'private',
+        ]);
+
+        $recipe->translations()->create([
+            'locale' => 'en',
+            'title' => 'My Recipe',
+            'slug' => 'my-recipe',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        $response = $this->actingAs($user)->patch(route('recipes.update.en', $recipe), [
+            'locale' => 'en',
+            'title' => 'Updated Recipe',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+            'visibility' => RecipeVisibility::DirectLink->value,
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'id' => $recipe->id,
+            'visibility' => RecipeVisibility::DirectLink->value,
+        ]);
     }
 }

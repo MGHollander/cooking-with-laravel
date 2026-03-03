@@ -38,5 +38,6 @@ return [
         'updated' => 'De gebruiker “<i>:name</i>” is succesvol aangepast!',
         'deleted' => 'De gebruiker “<i>:name</i>” is succesvol verwijderd!',
         'password_updated' => 'Je wachtwoord is succesvol gewijzigd!',
+        'cannot_delete_self' => 'Je kunt je eigen account niet verwijderen.',
     ],
 ];
