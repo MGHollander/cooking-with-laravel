@@ -6,6 +6,7 @@ return [
     'add_recipe' => 'Recept toevoegen',
     'import_recipe' => 'Recept importeren',
     'edit_profile' => 'Bewerk je profiel',
+    'settings' => 'Instellingen',
     'change_password' => 'Wijzig je wachtwoord',
     'manage_users' => 'Beheer gebruikers',
     'logout' => 'Uitloggen',

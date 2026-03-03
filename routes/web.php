@@ -5,6 +5,7 @@ use App\Http\Controllers\Recipe\RecipeController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\User\ChangePasswordController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\UserSettingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -89,6 +90,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/gebruikers/wachtwoord-wijzigen', [ChangePasswordController::class, 'update'])->name('users.password.update.nl');
     Route::post('/users/change-password', [ChangePasswordController::class, 'update'])->name('users.password.update.en');
+
+    Route::get('/gebruikers/instellingen', [UserSettingsController::class, 'edit'])->name('users.settings.edit.nl');
+    Route::get('/users/settings', [UserSettingsController::class, 'edit'])->name('users.settings.edit.en');
+
+    Route::patch('/gebruikers/instellingen', [UserSettingsController::class, 'update'])->name('users.settings.update.nl');
+    Route::patch('/users/settings', [UserSettingsController::class, 'update'])->name('users.settings.update.en');
 
     Route::get('/gebruikers', [UserController::class, 'index'])->name('users.index.nl');
     Route::get('/users', [UserController::class, 'index'])->name('users.index.en');
