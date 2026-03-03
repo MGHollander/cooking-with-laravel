@@ -95,4 +95,34 @@ class RecipeControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('My Recipe');
     }
+
+    public function test_recipe_create_form_passes_user_default_language()
+    {
+        $user = User::factory()->create([
+            'default_language' => 'nl',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('recipes.create.en'));
+
+        $response->assertInertia(fn ($page) => $page
+            ->component('Recipes/Form')
+            ->has('default_language')
+            ->where('default_language', 'nl')
+        );
+    }
+
+    public function test_recipe_create_form_uses_user_default_language_when_set_to_english()
+    {
+        $user = User::factory()->create([
+            'default_language' => 'en',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('recipes.create.nl'));
+
+        $response->assertInertia(fn ($page) => $page
+            ->component('Recipes/Form')
+            ->has('default_language')
+            ->where('default_language', 'en')
+        );
+    }
 }

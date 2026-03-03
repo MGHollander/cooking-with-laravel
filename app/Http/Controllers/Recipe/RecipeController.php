@@ -60,7 +60,7 @@ class RecipeController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         return Inertia::render('Recipes/Form', [
             'config' => [
@@ -69,6 +69,7 @@ class RecipeController extends Controller
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
             'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
+            'default_language' => $request->user()->default_language,
         ]);
     }
 

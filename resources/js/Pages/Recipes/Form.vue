@@ -16,7 +16,7 @@ import "vue-advanced-cropper/dist/style.css";
 import FlashMessage from "@/Components/FlashMessage.vue";
 import { trans } from "laravel-vue-i18n";
 
-const props = defineProps({ recipe: Object, config: Object, languages: Object });
+const props = defineProps({ recipe: Object, config: Object, languages: Object, default_language: String });
 const attrs = useAttrs();
 const edit = route().current(`recipes.edit.${attrs.locale}`) ?? false;
 
@@ -24,7 +24,7 @@ const form = useForm({
   // Fix multipart limitations @see https://inertiajs.com/file-uploads#multipart-limitations
   // NOTE: The form is also submitted using the post method instead of the patch method.
   _method: edit ? "PATCH" : "POST",
-  locale: edit ? props.recipe.locale : attrs.locale || "en",
+  locale: edit ? props.recipe.locale : props.default_language || attrs.locale || "en",
   title: edit ? props.recipe.title : "",
   media: null,
   media_dimensions: null,
