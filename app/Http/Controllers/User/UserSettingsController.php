@@ -13,26 +13,22 @@ class UserSettingsController extends Controller
 {
     public function edit(Request $request): Response
     {
-        $settings = $request->user()->settings()->firstOrCreate([], [
-            'default_language' => app()->getLocale(),
-        ]);
+        $user = $request->user();
 
         return Inertia::render('Users/Settings', [
-            'public_url' => $settings->public_url,
-            'default_language' => $settings->default_language,
+            'public_url' => $user->public_url,
+            'default_language' => $user->default_language,
         ]);
     }
 
     public function update(UserSettingsRequest $request): RedirectResponse
     {
-        $settings = $request->user()->settings()->firstOrCreate([], [
-            'default_language' => app()->getLocale(),
-        ]);
+        $user = $request->user();
 
-        $settings->update($request->validated());
+        $user->update($request->validated());
 
         return redirect()
             ->route('users.settings.edit.'.app()->getLocale())
-            ->with('success', __('users.flash.settings_updated', ['name' => $request->user()->name]));
+            ->with('success', __('users.flash.settings_updated', ['name' => $user->name]));
     }
 }

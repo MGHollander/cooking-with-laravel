@@ -7,11 +7,6 @@ use Illuminate\Validation\Rule;
 
 class UserSettingsRequest extends FormRequest
 {
-    public function settings()
-    {
-        return $this->user()->settings;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,7 +20,7 @@ class UserSettingsRequest extends FormRequest
                 'string',
                 'max:50',
                 'alpha_dash',
-                Rule::unique('user_settings', 'public_url')->ignore($this->settings()?->id),
+                Rule::unique('users', 'public_url')->ignore($this->user()->id),
             ],
             'default_language' => [
                 'required',
