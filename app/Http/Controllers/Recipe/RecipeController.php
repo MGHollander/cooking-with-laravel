@@ -250,6 +250,7 @@ class RecipeController extends Controller
                 'source_label' => $recipe->source_label,
                 'source_link' => $recipe->source_link,
                 'no_index' => $recipe->no_index,
+                'visibility' => $recipe->visibility,
             ],
             'config' => [
                 'max_file_size' => config('media-library.max_file_size'),

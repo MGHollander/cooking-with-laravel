@@ -78,6 +78,7 @@ return [
         'no_index' => 'Zoekmachines mogen dit recept niet indexeren',
         'visibility' => 'Zichtbaarheid',
         'save' => 'Opslaan',
+        'settings' => 'Instellingen',
         'delete' => 'Verwijder',
         'image_too_large' => 'De afbeelding is te groot. De maximale grootte is :size MB. Verklein de afbeelding en probeer het opnieuw.',
         'image_too_small' => 'De afbeelding is kleiner dan :widthx:height pixels. Als je deze gebruikt, dan wordt deze vergroot. Dit gaat ten koste van de kwaliteit.',

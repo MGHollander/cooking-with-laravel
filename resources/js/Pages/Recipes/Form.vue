@@ -446,7 +446,12 @@ onMounted(() => {
             </div>
             <InputError :message="form.errors.source_link" />
           </div>
+        </div>
+      </div>
 
+      <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded-md sm:p-6">
+        <div class="grid grid-cols-12 gap-6">
+          <p class="font-bold">{{ $t("recipes.form.settings") }}</p>
           <div class="col-span-12 space-y-1">
             <label class="flex items-center">
               <input
