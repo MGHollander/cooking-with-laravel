@@ -39,4 +39,50 @@ class ImportControllerTest extends TestCase
         $service = app(RecipeParsingService::class);
         $this->assertTrue($service->isParserAvailable('structured-data'));
     }
+
+    public function test_imported_recipe_defaults_to_private_visibility(): void
+    {
+        $user = User::factory()->create();
+
+        // Mock the import by directly calling store with valid data
+        $response = $this->actingAs($user)->post(route('import.store.en'), [
+            'locale' => 'en',
+            'title' => 'Imported Recipe',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+            'no_index' => true,
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'user_id' => $user->id,
+            'visibility' => 'private',
+        ]);
+    }
+
+    public function test_imported_recipe_can_have_public_visibility(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('import.store.en'), [
+            'locale' => 'en',
+            'title' => 'Imported Recipe Public',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+            'no_index' => true,
+            'visibility' => 'public',
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'user_id' => $user->id,
+            'visibility' => 'public',
+        ]);
+    }
 }

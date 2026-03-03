@@ -136,4 +136,137 @@ class RecipeControllerTest extends TestCase
 
         $response->assertRedirect(route('login.nl'));
     }
+
+    public function test_recipe_can_be_created_with_visibility_private()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('recipes.store.en'), [
+            'locale' => 'en',
+            'title' => 'Test Recipe',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+            'visibility' => 'private',
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'user_id' => $user->id,
+            'visibility' => 'private',
+        ]);
+    }
+
+    public function test_recipe_can_be_created_with_visibility_public()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('recipes.store.en'), [
+            'locale' => 'en',
+            'title' => 'Test Recipe Public',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+            'visibility' => 'public',
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'user_id' => $user->id,
+            'visibility' => 'public',
+        ]);
+    }
+
+    public function test_recipe_defaults_to_private_visibility()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('recipes.store.en'), [
+            'locale' => 'en',
+            'title' => 'Test Recipe Default',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'user_id' => $user->id,
+            'visibility' => 'private',
+        ]);
+    }
+
+    public function test_recipe_visibility_can_be_updated()
+    {
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create([
+            'user_id' => $user->id,
+            'visibility' => 'private',
+        ]);
+
+        $recipe->translations()->create([
+            'locale' => 'en',
+            'title' => 'My Recipe',
+            'slug' => 'my-recipe',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        $response = $this->actingAs($user)->patch(route('recipes.update.en', $recipe), [
+            'locale' => 'en',
+            'title' => 'Updated Recipe',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+            'visibility' => 'public',
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'id' => $recipe->id,
+            'visibility' => 'public',
+        ]);
+    }
+
+    public function test_recipe_visibility_can_be_set_to_direct_link()
+    {
+        $user = User::factory()->create();
+        $recipe = Recipe::factory()->create([
+            'user_id' => $user->id,
+            'visibility' => 'private',
+        ]);
+
+        $recipe->translations()->create([
+            'locale' => 'en',
+            'title' => 'My Recipe',
+            'slug' => 'my-recipe',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+        ]);
+
+        $response = $this->actingAs($user)->patch(route('recipes.update.en', $recipe), [
+            'locale' => 'en',
+            'title' => 'Updated Recipe',
+            'servings' => 4,
+            'difficulty' => 'easy',
+            'ingredients' => '[]',
+            'instructions' => '[]',
+            'visibility' => 'direct_link',
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('recipes', [
+            'id' => $recipe->id,
+            'visibility' => 'direct_link',
+        ]);
+    }
 }
