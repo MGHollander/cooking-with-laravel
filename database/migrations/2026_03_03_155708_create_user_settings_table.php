@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_settings', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->unique()->constrained()->cascadeOnDelete();
-            $table->string('public_url', 50)->nullable()->unique();
+            $table->string('public_url', 50)->unique();
             $table->string('default_language', 2)->default('nl');
             $table->timestamps();
         });

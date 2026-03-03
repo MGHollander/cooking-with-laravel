@@ -40,7 +40,7 @@ const title = computed(() => trans("users.settings.title"));
         <div class="grid grid-cols-6 gap-6">
           <div class="col-span-6 space-y-1 sm:col-span-4">
             <Label for="public_url" :value="$t('users.settings.public_url')" />
-            <Input v-model="form.public_url" type="text" class="block w-full" maxlength="50" />
+            <Input v-model="form.public_url" type="text" required class="block w-full" maxlength="50" />
             <p class="text-xs text-gray-500">
               {{ $t("users.settings.public_url_help") }}
             </p>

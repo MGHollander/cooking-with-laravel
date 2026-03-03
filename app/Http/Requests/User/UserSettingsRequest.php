@@ -21,7 +21,7 @@ class UserSettingsRequest extends FormRequest
     {
         return [
             'public_url' => [
-                'nullable',
+                'required',
                 'string',
                 'max:50',
                 'alpha_dash',
