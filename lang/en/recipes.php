@@ -12,6 +12,11 @@ return [
     'easy' => 'easy',
     'average' => 'average',
     'difficult' => 'difficult',
+    'visibility' => [
+        'private' => 'Private',
+        'direct_link' => 'Direct link only',
+        'public' => 'Public',
+    ],
     'show' => [
         'servings_title' => 'Servings',
         'preparation' => 'Pre&shy;pa&shy;ra&shy;tion',
@@ -70,7 +75,9 @@ return [
         'source_name' => 'Source name (optional)',
         'source_link' => 'Source link (optional)',
         'no_index' => 'Search engines may not index this recipe',
+        'visibility' => 'Visibility',
         'save' => 'Save',
+        'settings' => 'Settings',
         'delete' => 'Delete',
         'image_too_large' => 'The image is too large. The maximum size is :size MB. Reduce the image size and try again.',
         'image_too_small' => 'The image is smaller than :widthx:height pixels. If you use this, it will be enlarged. This will affect the quality.',
