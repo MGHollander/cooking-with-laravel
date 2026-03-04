@@ -83,7 +83,7 @@ const submit = () => {
 
         <form class="space-y-6" @submit.prevent="submit">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2" for="name">{{ $t("auth.name") }}</label>
+            <label class="block text-sm text-center font-medium text-gray-700 mb-2" for="name">{{ $t("auth.name") }}</label>
             <input
               id="name"
               v-model="form.name"
@@ -95,7 +95,7 @@ const submit = () => {
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2" for="email">{{ $t("auth.email") }}</label>
+            <label class="block text-sm text-center font-medium text-gray-700 mb-2" for="email">{{ $t("auth.email") }}</label>
             <input
               id="email"
               v-model="form.email"
@@ -106,7 +106,7 @@ const submit = () => {
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2" for="password">{{ $t("auth.password") }}</label>
+            <label class="block text-sm text-center font-medium text-gray-700 mb-2" for="password">{{ $t("auth.password") }}</label>
             <input
               id="password"
               v-model="form.password"
@@ -117,7 +117,7 @@ const submit = () => {
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2" for="password_confirmation">{{
+            <label class="block text-sm text-center font-medium text-gray-700 mb-2" for="password_confirmation">{{
               $t("auth.confirm_password")
             }}</label>
             <input
