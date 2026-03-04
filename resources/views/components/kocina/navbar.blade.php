@@ -27,7 +27,8 @@
 
             <div class="navbar-user-button-group">
                 @guest
-                    <a href="{{ route('login.' . app()->getLocale()) }}" class="button button-primary">{{ __('nav.login') }}</a>
+                    <a href="{{ route('login.' . app()->getLocale()) }}" class="button button-primary-outline">{{ __('nav.login') }}</a>
+                    <a href="{{ route('register.' . app()->getLocale()) }}" class="button button-primary">{{ __('nav.register') }}</a>
                 @endguest
 
                 @auth
