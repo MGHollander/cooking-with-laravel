@@ -8,6 +8,7 @@ import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
+import LocaleSelect from "@/Components/LocaleSelect.vue";
 import Textarea from "@/Components/Textarea.vue";
 import TipTapEditor from "@/Components/TipTapEditor.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
@@ -52,19 +53,6 @@ const form = useForm({
 const title = computed(() =>
   edit ? trans("recipes.form.edit_title", { title: form.title }) : trans("recipes.form.create_title"),
 );
-
-const sortedLanguages = computed(() => {
-  if (!props.languages) return [];
-
-  const popular = ["en", "nl"];
-  const popularLanguages = popular.map((code) => ({ code, name: props.languages[code] })).filter((l) => l.name);
-  const otherLanguages = Object.entries(props.languages)
-    .filter(([code]) => !popular.includes(code))
-    .map(([code, name]) => ({ code, name }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-
-  return [...popularLanguages, ...otherLanguages];
-});
 
 const file = ref(null);
 const image = ref({ src: props.recipe?.media?.original_url ?? null, type: null });
@@ -230,16 +218,9 @@ onMounted(() => {
       <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6">
         <div class="space-y-1">
           <Label for="locale" :value="$t('recipes.form.language')" />
+          
           <div class="flex gap-2">
-            <select
-              v-model="form.locale"
-              :disabled="!localeEnabled"
-              class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <option v-for="lang in sortedLanguages" :key="lang.code" :value="lang.code">
-                {{ lang.name }}
-              </option>
-            </select>
+            <LocaleSelect v-model="form.locale" :languages="props.languages" :disabled="!localeEnabled" />
             <Button
               v-if="edit && !localeEnabled"
               button-style="ghost"

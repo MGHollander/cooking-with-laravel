@@ -5,6 +5,7 @@ import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
+import LocaleSelect from "@/Components/LocaleSelect.vue";
 import Textarea from "@/Components/Textarea.vue";
 import TipTapEditor from "@/Components/TipTapEditor.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
@@ -29,19 +30,6 @@ const isLoading = ref(true);
 const errorMessage = ref("");
 const images = ref([]);
 const attrs = useAttrs();
-
-const sortedLanguages = computed(() => {
-  if (!props.languages) return [];
-
-  const popular = ["en", "nl"];
-  const popularLanguages = popular.map((code) => ({ code, name: props.languages[code] })).filter((l) => l.name);
-  const otherLanguages = Object.entries(props.languages)
-    .filter(([code]) => !popular.includes(code))
-    .map(([code, name]) => ({ code, name }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-
-  return [...popularLanguages, ...otherLanguages];
-});
 
 const cropperCard = ref(null);
 const cropperShow = ref(null);
@@ -191,14 +179,7 @@ onMounted(() => {
         <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded sm:p-6">
           <div class="space-y-1">
             <Label for="locale" :value="$t('recipes.form.language')" />
-            <select
-              v-model="form.locale"
-              class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            >
-              <option v-for="lang in sortedLanguages" :key="lang.code" :value="lang.code">
-                {{ lang.name }}
-              </option>
-            </select>
+            <LocaleSelect v-model="form.locale" :languages="props.languages" />
             <InputError :message="form.errors.locale" />
           </div>
         </div>

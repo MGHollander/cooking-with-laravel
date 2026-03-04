@@ -5,6 +5,7 @@ import Button from "@/Components/Button.vue";
 import Input from "@/Components/Input.vue";
 import InputError from "@/Components/InputError.vue";
 import Label from "@/Components/Label.vue";
+import LocaleSelect from "@/Components/LocaleSelect.vue";
 import DefaultLayout from "@/Layouts/Default.vue";
 import { trans } from "laravel-vue-i18n";
 
@@ -28,19 +29,6 @@ const submit = () => {
 };
 
 const title = computed(() => trans("users.settings.title"));
-
-const sortedLanguages = computed(() => {
-  if (!props.languages) return [];
-
-  const popular = ["en", "nl"];
-  const popularLanguages = popular.map((code) => ({ code, name: props.languages[code] })).filter((l) => l.name);
-  const otherLanguages = Object.entries(props.languages)
-    .filter(([code]) => !popular.includes(code))
-    .map(([code, name]) => ({ code, name }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-
-  return [...popularLanguages, ...otherLanguages];
-});
 
 const fullPublicUrl = computed(() => {
   return `${window.location.origin}/${trans("users.settings.public_url_suffix")}/${form.public_url}`;
@@ -72,14 +60,7 @@ const fullPublicUrl = computed(() => {
 
           <div class="col-span-6 space-y-1 sm:col-span-4">
             <Label for="default_language" :value="$t('users.settings.default_language')" />
-            <select
-              v-model="form.default_language"
-              class="block w-full rounded-md border-gray-300 shadow-sm transition duration-150 ease-in-out focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            >
-              <option v-for="lang in sortedLanguages" :key="lang.code" :value="lang.code">
-                {{ lang.name }}
-              </option>
-            </select>
+            <LocaleSelect v-model="form.default_language" :languages="props.languages" />
             <p class="text-xs text-gray-500">
               {{ $t("users.settings.default_language_help") }}
             </p>
