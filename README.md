@@ -29,7 +29,7 @@ friends, family and other sources in one place.
 
 Visit <http://localhost/>.
 
-**Login credential (after seeding)**
+### Login credential (after seeding)
 
 Username: `test@example.com`\
 Password: `password`

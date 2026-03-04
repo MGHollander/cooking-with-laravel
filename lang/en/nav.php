@@ -6,6 +6,7 @@ return [
     'add_recipe' => 'Add recipe',
     'import_recipe' => 'Import recipe',
     'edit_profile' => 'Edit your profile',
+    'settings' => 'Settings',
     'change_password' => 'Change your password',
     'manage_users' => 'Manage users',
     'logout' => 'Logout',

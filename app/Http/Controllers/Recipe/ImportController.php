@@ -78,6 +78,7 @@ class ImportController extends Controller
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
             'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
+            'default_visibility' => $user->default_visibility,
         ]);
     }
 
@@ -297,6 +298,7 @@ class ImportController extends Controller
                 'source_label' => $attributes['source_label'] ?? null,
                 'source_link' => $attributes['source_link'] ?? null,
                 'no_index' => $attributes['no_index'] ?? true,
+                'visibility' => $attributes['visibility'] ?? 'private',
             ]);
 
             $recipe->translations()->create([

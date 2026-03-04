@@ -96,7 +96,7 @@ return [
     */
 
     'fallback_locale' => 'en',
-    'available_locales' => ['en', 'nl'],
+    'available_locales' => ['nl', 'en'],
 
     'locale_domains' => [
         'savedflavors.local.nl' => 'nl',

@@ -60,7 +60,7 @@ class RecipeController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         return Inertia::render('Recipes/Form', [
             'config' => [
@@ -69,6 +69,8 @@ class RecipeController extends Controller
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
             'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
+            'default_language' => $request->user()->default_language,
+            'default_visibility' => $request->user()->default_visibility,
         ]);
     }
 
@@ -93,6 +95,7 @@ class RecipeController extends Controller
                 'source_label' => $attributes['source_label'] ?? null,
                 'source_link' => $attributes['source_link'] ?? null,
                 'no_index' => $attributes['no_index'] ?? false,
+                'visibility' => $attributes['visibility'] ?? 'private',
             ]);
 
             $recipe->translations()->create([
@@ -249,6 +252,7 @@ class RecipeController extends Controller
                 'source_label' => $recipe->source_label,
                 'source_link' => $recipe->source_link,
                 'no_index' => $recipe->no_index,
+                'visibility' => $recipe->visibility,
             ],
             'config' => [
                 'max_file_size' => config('media-library.max_file_size'),
@@ -280,6 +284,7 @@ class RecipeController extends Controller
                 'source_label' => $attributes['source_label'] ?? null,
                 'source_link' => $attributes['source_link'] ?? null,
                 'no_index' => $attributes['no_index'] ?? false,
+                'visibility' => $attributes['visibility'] ?? $recipe->visibility,
             ]);
 
             if (! $currentTranslation) {
