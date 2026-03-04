@@ -18,6 +18,8 @@ class UserSettingsController extends Controller
         return Inertia::render('Users/Settings', [
             'public_url' => $user->public_url,
             'default_language' => $user->default_language,
+            'default_visibility' => $user->default_visibility,
+            'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
         ]);
     }
 

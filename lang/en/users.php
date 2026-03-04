@@ -35,8 +35,12 @@ return [
     'settings' => [
         'title' => 'Settings',
         'public_url' => 'Public URL',
-        'public_url_help' => 'This is the URL where your public recipes will be available.',
+        'public_url_help' => 'This is the URL where your public recipes will be available:',
+        'public_url_suffix' => 'by',
         'default_language' => 'Default language',
+        'default_language_help' => 'This is the default language when you create a recipe.',
+        'default_visibility' => 'Default visibility',
+        'default_visibility_help' => 'This is the default visibility when you add a new recipe.',
         'save' => 'Save',
     ],
     'flash' => [

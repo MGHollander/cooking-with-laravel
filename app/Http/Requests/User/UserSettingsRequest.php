@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\Support\LanguageHelper;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,7 +25,11 @@ class UserSettingsRequest extends FormRequest
             ],
             'default_language' => [
                 'required',
-                Rule::in(['nl', 'en']),
+                Rule::in(array_keys(LanguageHelper::getAllLanguages())),
+            ],
+            'default_visibility' => [
+                'required',
+                Rule::in(['private', 'direct_link', 'public']),
             ],
         ];
     }

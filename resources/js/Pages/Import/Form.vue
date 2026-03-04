@@ -22,6 +22,7 @@ const props = defineProps({
   import_log_id: String,
   config: Object,
   languages: Object,
+  default_visibility: String,
 });
 
 const isLoading = ref(true);
@@ -69,7 +70,7 @@ const form = useForm({
   import_log_id: null,
   return_to_import_page: false,
   no_index: true, // Default to true for imported recipes
-  visibility: "private",
+  visibility: props.default_visibility || "private",
 });
 
 const submitForm = () => {
@@ -409,12 +410,12 @@ onMounted(() => {
               </div>
               <InputError :message="form.errors.source_link" />
             </div>
+          </div>
         </div>
-      </div>
 
-      <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded-md sm:p-6">
-        <div class="grid grid-cols-12 gap-6">
-          <p class="font-bold">{{ $t("recipes.form.settings") }}</p>
+        <div class="space-y-2 bg-white px-4 py-5 shadow sm:rounded-md sm:p-6">
+          <div class="grid grid-cols-12 gap-6">
+            <p class="font-bold">{{ $t("recipes.form.settings") }}</p>
             <div class="col-span-12 space-y-1">
               <label class="flex items-center">
                 <input

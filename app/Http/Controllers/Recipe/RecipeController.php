@@ -70,6 +70,7 @@ class RecipeController extends Controller
             ],
             'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
             'default_language' => $request->user()->default_language,
+            'default_visibility' => $request->user()->default_visibility,
         ]);
     }
 

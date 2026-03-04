@@ -5,7 +5,9 @@ namespace App\Http\Requests\Recipe;
 use App\Enums\RecipeVisibility;
 use App\Rules\ExternalImage;
 use App\Support\ImageTypeHelper;
+use App\Support\LanguageHelper;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RecipeRequest extends FormRequest
 {
@@ -17,7 +19,7 @@ class RecipeRequest extends FormRequest
     public function rules()
     {
         return [
-            'locale' => ['required', 'string', 'size:2', 'regex:/^[a-z]{2}$/'],
+            'locale' => ['required', 'string', Rule::in(array_keys(LanguageHelper::getAllLanguages()))],
             'title' => 'required|string|max:255',
             'summary' => 'nullable|string',
             'ingredients' => 'required|string',

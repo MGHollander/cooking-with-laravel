@@ -35,8 +35,12 @@ return [
     'settings' => [
         'title' => 'Instellingen',
         'public_url' => 'Publieke URL',
-        'public_url_help' => 'Dit is de URL waar je publieke recepten beschikbaar zijn.',
+        'public_url_help' => 'Dit is de URL waar je publieke recepten beschikbaar zijn:',
+        'public_url_suffix' => 'van',
         'default_language' => 'Standaard taal',
+        'default_language_help' => 'Dit is de standaard taal wanneer je een recept maakt.',
+        'default_visibility' => 'Standaard zichtbaarheid',
+        'default_visibility_help' => 'Dit is de standaard zichtbaarheid wanneer je een nieuw recept toevoegt.',
         'save' => 'Opslaan',
     ],
     'flash' => [

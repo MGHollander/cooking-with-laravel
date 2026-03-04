@@ -78,6 +78,7 @@ class ImportController extends Controller
                 'supported_mime_types' => ImageTypeHelper::getMimeTypes(),
             ],
             'languages' => \App\Support\LanguageHelper::getAllLanguagesWithTranslation(),
+            'default_visibility' => $user->default_visibility,
         ]);
     }
 

@@ -16,7 +16,13 @@ import "vue-advanced-cropper/dist/style.css";
 import FlashMessage from "@/Components/FlashMessage.vue";
 import { trans } from "laravel-vue-i18n";
 
-const props = defineProps({ recipe: Object, config: Object, languages: Object, default_language: String });
+const props = defineProps({
+  recipe: Object,
+  config: Object,
+  languages: Object,
+  default_language: String,
+  default_visibility: String,
+});
 const attrs = useAttrs();
 const edit = route().current(`recipes.edit.${attrs.locale}`) ?? false;
 
@@ -40,7 +46,7 @@ const form = useForm({
   source_label: edit ? props.recipe.source_label : "",
   source_link: edit ? props.recipe.source_link : "",
   no_index: edit ? Boolean(props.recipe.no_index) : false,
-  visibility: edit ? props.recipe.visibility : "private",
+  visibility: edit ? props.recipe.visibility : props.default_visibility || "private",
 });
 
 const title = computed(() =>

@@ -29,6 +29,7 @@ class User extends Authenticatable
         'password',
         'public_url',
         'default_language',
+        'default_visibility',
     ];
 
     /**
@@ -67,6 +68,10 @@ class User extends Authenticatable
 
             if (! $user->default_language) {
                 $user->default_language = app()->getLocale();
+            }
+
+            if (! $user->default_visibility) {
+                $user->default_visibility = 'private';
             }
         });
 
