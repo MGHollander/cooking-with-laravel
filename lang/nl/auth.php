@@ -31,6 +31,11 @@ return [
     'confirm_password_title' => 'Bevestig je wachtwoord',
     'confirm_password_description' => 'Dit is een beveiligd gedeelte van de website. Bevestig je wachtwoord voordat je doorgaat.',
     'confirm_password_button' => 'Bevestig',
+    'register_with_email' => 'Of gebruik je e-mailadres voor registratie:',
+    'agree_terms' => 'Door je te registreren ga je akkoord met onze',
+    'terms' => 'voorwaarden',
+    'welcome_back' => 'Welkom terug',
+    'already_registered_text' => 'Ben je al geregistreerd? Log dan in en begin vandaag nog met het koken van je eerste maaltijd.',
 
     'forgot_password' => [
         'title' => 'Wachtwoord vergeten',

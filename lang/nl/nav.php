@@ -11,6 +11,7 @@ return [
     'manage_users' => 'Beheer gebruikers',
     'logout' => 'Uitloggen',
     'login' => 'Inloggen',
+    'register' => 'Registreren',
     'expand_menu' => 'Menu uitklappen',
     'collapse_menu' => 'Menu inklappen',
     'add_menu' => 'Uitklapmenu om recepten toe te voegen',

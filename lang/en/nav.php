@@ -11,6 +11,7 @@ return [
     'manage_users' => 'Manage users',
     'logout' => 'Logout',
     'login' => 'Login',
+    'register' => 'Sign up',
     'expand_menu' => 'Expand menu',
     'collapse_menu' => 'Collapse menu',
     'add_menu' => 'Dropdown menu to add recipes',

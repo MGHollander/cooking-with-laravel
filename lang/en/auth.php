@@ -31,6 +31,11 @@ return [
     'confirm_password_title' => 'Confirm your password',
     'confirm_password_description' => 'This is a secure area of the application. Please confirm your password before continuing.',
     'confirm_password_button' => 'Confirm',
+    'register_with_email' => 'Or use your email for registration:',
+    'agree_terms' => 'By signing up you agree to our',
+    'terms' => 'terms',
+    'welcome_back' => 'Welcome Back',
+    'already_registered_text' => 'Already signed up, enter your details and start cooking your first meal today',
 
     'forgot_password' => [
         'title' => 'Forgot Password',
